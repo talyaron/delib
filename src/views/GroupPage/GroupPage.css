@@ -1,0 +1,19 @@
+.questionsWrapper {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  padding: 100px 30px 100px 30px;
+  background: #e8e8e8;
+}
+
+@media screen and (max-width: 1000px) {
+  .questionsWrapper {
+    grid-template-columns: auto auto;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .questionsWrapper {
+    grid-template-columns: auto;
+    padding: 100px 10px 100px 10px;
+  }
+}

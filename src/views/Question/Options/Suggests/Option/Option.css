@@ -1,0 +1,133 @@
+.optionCard {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    animation-name: show;
+    animation-duration: 0.3s;
+    
+}
+
+@keyframes show {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.cardTitle>input {
+    width: 95%;
+    box-shadow: inset -2px 2px 4px #00000077;
+    border-radius: 5px;
+    padding: 2px;
+    border: none;
+}
+
+.cardDescription {
+    height: 75px;
+}
+
+.cardDescription>textarea {
+    width: 95%;
+    height: 5rem;
+    resize: none;
+    box-shadow: inset -2px 2px 4px #00000077;
+    border-radius: 5px;
+    padding: 2px;
+    border: none;
+}
+
+.optionMain {
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.optionContent {
+    width: 54%;
+    padding: 5px;
+}
+
+.optionVote {
+    background: rgba(128, 128, 128, 0.14);
+    border-radius: 5px;
+    padding: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.optionVote:active {
+    background: rgba(128, 128, 128, 0.3);
+}
+
+.optionSelcetUp {
+    background: rgba(21, 128, 26, 0.3);
+}
+
+.optionSelcetDown {
+    background: rgba(124, 30, 30, 0.3);
+}
+
+.voteUp {
+    animation-name: voteUp;
+    animation-duration: 0.3s;
+    animation-direction: alternate-reverse;
+    animation-iteration-count: 3;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes voteUp {
+    from {
+        transform: rotate(0deg)
+    }
+    to {
+        transform: rotate(-35deg)
+    }
+}
+
+.voteDown {
+    animation-name: voteDown;
+    animation-duration: 0.3s;
+    animation-direction: alternate-reverse;
+    animation-iteration-count: 3;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes voteDown {
+    from {
+        transform: rotate(0deg)
+    }
+    to {
+        transform: rotate(35deg)
+    }
+}
+
+.optionInfo {
+    display: flex;
+    justify-content: space-around;
+    color: var(--textRegular);
+    margin-top: 8px;
+    border-top: 0.5px solid #d2d2d2;
+}
+
+.optionInfo>div {
+    display: flex;
+    align-items: center;
+    padding: 2px 20px;
+}
+
+.optionChat {
+    cursor: pointer;
+    user-select: none;
+}
+
+.editOptionBtn {
+    margin: 0px !important;
+    padding: 5px 7px !important;
+    color: white !important;
+}

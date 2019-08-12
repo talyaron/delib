@@ -1,0 +1,14 @@
+.subAnswerCard {
+    background: #e6e6e6;
+    margin: 0px 20px 2px 7px;
+    padding: 4px;
+    border-bottom: 1px solid #b9b9b9;
+}
+
+.subAnswerText {}
+
+.subAnswerAuthor {
+    color: gray;
+    margin-top: 4px;
+    font-size: 0.85rem;
+}

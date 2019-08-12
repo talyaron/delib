@@ -1,0 +1,5 @@
+node_modules/
+*.bundle*.js
+configKey.js
+firebase-debug.log
+\.firebase/hosting\.cHVibGlj\.cache

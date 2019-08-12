@@ -1,0 +1,16 @@
+.feedContent {
+    width: 100%;
+    border: 1px solid #80808024;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+.feedContentMessage {
+    font-size: 1.2rem;
+    margin-bottom: 6px;
+}
+
+.feedContentName {
+    font-size: 0.75rem;
+    color: gray;
+}

@@ -1,0 +1,59 @@
+.questionIntro {
+    margin: 20px 0px;
+}
+
+.questionIntro>div {
+    background: wheat;
+    margin: 10px 0px;
+    padding: 10px;
+    font-size: 1.3rem;
+    display: flex;
+    box-sizing: border-box;
+}
+
+.questionIntroTitle {
+    font-size: 1.6rem;
+    width: 100%;
+    cursor: pointer;
+    user-select: none;
+}
+
+.questionIntroButton {
+    margin: 0px 10px !important;
+    color: white;
+    height: fit-content;
+}
+
+.questionIntroDescription {
+    font-size: 1.6rem;
+    width: 100%;
+    height: fit-content;
+    cursor: pointer;
+    user-select: none;
+}
+
+.questionIntroDescription_texterae {
+    font-size: 1.3rem;
+    width: 100%;
+    height: 5rem;
+}
+
+.subTitleEdit {
+    font-weight: 700;
+    margin-left: 15px;
+}
+
+.addSubQuestin {
+    color: white;
+    float: left;
+}
+
+.inputNewSubQuestion {
+    width: 100%;
+}
+
+.buttonsWrapper {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+}

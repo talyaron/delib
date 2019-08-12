@@ -1,0 +1,117 @@
+.subQuestionCard {
+    margin: 5px 5px 1px 5px !important;
+    background: #427fb1c4;
+}
+
+.subQuestionCardCotent {
+    display: flex;
+    justify-content: space-between;
+    color: white;
+}
+
+.subQuestionCardAuthor {
+    color: rgba(255, 255, 255, 0.719);
+    font-size: 0.75rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.subQuestionCardDesc {
+    margin-bottom: 5px;
+    color: white;
+}
+
+.subQuestionCardVote {
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.voteCount {
+    font-size: 0.75rem;
+    color: gray;
+}
+
+.subAnswersWrapper {
+    /* max-height: 148px; */
+    margin-top: 2px;
+    transition: all 0.5s;
+    transition-timing-function: ease-in-out;
+}
+
+.subAnswersWrapper2 {
+    overflow-y: auto;
+    height: 120px;
+}
+
+.showAnswers {
+    display: block;
+}
+
+.hideAnswers {
+    display: none;
+}
+
+/* input form */
+
+.addInputForm {
+    position: relative;
+    bottom: 0px;
+}
+
+.addInputForm>textarea {
+    border: 0px solid transparent;
+    border-bottom: 1px solid #a0a0a0;
+    resize: none;
+    width: 85%;
+    position: relative;
+    right: 50%;
+    transform: translateX(50%);
+    margin-top: 10px;
+    background: #fff0d4;
+    border-radius: 5px;
+}
+
+.subQuestionCardMore {
+    display: flex;
+    padding-top: 8px;
+    flex-direction: row;
+    justify-content: space-between;
+    border-top: 1px solid rgba(0, 0, 0, 0.13);
+}
+
+.subQuestionCardMore>div {
+    display: flex;
+    flex: 1;
+}
+
+.iconBackground {
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #00000030;
+    padding: 4px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.iconBackground>img {
+    width: 15px;
+}
+
+.subQuestionCardEdit {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.editSubQuestion {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.editSubQuestion>textarea {
+    resize: none;
+}

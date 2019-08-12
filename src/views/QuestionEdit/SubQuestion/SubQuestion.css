@@ -1,0 +1,53 @@
+.optionEditBox {
+    display: flex;
+    width: 100%;
+    cursor: grab;
+}
+
+.optionEditBox:active {
+    cursor: grabbing;
+}
+
+.optionEditDragable {
+    width: 30px;
+    height: 100%;
+    margin: 10px;
+    background: wheat;
+}
+
+.optionEditContent {
+    width: 100%;
+    background: wheat;
+    margin: 4px;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 1px 1px 2px black;
+}
+
+.optionEditContent>div {
+    margin-bottom: 18px;
+}
+
+.optionEditContentText {
+    margin-bottom: 6px;
+}
+
+.optionEditContentText>div {
+    padding: 3px 0px;
+}
+
+.optionEditContentText>input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.optionEditContentSettings {}
+
+.optionEditButton {
+    color: white;
+    padding: 5px 20px;
+}
+
+.optionEditType {}
+
+.optionEditShow {}

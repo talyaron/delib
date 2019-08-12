@@ -1,0 +1,276 @@
+:root {
+    --mainBackground: #f14a4a;
+    --subBackground: #ee7171;
+    --mainColor: white;
+    --accent: blue;
+    --textHeader: rgba(0, 0, 0, 0.78);
+    --textHeaderSize: 1.3rem;
+    --textHeaderWeight: 600;
+    --textSubHeader: rgba(0, 0, 0, 0.68);
+    --textHeaderSize: 1.1rem;
+    --textHeaderSubTitleSize: 1rem;
+    --textRegular: rgba(0, 0, 0, 0.55);
+    --textRegularSize: 1rem;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    font-family: 'Varela Round', sans-serif;
+    font-size: 12px;
+}
+
+body {
+    direction: rtl;
+}
+
+.page {
+    width: 100%;
+    height: 100%;
+}
+
+header {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    background: var(--mainBackground);
+    box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.5);
+    padding: 10px 0px;
+    color: var(--mainColor);
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 600;
+    z-index: 3;
+}
+
+.wrapperAll {
+    position: relative;
+    margin: auto;
+    max-width: 550px;
+    padding: 10px;
+}
+
+.wrapper {
+    max-width: 550px;
+    margin: 20px auto 20px auto;
+    position: relative;
+    z-index: 2;
+}
+
+.card {
+    background: white;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    border-radius: 3px;
+    direction: rtl;
+    padding: 10px;
+    margin: 5px;
+}
+
+.cardTitle {
+    color: var(--textHeader);
+    font-size: var(--textHeaderSize);
+    font-weight: var(--textHeaderWeight);
+    margin-bottom: 10px;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+}
+
+.cardDescription {
+    color: var(--textSubHeader);
+    font-size: var(--textSubHeaderSize);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.centerElement {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.centerInput {
+    max-width: 300px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%)
+}
+
+.newElementShow {
+    animation-name: showUp;
+    animation-duration: 1s;
+}
+
+@keyframes showUp {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.headers {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    font-size: 1.4rem;
+    font-weight: 900;
+    box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    z-index: 100;
+}
+
+.navSubHeaders {}
+
+.cardsContainer {
+    margin-top: 85px;
+}
+
+/*  Buttons */
+
+.buttons {
+    width: max-content;
+    padding: 12px 25px;
+    margin: 5px 10px;
+    background: teal;
+    border-radius: 5px;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+    user-select: none;
+    cursor: pointer;
+}
+
+.buttons:active {
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.confirm {
+    background: #51d051;
+}
+
+.cancel {
+    background: #e85353;
+}
+
+.negative {
+    color: red;
+}
+
+.fav {
+    background: var(--accent);
+    width: 60px;
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: fixed;
+    right: 6vw;
+    bottom: 6vh;
+    border-radius: 50%;
+    box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.5);
+    user-select: none;
+    cursor: pointer;
+    z-index: 5;
+}
+
+.fav:active {
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.fav>div {
+    color: white;
+    text-align: center;
+    font-size: 3rem;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0px;
+    left: 0%;
+    width: 100%;
+    background: var(--subBackground);
+    color: white;
+    display: flex;
+    justify-content: stretch;
+    box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.5);
+    z-index: 4;
+}
+
+.footerButton {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    cursor: pointer;
+    padding: 11px;
+}
+
+.footerButtonSelected {
+    background: var(--mainBackground);
+}
+
+/* module */
+
+.module {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    z-index: 100;
+    background: rgba(128, 128, 128, 0.61);
+}
+
+.moduleBox {
+    max-width: 500px;
+    margin: auto;
+    position: relative;
+    top: 20%;
+    background: white;
+    box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.459);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.moduleTitle {
+    text-align: center;
+    width: 100%;
+    color: var(--textHeader);
+    font-size: var(--textHeaderSize);
+    font-weight: var(--textHeaderWeight);
+}
+
+.moduleInputs {
+    display: flex;
+    flex-direction: column;
+}
+
+.moduleInputs>* {
+    margin-bottom: 10px;
+    resize: none;
+}
+
+.moduleDescription {
+    height: 4rem;
+}
+
+.moduleButtons {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.checkBoxes [type="checkbox"]{
+    transform: scale(1.5);
+    margin-left: 10px;
+}
+
+.checkBoxes label{
+    font-size: 1.5rem;
+    margin-left: 20px;
+}

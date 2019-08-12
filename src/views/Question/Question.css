@@ -1,0 +1,80 @@
+.questionHeadr {
+    background: var(--mainBackground);
+    color: white;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+    position: fixed;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+    z-index: 100;
+    user-select: none;
+    cursor: pointer;
+}
+
+.mainHeader {
+    padding: 10px;
+    text-align: center;
+}
+
+.subHeader {
+    background: var(--accent);
+    color: white;
+    padding: 40px;
+    border-radius: 10px;
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    width: 90%;
+    max-width: 550px;
+    z-index: 5;
+    transform: translate(-50%, 0vh);
+    box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.582);
+}
+
+.hideOnScroll {
+    animation-name: hideOnScroll;
+    animation-duration: 3s;
+    animation-fill-mode: forwards
+}
+
+@keyframes hideOnScroll {
+    from {
+        transform: scaleY(1) translate(-50%, 0vh);
+    }
+    to {
+        transform: scaleY(0) translate(-50%, -50vh);
+    }
+}
+
+.questionSection {
+    box-shadow: 1px 1px 2px #00000099;
+    border-radius: 10px;
+    padding-bottom: 9px;
+    margin-top: 17px;
+}
+
+.questionSectionTitle {
+    border-radius: 10px 10px 0px 0px;
+    font-size: var(--textHeaderSize);
+    color: white;
+    background: #4f4dce;
+    padding: 10px;
+    box-sizing: border-box;
+    font-weight: 600;
+}
+
+.subQuestions {}
+
+.questionSectionMain {
+    padding: 20px;
+}
+
+.questionSectionAddButton {
+    width: max-content;
+    background: white;
+    border: 1px solid #bfbff9;
+    padding: 2px 9px;
+    box-sizing: 2px 2px;
+    box-shadow: 2px 2px 4px #0000006e;
+    color: #4c4a4a;
+}

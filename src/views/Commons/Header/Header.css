@@ -1,0 +1,31 @@
+.headerContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.headerTitle {
+    width: 100%;
+}
+
+.headerMessage {
+    padding: 0px 0px 0px 8px;
+}
+
+.headerMesaggeCounter {
+    position: absolute;
+    top: 8px;
+    left: 14px;
+    transition: 0.3s all;
+}
+
+.headerBack {
+    padding-right: 8px;
+}
+
+.headerEmptyBack {
+    width: 40px;
+}
+
+.headerSetFeed {
+    margin-left: 5px;
+}

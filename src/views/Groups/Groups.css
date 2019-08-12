@@ -1,0 +1,17 @@
+.groupsWrapper {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  background: #e8e8e8;
+}
+
+@media screen and (max-width: 1000px) {
+  .groupsWrapper {
+    grid-template-columns: auto auto;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .groupsWrapper {
+    grid-template-columns: auto;
+  }
+}
