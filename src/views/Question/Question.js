@@ -4,7 +4,7 @@ import m from 'mithril';
 import './Question.css';
 import Header from '../Commons/Header/Header';
 import Feed from '../Commons/Feed/Feed';
-import Options from './Options/Options';
+import Options from './SubQuestions/SubQuestions';
 import Spinner from '../Commons/Spinner/Spinner';
 import Description from './SubSections/Description';
 import Modal from '../Commons/Modal/Modal';

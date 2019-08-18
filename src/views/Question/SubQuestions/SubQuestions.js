@@ -1,5 +1,5 @@
 import m from 'mithril';
-import './Options.css';
+import './SubQuestions.css';
 
 //componetns
 import Suggests from './Suggests/Suggets';
@@ -14,7 +14,7 @@ import settings from '../../../data/settings';
 
 module.exports = {
     oninit: vnode => {
-
+        console.log('init');
         vnode.state = {
             options: []
         }

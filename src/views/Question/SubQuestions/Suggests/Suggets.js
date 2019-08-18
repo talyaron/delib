@@ -1,7 +1,7 @@
 import m from 'mithril'
 
 //components
-import Option from '../Suggests/Option/Option';
+import Option from './Option/Option';
 
 module.exports = {
     view: vnode => {       
