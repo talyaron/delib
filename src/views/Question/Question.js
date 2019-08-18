@@ -4,7 +4,7 @@ import m from 'mithril';
 import './Question.css';
 import Header from '../Commons/Header/Header';
 import Feed from '../Commons/Feed/Feed';
-import Options from './SubQuestions/SubQuestions';
+import SubQuestion from './SubQuestions/SubQuestions';
 import Spinner from '../Commons/Spinner/Spinner';
 import Description from './SubSections/Description';
 import Modal from '../Commons/Modal/Modal';
@@ -16,7 +16,7 @@ import settings from '../../data/settings';
 
 
 //functions
-import { getQuestionDetails, getOptions, getSubItems, getSubQuestions } from '../../functions/firebase/get/get';
+import { getQuestionDetails, getSubQuestion, getSubItems, getSubQuestions } from '../../functions/firebase/get/get';
 import { deep_value, setWrapperHeight, setWrapperFromFooter } from '../../functions/general';
 
 
@@ -138,7 +138,7 @@ module.exports = {
                         vnode.state.subQuestions.map((subQuestion, index) => {
 
                             return (
-                                <Options
+                                <SubQuestion
                                     groupId={vnode.attrs.groupId}
                                     questionId={vnode.attrs.id}
                                     subQuestionId={subQuestion.id}
@@ -197,9 +197,9 @@ module.exports = {
 
 
 function orderBy(order, vnode) {
-    // getOptions('off', vnode.attrs.groupId, vnode.attrs.id, order);
+    // getSubQuestion('off', vnode.attrs.groupId, vnode.attrs.id, order);
 
     vnode.state.unsubscribeOptions();
-    vnode.state.unsubscribeOptions = getOptions('on', vnode.attrs.groupId, vnode.attrs.id, order);
+    vnode.state.unsubscribeOptions = getSubQuestion('on', vnode.attrs.groupId, vnode.attrs.id, order);
     vnode.state.orderBy = order
 }

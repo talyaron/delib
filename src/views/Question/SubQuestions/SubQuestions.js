@@ -5,7 +5,7 @@ import './SubQuestions.css';
 import Suggests from './Suggests/Suggets';
 import Votes from './Votes/Votes';
 
-import { getOptions } from '../../../functions/firebase/get/get';
+import { getSubQuestion } from '../../../functions/firebase/get/get';
 import settings from '../../../data/settings';
 
 
@@ -20,7 +20,7 @@ module.exports = {
         }
 
         let va = vnode.attrs;
-        getOptions(va.groupId, va.questionId, va.subQuestionId, va.orderBy, vnode);
+        getSubQuestion(va.groupId, va.questionId, va.subQuestionId, va.orderBy, vnode);
     },
     view: (vnode) => {
 
