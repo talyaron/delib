@@ -42,7 +42,20 @@ module.exports = {
                     <div
                         class='questionSectionTitle questions'
                         style={`color:${vnode.attrs.info.colors.color}; background:${vnode.attrs.info.colors.background}`}
-                    >{vnode.attrs.title}</div>
+                    >
+                        <div>{vnode.attrs.title}</div>
+                        {vnode.attrs.isAlone ?
+                            <div onclick={() => {
+                                m.route.set(`/question/${vnode.attrs.groupId}/${vnode.attrs.questionId}`)
+                            }}><img src='img/icons8-back-24.png' /></div>
+                            :
+                            <div onclick={() => {
+                                m.route.set(`/subquestions/${vnode.attrs.groupId}/${vnode.attrs.questionId}/${vnode.attrs.subQuestionId}`)
+                            }}>
+                                <img src='img/icons8-advertisement-page-24-white.png' />
+                            </div>
+                        }
+                    </div>
                     {switchProcess(vnode.state.processType, vnode)}
                     <div class='questionSectionFooter'>
                         <div

@@ -38,7 +38,7 @@ module.exports = {
     );
   },
   onbeforeupdate: vnode => {
-    
+
     if (store.subQuestions.hasOwnProperty(vnode.attrs.subQuestionId)) {
       vnode.state.details = store.subQuestions[vnode.attrs.subQuestionId] 
     }    
@@ -61,6 +61,7 @@ module.exports = {
             parentVnode={vnode}
             info={settings.subItems.options}
             processType={vnode.state.details.processType}
+            isAlone={true}
           />
         ) : (
           <Spinner />

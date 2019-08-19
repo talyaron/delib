@@ -1,0 +1,11 @@
+.questionSectionTitle {
+    border-radius: 10px 10px 0px 0px;
+    font-size: var(--textHeaderSize);
+    color: white;
+    background: #4f4dce;
+    padding: 10px;
+    box-sizing: border-box;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+}

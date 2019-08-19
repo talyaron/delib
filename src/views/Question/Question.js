@@ -149,6 +149,7 @@ module.exports = {
                                     parentVnode={vnode}
                                     info={settings.subItems.options}
                                     processType={subQuestion.processType}
+                                    isAlone={false}
                                 />
                             )
                         })
