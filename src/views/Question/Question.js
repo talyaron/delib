@@ -112,7 +112,7 @@ module.exports = {
         // vnode.state.unsubscribeValues();
     },
     view: vnode => {
-
+        
         return (
             <div>
                 <div class='headerContainer' id='questionHeadr' onclick={() => { m.route.set('/group/' + vnode.attrs.groupId) }}>

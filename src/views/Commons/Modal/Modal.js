@@ -2,7 +2,7 @@
 import m from 'mithril';
 import './Modal.css';
 
-import { createOption, createSubItem } from '../../../functions/firebase/set/set';
+import { createOption } from '../../../functions/firebase/set/set';
 
 import store from '../../../data/store';
 
@@ -63,12 +63,24 @@ module.exports = {
 
 
 function setNewInfo(vnp, vnode) {
+    console.dir(vnp)
+    //in question, questionId is called id. These is used to fix the problem
+    let questionId, subQuestionId;
+    if (vnp.hasOwnProperty('id')) {
+        questionId = vnp.attrs.id;
+        subQuestionId = vnp.state.showModal.subQuestionId;
+    } else {
+        questionId = vnp.attrs.questionId;
+        subQuestionId = vnp.attrs.subQuestionId;
+    }
 
+    console.log(questionId)
+    
 
     createOption(
         vnp.attrs.groupId,
-        vnp.attrs.id,
-        vnp.state.showModal.subQuestionId,
+        questionId,
+        subQuestionId,
         vnp.state.showModal.which,
         store.user.uid,
         vnode.state.add.title,

@@ -139,7 +139,7 @@ header {
     margin: 5px 10px;
     background: teal;
     border-radius: 5px;
-    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+    /* box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5); */
     user-select: none;
     cursor: pointer;
 }
@@ -214,56 +214,7 @@ header {
     background: var(--mainBackground);
 }
 
-/* module */
 
-.module {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0px;
-    left: 0px;
-    z-index: 100;
-    background: rgba(128, 128, 128, 0.61);
-}
-
-.moduleBox {
-    max-width: 500px;
-    margin: auto;
-    position: relative;
-    top: 20%;
-    background: white;
-    box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.459);
-    border-radius: 10px;
-    padding: 10px;
-}
-
-.moduleTitle {
-    text-align: center;
-    width: 100%;
-    color: var(--textHeader);
-    font-size: var(--textHeaderSize);
-    font-weight: var(--textHeaderWeight);
-}
-
-.moduleInputs {
-    display: flex;
-    flex-direction: column;
-}
-
-.moduleInputs>* {
-    margin-bottom: 10px;
-    resize: none;
-}
-
-.moduleDescription {
-    height: 4rem;
-}
-
-.moduleButtons {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
 
 .checkBoxes [type="checkbox"]{
     transform: scale(1.5);
