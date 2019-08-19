@@ -1,26 +1,38 @@
 import m from 'mithril';
-import './SubQuestions.css';
+
+import './SubQuestion.css';
 
 //componetns
 import Suggests from './Suggests/Suggets';
 import Votes from './Votes/Votes';
 
-import { getSubQuestion } from '../../../functions/firebase/get/get';
+//model
 import settings from '../../../data/settings';
+import store from '../../../data/store';
 
 
 //functions
+import { getSubQuestion, getSubQuestionOptions } from '../../../functions/firebase/get/get';
+import {get} from 'lodash'
 
+let unsubscribe = () => { };
+let unsubscribeOptions = () => { };
 
 module.exports = {
     oninit: vnode => {
-        console.log('init');
+      
         vnode.state = {
             options: []
         }
 
         let va = vnode.attrs;
-        getSubQuestion(va.groupId, va.questionId, va.subQuestionId, va.orderBy, vnode);
+       
+        unsubscribe = getSubQuestion(va.groupId, va.questionId, va.subQuestionId);
+        unsubscribeOptions = getSubQuestionOptions(va.groupId, va.questionId, va.subQuestionId, 'top');
+    },
+    onremove: vnode => {
+        unsubscribe();
+        unsubscribeOptions();
     },
     view: (vnode) => {
 
@@ -31,7 +43,7 @@ module.exports = {
                         class='questionSectionTitle questions'
                         style={`color:${vnode.attrs.info.colors.color}; background:${vnode.attrs.info.colors.background}`}
                     >{vnode.attrs.title}</div>
-                    {switchProcess(vnode.attrs.processType, vnode)}
+                    {switchProcess(vnode.state.processType, vnode)}
                     <div class='questionSectionFooter'>
                         <div
                             class='buttons questionSectionAddButton'
@@ -50,19 +62,25 @@ function addQuestion(vnode, type) {
 }
 
 function switchProcess(type, vnode) {
-   
+    let options = get(store, `subQuestions[${vnode.attrs.subQuestionId}].options`, []);
+  
     switch (type) {
         case settings.processes.suggestions:
             return <Suggests
                 groupId={vnode.attrs.groupId}
                 questionId={vnode.attrs.questionId}
                 subQuestionId={vnode.attrs.subQuestionId}
-                options={vnode.state.options}
+                options={options}
             />
         case settings.processes.votes:
             return <Votes />;
         default:
-            return null
+            return <Suggests
+                groupId={vnode.attrs.groupId}
+                questionId={vnode.attrs.questionId}
+                subQuestionId={vnode.attrs.subQuestionId}
+                options={options}
+            />
     }
 
 }

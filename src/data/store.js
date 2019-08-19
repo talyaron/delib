@@ -24,7 +24,8 @@ var store = {
     feed: {}, //the feed
     showFeed: false,
     numberOfNewMessages: 0,
-    subscribed: {} //subscribed entityes
+    subscribed: {}, //subscribed entityes
+    subQuestions: {}
 }
 
 module.exports = store; 

@@ -4,7 +4,7 @@ import m from 'mithril';
 import './Question.css';
 import Header from '../Commons/Header/Header';
 import Feed from '../Commons/Feed/Feed';
-import SubQuestion from './SubQuestions/SubQuestions';
+import SubQuestion from './SubQuestions/SubQuestion';
 import Spinner from '../Commons/Spinner/Spinner';
 import Description from './SubSections/Description';
 import Modal from '../Commons/Modal/Modal';
@@ -136,6 +136,7 @@ module.exports = {
                     </div>
                     {
                         vnode.state.subQuestions.map((subQuestion, index) => {
+
 
                             return (
                                 <SubQuestion

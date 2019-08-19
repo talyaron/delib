@@ -3,7 +3,7 @@ import DB from "../config";
 import store from "../../../data/store";
 
 //functions
-import {set} from 'lodash'
+import { set } from 'lodash'
 
 var unsubscribe = {};
 
@@ -159,7 +159,8 @@ function getSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
     });
 }
 
-function getSubQuestion(groupId, questionId, subQuestionId, vnode) {
+function getSubQuestion(groupId, questionId, subQuestionId) {
+
   let optionRef = DB.collection("groups")
     .doc(groupId)
     .collection("questions")
@@ -167,12 +168,17 @@ function getSubQuestion(groupId, questionId, subQuestionId, vnode) {
     .collection("subQuestions")
     .doc(subQuestionId);
 
-    return optionRef.onSnapshot(subQuestionDB=>{
-     vnode.state.details = subQuestionDB()
-     m.redraw();
-    })
+  return optionRef.onSnapshot(subQuestionDB => {
+    if (subQuestionDB.exists) {
+      set(store, `subQuestions[${subQuestionId}]`, subQuestionDB.data())
 
-    
+      m.redraw();
+    } else {
+      console.error(`subQuestion ${groupId}/${questionId}/${subQuestionId} dont exists `)
+    }
+  })
+
+
 
 }
 
@@ -180,9 +186,14 @@ function getSubQuestionOptions(
   groupId,
   questionId,
   subQuestionId,
-  order,
-  vnode
+  order 
 ) {
+  console.log(groupId,
+    questionId,
+    subQuestionId,
+    order);
+  
+  
   let optionRef = DB.collection("groups")
     .doc(groupId)
     .collection("questions")
@@ -203,7 +214,7 @@ function getSubQuestionOptions(
       orderBy = "time";
   }
 
-  let unsubscribe = optionRef
+  return optionRef
     .orderBy(orderBy, "desc")
     .limit(20)
     .onSnapshot(optionsDB => {
@@ -233,11 +244,12 @@ function getSubQuestionOptions(
         optionsArray.push(optionObj);
       });
 
-      vnode.state.options = optionsArray;
+      set(store, `subQuestions[${subQuestionId}].options`, optionsArray);
+     
       m.redraw();
     });
 
-  return unsubscribe;
+ 
 }
 
 function getOptionDetails(groupId, questionId, subQuestionId, optionId, vnode) {
@@ -361,7 +373,7 @@ function getSubItems(subItemsType, groupId, questionId, vnode) {
   unsubscribe = subItemsRef
     .orderBy("totalVotes", "desc")
     .onSnapshot(SubItemsDB => {
-      SubItemsDB.docChanges().forEach(function(change) {
+      SubItemsDB.docChanges().forEach(function (change) {
         if (change.type === "added") {
           vnode.state.subAnswersUnsb[change.doc.id] = getSubAnswers(
             groupId,
