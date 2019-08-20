@@ -63,7 +63,7 @@ module.exports = {
 
 
 function setNewInfo(vnp, vnode) {
-    console.dir(vnp)
+   
     //in question, questionId is called id. These is used to fix the problem
     let questionId, subQuestionId;
     if (vnp.hasOwnProperty('id')) {
@@ -74,7 +74,7 @@ function setNewInfo(vnp, vnode) {
         subQuestionId = vnp.attrs.subQuestionId;
     }
 
-    console.log(questionId)
+   
     
 
     createOption(

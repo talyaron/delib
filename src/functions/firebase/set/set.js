@@ -260,7 +260,7 @@ function setSubAnswer(groupId, questionId, subQuestionId, creatorId, creatorName
 //add a path ([collection1, doc1, collection2, doc2, etc])
 function addToFeed(addRemove, pathArray, refString, collectionOrDoc) {
 
-    console.log('addToFeed', addRemove)
+    
 
     if (addRemove == 'add') {
         DB.collection('users').doc(store.user.uid).collection('feeds').doc(refString)

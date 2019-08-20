@@ -57,7 +57,7 @@ module.exports = {
                         :
                         <div class='headerEmptyBack' />
                     }
-
+                    
                     <div class='headerTitle'>
                         {vnode.attrs.topic}: {vnode.attrs.title}
                     </div>

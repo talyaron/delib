@@ -1,6 +1,7 @@
 import m from "mithril";
 import DB from "../config";
 import store from "../../../data/store";
+import { Howl, Howler } from 'howler';
 
 //functions
 import { set } from 'lodash'
@@ -186,14 +187,14 @@ function getSubQuestionOptions(
   groupId,
   questionId,
   subQuestionId,
-  order 
+  order
 ) {
   console.log(groupId,
     questionId,
     subQuestionId,
     order);
-  
-  
+
+
   let optionRef = DB.collection("groups")
     .doc(groupId)
     .collection("questions")
@@ -245,11 +246,11 @@ function getSubQuestionOptions(
       });
 
       set(store, `subQuestions[${subQuestionId}].options`, optionsArray);
-     
+
       m.redraw();
     });
 
- 
+
 }
 
 function getOptionDetails(groupId, questionId, subQuestionId, optionId, vnode) {
@@ -488,6 +489,7 @@ function listenToFeeds() {
   }
 }
 
+
 function listenToFeed(path, onOff = "on") {
   let path1 = path;
   path = path.replace(/--/g, "/");
@@ -516,6 +518,16 @@ function listenToFeed(path, onOff = "on") {
             store.feed[path] = newFeed;
 
             store.numberOfNewMessages++;
+           
+           
+              console.log('play sound')
+              audio.play();
+            
+            const playPromise = audio.play()
+            // const playPromise = media.play();
+            if (playPromise !== null) {
+              playPromise.catch(() => { audio.play(); })
+            }
 
             m.redraw();
           }
