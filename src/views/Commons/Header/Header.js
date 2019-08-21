@@ -57,7 +57,7 @@ module.exports = {
 
                         <img onclick={(e) => {
                             e.stopPropagation();
-                            toggleMenu(vnode)
+                            toggleMenu(vnode);
                         }} class='headerHamburger' src='img/icons8-menu-24.png' />
                         <div class='headerTitle'>
                             {vnode.attrs.topic}: {vnode.attrs.title}
