@@ -1,3 +1,6 @@
+import m from 'mithril';
+import store from '../data/store';
+
 function deep_value(obj, path, alternativeValue) {
 
     for (var i = 0, path = path.split('.'), len = path.length; i < len; i++) {
@@ -105,7 +108,7 @@ function createRefString(refArray, collectionOrDoc) {
 }
 
 function getRandomName() {
-    return randomEl(adjectives)+randomEl(nouns)
+    return randomEl(adjectives) + randomEl(nouns)
 }
 
 var adjectives = ["Happy", "adroit", "amatory", "animistic", "antic", "arcadian", "baleful", "bellicose", "bilious", "boorish", "calamitous", "caustic", "cerulean", "comely", "concomitant", "contumacious", "corpulent", "crapulous", "defamatory", "didactic", "dilatory", "dowdy", "efficacious", "effulgent", "egregious", "endemic", "equanimous", "execrable", "fastidious", "feckless", "fecund", "friable", "fulsome", "garrulous", "guileless", "gustatory", "heuristic", "histrionic", "hubristic", "incendiary", "insidious", "insolent", "intransigent", "inveterate", "invidious", "irksome", "jejune", "jocular", "judicious", "lachrymose", "limpid", "loquacious", "luminous", "mannered", "mendacious", "meretricious", "minatory", "mordant", "munificent", "nefarious", "noxious", "obtuse", "parsimonious", "pendulous", "pernicious", "pervasive", "petulant", "platitudinous", "precipitate", "propitious", "puckish", "querulous", "quiescent", "rebarbative", "recalcitant", "redolent", "rhadamanthine", "risible", "ruminative", "sagacious", "salubrious", "sartorial", "sclerotic", "serpentine", "spasmodic", "strident", "taciturn", "tenacious", "tremulous", "trenchant", "turbulent", "turgid", "ubiquitous", "uxorious", "verdant", "voluble", "voracious", "wheedling", "withering", "zealous"];
@@ -116,4 +119,20 @@ function randomEl(list) {
     return list[i];
 }
 
-module.exports = { Reference, createRefString, msToTime, deep_value, setWrapperHeight, setWrapperFromFooter, returnUserRole, getRandomName }
+function loginIfNotRegisterd(back = 'login') {
+    //see if logged in
+
+    if (store.user.hasOwnProperty('isAnonymous')) {
+        if (store.user.isAnonymous) {
+            //need to login
+            store.lastPage = `/${back}`;
+            m.route.set('/loginGoogle');
+        }
+    } else {
+        store.lastPage = `/${back}`;
+        m.route.set('/loginGoogle');
+    }
+}
+
+
+module.exports = { Reference, createRefString, msToTime, deep_value, setWrapperHeight, setWrapperFromFooter, returnUserRole, getRandomName, loginIfNotRegisterd }

@@ -68,6 +68,7 @@ function onAuth() {
 
             console.log('User is signed out.');
             store.user = {};
+            m.redraw();
         }
 
     });

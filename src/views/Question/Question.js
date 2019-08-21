@@ -6,7 +6,7 @@ import Header from '../Commons/Header/Header';
 import Feed from '../Commons/Feed/Feed';
 import SubQuestion from './SubQuestions/SubQuestion';
 import Spinner from '../Commons/Spinner/Spinner';
-import Description from './SubSections/Description';
+import Description from './SubSection/Description';
 import Modal from '../Commons/Modal/Modal';
 
 

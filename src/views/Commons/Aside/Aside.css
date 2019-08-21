@@ -1,0 +1,38 @@
+aside {
+    width: 250px;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 56px;
+    right: -260px;
+    z-index: 3;
+    box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.5);
+    transition: all 0.5s;
+}
+
+.topAside {
+    height: 200px;
+    background: var(--mainBackground);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    font-size: 2rem;
+}
+
+.topAside>p{
+    padding-right: 10px;
+}
+
+.menuAside {
+    height: 100%;
+    background: wheat;
+}
+
+.menuAside>div {
+    border-bottom: 1px solid #c3c3c3;
+    padding: 10px;
+    cursor: pointer;
+}
+
+

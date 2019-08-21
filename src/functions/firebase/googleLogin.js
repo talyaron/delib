@@ -43,10 +43,10 @@ function anonymousLogin() {
 function logout() {
     firebase.auth().signOut()
         .then(function () {
-            // Sign-out successful.
+           console.log('logout')
         })
         .catch(function (error) {
-            // An error happened
+           console.error(error)
         });
 }
 

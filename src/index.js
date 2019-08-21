@@ -12,6 +12,7 @@ m.route.prefix('?')
 
 //Views
 import Login from "./views/Login/Login";
+import LoginGoogle from "./views/Login/LoginGoogle";
 import Logout from './views/Logout/Logout';
 import Groups from "./views/Groups/Groups";
 import GroupPage from './views/GroupPage/GroupPage';
@@ -20,8 +21,9 @@ import QuestionEdit from './views/QuestionEdit/QuestionEdit';
 import ChatPage from './views/ChatPage/ChatPage';
 import SubQuestionsPage from './views/SubQuestionsPage/SubQuestionsPage';
 
-m.route(root, "/splash", {
-    "/splash": Login,
+m.route(root, "/login", {
+    "/login": Login,
+    "/logingoogle": LoginGoogle,
     "/logout": Logout,
     "/groups": Groups,
     "/group/:id": GroupPage,

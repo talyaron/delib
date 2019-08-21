@@ -1,7 +1,7 @@
 import m from "mithril";
 import DB from "../config";
 import store from "../../../data/store";
-import { Howl, Howler } from 'howler';
+
 
 //functions
 import { set } from 'lodash'
