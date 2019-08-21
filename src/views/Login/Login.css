@@ -18,8 +18,7 @@
     color: red;
     display: flex;
     position: relative;
-    right: 50%;
-    transform: translateX(50%);
+   
 }
 
 .loginButton>div {

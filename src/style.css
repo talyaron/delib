@@ -30,8 +30,6 @@ body {
     height: 100%;
 }
 
-
-
 .wrapperAll {
     position: relative;
     margin: auto;
@@ -77,6 +75,9 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .centerInput {
@@ -201,14 +202,12 @@ body {
     background: var(--mainBackground);
 }
 
-
-
-.checkBoxes [type="checkbox"]{
+.checkBoxes [type="checkbox"] {
     transform: scale(1.5);
     margin-left: 10px;
 }
 
-.checkBoxes label{
+.checkBoxes label {
     font-size: 1.5rem;
     margin-left: 20px;
 }
