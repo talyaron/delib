@@ -12,7 +12,7 @@ import Aside from '../Aside/Aside';
 
 module.exports = {
     oninit: vnode => {
-
+       
         vnode.state = {
             previousCount: 0,
             subscribed: false,

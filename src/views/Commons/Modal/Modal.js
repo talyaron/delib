@@ -66,7 +66,8 @@ function setNewInfo(vnp, vnode) {
    
     //in question, questionId is called id. These is used to fix the problem
     let questionId, subQuestionId;
-    if (vnp.hasOwnProperty('id')) {
+    debugger;
+    if (vnp.attrs.hasOwnProperty('id')) {
         questionId = vnp.attrs.id;
         subQuestionId = vnp.state.showModal.subQuestionId;
     } else {
@@ -75,7 +76,13 @@ function setNewInfo(vnp, vnode) {
     }
 
    
-    
+    console.log(vnp.attrs.groupId,
+        questionId,
+        subQuestionId,
+        vnp.state.showModal.which,
+        store.user.uid,
+        vnode.state.add.title,
+        vnode.state.add.description)
 
     createOption(
         vnp.attrs.groupId,

@@ -20,11 +20,16 @@ module.exports = {
                         Delib
                     </div>
                     <div id='splashSubName'>
-                        מחליטים ביחד
-                    </div>
+                        <p>פעולה זאת דורשת הרשמה</p>
+                        <p>האם תרצו להרשם עם גוגל?</p>
+                        </div>
                     <div class="buttons loginButton" onclick={() => { googleLogin() }}>
                         <div>התחברות עם גוגל</div>
                         <img src='img/icons8-google.svg'></img>
+                    </div>
+                    <p>-- או --</p>
+                    <div class="buttons loginButton" onclick={() => { m.route.set(store.lastPage || '/login') }}>
+                        <div>חזרה לדף הקודם</div>                       
                     </div>
                 </div>
             </div >

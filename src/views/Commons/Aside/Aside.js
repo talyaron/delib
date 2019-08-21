@@ -19,7 +19,10 @@ module.exports = {
                     {store.user.displayName?
                         <div onclick={() => { logout() }}>התנתקות</div>
                         :
-                        <div onclick={() => { m.route.set('/logingoogle') }}>התחברות</div>
+                        <div onclick={() => {
+                            store.lastPage = m.route.get();
+                            m.route.set('/logingoogle')
+                        }}>התחברות</div>
                     }
                     <div>המכון לדמוקרטיה דיונית</div>
                     <div>תודות</div>
