@@ -89,9 +89,12 @@ function setNewInfo(vnp, vnode) {
         questionId,
         subQuestionId,
         vnp.state.showModal.which,
-        store.user.uid,
+        store.user.uid,        
         vnode.state.add.title,
-        vnode.state.add.description);
+        vnode.state.add.description,
+        store.user.displayName || 'אנונימי',
+        vnp.state.details.title || vnp.state.showModal.title
+    );
 
     vnp.state.showModal.isShow = false;
 

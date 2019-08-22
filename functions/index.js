@@ -173,17 +173,19 @@ exports.countNumbeOfMessages =
 exports.sendPushForNewOptions =
     functions.firestore
         .document('groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}')
-        .onWrite((event, context) => {
-
-            console.log(context.params.subQuestionId, 'created ne option');
+        .onWrite((change, context) => {
+            const CP = context.params;
+            const OPTION_DATA = change.after.data()
+            
 
             // Setup notification
-            // const NOTIFICATION_SNAPSHOT = event.data;
+            
             const payload = {
                 notification: {
-                    title: `New option created`,
-                    body: 'New option created Body',
-                    icon: 'https://upload.wikimedia.org/wikipedia/commons/f/f2/Kakao_logo.jpg'
+                    title: `הצעה חדשה: ${OPTION_DATA.title}`,
+                    body: `${OPTION_DATA.creatorName} מציע ש ${OPTION_DATA.title} \nהיא תשובה טובה ל-\n ${OPTION_DATA.subQuestionTitle}`,
+                    icon: 'https://delib.tech/img/logo-192.png',
+                    click_action: `https://delib.tech/?/subquestions/${CP.groupId}/${CP.questionId}/${CP.subQuestionId}`
 
                 }
             }
@@ -225,22 +227,9 @@ exports.sendPushForNewOptions =
                 const tokens = [];
                 let counter = 0;
                 tokensDB.forEach(tokenDb => {
-                    tokens.push(tokenDb.data().token)
-                    // tokensWithKey.push({
-                    //     token: snapshot[key].token,
-                    //     key: key
-                    // });
+                    tokens.push(tokenDb.data().token)                    
                 })
-                // for (let key in snapshot) {
-                //     tokens.push(snapshot[key].token);
-                //     tokensWithKey.push({
-                //         token: snapshot[key].token,
-                //         key: key
-                //     });
-                // }
-                console.log(tokens);
-                console.log(payload);
-
+               
                 return admin.messaging().sendToDevice(tokens, payload)
                 // .then((response) => cleanInvalidTokens(tokensWithKey, response.results))
                 // .then(() => admin.database().ref('/notifications').child(NOTIFICATION_SNAPSHOT.key).remove())

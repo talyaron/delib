@@ -114,8 +114,8 @@ function setSubQuestionsOrder(groupId, questionId, subQuestionId, order) {
 
 
 
-function createOption(groupId, questionId, subQuestionId, type, creatorId, title, description) {
-    console.log(groupId, questionId, subQuestionId, type, creatorId, title, description)
+function createOption(groupId, questionId, subQuestionId, type, creatorId, title, description, creatorName, subQuestionTitle) {
+    console.log(groupId, questionId, subQuestionId, type, creatorId, title, description, creatorName, subQuestionTitle)
     let optionRef = DB.collection('groups').doc(groupId)
         .collection('questions').doc(questionId)
         .collection('subQuestions').doc(subQuestionId)
@@ -128,6 +128,8 @@ function createOption(groupId, questionId, subQuestionId, type, creatorId, title
         type,
         title,
         description,
+        creatorName,
+        subQuestionTitle,
         time: firebase.firestore.FieldValue.serverTimestamp(),
         consensusPrecentage: 0
     }).then(newOption => {
