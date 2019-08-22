@@ -9,18 +9,22 @@ import Votes from './Votes/Votes';
 //model
 import settings from '../../../data/settings';
 import store from '../../../data/store';
+import { EntityModel } from '../../../data/dataTypes';
 
 
 //functions
 import { getSubQuestion, getSubQuestionOptions } from '../../../functions/firebase/get/get';
+import { subscribeToNotification, unsubscribeFromNotification } from "../../../functions/firebase/messaging";
 import { get } from 'lodash'
 
 let unsubscribe = () => { };
 let unsubscribeOptions = () => { };
+let subQuestionObj;
 
 module.exports = {
     oninit: vnode => {
-
+        subQuestionObj = new EntityModel('subQuestion', vnode.attrs.groupId, vnode.attrs.questionId, vnode.attrs.subQuestionId);
+        console.dir(subQuestionObj)
         vnode.state = {
             options: []
         }
@@ -35,7 +39,7 @@ module.exports = {
         unsubscribeOptions();
     },
     view: (vnode) => {
-
+        console.log(vnode.attrs.subQuestionId, store.push.includes(vnode.attrs.subQuestionId))
         return (
             <div class='wrapper' id='optionsWrapper' >
                 <div class='questionSection'>
@@ -49,16 +53,16 @@ module.exports = {
                                 :
                                 <div />
                             }
-                            {!store.push.subQuestions.hasOwnProperty(vnode.attrs.subQuestionId) ?
-                                < div
-                                    class='buttons buttonOutlineWhite'
-                                    onclick={() => { subscribeToNotification('subQuestions', vnode.attrs.subQuestionId) }}
-                                >הרשמה לעדכונים</div>
-                                :
+                            {store.push.includes(vnode.attrs.subQuestionId) ?      
                                 <div
                                     class='buttons buttonOutlineWhite'
-                                    onclick={() => { unsubscribeFromNotification(store.user.uid) }}
+                                    onclick={() => { unsubscribeFromNotification(vnode.attrs.subQuestionId) }}
                                 >ביטול עדכונים</div>
+                                :
+                                < div
+                                    class='buttons buttonOutlineWhite'
+                                    onclick={() => { subscribeToNotification(vnode.attrs.subQuestionId) }}
+                                >הרשמה לעדכונים</div>
                             }
                         </div>
                         {vnode.attrs.isAlone ?

@@ -189,11 +189,7 @@ function getSubQuestionOptions(
   subQuestionId,
   order
 ) {
-  console.log(groupId,
-    questionId,
-    subQuestionId,
-    order);
-
+  
 
   let optionRef = DB.collection("groups")
     .doc(groupId)
@@ -517,10 +513,8 @@ function listenToFeed(path, onOff = "on") {
             //add feed-inputs to feed
             store.feed[path] = newFeed;
 
-            store.numberOfNewMessages++;
-           
-           
-              console.log('play sound')
+            store.numberOfNewMessages++;  
+              
               audio.play();
             
             const playPromise = audio.play()

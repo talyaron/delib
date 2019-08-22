@@ -1,5 +1,10 @@
+import m from 'mithril';
+
 import DB from './config';
+
+//model
 import store from '../../data/store';
+import { EntityModel } from '../../data/dataTypes';
 
 // Retrieve Firebase Messaging object.
 const MESSAGING = firebase.messaging();
@@ -7,15 +12,28 @@ const MESSAGING = firebase.messaging();
 // Add the public key generated from the console here.
 MESSAGING.usePublicVapidKey("BOXKnicJW5Cu3xwRG7buXf-JU8tS-AErJX_Ax7CsUwqZQvBvo2E-ECnE-uGvUKcgeL-1nT-cJw8qGo4dH-zrfGA");
 
+// update which eneties are subscribes
+function getSubscriptions() {
+    DB.collection('tokens').doc(store.user.uid).onSnapshot(userTokenDB => {
+        if (userTokenDB.exists && userTokenDB.data().pushEntities) {
+            store.push = userTokenDB.data().pushEntities;
+            console.dir(store.push)
+            m.redraw();
+        }
+    })
+}
 
-exports.subscribeToNotification = (entityObj, entityId) => {
+function subscribeToNotification(entityId){
+    
+
     try {
-        
+
+        // if(Object.prototype.toString().call() !== [Object ])
         MESSAGING.requestPermission()
             .then(function () {
                 console.log('Notification permission granted.');
-                handleTokenRefresh()
-                
+                handleTokenRefresh(entityId)
+
             })
 
             .catch(function (err) {
@@ -26,27 +44,31 @@ exports.subscribeToNotification = (entityObj, entityId) => {
     }
 }
 
-exports.unsubscribeFromNotification = (entity, entityId) => {
-    console.log('unsubscribeFromNotification')
+function unsubscribeFromNotification (entityId) {
+    console.log('unsubscribeFromNotification', entityId)
     // delete store.push[entity][entityId]
-    console.dir(store)
-    delete store.push[entity][entityId];
+    
+    
 
     MESSAGING.getToken()
         .then(token => {
             MESSAGING.deleteToken(token)
         })
         .then(() => {
-            DB.collection('tokens')
-                .where('userId', '==', store.user.uid)
+            DB.collection('tokens').doc(store.user.uid)               
                 .get()
-                .then(tokensDB => {
-                    tokensDB.forEach(tokenDB => {
-                        tokenDB.delete();
-                       
-                    })
+                .then(userTokenDB => {
+                    if (userTokenDB.exists && userTokenDB.data().pushEntities) {
+                        let entitiesSet = new Set(userTokenDB.data().pushEntities);
+                        entitiesSet.delete(entityId);
+                        console.dir(entitiesSet)
+                        let entitiesArray = new Array(...entitiesSet);
+
+                        DB.collection('tokens').doc(store.user.uid).update({ pushEntities: entitiesArray})
+                    }
+                   
                 })
-                
+
 
         })
 }
@@ -61,18 +83,47 @@ MESSAGING.onMessage(function (payload) {
     // ...
 });
 
-function handleTokenRefresh() {
-    return MESSAGING.getToken().then(token => {
-        console.log(token);
-       
-        DB.collection("tokens").add({
-            token,
-            userId: store.user.uid
-        }).then(() => {
-            console.log('token saved to DB')
+function handleTokenRefresh(entityId) {
 
-        }).catch(err => {
-            console.log(err);
-        })
+
+    return MESSAGING.getToken().then(token => {
+        const tokenRef = DB.collection("tokens").doc(store.user.uid);
+
+        tokenRef.get()
+            .then(docDB => {
+
+                const tokenObj = {
+                    token,
+                    userId: store.user.uid
+                }
+
+                if (docDB.exists) {
+                    //if token exists 
+                    
+                    if (typeof entityId == 'string') {
+                        //if new entity subscribed, add it to pushentities array under token
+
+                        let tokenSet = new Set(docDB.data().pushEntities);
+                        tokenSet.add(entityId);
+                        tokenObj.pushEntities = new Array(...tokenSet);
+                    }
+
+                    tokenRef.update(tokenObj)
+                } else {
+                    if (typeof entityId == 'string') {
+                        tokenObj.pushEntities = [entityId]
+                    }
+                    tokenRef.set(tokenObj);
+                }
+            })
+            .then(() => {
+                console.log('token saved to DB')
+
+            }).catch(err => {
+                console.log(err);
+            })
     })
+
 }
+
+module.exports = { getSubscriptions, subscribeToNotification,unsubscribeFromNotification };

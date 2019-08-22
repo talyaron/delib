@@ -5,6 +5,7 @@ import DB from '../firebase/config';
 //functions
 import { listenToFeeds } from '../firebase/get/get';
 import { getRandomName } from '../general';
+import { getSubscriptions } from '../firebase/messaging';
 
 function AnonymousLogin() {
     firebase.auth().signInAnonymously().catch(function (error) {
@@ -20,6 +21,7 @@ function onAuth() {
         store.user = user;
 
         if (user) {
+            getSubscriptions();
             console.dir(user)
             console.log('User', store.user.uid, 'is signed in.');
             if (!user.isAnonymous) {
@@ -32,6 +34,7 @@ function onAuth() {
                 }
 
                 listenToFeeds();
+                
 
                 DB.collection("users").doc(user.uid).set(userSimpleObj).then(function () {
 
@@ -68,6 +71,7 @@ function onAuth() {
 
             console.log('User is signed out.');
             store.user = {};
+            store.push = [false];
             m.redraw();
         }
 

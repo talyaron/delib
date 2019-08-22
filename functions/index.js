@@ -5,6 +5,7 @@ const db = admin.firestore();
 const settings = { timestampsInSnapshots: true };
 db.settings(settings);
 
+/*  ====== Votes ====== */
 
 
 exports.totalVotes = functions.firestore
@@ -127,77 +128,7 @@ exports.totalLikesForSubQuestion = functions.firestore
         })
     })
 
-// exports.totalLikesForQuestionsGoals = functions.firestore
-//     .document('groups/{groupId}/questions/{questionId}/goals/{subGoalId}/likes/{userId}')
-//     .onUpdate((change, context) => {
-//         var newLike = change.after.data().like;
-//         var previousLike = 0;
-//         if (change.before.data() !== undefined) {
-//             previousLike = change.before.data().like;
-//         }
-
-//         var like = newLike - previousLike;
-
-//         var subGoalLikesRef = db.collection('groups').doc(context.params.groupId)
-//             .collection('questions').doc(context.params.questionId)
-//             .collection('goals').doc(context.params.subGoalId);
-
-
-//         return db.runTransaction(transaction => {
-//             return transaction.get(subGoalLikesRef).then(subGoalDoc => {
-//                 // Compute new number of ratings
-//                 var totalVotes = 0;
-//                 if (subGoalDoc.data().totalVotes !== undefined) {
-//                     totalVotes = subGoalDoc.data().totalVotes + like;
-//                 } else {
-//                     totalVotes = like;
-//                 }
-
-//                 // Update restaurant info
-//                 return transaction.update(subGoalLikesRef, {
-//                     totalVotes
-
-//                 });
-//             })
-//         })
-//     })
-
-
-// exports.totalLikesForQuestionsValues = functions.firestore
-//     .document('groups/{groupId}/questions/{questionId}/values/{subValueId}/likes/{userId}')
-//     .onUpdate((change, context) => {
-//         var newLike = change.after.data().like;
-//         var previousLike = 0;
-//         if (change.before.data() !== undefined) {
-//             previousLike = change.before.data().like;
-//         }
-
-//         var like = newLike - previousLike;
-
-//         var subValueLikesRef = db.collection('groups').doc(context.params.groupId)
-//             .collection('questions').doc(context.params.questionId)
-//             .collection('values').doc(context.params.subValueId);
-
-
-//         return db.runTransaction(transaction => {
-//             return transaction.get(subValueLikesRef).then(subGoalDoc => {
-//                 // Compute new number of ratings
-//                 var totalVotes = 0;
-//                 if (subGoalDoc.data().totalVotes !== undefined) {
-//                     totalVotes = subGoalDoc.data().totalVotes + like;
-//                 } else {
-//                     totalVotes = like;
-//                 }
-
-//                 // Update restaurant info
-//                 return transaction.update(subValueLikesRef, {
-//                     totalVotes
-
-//                 });
-//             })
-//         })
-//     })
-
+// ========== Messages ============
 
 exports.countNumbeOfMessages =
     functions.firestore.document('groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}/messages/{messageId}')
@@ -235,3 +166,8 @@ exports.countNumbeOfMessages =
             }
 
         });
+
+
+// ========= push notifications
+
+

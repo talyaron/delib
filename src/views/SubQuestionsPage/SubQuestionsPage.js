@@ -13,8 +13,8 @@ import Spinner from '../Commons/Spinner/Spinner';
 
 //functions
 import { getSubQuestion } from "../../functions/firebase/get/get";
-import { subscribeToNotification, unsubscribeFromNotification } from "../../functions/firebase/messaging";
-import { set } from 'lodash';
+
+
 
 let unsubscribe = () => { };
 
@@ -59,7 +59,7 @@ module.exports = {
     unsubscribe();
   },
   view: vnode => {
-    console.info(store.push.subQuestions.hasOwnProperty(vnode.attrs.subQuestionId))
+   
     return (
       <div>
         {vnode.state.details.title ? (
