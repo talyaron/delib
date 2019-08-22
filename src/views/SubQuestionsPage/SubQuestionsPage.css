@@ -1,0 +1,13 @@
+.subQuestionHeader {
+    background: #3248af;
+    color: white;
+    display: flex;
+    justify-content: space-around;
+    
+}
+
+.subQuestionHeader>.title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

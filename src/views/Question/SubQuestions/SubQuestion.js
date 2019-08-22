@@ -13,20 +13,20 @@ import store from '../../../data/store';
 
 //functions
 import { getSubQuestion, getSubQuestionOptions } from '../../../functions/firebase/get/get';
-import {get} from 'lodash'
+import { get } from 'lodash'
 
 let unsubscribe = () => { };
 let unsubscribeOptions = () => { };
 
 module.exports = {
     oninit: vnode => {
-      
+
         vnode.state = {
             options: []
         }
 
         let va = vnode.attrs;
-       
+
         unsubscribe = getSubQuestion(va.groupId, va.questionId, va.subQuestionId);
         unsubscribeOptions = getSubQuestionOptions(va.groupId, va.questionId, va.subQuestionId, 'top');
     },
@@ -43,7 +43,24 @@ module.exports = {
                         class='questionSectionTitle questions'
                         style={`color:${vnode.attrs.info.colors.color}; background:${vnode.attrs.info.colors.background}`}
                     >
-                        <div>{vnode.attrs.title}</div>
+                        <div>
+                            {!vnode.attrs.isAlone ?
+                                <div>{vnode.attrs.title}</div>
+                                :
+                                <div />
+                            }
+                            {!store.push.subQuestions.hasOwnProperty(vnode.attrs.subQuestionId) ?
+                                < div
+                                    class='buttons buttonOutlineWhite'
+                                    onclick={() => { subscribeToNotification('subQuestions', vnode.attrs.subQuestionId) }}
+                                >הרשמה לעדכונים</div>
+                                :
+                                <div
+                                    class='buttons buttonOutlineWhite'
+                                    onclick={() => { unsubscribeFromNotification(store.user.uid) }}
+                                >ביטול עדכונים</div>
+                            }
+                        </div>
                         {vnode.attrs.isAlone ?
                             <div onclick={() => {
                                 m.route.set(`/question/${vnode.attrs.groupId}/${vnode.attrs.questionId}`)
@@ -76,7 +93,7 @@ function addQuestion(vnode, type) {
 
 function switchProcess(type, vnode) {
     let options = get(store, `subQuestions[${vnode.attrs.subQuestionId}].options`, []);
-  
+
     switch (type) {
         case settings.processes.suggestions:
             return <Suggests

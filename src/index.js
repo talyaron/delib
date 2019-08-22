@@ -4,11 +4,18 @@ import './style.css';
 
 //functions
 import './functions/firebase/config';
+import './functions/firebase/messaging';
 import { onAuth } from './functions/firebase/firebaseAuth';
 import { logout } from './functions/firebase/googleLogin';
 onAuth();
 window.logout = logout;
-m.route.prefix('?')
+m.route.prefix('?');
+
+//model
+import { EntityModel } from './data/dataTypes';
+
+let sEnt = new EntityModel('', 'aa', 'aa');
+console.dir(sEnt);
 
 //Views
 import Login from "./views/Login/Login";

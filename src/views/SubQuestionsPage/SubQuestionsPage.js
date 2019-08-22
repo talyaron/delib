@@ -1,14 +1,19 @@
 import m from "mithril";
+
+//model
 import store from "../../data/store";
 import settings from '../../data/settings';
 
+
 //components
+import './SubQuestionsPage.css'
 import SubQuestion from "../Question/SubQuestions/SubQuestion";
 import Modal from '../Commons/Modal/Modal';
 import Spinner from '../Commons/Spinner/Spinner';
 
 //functions
 import { getSubQuestion } from "../../functions/firebase/get/get";
+import { subscribeToNotification, unsubscribeFromNotification } from "../../functions/firebase/messaging";
 import { set } from 'lodash';
 
 let unsubscribe = () => { };
@@ -54,10 +59,14 @@ module.exports = {
     unsubscribe();
   },
   view: vnode => {
+    console.info(store.push.subQuestions.hasOwnProperty(vnode.attrs.subQuestionId))
     return (
       <div>
         {vnode.state.details.title ? (
           <div>
+            <div class='headers subQuestionHeader'>
+              <div class='title'>{vnode.state.details.title}</div>              
+            </div>
             <SubQuestion
               groupId={vnode.attrs.groupId}
               questionId={vnode.attrs.questionId}

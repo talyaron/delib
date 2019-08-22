@@ -3,8 +3,6 @@ import config from '../../../configKey';
 firebase.initializeApp(config);
 const DB = firebase.firestore();
 // window.db = DB;
-DB.settings({
-    timestampsInSnapshots: true
-});
+DB.settings({});
 
 module.exports = DB;

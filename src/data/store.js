@@ -26,7 +26,10 @@ var store = {
     showFeed: false,
     numberOfNewMessages: 0,
     subscribed: {}, //subscribed entityes
-    subQuestions: {}
+    subQuestions: {},
+    push: {
+        subQuestions:{}
+    }
 }
 
 module.exports = store; 
