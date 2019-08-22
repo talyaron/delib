@@ -9,8 +9,16 @@ import { EntityModel } from '../../data/dataTypes';
 // Retrieve Firebase Messaging object.
 const MESSAGING = firebase.messaging();
 
+
 // Add the public key generated from the console here.
 MESSAGING.usePublicVapidKey("BOXKnicJW5Cu3xwRG7buXf-JU8tS-AErJX_Ax7CsUwqZQvBvo2E-ECnE-uGvUKcgeL-1nT-cJw8qGo4dH-zrfGA");
+
+
+    // DB.collectionGroup('options').get().then(dataDB => {
+    //     dataDB.forEach(datumDb => {
+    //         console.dir(datumDb.ref.path)
+    //     })
+    // })
 
 // update which eneties are subscribes
 function getSubscriptions() {

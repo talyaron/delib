@@ -164,10 +164,88 @@ exports.countNumbeOfMessages =
                     return true;
                 }).catch(err => { console.log(err) });
             }
+            return;
 
         });
 
 
-// ========= push notifications
+// ========= push notifications =======
+exports.sendPushForNewOptions =
+    functions.firestore
+        .document('groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}')
+        .onWrite((event, context) => {
 
+            console.log(context.params.subQuestionId, 'created ne option');
+
+            // Setup notification
+            // const NOTIFICATION_SNAPSHOT = event.data;
+            const payload = {
+                notification: {
+                    title: `New option created`,
+                    body: 'New option created Body',
+                    icon: 'https://upload.wikimedia.org/wikipedia/commons/f/f2/Kakao_logo.jpg'
+
+                }
+            }
+
+            // Clean invalid tokens
+            function cleanInvalidTokens(tokensWithKey, results) {
+
+                const invalidTokens = [];
+
+                results.forEach((result, i) => {
+                    if (!result.error) return;
+
+                    console.error('Failure sending notification to', tokensWithKey[i].token, result.error);
+
+                    switch (result.error.code) {
+                        case "messaging/invalid-registration-token":
+                        case "messaging/registration-token-not-registered":
+                            invalidTokens.push(admin.database().ref('/tokens').child(tokensWithKey[i].key).remove());
+                            break;
+                        default:
+                            break;
+                    }
+                });
+
+                return Promise.all(invalidTokens);
+            }
+
+            // 
+            return db.collection('tokens')
+                .where('pushEntities', "array-contains", context.params.subQuestionId)
+                .get().then(tokensDB => {
+
+                
+                if (tokensDB.size === 0) return;
+
+                // const snapshot = tokensDB.data();
+                const snapshot = [];
+                const tokensWithKey = [];
+                const tokens = [];
+                let counter = 0;
+                tokensDB.forEach(tokenDb => {
+                    tokens.push(tokenDb.data().token)
+                    // tokensWithKey.push({
+                    //     token: snapshot[key].token,
+                    //     key: key
+                    // });
+                })
+                // for (let key in snapshot) {
+                //     tokens.push(snapshot[key].token);
+                //     tokensWithKey.push({
+                //         token: snapshot[key].token,
+                //         key: key
+                //     });
+                // }
+                console.log(tokens);
+                console.log(payload);
+
+                return admin.messaging().sendToDevice(tokens, payload)
+                // .then((response) => cleanInvalidTokens(tokensWithKey, response.results))
+                // .then(() => admin.database().ref('/notifications').child(NOTIFICATION_SNAPSHOT.key).remove())
+            }).catch(err => {
+                console.log('Error2:', err)
+            });
+        })
 

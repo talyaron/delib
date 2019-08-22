@@ -66,7 +66,7 @@ function setNewInfo(vnp, vnode) {
    
     //in question, questionId is called id. These is used to fix the problem
     let questionId, subQuestionId;
-    debugger;
+    
     if (vnp.attrs.hasOwnProperty('id')) {
         questionId = vnp.attrs.id;
         subQuestionId = vnp.state.showModal.subQuestionId;

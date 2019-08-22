@@ -39,7 +39,7 @@ module.exports = {
         unsubscribeOptions();
     },
     view: (vnode) => {
-        console.log(vnode.attrs.subQuestionId, store.push.includes(vnode.attrs.subQuestionId))
+       
         return (
             <div class='wrapper' id='optionsWrapper' >
                 <div class='questionSection'>

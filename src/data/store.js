@@ -27,9 +27,7 @@ var store = {
     numberOfNewMessages: 0,
     subscribed: {}, //subscribed entityes
     subQuestions: {},
-    push: {
-        subQuestions:{}
-    }
+    push: []
 }
 
 module.exports = store; 
