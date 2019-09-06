@@ -14,12 +14,6 @@ const MESSAGING = firebase.messaging();
 MESSAGING.usePublicVapidKey("BOXKnicJW5Cu3xwRG7buXf-JU8tS-AErJX_Ax7CsUwqZQvBvo2E-ECnE-uGvUKcgeL-1nT-cJw8qGo4dH-zrfGA");
 
 
-    // DB.collectionGroup('options').get().then(dataDB => {
-    //     dataDB.forEach(datumDb => {
-    //         console.dir(datumDb.ref.path)
-    //     })
-    // })
-
 // update which eneties are subscribes
 function getSubscriptions() {
     DB.collection('tokens').doc(store.user.uid).onSnapshot(userTokenDB => {
@@ -31,8 +25,7 @@ function getSubscriptions() {
     })
 }
 
-function subscribeToNotification(entityId){
-    
+function subscribeToNotification(entityId){    
 
     try {
 

@@ -14,8 +14,17 @@ m.route.prefix('?');
 //model
 import { EntityModel } from './data/dataTypes';
 
-let sEnt = new EntityModel('', 'aa', 'aa');
-console.dir(sEnt);
+let nativeURL = window.document.URL;
+//deal with facebook additions of url
+if (nativeURL.includes('&')) {
+    let indexAnd = nativeURL.indexOf('&');
+    let indexQuestion = nativeURL.indexOf('?');   
+
+    nativeURL = nativeURL.slice(indexQuestion + 2, indexAnd);
+   
+    window.history.pushState(null, 'test', `/?/${nativeURL}`);
+    
+}
 
 //Views
 import Login from "./views/Login/Login";
