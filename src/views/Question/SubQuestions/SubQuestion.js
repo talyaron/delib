@@ -25,6 +25,15 @@ module.exports = {
             options: []
         }
 
+        //get user before login to page
+        store.lastPage = '/subquestions/' + vnode.attrs.groupId + '/' + vnode.attrs.questionId + '/' + vnode.attrs.subQuestionId;
+        sessionStorage.setItem('lastPage', store.lastPage);
+
+        //check to see if user logged in
+        if (store.user.uid == undefined) {
+            m.route.set('/login');           
+        } 
+
         let va = vnode.attrs;
        
         unsubscribe = getSubQuestion(va.groupId, va.questionId, va.subQuestionId);

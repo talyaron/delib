@@ -22,19 +22,19 @@ module.exports = {
                     </div>
                     <div id='splashSubName'>
                         מחליטים ביחד
-                    </div>
-                    <div class="buttons loginButton" onclick={() => { googleLogin() }}>
-                        <div>התחברות עם גוגל</div>
-                        <img src='img/icons8-google.svg'></img>
-                    </div>
-                    <p> -- או -- </p>
+                    </div>                   
+                   
                     <div class='anonymousLogin'>
                         <input type='text' class='inputLogin' onkeyup={e => store.userTempName = e.target.value} placeholder='רשמו כינוי' />
                         <div class="buttons loginButton" onclick={() => { anonymousLogin() }}>
                             <div>התחברות עם משתמש זמני</div>
                         </div>
                     </div>
-
+                    <p> -- או -- </p>
+                    <div class="buttons loginButton" onclick={() => { googleLogin() }}>
+                        <div>התחברות עם גוגל</div>
+                        <img src='img/icons8-google.svg'></img>
+                    </div>
                 </div>
             </div >
         )

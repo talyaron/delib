@@ -23,9 +23,7 @@ import { deep_value, setWrapperHeight, setWrapperFromFooter } from '../../functi
 module.exports = {
     oninit: vnode => {
 
-        //get user before login to page
-        store.lastPage = '/question/' + vnode.attrs.groupId + '/' + vnode.attrs.id;
-        sessionStorage.setItem('lastPage', store.lastPage);
+        
 
 
         vnode.state = {
@@ -61,6 +59,10 @@ module.exports = {
                 registered: false
             }
         }
+
+        //get user before login to page
+        store.lastPage = '/question/' + vnode.attrs.groupId + '/' + vnode.attrs.id;
+        sessionStorage.setItem('lastPage', store.lastPage);
 
         //check to see if user logged in
         if (store.user.uid == undefined) {
