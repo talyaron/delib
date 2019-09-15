@@ -115,7 +115,7 @@ function setSubQuestionsOrder(groupId, questionId, subQuestionId, order) {
 
 
 function createOption(groupId, questionId, subQuestionId, type, creatorId, title, description, moreText, moreURL) {
-  debugger;
+ 
     let optionRef = DB.collection('groups').doc(groupId)
         .collection('questions').doc(questionId)
         .collection('subQuestions').doc(subQuestionId)
@@ -293,13 +293,19 @@ function addToFeed(addRemove, pathArray, refString, collectionOrDoc) {
 
 function updateOption(vnode) {
 
+    
+
     DB.collection('groups').doc(vnode.attrs.groupId)
         .collection('questions').doc(vnode.attrs.questionId)
         .collection('subQuestions').doc(vnode.attrs.subQuestionId)
         .collection('options').doc(vnode.attrs.optionId)
         .update({
             title: vnode.state.title,
-            description: vnode.state.description
+            description: vnode.state.description,
+            more:{
+                text:vnode.state.more.text||'',
+                URL: vnode.state.more.URL||'',
+            }
         })
 }
 
