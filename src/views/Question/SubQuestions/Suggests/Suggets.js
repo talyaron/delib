@@ -10,7 +10,7 @@ module.exports = {
         return (
             <div>
                 {vnode.attrs.options.map((option, index) => {
-                    console.dir(option)
+                   
                     return <Option
                         groupId={vnode.attrs.groupId}
                         questionId={vnode.attrs.questionId}
@@ -23,7 +23,7 @@ module.exports = {
                         consensusPrecentage={option.consensusPrecentage}
                         messagesCounter={option.numberOfMessages}
                         more={option.more}
-                        key={index}
+                        key={option.id}
                     />
                 })
                 }

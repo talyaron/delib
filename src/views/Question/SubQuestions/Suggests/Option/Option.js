@@ -27,7 +27,7 @@ module.exports = {
         offsetLeft: 0
       },
       isEdit: false,
-      more: vnode.attrs.more
+      more: vnode.attrs.more || { text: "", URL: "" }
     };
 
     vnode.state.title = vnode.attrs.title;
@@ -170,7 +170,7 @@ module.exports = {
                 />
               )}
             </div>
-            {vnode.state.more !== undefined ? (
+            {vnode.state.more.text.length > 0 ? (
               <div>
                 {!vnode.state.isEdit ? (
                   <a
@@ -183,6 +183,7 @@ module.exports = {
                 ) : (
                   <div class="cardTitle">
                     <input
+                      placeholder="טקסט"
                       type="text"
                       oninput={e => {
                         vnode.state.more.text = e.target.value;
@@ -191,6 +192,7 @@ module.exports = {
                     ></input>
                     <input
                       type="url"
+                      placeholder="URL"
                       oninput={e => {
                         vnode.state.more.URL = e.target.value;
                       }}
@@ -200,7 +202,30 @@ module.exports = {
                 )}
               </div>
             ) : (
-              <div />
+              <div>
+                {!vnode.state.isEdit ? (
+                  <div />
+                ) : (
+                  <div class="cardTitle">
+                    <input
+                      type="text"
+                      oninput={e => {
+                        vnode.state.more.text = e.target.value;
+                      }}
+                      placeholder="טקסט"
+                      value={vnode.state.more.text}
+                    ></input>
+                    <input
+                      type="url"
+                      oninput={e => {
+                        vnode.state.more.URL = e.target.value;
+                      }}
+                      placeholder="URL"
+                      value={vnode.state.more.URL}
+                    ></input>
+                  </div>
+                )}
+              </div>
             )}
           </div>
           <div
