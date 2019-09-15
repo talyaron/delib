@@ -26,7 +26,8 @@ var store = {
     showFeed: false,
     numberOfNewMessages: 0,
     subscribed: {}, //subscribed entityes
-    subQuestions: {}
+    subQuestions: {},
+    editEntity: false
 }
 
 module.exports = store; 

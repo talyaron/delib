@@ -3,26 +3,30 @@ import m from 'mithril';
 import { deep_value, setWrapperHeight } from '../../functions/general';
 import store from '../../data/store';
 
+
+//components
 import './GroupPage.css';
 import Group from './Group/Group';
 import Header from '../Commons/Header/Header';
 import Feed from '../Commons/Feed/Feed';
+import Edit from '../Commons/Edit/Edit';
 
 
 //functions
 import { createQuestion } from '../../functions/firebase/set/set';
 import { getQuestions, getGroupDetails } from '../../functions/firebase/get/get';
+import { setLastPage } from '../../functions/general';
 
 module.exports = {
     oninit: vnode => {
-        store.lastPage = '/group/' + vnode.attrs.id;
-        sessionStorage.setItem('lastPage', store.lastPage)
+        setLastPage();
 
         vnode.state = {
             add: {
                 title: '',
                 description: ''
             },
+            edit:true,
             addQuestion: false,
             questions: [],
             unsubscribe: {},
@@ -56,6 +60,7 @@ module.exports = {
         vnode.state.undbGroupDetails();
     },
     view: vnode => {
+       
         return (
             <div class='page'>
                 <Header

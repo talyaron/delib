@@ -24,10 +24,18 @@ module.exports = {
                             m.route.set('/logingoogle')
                         }}>התחברות</div>
                     }
+                    <div onclick={(e) => { editPage(e,vnode)}}>עריכת הדף</div>
                     <div>המכון לדמוקרטיה דיונית</div>
                     <div>תודות</div>
                 </div>
             </aside>
         )
     }
+}
+
+function editPage(e,vnode) {
+    e.stopPropagation();
+    console.log(m.route.param())
+    store.editEntity = m.route.param();
+    store.editEntity['entity']
 }

@@ -20,6 +20,9 @@ import Question from './views/Question/Question';
 import QuestionEdit from './views/QuestionEdit/QuestionEdit';
 import ChatPage from './views/ChatPage/ChatPage';
 import SubQuestionsPage from './views/SubQuestionsPage/SubQuestionsPage';
+import Edit from './views/Commons/Edit/Edit';
+
+
 
 let nativeURL = window.document.URL;
 //deal with facebook additions of url
@@ -33,16 +36,19 @@ if (nativeURL.includes('&')) {
 
 }
 
+
+
 m.route(root, "/login", {
     "/login": Login,
     "/logingoogle": LoginGoogle,
     "/logout": Logout,
     "/groups": Groups,
     "/group/:id": GroupPage,
-    '/question/:groupId/:id': Question,
+    '/question/:groupId/:questionId': Question,
     "/questionEdit/:groupId/:questionId": QuestionEdit,
     '/optionchat/:groupId/:questionId/:subQuestionId/:optionId': ChatPage,
-    "/subquestions/:groupId/:questionId/:subQuestionId": SubQuestionsPage
+    "/subquestions/:groupId/:questionId/:subQuestionId": SubQuestionsPage,
+    "/edit":Edit
 
 })
 

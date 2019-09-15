@@ -16,9 +16,7 @@ let unsubscribe = () => { };
 module.exports = {
   oninit: vnode => {
     //get user before login to page
-    store.lastPage = `/subquestions/${vnode.attrs.groupId}/${
-      vnode.attrs.questionId
-      }/${vnode.attrs.subQuestionId}`;
+    store.lastPage = `/subquestions/${vnode.attrs.groupId}/${vnode.attrs.questionId}/${vnode.attrs.subQuestionId}`;
     sessionStorage.setItem("lastPage", store.lastPage);
 
     vnode.state = {
