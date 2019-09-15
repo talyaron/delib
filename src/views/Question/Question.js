@@ -48,7 +48,7 @@ module.exports = {
             subAnswersUnsb: {}, //used to unsubscribe
             showModal: {
                 isShow: false,
-                which: ''
+                which: 'subQuestion'
             },
             unsbscribe: {
                 subQuestions: {}

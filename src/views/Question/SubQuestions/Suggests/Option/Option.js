@@ -9,6 +9,7 @@ import { getOptionVote } from '../../../../../functions/firebase/get/get';
 
 module.exports = {
     oninit: vnode => {
+        console.dir(vnode.attrs)
 
         vnode.state = {
             title: '',
@@ -23,7 +24,8 @@ module.exports = {
                 offsetTop: 0,
                 offsetLeft: 0
             },
-            isEdit: false
+            isEdit: false,
+            more:vnode.attrs.more
         }
 
         vnode.state.title = vnode.attrs.title;
@@ -147,6 +149,11 @@ module.exports = {
                             }
 
                         </div>
+                        {vnode.state.more !== undefined?
+                        <a class='cardMore' href={vnode.state.more.URL} target='_blank'>{vnode.state.more.text}</a>
+                        :
+                        <div />
+                        }
                     </div>
                     <div class={vnode.state.down ? 'optionVote optionSelcetDown' : 'optionVote'} onclick={() => { setSelection('down', vnode) }}>
                         <img

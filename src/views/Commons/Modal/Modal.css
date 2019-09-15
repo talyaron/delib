@@ -47,10 +47,17 @@
     border-left: 0px;
     border-right: 0px;
     font-family: 'Varela Round', sans-serif;
+    opacity: 0.75;
 }
 
 .moduleButtons {
     width: 100%;
     display: flex;
     justify-content: center;
+}
+
+.modalMoreInfo{
+    
+    display: flex;
+    flex-direction: column;
 }

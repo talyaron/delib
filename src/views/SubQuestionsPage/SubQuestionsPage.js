@@ -28,7 +28,7 @@ module.exports = {
       },
       showModal: {
         isShow: false,
-        which: '',
+        which: 'subQuestion',
         title: 'הוספת אפשרות'
       }
     };
