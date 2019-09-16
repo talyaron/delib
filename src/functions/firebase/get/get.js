@@ -189,11 +189,7 @@ function getSubQuestionOptions(
   subQuestionId,
   order
 ) {
-  console.log(groupId,
-    questionId,
-    subQuestionId,
-    order);
-
+ 
 
   let optionRef = DB.collection("groups")
     .doc(groupId)

@@ -79,7 +79,7 @@ module.exports = {
     },
     oncreate: vnode => {
         setWrapperHeight('questionHeadr', 'questionWrapperAll')
-        setWrapperFromFooter('questionFooter', 'questionWrapperAll');
+        // setWrapperFromFooter('questionFooter', 'questionWrapperAll');
         if (vnode.state.callDB) {
             //subscribe to subQuestions
             vnode.state.unsbscribe.subQuestions = getSubQuestions(vnode.attrs.groupId, vnode.attrs.questionId, vnode, true);
@@ -154,23 +154,7 @@ module.exports = {
 
                 </div>
 
-                <div class='footer' id='questionFooter'>
-                    <div
-                        class={vnode.state.orderBy == 'new' ? 'footerButton footerButtonSelected' : 'footerButton'}
-                        onclick={() => {
-
-                            orderBy('new', vnode)
-                        }}
-                    >חדש</div>
-                    <div
-                        class={vnode.state.orderBy == 'top' ? 'footerButton footerButtonSelected' : 'footerButton'}
-                        onclick={() => {
-
-                            orderBy('top', vnode)
-                        }}
-                    >Top</div>
-                    <div class='footerButton'>שיחות</div>
-                </div>
+               
                 {
                     vnode.state.title === 'כותרת השאלה' ?
                         <Spinner />

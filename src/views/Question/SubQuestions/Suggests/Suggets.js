@@ -5,6 +5,9 @@ import Option from './Option/Option';
 
 
 module.exports = {
+    oninit:vnode=>{
+        
+    },
     view: vnode => {
         
         return (

@@ -11,8 +11,7 @@ import { getOptionVote } from "../../../../../functions/firebase/get/get";
 
 module.exports = {
   oninit: vnode => {
-    console.dir(vnode.attrs);
-
+   
     vnode.state = {
       title: "",
       description: "",
