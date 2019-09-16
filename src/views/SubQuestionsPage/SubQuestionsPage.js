@@ -20,7 +20,7 @@ module.exports = {
     sessionStorage.setItem("lastPage", store.lastPage);
 
     vnode.state = {
-      orderBy: "new",
+      orderBy: "top",
       options: [false],
       details: {
         title: false,

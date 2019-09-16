@@ -118,15 +118,9 @@ function switchProcess(type, vnode) {
     `subQuestions[${vnode.attrs.subQuestionId}].options`,
     []
   );
-  for(let i in options){
-    console.log(options[i].title, Math.floor(options[i].time.seconds/3600));
-  }
   
   options = orderOptionsBy(options, vnode.attrs.orderBy);
-  for(let i in options){
-    console.log(options[i].title, Math.floor(options[i].time.seconds/3600));
-  //  window.x1 = options.time.seconds;
-  }
+  
   
 
   switch (type) {
@@ -156,17 +150,16 @@ function switchProcess(type, vnode) {
 function orderOptionsBy(options, orderBy) {
   switch (orderBy) {
     case "new":
-      return options.sort((a, b) => {
-    
+      return options.sort((a, b) => {    
         return b.time.seconds - a.time.seconds;
       });
     case "top":
       return options.sort((a, b) => {
-        return a.consensusPrecentage - b.consensusPrecentage;
+        return b.consensusPrecentage - a.consensusPrecentage;
       });
     default:
       return options.sort((a, b) => {
-        return a.consensusPrecentage - b.consensusPrecentage;
+        return b.consensusPrecentage - a.consensusPrecentage;
       });
   }
 }
