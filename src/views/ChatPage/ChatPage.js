@@ -86,7 +86,7 @@ module.exports = {
                     optionTitle={vnode.state.option.title}
                     topic='אופציה'
                     title={vnode.state.option.title}
-                    upLevelUrl={`/question/${vnode.attrs.groupId}/${vnode.attrs.questionId}`}
+                    upLevelUrl={`/subquestions/${vnode.attrs.groupId}/${vnode.attrs.questionId}/${vnode.attrs.subQuestionId}`}
                     entityId={vnode.attrs.optionId}
                 />
                 <div class='chatWrapper' id='chatWrapper'>
