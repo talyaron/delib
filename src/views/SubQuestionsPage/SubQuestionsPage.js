@@ -102,12 +102,12 @@ module.exports = {
               </div>
               <div
                 class={
-                  vnode.state.orderBy == "chats"
+                  vnode.state.orderBy == "message"
                     ? "footerButton footerButtonSelected"
                     : "footerButton"
                 }
                 onclick={() => {
-                  vnode.state.orderBy = 'chats'
+                  vnode.state.orderBy = 'message'
                 }}
               >שיחות אחרונות</div>
             </div>

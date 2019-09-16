@@ -118,10 +118,8 @@ function switchProcess(type, vnode) {
     `subQuestions[${vnode.attrs.subQuestionId}].options`,
     []
   );
-  
+
   options = orderOptionsBy(options, vnode.attrs.orderBy);
-  
-  
 
   switch (type) {
     case settings.processes.suggestions:
@@ -148,14 +146,25 @@ function switchProcess(type, vnode) {
 }
 
 function orderOptionsBy(options, orderBy) {
+  console.dir(options);
   switch (orderBy) {
     case "new":
-      return options.sort((a, b) => {    
+      return options.sort((a, b) => {
         return b.time.seconds - a.time.seconds;
       });
     case "top":
       return options.sort((a, b) => {
         return b.consensusPrecentage - a.consensusPrecentage;
+      });
+    case "message":
+      for (let i in options) {
+        if (!options[i].hasOwnProperty("lastMessage")) {
+          options[i]["lastMessage"] = { seconds: 0 };
+        }
+      }
+
+      return options.sort((a, b) => {
+        return b.lastMessage.seconds - a.lastMessage.seconds;
       });
     default:
       return options.sort((a, b) => {
