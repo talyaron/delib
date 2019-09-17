@@ -172,7 +172,7 @@ function getSubQuestion(groupId, questionId, subQuestionId) {
   return optionRef.onSnapshot(subQuestionDB => {
     if (subQuestionDB.exists) {
       set(store, `subQuestions[${subQuestionId}]`, subQuestionDB.data())
-      console.dir(store.subQuestions[subQuestionId])
+    
       m.redraw();
     } else {
       console.error(`subQuestion ${groupId}/${questionId}/${subQuestionId} dont exists `)

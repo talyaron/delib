@@ -79,36 +79,36 @@ module.exports = {
             <div class="footer" id="questionFooter">
               <div
                 class={
-                  vnode.state.orderBy == "new"
+                  vnode.state.details.orderBy == "new"
                     ? "footerButton footerButtonSelected"
                     : "footerButton"
                 }
                 onclick={() => {
-                  vnode.state.orderBy = 'new'
+                  vnode.state.details.orderBy = 'new'
                 }}
               >
                 חדשות
               </div>
               <div
                 class={
-                  vnode.state.orderBy == "top"
+                  vnode.state.details.orderBy == "top"
                     ? "footerButton footerButtonSelected"
                     : "footerButton"
                 }
                 onclick={() => {
-                  vnode.state.orderBy = 'top'
+                  vnode.state.details.orderBy = 'top'
                 }}
               >
                 הכי מוסכמות
               </div>
               <div
                 class={
-                  vnode.state.orderBy == "message"
+                  vnode.state.details.orderBy == "message"
                     ? "footerButton footerButtonSelected"
                     : "footerButton"
                 }
                 onclick={() => {
-                  vnode.state.orderBy = 'message'
+                  vnode.state.details.orderBy = 'message'
                 }}
               >שיחות אחרונות</div>
             </div>

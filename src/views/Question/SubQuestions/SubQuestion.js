@@ -22,9 +22,10 @@ let unsubscribeOptions = () => {};
 
 module.exports = {
   oninit: vnode => {
+    console.log('init')
     vnode.state = {
       options: [],
-      orderBy:vnode.attrs.orderBy
+      orderBy:get(store, `subQuestions[${vnode.attrs.subQuestionId}].orderBy`,vnode.attrs.orderBy)
     };
 
     //get user before login to page
@@ -51,6 +52,12 @@ module.exports = {
       va.subQuestionId,
       "top"
     );
+  },
+  onbeforeupdate:vnode=>{
+  
+    vnode.state.orderBy = vnode.attrs.orderBy;
+
+    
   },
   onremove: vnode => {
     unsubscribe();
@@ -115,18 +122,15 @@ function addQuestion(vnode, type) {
 
 function switchProcess(type, vnode) {
   
-  console.dir(store)
+
   let options = get(
     store,
     `options[${vnode.attrs.subQuestionId}]`,
     []
   );
-  let orderBy = get(store, `subQuestions[${vnode.attrs.subQuestionId}].orderBy`,'top')
+    
 
-  console.log('switchProcess',vnode.attrs.subQuestionId, orderBy);
-
-  options = orderOptionsBy(options, orderBy);
-  console.dir(options)
+  options = orderOptionsBy(options, vnode.state.orderBy);
  
 
   switch (type) {
