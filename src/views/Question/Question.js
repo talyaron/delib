@@ -16,7 +16,7 @@ import settings from '../../data/settings';
 
 
 //functions
-import { getQuestionDetails, getSubQuestion, getSubItems, getSubQuestions } from '../../functions/firebase/get/get';
+import { getQuestionDetails, getSubQuestion, getSubQuestions } from '../../functions/firebase/get/get';
 import { deep_value, setWrapperHeight, setWrapperFromFooter } from '../../functions/general';
 
 
@@ -140,7 +140,7 @@ module.exports = {
                                     groupId={vnode.attrs.groupId}
                                     questionId={vnode.attrs.questionId}
                                     subQuestionId={subQuestion.id}
-                                    orderBy={vnode.state.orderBy}
+                                    orderBy={subQuestion.orderBy}
                                     title={subQuestion.title}
                                     subItems={vnode.state.subItems.options}
                                     parentVnode={vnode}

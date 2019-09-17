@@ -49,6 +49,7 @@ module.exports = {
     unsubscribe();
   },
   view: vnode => {
+  
     return (
       <div>
         {vnode.state.details.title ? (
@@ -57,7 +58,7 @@ module.exports = {
               groupId={vnode.attrs.groupId}
               questionId={vnode.attrs.questionId}
               subQuestionId={vnode.attrs.subQuestionId}
-              orderBy={vnode.state.orderBy}
+              orderBy={vnode.state.details.orderBy}
               title={vnode.state.details.title}
               subItems={vnode.state.details.options}
               parentVnode={vnode}

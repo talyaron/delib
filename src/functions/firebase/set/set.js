@@ -83,7 +83,8 @@ function createSubQuestion(groupId, questionId, title, order) {
     .add({
       title,
       order,
-      creator: store.user.uid
+      creator: store.user.uid,
+      orderBy:'top'
     })
     .then(function(docRef) {
       console.log("doc wrirten succesfully");
@@ -116,6 +117,21 @@ function updateSubQuestionProcess(
     .collection("subQuestions")
     .doc(subQuestionId)
     .update({ processType });
+}
+
+function updateSubQuestionOrderBy(
+  groupId,
+  questionId,
+  subQuestionId,
+  orderBy
+) {
+    DB.collection("groups")
+    .doc(groupId)
+    .collection("questions")
+    .doc(questionId)
+    .collection("subQuestions")
+    .doc(subQuestionId)
+    .update({ orderBy });
 }
 
 function updateSubQuestionsOrder(groupId, questionId, newOrderArray) {
@@ -465,5 +481,6 @@ module.exports = {
   setLike,
   setMessage,
   setSubAnswer,
-  updateSubQuestionProcess
+  updateSubQuestionProcess,
+  updateSubQuestionOrderBy
 };

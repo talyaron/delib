@@ -113,6 +113,8 @@ function addQuestion(vnode, type) {
 }
 
 function switchProcess(type, vnode) {
+  console.log('switchProcess',vnode.attrs.subQuestionId);
+  console.dir(store)
   let options = get(
     store,
     `subQuestions[${vnode.attrs.subQuestionId}].options`,
@@ -120,6 +122,8 @@ function switchProcess(type, vnode) {
   );
 
   options = orderOptionsBy(options, vnode.attrs.orderBy);
+  console.dir(options)
+ 
 
   switch (type) {
     case settings.processes.suggestions:
@@ -146,7 +150,8 @@ function switchProcess(type, vnode) {
 }
 
 function orderOptionsBy(options, orderBy) {
-  console.dir(options);
+
+  
   switch (orderBy) {
     case "new":
       return options.sort((a, b) => {
