@@ -23,7 +23,8 @@ let unsubscribeOptions = () => {};
 module.exports = {
   oninit: vnode => {
     vnode.state = {
-      options: []
+      options: [],
+      orderBy:vnode.attrs.orderBy
     };
 
     //get user before login to page
@@ -113,15 +114,18 @@ function addQuestion(vnode, type) {
 }
 
 function switchProcess(type, vnode) {
-  console.log('switchProcess',vnode.attrs.subQuestionId);
+  
   console.dir(store)
   let options = get(
     store,
-    `subQuestions[${vnode.attrs.subQuestionId}].options`,
+    `options[${vnode.attrs.subQuestionId}]`,
     []
   );
+  let orderBy = get(store, `subQuestions[${vnode.attrs.subQuestionId}].orderBy`,'top')
 
-  options = orderOptionsBy(options, vnode.attrs.orderBy);
+  console.log('switchProcess',vnode.attrs.subQuestionId, orderBy);
+
+  options = orderOptionsBy(options, orderBy);
   console.dir(options)
  
 
