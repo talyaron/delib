@@ -6,10 +6,12 @@ import DB from './config';
 import store from '../../data/store';
 import { EntityModel } from '../../data/dataTypes';
 
+let MESSAGING;
+
 if ('Notification' in window) {
 
 	// Retrieve Firebase Messaging object.
-	const MESSAGING = firebase.messaging();
+	MESSAGING = firebase.messaging();
 	// Add the public key generated from the console here.
 	MESSAGING.usePublicVapidKey(
 		'BOXKnicJW5Cu3xwRG7buXf-JU8tS-AErJX_Ax7CsUwqZQvBvo2E-ECnE-uGvUKcgeL-1nT-cJw8qGo4dH-zrfGA'

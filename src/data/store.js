@@ -27,7 +27,7 @@ var store = {
     numberOfNewMessages: 0,
     subscribed: {}, //subscribed entityes
     subQuestions: {},
-    editEntity: false
+    editEntity: false,
     subQuestions: {},
     push: []
 }

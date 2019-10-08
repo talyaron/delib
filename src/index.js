@@ -40,18 +40,6 @@ import Edit from './views/Commons/Edit/Edit';
 
 
 
-let nativeURL = window.document.URL;
-//deal with facebook additions of url
-if (nativeURL.includes('&')) {
-    let indexAnd = nativeURL.indexOf('&');
-    let indexQuestion = nativeURL.indexOf('?');
-
-    nativeURL = nativeURL.slice(indexQuestion + 2, indexAnd);
-
-    window.history.pushState(null, 'test', `/?/${nativeURL}`);
-
-}
-
 
 
 m.route(root, "/login", {
