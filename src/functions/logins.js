@@ -6,12 +6,9 @@ function restrictedPage(URLPath) {
 
     //check if user is logged-in, else redirect to login
     if (store.user.hasOwnProperty('isAnonymous')) {
-        // if (store.user.isAnonymous) {
-        //     redirectToLogin(URLPath);
-        //     return false
-        // } else {
+       
             return true;
-        // }
+        
     } else {
         redirectToLogin();
         return false;
