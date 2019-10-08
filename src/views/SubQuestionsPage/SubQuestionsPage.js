@@ -1,17 +1,17 @@
 import m from "mithril";
 import store from "../../data/store";
-import settings from '../../data/settings';
+import settings from "../../data/settings";
 
 //components
 import SubQuestion from "../Question/SubQuestions/SubQuestion";
-import Modal from '../Commons/Modal/Modal';
-import Spinner from '../Commons/Spinner/Spinner';
+import Modal from "../Commons/Modal/Modal";
+import Spinner from "../Commons/Spinner/Spinner";
 
 //functions
 import { getSubQuestion } from "../../functions/firebase/get/get";
-import { set } from 'lodash';
+import { set } from "lodash";
 
-let unsubscribe = () => { };
+let unsubscribe = () => {};
 
 module.exports = {
   oninit: vnode => {
@@ -20,7 +20,7 @@ module.exports = {
     sessionStorage.setItem("lastPage", store.lastPage);
 
     vnode.state = {
-      orderBy: "new",
+      orderBy: "top",
       options: [false],
       details: {
         title: false,
@@ -28,8 +28,8 @@ module.exports = {
       },
       showModal: {
         isShow: false,
-        which: 'subQuestion',
-        title: 'הוספת אפשרות'
+        which: "subQuestion",
+        title: "הוספת אפשרות"
       }
     };
   },
@@ -38,20 +38,18 @@ module.exports = {
       vnode.attrs.groupId,
       vnode.attrs.questionId,
       vnode.attrs.subQuestionId
-
     );
   },
   onbeforeupdate: vnode => {
-
     if (store.subQuestions.hasOwnProperty(vnode.attrs.subQuestionId)) {
-      vnode.state.details = store.subQuestions[vnode.attrs.subQuestionId]
+      vnode.state.details = store.subQuestions[vnode.attrs.subQuestionId];
     }
-
   },
   onremove: vnode => {
     unsubscribe();
   },
   view: vnode => {
+  
     return (
       <div>
         {vnode.state.details.title ? (
@@ -60,7 +58,7 @@ module.exports = {
               groupId={vnode.attrs.groupId}
               questionId={vnode.attrs.questionId}
               subQuestionId={vnode.attrs.subQuestionId}
-              orderBy={vnode.state.orderBy}
+              orderBy={vnode.state.details.orderBy}
               title={vnode.state.details.title}
               subItems={vnode.state.details.options}
               parentVnode={vnode}
@@ -68,20 +66,64 @@ module.exports = {
               processType={vnode.state.details.processType}
               isAlone={true}
             />
-            <div class='fav' onclick={()=>{vnode.state.showModal.isShow = true }}><div>+</div></div>
+            {/* ------------- Fav --------------- */}
+            <div
+              class="fav"
+              onclick={() => {
+                vnode.state.showModal.isShow = true;
+              }}
+            >
+              <div>+</div>
+            </div>
+            {/* ---------------- Footer -------------- */}
+            <div class="footer" id="questionFooter">
+              <div
+                class={
+                  vnode.state.details.orderBy == "new"
+                    ? "footerButton footerButtonSelected"
+                    : "footerButton"
+                }
+                onclick={() => {
+                  vnode.state.details.orderBy = 'new'
+                }}
+              >
+                חדשות
+              </div>
+              <div
+                class={
+                  vnode.state.details.orderBy == "top"
+                    ? "footerButton footerButtonSelected"
+                    : "footerButton"
+                }
+                onclick={() => {
+                  vnode.state.details.orderBy = 'top'
+                }}
+              >
+                הכי מוסכמות
+              </div>
+              <div
+                class={
+                  vnode.state.details.orderBy == "message"
+                    ? "footerButton footerButtonSelected"
+                    : "footerButton"
+                }
+                onclick={() => {
+                  vnode.state.details.orderBy = 'message'
+                }}
+              >שיחות אחרונות</div>
+            </div>
             <Modal
               showModal={vnode.state.showModal.isShow}
               whichModal={vnode.state.showModal.which}
               title={vnode.state.showModal.title}
-              placeholderTitle='כותרת'
-              placeholderDescription='הסבר'
+              placeholderTitle="כותרת"
+              placeholderDescription="הסבר"
               vnode={vnode}
             />
-
           </div>
         ) : (
-            <Spinner />
-          )}
+          <Spinner />
+        )}
       </div>
     );
   }

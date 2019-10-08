@@ -16,7 +16,7 @@ import settings from '../../data/settings';
 
 
 //functions
-import { getQuestionDetails, getSubQuestion, getSubItems, getSubQuestions } from '../../functions/firebase/get/get';
+import { getQuestionDetails, getSubQuestion, getSubQuestions } from '../../functions/firebase/get/get';
 import { deep_value, setWrapperHeight, setWrapperFromFooter } from '../../functions/general';
 
 
@@ -79,7 +79,7 @@ module.exports = {
     },
     oncreate: vnode => {
         setWrapperHeight('questionHeadr', 'questionWrapperAll')
-        setWrapperFromFooter('questionFooter', 'questionWrapperAll');
+        // setWrapperFromFooter('questionFooter', 'questionWrapperAll');
         if (vnode.state.callDB) {
             //subscribe to subQuestions
             vnode.state.unsbscribe.subQuestions = getSubQuestions(vnode.attrs.groupId, vnode.attrs.questionId, vnode, true);
@@ -140,7 +140,7 @@ module.exports = {
                                     groupId={vnode.attrs.groupId}
                                     questionId={vnode.attrs.questionId}
                                     subQuestionId={subQuestion.id}
-                                    orderBy={vnode.state.orderBy}
+                                    orderBy={subQuestion.orderBy}
                                     title={subQuestion.title}
                                     subItems={vnode.state.subItems.options}
                                     parentVnode={vnode}
@@ -154,23 +154,7 @@ module.exports = {
 
                 </div>
 
-                <div class='footer' id='questionFooter'>
-                    <div
-                        class={vnode.state.orderBy == 'new' ? 'footerButton footerButtonSelected' : 'footerButton'}
-                        onclick={() => {
-
-                            orderBy('new', vnode)
-                        }}
-                    >חדש</div>
-                    <div
-                        class={vnode.state.orderBy == 'top' ? 'footerButton footerButtonSelected' : 'footerButton'}
-                        onclick={() => {
-
-                            orderBy('top', vnode)
-                        }}
-                    >Top</div>
-                    <div class='footerButton'>שיחות</div>
-                </div>
+               
                 {
                     vnode.state.title === 'כותרת השאלה' ?
                         <Spinner />
