@@ -1,4 +1,9 @@
 var settings = {
+    pages: {
+        groups: {
+            link:'/groups'
+        }
+    },
     subItems: {
         options: {
             name: 'אפשרויות לפתרון',

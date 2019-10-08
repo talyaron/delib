@@ -172,7 +172,7 @@ function getSubQuestion(groupId, questionId, subQuestionId) {
   return optionRef.onSnapshot(subQuestionDB => {
     if (subQuestionDB.exists) {
       set(store, `subQuestions[${subQuestionId}]`, subQuestionDB.data())
-
+    
       m.redraw();
     } else {
       console.error(`subQuestion ${groupId}/${questionId}/${subQuestionId} dont exists `)
@@ -189,7 +189,7 @@ function getSubQuestionOptions(
   subQuestionId,
   order
 ) {
-  
+ 
 
   let optionRef = DB.collection("groups")
     .doc(groupId)
@@ -241,7 +241,7 @@ function getSubQuestionOptions(
         optionsArray.push(optionObj);
       });
 
-      set(store, `subQuestions[${subQuestionId}].options`, optionsArray);
+      set(store, `options[${subQuestionId}]`, optionsArray);
 
       m.redraw();
     });

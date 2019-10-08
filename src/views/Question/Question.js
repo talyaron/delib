@@ -16,20 +16,18 @@ import settings from '../../data/settings';
 
 
 //functions
-import { getQuestionDetails, getSubQuestion, getSubItems, getSubQuestions } from '../../functions/firebase/get/get';
+import { getQuestionDetails, getSubQuestion, getSubQuestions } from '../../functions/firebase/get/get';
 import { deep_value, setWrapperHeight, setWrapperFromFooter } from '../../functions/general';
 
 
 module.exports = {
     oninit: vnode => {
 
-        //get user before login to page
-        store.lastPage = '/question/' + vnode.attrs.groupId + '/' + vnode.attrs.id;
-        sessionStorage.setItem('lastPage', store.lastPage);
+        
 
 
         vnode.state = {
-            title: deep_value(store.questions, `${vnode.attrs.groupId}.${vnode.attrs.id}.title`, 'כותרת השאלה'),
+            title: deep_value(store.questions, `${vnode.attrs.groupId}.${vnode.attrs.questionId}.title`, 'כותרת השאלה'),
             addOption: false,
             callDB: true,
             subItems: {
@@ -50,7 +48,7 @@ module.exports = {
             subAnswersUnsb: {}, //used to unsubscribe
             showModal: {
                 isShow: false,
-                which: ''
+                which: 'subQuestion'
             },
             unsbscribe: {
                 subQuestions: {}
@@ -62,6 +60,10 @@ module.exports = {
             }
         }
 
+        //get user before login to page
+        store.lastPage = '/question/' + vnode.attrs.groupId + '/' + vnode.attrs.questionId;
+        sessionStorage.setItem('lastPage', store.lastPage);
+
         //check to see if user logged in
         if (store.user.uid == undefined) {
             m.route.set('/login');
@@ -71,25 +73,25 @@ module.exports = {
         }
 
         //propare undubscribe function for question details to be used  onremove
-        vnode.state.unsubscribeQuestionDetails = getQuestionDetails(vnode.attrs.groupId, vnode.attrs.id, vnode);
+        vnode.state.unsubscribeQuestionDetails = getQuestionDetails(vnode.attrs.groupId, vnode.attrs.questionId, vnode);
 
 
     },
     oncreate: vnode => {
         setWrapperHeight('questionHeadr', 'questionWrapperAll')
-        setWrapperFromFooter('questionFooter', 'questionWrapperAll');
+        // setWrapperFromFooter('questionFooter', 'questionWrapperAll');
         if (vnode.state.callDB) {
-            //subscribe to subItems
-            vnode.state.unsbscribe.subQuestions = getSubQuestions(vnode.attrs.groupId, vnode.attrs.id, vnode, true);
+            //subscribe to subQuestions
+            vnode.state.unsbscribe.subQuestions = getSubQuestions(vnode.attrs.groupId, vnode.attrs.questionId, vnode, true);
 
         }
     },
     onbeforeupdate: vnode => {
 
-        vnode.state.title = deep_value(store.questions, `${vnode.attrs.groupId}.${vnode.attrs.id}.title`, 'כותרת השאלה');
-        vnode.state.description = deep_value(store.questions, `${vnode.attrs.groupId}.${vnode.attrs.id}.description`, '');
+        vnode.state.title = deep_value(store.questions, `${vnode.attrs.groupId}.${vnode.attrs.questionId}.title`, 'כותרת השאלה');
+        vnode.state.description = deep_value(store.questions, `${vnode.attrs.groupId}.${vnode.attrs.questionId}.description`, '');
 
-        let userRole = deep_value(store.questions, `${vnode.attrs.groupId}.${vnode.attrs.id}.roles.${store.user.uid}`, false);
+        let userRole = deep_value(store.questions, `${vnode.attrs.groupId}.${vnode.attrs.questionId}.roles.${store.user.uid}`, false);
         if (!userRole) {
             // the user is not a member in the question, he/she should login, and ask for membership
         }
@@ -104,12 +106,7 @@ module.exports = {
         if (typeof vnode.state.unsbscribe.subQuestions === 'function') {
             vnode.state.unsbscribe.subQuestions();
         }
-
-        // vnode.state.unsubscribeQuestionDetails();
-        // vnode.state.unsubscribeOptions();
-        // vnode.state.unsubscribeQuestion();
-        // vnode.state.unsubscribeGoals();
-        // vnode.state.unsubscribeValues();
+        
     },
     view: vnode => {
         
@@ -130,7 +127,7 @@ module.exports = {
                             title='הסבר על השאלה:'
                             content={vnode.state.description}
                             groupId={vnode.attrs.groupId}
-                            questionId={vnode.attrs.id}
+                            questionId={vnode.attrs.questionId}
                             creatorId={vnode.state.creatorId}
                         />
                     </div>
@@ -141,9 +138,9 @@ module.exports = {
                             return (
                                 <SubQuestion
                                     groupId={vnode.attrs.groupId}
-                                    questionId={vnode.attrs.id}
+                                    questionId={vnode.attrs.questionId}
                                     subQuestionId={subQuestion.id}
-                                    orderBy={vnode.state.orderBy}
+                                    orderBy={subQuestion.orderBy}
                                     title={subQuestion.title}
                                     subItems={vnode.state.subItems.options}
                                     parentVnode={vnode}
@@ -157,23 +154,7 @@ module.exports = {
 
                 </div>
 
-                <div class='footer' id='questionFooter'>
-                    <div
-                        class={vnode.state.orderBy == 'new' ? 'footerButton footerButtonSelected' : 'footerButton'}
-                        onclick={() => {
-
-                            orderBy('new', vnode)
-                        }}
-                    >חדש</div>
-                    <div
-                        class={vnode.state.orderBy == 'top' ? 'footerButton footerButtonSelected' : 'footerButton'}
-                        onclick={() => {
-
-                            orderBy('top', vnode)
-                        }}
-                    >Top</div>
-                    <div class='footerButton'>שיחות</div>
-                </div>
+               
                 {
                     vnode.state.title === 'כותרת השאלה' ?
                         <Spinner />
@@ -199,9 +180,9 @@ module.exports = {
 
 
 function orderBy(order, vnode) {
-    // getSubQuestion('off', vnode.attrs.groupId, vnode.attrs.id, order);
+    // getSubQuestion('off', vnode.attrs.groupId, vnode.attrs.questionId, order);
 
     vnode.state.unsubscribeOptions();
-    vnode.state.unsubscribeOptions = getSubQuestion('on', vnode.attrs.groupId, vnode.attrs.id, order);
+    vnode.state.unsubscribeOptions = getSubQuestion('on', vnode.attrs.groupId, vnode.attrs.questionId, order);
     vnode.state.orderBy = order
 }

@@ -5,11 +5,15 @@ import Option from './Option/Option';
 
 
 module.exports = {
+    oninit:vnode=>{
+        
+    },
     view: vnode => {
+        
         return (
             <div>
                 {vnode.attrs.options.map((option, index) => {
-
+                   
                     return <Option
                         groupId={vnode.attrs.groupId}
                         questionId={vnode.attrs.questionId}
@@ -21,7 +25,8 @@ module.exports = {
                         totalVoters={option.totalVoters}
                         consensusPrecentage={option.consensusPrecentage}
                         messagesCounter={option.numberOfMessages}
-                        key={index}
+                        more={option.more}
+                        key={option.id}
                     />
                 })
                 }

@@ -14,11 +14,10 @@
 }
 
 .loginButton {
-    background: white;
-    color: red;
+    background: white !important;
+    color: red !important;
     display: flex;
     position: relative;
-   
 }
 
 .loginButton>div {

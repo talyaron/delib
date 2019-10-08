@@ -134,5 +134,15 @@ function loginIfNotRegisterd(back = 'login') {
     }
 }
 
+function setLastPage() {
+    store.lastPage = m.route.get();
+    sessionStorage.setItem('lastPage', store.lastPage)
+}
 
-module.exports = { Reference, createRefString, msToTime, deep_value, setWrapperHeight, setWrapperFromFooter, returnUserRole, getRandomName, loginIfNotRegisterd }
+
+module.exports = {
+    Reference,
+    createRefString,
+    msToTime,
+    deep_value, setWrapperHeight, setWrapperFromFooter, returnUserRole, getRandomName, loginIfNotRegisterd, setLastPage
+}
