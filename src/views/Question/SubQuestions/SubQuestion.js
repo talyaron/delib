@@ -22,7 +22,7 @@ let subQuestionObj;
 
 module.exports = {
 	oninit: (vnode) => {
-		console.log('init');
+	
 		vnode.state = {
 			options: [],
 			orderBy: get(store, `subQuestions[${vnode.attrs.subQuestionId}].orderBy`, vnode.attrs.orderBy)
@@ -45,7 +45,7 @@ module.exports = {
 	},
 	onbeforeupdate: (vnode) => {
 		vnode.state.orderBy = vnode.attrs.orderBy;
-		console.log('order:', vnode.state.orderBy)
+	
 	},
 	onremove: (vnode) => {
 		unsubscribe();
@@ -63,19 +63,19 @@ module.exports = {
 						{
 							store.push.includes(vnode.attrs.subQuestionId) ? (
 							<div
-								class="buttons buttonOutlineWhite"
+								
 								onclick={() => {
 									unsubscribeFromNotification(vnode.attrs.subQuestionId);
-								}}>
-								ביטול עדכונים
+								}}>									
+									<img src="img/round_speaker_notes_off_white_24dp.png" />
 							</div>
 						) : (
 							<div
-								class="buttons buttonOutlineWhite"
+								
 								onclick={() => {
 									subscribeToNotification(vnode.attrs.subQuestionId);
 								}}>
-								הרשמה לעדכונים
+								<img src="img/round_speaker_notes_white_24dp.png" />
 							</div>
 							)}
 							<div>{vnode.attrs.title}</div>
@@ -126,7 +126,7 @@ function addQuestion(vnode, type) {
 function switchProcess(type, vnode) {
 	let options = get(store, `options[${vnode.attrs.subQuestionId}]`, []);
 	options = orderOptionsBy(options, vnode.state.orderBy);
-	console.dir(options);
+	
 
 	switch (type) {
 		case settings.processes.suggestions:
