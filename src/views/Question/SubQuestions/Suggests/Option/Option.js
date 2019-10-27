@@ -14,8 +14,8 @@ module.exports = {
    
     vnode.state = {
       creatorName:vnode.attrs.creatorName || 'אנונימי',
-      title: "",
-      description: "",
+      title:vnode.attrs.title,
+      description: vnode.attrs.description,
       up: false,
       down: false,
       consensusPrecentage: "",
@@ -30,8 +30,9 @@ module.exports = {
       more: vnode.attrs.more || { text: "", URL: "" }
     };
 
-    vnode.state.title = vnode.attrs.title;
-    vnode.state.description = vnode.attrs.description;
+    console.log(vnode.state.title ,vnode.attrs.creatorName)
+    
+    
 
     vnode.state.likeUnsubscribe = getOptionVote(
       vnode.attrs.groupId,

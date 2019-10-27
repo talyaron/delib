@@ -19,6 +19,7 @@ module.exports = {
                         questionId={vnode.attrs.questionId}
                         subQuestionId={vnode.attrs.subQuestionId}
                         optionId={option.id}
+                        creatorName={option.creatorName}
                         creatorId={option.creatorId}
                         title={option.title}
                         description={option.description}
