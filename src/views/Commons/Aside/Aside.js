@@ -13,10 +13,10 @@ module.exports = {
         return (
             <aside id='aside'>
                 <div class='topAside'>
-                    <p>{store.user.displayName||'Anonymous'}</p>
+                    <p>{store.user.name}</p>
                 </div>
                 <div class='menuAside'>
-                    {store.user.displayName?
+                    {store.user.name?
                         <div onclick={() => { logout() }}>התנתקות</div>
                         :
                         <div onclick={() => {

@@ -132,7 +132,7 @@ function setNewInfo(vnp, vnode) {
         store.user.uid,        
         vnode.state.add.title,
         vnode.state.add.description,
-        store.user.displayName || 'אנונימי',
+        store.user.name || 'אנונימי',
         vnp.state.details.title || vnp.state.showModal.title
     );
 

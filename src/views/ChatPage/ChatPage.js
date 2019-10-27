@@ -155,7 +155,7 @@ function sendMessage(vnode) {
             va.subQuestionId,
             va.optionId,
             store.user.uid,
-            store.user.displayName || 'אנונימי',
+            store.user.name || 'אנונימי',
             vnode.state.input,
             vnode.state.groupTitle,
             vnode.state.questionTitle,
