@@ -13,6 +13,7 @@ module.exports = {
   oninit: vnode => {
    
     vnode.state = {
+      creatorName:vnode.attrs.creatorName || 'אנונימי',
       title: "",
       description: "",
       up: false,
@@ -144,6 +145,7 @@ module.exports = {
             />
           </div>
           <div class="optionContent">
+            <div class='option_creator'>מציע\ה: {vnode.state.creatorName}</div>
             <div class="cardTitle">
               {!vnode.state.isEdit ? (
                 <span>{vnode.attrs.title}</span>

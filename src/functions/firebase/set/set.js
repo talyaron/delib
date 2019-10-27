@@ -391,6 +391,8 @@ function updateOption(vnode) {
 		.collection('options')
 		.doc(vnode.attrs.optionId)
 		.update({
+			creatorUid:store.user.uid,			
+			creatorName: vnode.state.creatorName || 'אנונימי',			
 			title: vnode.state.title,
 			description: vnode.state.description,
 			more: {
