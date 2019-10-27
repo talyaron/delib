@@ -27,6 +27,7 @@ module.exports = {
         offsetLeft: 0
       },
       isEdit: false,
+      isNamed:true,
       more: vnode.attrs.more || { text: "", URL: "" }
     };
 
@@ -146,7 +147,23 @@ module.exports = {
             />
           </div>
           <div class="optionContent">
-            <div class='option_creator'>מציע\ה: {vnode.state.creatorName}</div>
+            {!vnode.state.isEdit ?
+              <div class='option_creator'>מציע/ה: {vnode.state.creatorName}</div>
+              :
+              <div class='option_creator'>
+                <input
+									type="checkbox"
+									defaultChecked={vnode.state.isNamed}
+									onchange={(e) => {
+										isAnonymous(e, vnode);
+									}}
+                />
+                {vnode.state.isNamed ?
+                  <span>מציע\ה: {vnode.state.creatorName}</span> :
+                  <span>אנונימי/ת</span>
+                }
+              </div>
+            }
             <div class="cardTitle">
               {!vnode.state.isEdit ? (
                 <span>{vnode.attrs.title}</span>
@@ -348,4 +365,9 @@ function setSelection(upDown, vnode) {
       );
     }
   }
+}
+
+function isAnonymous(e, vnode) {
+  vnode.state.isNamed = e.target.checked;
+ 
 }

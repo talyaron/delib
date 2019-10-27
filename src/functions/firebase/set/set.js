@@ -382,6 +382,7 @@ function addToFeed(addRemove, pathArray, refString, collectionOrDoc) {
 }
 
 function updateOption(vnode) {
+	let creatorName = vnode.state.isNamed?vnode.state.creatorName:'אנונימי/ת' 
 	DB.collection('groups')
 		.doc(vnode.attrs.groupId)
 		.collection('questions')
@@ -392,7 +393,7 @@ function updateOption(vnode) {
 		.doc(vnode.attrs.optionId)
 		.update({
 			creatorUid:store.user.uid,			
-			creatorName: vnode.state.creatorName || 'אנונימי',			
+			creatorName,			
 			title: vnode.state.title,
 			description: vnode.state.description,
 			more: {
