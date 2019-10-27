@@ -16,7 +16,8 @@ function createGroup(creatorId, title, description) {
 				id: docRef.id,
 				date: new Date().getTime()
 			});
-		})
+			m.route.set(`/group/${docRef.id}`);
+		})		
 		.catch(function(error) {
 			console.error('Error adding document: ', error);
 		});

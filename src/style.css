@@ -132,6 +132,8 @@ body {
     padding: 12px 25px;
     margin: 5px 10px;
     background: teal;
+    color:white;
+    border: none;
     border-radius: 5px;
     /* box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5); */
     user-select: none;
