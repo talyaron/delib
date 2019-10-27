@@ -42,7 +42,7 @@
     font-weight: var(--textHeaderWeight);
 }
 
-.moduleInputs {
+/* .moduleInputs {
     display: flex;
     flex-direction: column;
 }
@@ -63,7 +63,7 @@
     border-right: 0px;
     font-family: 'Varela Round', sans-serif;
     opacity: 0.75;
-}
+} */
 
 .moduleButtons {
     width: 100%;

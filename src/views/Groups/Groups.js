@@ -58,7 +58,7 @@ module.exports = {
                         })
                     }
                 </div>
-                <div class='fav' onclick={() => { createGroup(store.user.uid, 'some title', 'some description') }} >
+                <div class='fav' onclick={() => { m.route.set('/newgroup') }} >
                     <div>+</div>
                 </div>
                 <Feed />

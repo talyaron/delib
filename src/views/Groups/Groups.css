@@ -1,7 +1,8 @@
 .groupsWrapper {
   display: grid;
   grid-template-columns: auto auto auto;
-  background: #e8e8e8;
+  
+  margin-top:80px;
 }
 
 @media screen and (max-width: 1000px) {
