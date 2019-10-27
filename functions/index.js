@@ -312,7 +312,7 @@ exports.sendPushForNewOptions =
                 return Promise.all(invalidTokens);
             }
 
-            // 
+            // go over all token given by users and see which user set a token for this entity
             return db.collection('tokens')
                 .where('pushEntities', "array-contains", context.params.subQuestionId)
                 .get().then(tokensDB => {
@@ -325,10 +325,11 @@ exports.sendPushForNewOptions =
                 const tokensWithKey = [];
                 const tokens = [];
                 let counter = 0;
-                tokensDB.forEach(tokenDb => {
+                  tokensDB.forEach(tokenDb => {
+                  //gather all users in this entity
                     tokens.push(tokenDb.data().token)                    
                 })
-               
+               //send notifications to all users that are registerd to this entity
                 return admin.messaging().sendToDevice(tokens, payload)
                 // .then((response) => cleanInvalidTokens(tokensWithKey, response.results))
                 // .then(() => admin.database().ref('/notifications').child(NOTIFICATION_SNAPSHOT.key).remove())

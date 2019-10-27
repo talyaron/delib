@@ -25,7 +25,7 @@
     top: 30%;
     left: 50%;
     width: 90%;
-    max-width: 550px;
+    max-width: var(--maxWidthOnPC);
     z-index: 5;
     transform: translate(-50%, 0vh);
     box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.582);

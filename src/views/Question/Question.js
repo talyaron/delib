@@ -8,6 +8,7 @@ import SubQuestion from './SubQuestions/SubQuestion';
 import Spinner from '../Commons/Spinner/Spinner';
 import Description from './SubSection/Description';
 import Modal from '../Commons/Modal/Modal';
+import AlertsSetting from '../Commons/AlertsSetting/AlertsSetting';
 
 
 //model
@@ -57,7 +58,8 @@ module.exports = {
                 anonymous: false,
                 public: false,
                 registered: false
-            }
+            },
+            isAlertsSetting:false
         }
 
         //get user before login to page
@@ -170,6 +172,20 @@ module.exports = {
                     vnode={vnode}
                 />
                 <Feed />
+                <AlertsSetting
+                    isAlertsSetting={vnode.state.isAlertsSetting}
+                    title={vnode.state.title}
+                    alertsSetting={[
+                        {
+                            title: 'הודעות חדשות',
+                            ids: {
+                                groupId: vnode.attrs.groupId,
+                                questionId:vnode.attrs.questionId
+                            },
+                            isOn:true
+                        }
+                    ]}
+                />
             </div>
         )
     }

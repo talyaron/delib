@@ -11,6 +11,7 @@
     --textHeaderSubTitleSize: 1rem;
     --textRegular: rgba(0, 0, 0, 0.55);
     --textRegularSize: 1rem;
+    --maxWidthOnPC:550px;
 }
 
 html, body {
@@ -33,12 +34,12 @@ body {
 .wrapperAll {
     position: relative;
     margin: auto;
-    max-width: 550px;
+    max-width: var(--maxWidthOnPC);
     padding: 10px;
 }
 
 .wrapper {
-    max-width: 550px;
+    max-width: var(--maxWidthOnPC);
     margin: 20px auto 20px auto;
     position: relative;
     z-index: 2;
@@ -67,6 +68,10 @@ body {
     font-size: var(--textSubHeaderSize);
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.hidden {
+    display: none;
 }
 
 .centerElement {
@@ -143,7 +148,6 @@ body {
 
 .buttonOutlineWhite:active {
     background: rgba(255, 255, 255, 0.191);
-   
 }
 
 .confirm {
@@ -220,4 +224,12 @@ body {
 .checkBoxes label {
     font-size: 1.5rem;
     margin-left: 20px;
+}
+
+.popupHeader {
+    background: var(--subBackground);
+    padding: 5px;
+    border-radius: 5px 5px 0px 0px;
+    font-size: 1.2rem;
+    font-weight: 600;
 }

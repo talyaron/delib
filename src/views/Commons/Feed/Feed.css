@@ -9,7 +9,7 @@
     background: rgba(0, 0, 0, 0.377);
 }
 
-.hideFeedBox{
+.hideFeedBox {
     display: none;
 }
 
@@ -46,7 +46,7 @@
 }
 
 .feedWrapper {
-    max-width: 550px;
+    max-width: var(--maxWidthOnPC);
     margin: 65px auto;
     background: white;
     padding: 10px;
