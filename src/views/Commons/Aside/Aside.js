@@ -24,7 +24,11 @@ module.exports = {
                             m.route.set('/logingoogle')
                         }}>התחברות</div>
                     }
-                    <div onclick={(e) => { editPage(e,vnode)}}>עריכת הדף</div>
+                    {vnode.attrs.isAdmin?
+                        <div onclick={(e) => { editPage(e, vnode) }}>עריכת הדף</div>
+                        :
+                        <div />
+                    }
                     <div>המכון לדמוקרטיה דיונית</div>
                     <div>תודות</div>
                 </div>
@@ -37,5 +41,7 @@ function editPage(e,vnode) {
     e.stopPropagation();
     console.log(m.route.param())
     store.editEntity = m.route.param();
-    store.editEntity['entity']
+    store.editEntity['entity'];
+    m.route.set(vnode.attrs.editPageLink);
+
 }

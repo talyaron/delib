@@ -23,6 +23,17 @@ function createGroup(creatorId, title, description) {
 		});
 }
 
+function updateGroup(vnode) {
+	DB.collection('groups').doc(vnode.attrs.id).update({
+		title: vnode.state.title,
+		description:vnode.state.description
+	}).then(doc => {
+		m.route.set(`/group/${vnode.attrs.id}`);
+	}).catch(err => {
+		console.error(err)
+	})
+}
+
 function createQuestion(groupId, creatorId, title, description) {
 	DB.collection('groups')
 		.doc(groupId)
