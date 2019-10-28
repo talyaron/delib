@@ -5,6 +5,11 @@
     grid-template-columns: auto 120px;
 }
 
+.groupImg{
+    width: 120px;
+    max-height: 120px;
+}
+
 .questionOwned{
     background: #ef4a497d;
 }

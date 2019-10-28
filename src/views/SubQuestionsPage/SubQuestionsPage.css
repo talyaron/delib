@@ -1,13 +1,18 @@
 .subQuestionHeader {
-    background: #3248af;
+    background:var(--accent);
     color: white;
-    display: flex;
-    justify-content: space-around;
-    
+    text-align: center;
+    font-size: 1.5rem;
+   
 }
 
-.subQuestionHeader>.title {
+.subQuestionHeader .title {
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+.subQuestionHeader img{
+    width: 120px;
+    max-height: 120px;
 }
