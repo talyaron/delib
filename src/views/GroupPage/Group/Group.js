@@ -15,7 +15,7 @@ module.exports = {
     return (
       <div
         class={
-          vnode.state.owned ? "card groupCard questionOwned" : "card groupCard"
+          vnode.state.owned ? "card questionCard questionOwned" : "card groupCard"
         }
         onclick={() => {
           m.route.set(vnode.attrs.route + vnode.attrs.question.id);

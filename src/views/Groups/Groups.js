@@ -13,7 +13,6 @@ import Feed from '../Commons/Feed/Feed';
 //functions
 import { getUserGroups } from '../../functions/firebase/get/get';
 import { restrictedPage } from '../../functions/logins';
-import { createGroup } from '../../functions/firebase/set/set';
 import { setWrapperHeight } from '../../functions/general';
 
 import store from '../../data/store';
