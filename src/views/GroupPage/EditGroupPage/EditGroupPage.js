@@ -24,10 +24,12 @@ module.exports = {
     getGroupDetails(vnode.attrs.id, vnode);
   },
   onbeforeupdate: vnode => {
-    vnode.state = get("store", `groups[${vnode.attrs.id}]`, vnode.state);
+    vnode.state = get(store, `groups[${vnode.attrs.id}]`, vnode.state);
+    console.log('onbeforeupdate');
+    console.dir(vnode.state)
   },
   view: vnode => {
-    console.dir(vnode.attrs);
+    console.dir(vnode.state.logo);
     return (
       <div>
         <Header topic="קבוצה" title="עדכון קבוצה" upLevelUrl="/groups" />
