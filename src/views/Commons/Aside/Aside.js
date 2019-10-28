@@ -39,7 +39,7 @@ module.exports = {
 
 function editPage(e,vnode) {
     e.stopPropagation();
-    console.log(m.route.param())
+    
     store.editEntity = m.route.param();
     store.editEntity['entity'];
     m.route.set(vnode.attrs.editPageLink);

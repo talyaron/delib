@@ -31,8 +31,7 @@ module.exports = {
       more: vnode.attrs.more || { text: "", URL: "" }
     };
 
-    console.log(vnode.state.title ,vnode.attrs.creatorName)
-    
+        
     
 
     vnode.state.likeUnsubscribe = getOptionVote(

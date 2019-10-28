@@ -1,12 +1,13 @@
 import m from "mithril";
 import "../../Groups/NewGroupPage/NewGroupPage.css";
 import { get } from "lodash";
-import {DB} from '../../../functions/firebase/config';
+
 
 //model
 import store from "../../../data/store";
 //compnents
 import Header from "../../Commons/Header/Header";
+import Picture from '../../Commons/Picture/Picture';
 
 //functions
 import { updateGroup } from "../../../functions/firebase/set/set";
@@ -25,11 +26,10 @@ module.exports = {
   },
   onbeforeupdate: vnode => {
     vnode.state = get(store, `groups[${vnode.attrs.id}]`, vnode.state);
-    console.log('onbeforeupdate');
-    console.dir(vnode.state)
+    
   },
   view: vnode => {
-    console.dir(vnode.state.logo);
+   
     return (
       <div>
         <Header topic="קבוצה" title="עדכון קבוצה" upLevelUrl="/groups" />
@@ -47,23 +47,7 @@ module.exports = {
             value={vnode.state.description}
             onkeyup={e => (vnode.state.description = e.target.value)}
           />
-          {/* add picuter */}
-          <div class="addPicturesPanel" onclick={addPicture}>
-            <input
-              type="file"
-              class="addPicture"
-              id="pictuerToAdd"
-              onclick={() => {}}
-              onchange={event => {
-                getImage(event, vnode.state.sessionUid, 1, vnode);
-              }}
-            ></input>
-            {vnode.state.logo ? (
-              <img src={vnode.state.logo} class="imgOption" />
-            ) : (
-              <span>הוסיפו תמונה</span>
-            )}
-          </div>
+          <Picture logo={vnode.state.logo} id={vnode.attrs.id}/>
           <input
             type="button"
             class="buttons"
@@ -82,32 +66,4 @@ module.exports = {
 
 // functions
 
-function addPicture() {
-  document.getElementById("pictuerToAdd").click();
-}
 
-// functions
-
-function getImage(event, sessionUid, picIndex, vnode) {
-  // imageToUpload = image.target.files[0];
-  const ref = firebase.storage().ref("/groups/" + vnode.attrs.id);
-  const image = event.target.files[0];
-  // const name = image.name;
-  const metadata = {
-    contentType: image.type
-  };
-//   const uid = randomUid();
-  // const task = ref.child(uid).put(image, metadata);
-  ref
-    .put(image, metadata)
-    .then(snapshot => {
-      snapshot.ref.getDownloadURL().then(downloadURL=> {
-        DB.collection('groups').doc(vnode.attrs.id).update({logo:downloadURL})
-        .then(doc=>{
-            vnode.state.logo = downloadURL;
-            m.redraw();           
-        })       
-      });
-    })
-    .catch(console.error);
-}

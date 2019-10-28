@@ -1,6 +1,8 @@
 .groupCard {
     user-select: none;
     cursor: pointer;
+    display: grid;
+    grid-template-columns: auto 120px;
 }
 
 .questionOwned{

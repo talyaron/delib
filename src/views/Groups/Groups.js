@@ -26,16 +26,13 @@ module.exports = {
         if (restrictedPage('/groups')) {
             getUserGroups('on', store.user.uid);
         }
-
-
-
-
     },
     oncreate: vnode => {
         setWrapperHeight('headerContainer', 'groupsWrapper');
     },
     onupdate: vnode => {
         setWrapperHeight('headerContainer', 'groupsWrapper');
+        console.dir(store.userGroups)
     },
     onremove: vnode => {
         getUserGroups('off', store.user.uid);
@@ -54,7 +51,9 @@ module.exports = {
                                 title={group.title}
                                 description={group.description}
                                 id={group.id}
-                                key={key} />
+                                key={key}
+                                logo={group.logo}
+                                />
                         })
                     }
                 </div>

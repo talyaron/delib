@@ -34,7 +34,7 @@ function getSubscriptions() {
         DB.collection('tokens').doc(store.user.uid).onSnapshot((userTokenDB) => {
             if (userTokenDB.exists && userTokenDB.data().pushEntities) {
                 store.push = userTokenDB.data().pushEntities;
-                console.dir(store.push);
+          
                 m.redraw();
             }
         });
