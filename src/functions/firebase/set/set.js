@@ -1,5 +1,5 @@
 import m from 'mithril';
-import DB from '../config';
+import {DB} from '../config';
 import store from '../../../data/store';
 import { Reference } from '../../general';
 

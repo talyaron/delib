@@ -1,6 +1,6 @@
 import m from 'mithril';
 
-import DB from './config';
+import {DB} from './config';
 
 //model
 import store from '../../data/store';

@@ -1,7 +1,7 @@
 import m from 'mithril';
 import store from '../../data/store';
 
-import DB from '../firebase/config';
+import {DB} from '../firebase/config';
 
 function googleLogin() {
 

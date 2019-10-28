@@ -1,6 +1,6 @@
 import store from '../../data/store';
 import m from 'mithril';
-import DB from '../firebase/config';
+import {DB} from '../firebase/config';
 
 //functions
 import { listenToFeeds } from '../firebase/get/get';

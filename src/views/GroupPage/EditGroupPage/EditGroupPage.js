@@ -1,6 +1,7 @@
 import m from "mithril";
 import "../../Groups/NewGroupPage/NewGroupPage.css";
 import { get } from "lodash";
+import {DB} from '../../../functions/firebase/config';
 
 //model
 import store from "../../../data/store";
@@ -93,7 +94,7 @@ function getImage(event, sessionUid, picIndex, vnode) {
   const metadata = {
     contentType: image.type
   };
-  const uid = randomUid();
+//   const uid = randomUid();
   // const task = ref.child(uid).put(image, metadata);
   ref
     .put(image, metadata)
