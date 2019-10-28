@@ -419,6 +419,7 @@ module.exports = {
 	updateOption,
 	addToFeed,
 	createGroup,
+	updateGroup,
 	createQuestion,
 	updateQuestion,
 	createSubQuestion,

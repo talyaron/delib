@@ -105,7 +105,7 @@ function getGroupDetails(groupId, vnode) {
     .doc(groupId)
     .onSnapshot(groupDB => {
       store.groups[groupId] = groupDB.data();    
-      vnode.state.groupName = groupDB.data().title;
+      vnode.state.title = groupDB.data().title;
       m.redraw();
     });
 }
