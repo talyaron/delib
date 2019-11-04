@@ -1,4 +1,4 @@
-import config from '../../../configKey';
+import config from './configKey';
 
 
 

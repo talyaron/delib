@@ -213,7 +213,6 @@ function getSubQuestionOptions(
 
   return optionRef
     .orderBy(orderBy, "desc")
-    .limit(20)
     .onSnapshot(optionsDB => {
       let optionsArray = [];
       optionsDB.forEach(optionDB => {
