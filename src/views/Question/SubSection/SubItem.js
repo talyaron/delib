@@ -142,10 +142,10 @@ function addAnswer(event, vnode) {
         let va = vnode.attrs;
         let userName = '';
 
-        if (store.user.isAnonymous || store.user.displayName == null) {
+        if (store.user.isAnonymous || store.user.name == null) {
             userName = 'אנונימי/ת'
         } else {
-            userName = store.user.displayName
+            userName = store.user.name
         }
 
 

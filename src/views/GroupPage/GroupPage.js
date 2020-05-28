@@ -1,4 +1,5 @@
 import m from 'mithril';
+import { get } from 'lodash';
 
 import { deep_value, setWrapperHeight } from '../../functions/general';
 import store from '../../data/store';
@@ -26,11 +27,12 @@ module.exports = {
                 title: '',
                 description: ''
             },
+            isAdmin:false,
             edit:true,
             addQuestion: false,
             questions: [],
             unsubscribe: {},
-            groupName: deep_value(store.groups, '[' + vnode.attrs.id + '].title', 'שם הקבוצה')
+            groupName: get(store, 'groups[' + vnode.attrs.id + '].title', 'שם הקבוצה')
         }
 
         getQuestions('on', vnode.attrs.id, vnode);
@@ -40,9 +42,11 @@ module.exports = {
         setWrapperHeight('headerContainer', 'groupWrapper');
     },
     onbeforeupdate: vnode => {
+        //check is admin
+        vnode.state.isAdmin = (store.user.uid == get(store, 'groups[' + vnode.attrs.id + '].creatorId', 'aaaaa'));   
 
         //update name of group
-        vnode.state.groupName = deep_value(store.groups, '[' + vnode.attrs.id + '].title', 'שם הקבוצה');
+        vnode.state.groupName = get(store, 'groups[' + vnode.attrs.id + '].title', 'שם הקבוצה');
         document.title = `דליב - ${vnode.state.groupName}`
 
         //update array of questions
@@ -66,7 +70,10 @@ module.exports = {
                 <Header
                     upLevelUrl='/groups'
                     topic='קבוצה'
-                    title={vnode.state.groupName} />
+                    title={vnode.state.groupName}
+                    isAdmin={vnode.state.isAdmin}
+                    editPageLink={`/editgroup/${vnode.attrs.id}`}
+                />
                 <div class='questionsWrapper' id='groupWrapper'>
                     {
                         vnode.state.questions.map((question, key) => {

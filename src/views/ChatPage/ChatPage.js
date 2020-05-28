@@ -15,7 +15,7 @@ import { setMessage, addToFeed } from '../../functions/firebase/set/set';
 import { deep_value, setWrapperHeight } from '../../functions/general';
 
 //Data
-import DB from '../../functions/firebase/config';
+import {DB} from '../../functions/firebase/config';
 
 module.exports = {
     oninit: vnode => {
@@ -155,7 +155,7 @@ function sendMessage(vnode) {
             va.subQuestionId,
             va.optionId,
             store.user.uid,
-            store.user.displayName || 'אנונימי',
+            store.user.name || 'אנונימי',
             vnode.state.input,
             vnode.state.groupTitle,
             vnode.state.questionTitle,

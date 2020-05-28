@@ -13,10 +13,10 @@ module.exports = {
         return (
             <aside id='aside'>
                 <div class='topAside'>
-                    <p>{store.user.displayName||'Anonymous'}</p>
+                    <p>{store.user.name}</p>
                 </div>
                 <div class='menuAside'>
-                    {store.user.displayName?
+                    {store.user.name?
                         <div onclick={() => { logout() }}>התנתקות</div>
                         :
                         <div onclick={() => {
@@ -24,7 +24,11 @@ module.exports = {
                             m.route.set('/logingoogle')
                         }}>התחברות</div>
                     }
-                    <div onclick={(e) => { editPage(e,vnode)}}>עריכת הדף</div>
+                    {vnode.attrs.isAdmin?
+                        <div onclick={(e) => { editPage(e, vnode) }}>עריכת הדף</div>
+                        :
+                        <div />
+                    }
                     <div>המכון לדמוקרטיה דיונית</div>
                     <div>תודות</div>
                 </div>
@@ -35,7 +39,9 @@ module.exports = {
 
 function editPage(e,vnode) {
     e.stopPropagation();
-    console.log(m.route.param())
+    
     store.editEntity = m.route.param();
-    store.editEntity['entity']
+    store.editEntity['entity'];
+    m.route.set(vnode.attrs.editPageLink);
+
 }

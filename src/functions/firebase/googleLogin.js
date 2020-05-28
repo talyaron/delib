@@ -1,7 +1,7 @@
 import m from 'mithril';
 import store from '../../data/store';
 
-import DB from '../firebase/config';
+import {DB} from '../firebase/config';
 
 function googleLogin() {
 
@@ -32,12 +32,16 @@ function googleLogin() {
 }
 
 function anonymousLogin() {
-    firebase.auth().signInAnonymously().catch(function (error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // ...
-    });
+    if (store.userTempName) {
+        firebase.auth().signInAnonymously().catch(function (error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // ...
+        });
+    } else {
+        console.log('User didnot provide username')
+    }
 }
 
 function logout() {

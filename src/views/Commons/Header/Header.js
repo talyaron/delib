@@ -104,7 +104,7 @@ module.exports = {
                     }
 
                 </header>
-                <Aside />
+                <Aside isAdmin={vnode.attrs.isAdmin} editPageLink={vnode.attrs.editPageLink} />
             </div>
         )
     }

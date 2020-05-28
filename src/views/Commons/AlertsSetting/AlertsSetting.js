@@ -8,10 +8,7 @@ module.exports = {
         vnode.state = {
           alertsSetting:vnode.attrs.alertsSetting
       }  
-    },
-    onpudate: vnode => {
-      console.dir(vnode.state.alertsSetting)  
-    },
+    },   
 	view: (vnode) => {
 		return (
             <div class={vnode.attrs.isAlertsSetting ? "alertsSetting_bkg" : 'hidden'}>

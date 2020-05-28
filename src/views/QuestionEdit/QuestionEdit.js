@@ -79,14 +79,7 @@ module.exports = {
       }
     });
   },
-  onbeforeupdate: vnode => {
-    // let counter = 0;
-    // for (let i in vnode.state.subQuestions) {
-    //     vnode.state.subQuestionsArray[counter] = vnode.state.subQuestions[i];
-    //     counter++;
-    // }
-    // console.dir(vnode.state.subQuestionsArray)
-  },
+  
   onupdate: vnode => {
     setWrapperHeight("headerContainer", "questionEditWrapperAll");
   },

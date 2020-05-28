@@ -13,8 +13,9 @@ module.exports = {
   oninit: vnode => {
    
     vnode.state = {
-      title: "",
-      description: "",
+      creatorName:vnode.attrs.creatorName || 'אנונימי',
+      title:vnode.attrs.title,
+      description: vnode.attrs.description,
       up: false,
       down: false,
       consensusPrecentage: "",
@@ -26,11 +27,12 @@ module.exports = {
         offsetLeft: 0
       },
       isEdit: false,
+      isNamed:true,
       more: vnode.attrs.more || { text: "", URL: "" }
     };
 
-    vnode.state.title = vnode.attrs.title;
-    vnode.state.description = vnode.attrs.description;
+        
+    
 
     vnode.state.likeUnsubscribe = getOptionVote(
       vnode.attrs.groupId,
@@ -144,6 +146,23 @@ module.exports = {
             />
           </div>
           <div class="optionContent">
+            {!vnode.state.isEdit ?
+              <div class='option_creator'>מציע/ה: {vnode.state.creatorName}</div>
+              :
+              <div class='option_creator'>
+                <input
+									type="checkbox"
+									defaultChecked={vnode.state.isNamed}
+									onchange={(e) => {
+										isAnonymous(e, vnode);
+									}}
+                />
+                {vnode.state.isNamed ?
+                  <span>מציע\ה: {vnode.state.creatorName}</span> :
+                  <span>אנונימי/ת</span>
+                }
+              </div>
+            }
             <div class="cardTitle">
               {!vnode.state.isEdit ? (
                 <span>{vnode.attrs.title}</span>
@@ -345,4 +364,9 @@ function setSelection(upDown, vnode) {
       );
     }
   }
+}
+
+function isAnonymous(e, vnode) {
+  vnode.state.isNamed = e.target.checked;
+ 
 }

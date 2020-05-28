@@ -12,11 +12,26 @@
     max-width: 500px;
     margin: auto;
     position: relative;
-    top: 20%;
+    top: 10%;
     background: white;
     box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.459);
     border-radius: 10px;
     padding: 10px;
+}
+
+.moduleCreator {
+    font-size: 1.2rem;
+}
+
+.moduleCreator>input {
+    width: 20px;
+    height: 20px;
+    opacity: 0.75;
+}
+
+.moduleCreator>span {
+    font-size: 1.5rem;
+    color: var(--textheader);
 }
 
 .moduleTitle {
@@ -27,7 +42,7 @@
     font-weight: var(--textHeaderWeight);
 }
 
-.moduleInputs {
+/* .moduleInputs {
     display: flex;
     flex-direction: column;
 }
@@ -48,7 +63,7 @@
     border-right: 0px;
     font-family: 'Varela Round', sans-serif;
     opacity: 0.75;
-}
+} */
 
 .moduleButtons {
     width: 100%;
@@ -56,8 +71,7 @@
     justify-content: center;
 }
 
-.modalMoreInfo{
-    
+.modalMoreInfo {
     display: flex;
     flex-direction: column;
 }

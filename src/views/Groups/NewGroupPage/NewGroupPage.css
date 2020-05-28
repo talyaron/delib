@@ -1,0 +1,30 @@
+.wrapper_newGroup{
+    margin-top:80px;
+}
+
+.addPicturesPanel {
+    background: #8080801c;
+    display: table-cell;
+    vertical-align: middle;
+    margin: 8px 0px;
+    height: 200px;
+    text-align: center;
+    user-select: none;
+    cursor: pointer;
+}
+
+.addPicturesPanel>span {
+    position: relative;
+    top: 80px;
+    font-size: 40px;
+    color: gray;
+}
+
+.addPicture {
+    display: none;
+}
+
+.imgOption {
+    max-width: 100%;
+    max-height: 100%;
+}

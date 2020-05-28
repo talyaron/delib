@@ -1,5 +1,5 @@
 import m from 'mithril';
-import DB from '../config';
+import {DB} from '../config';
 import store from '../../../data/store';
 import { Reference } from '../../general';
 
@@ -16,10 +16,22 @@ function createGroup(creatorId, title, description) {
 				id: docRef.id,
 				date: new Date().getTime()
 			});
-		})
+			m.route.set(`/group/${docRef.id}`);
+		})		
 		.catch(function(error) {
 			console.error('Error adding document: ', error);
 		});
+}
+
+function updateGroup(vnode) {
+	DB.collection('groups').doc(vnode.attrs.id).update({
+		title: vnode.state.title,
+		description:vnode.state.description
+	}).then(doc => {
+		m.route.set(`/group/${vnode.attrs.id}`);
+	}).catch(err => {
+		console.error(err)
+	})
 }
 
 function createQuestion(groupId, creatorId, title, description) {
@@ -382,6 +394,7 @@ function addToFeed(addRemove, pathArray, refString, collectionOrDoc) {
 }
 
 function updateOption(vnode) {
+	let creatorName = vnode.state.isNamed?vnode.state.creatorName:'אנונימי/ת' 
 	DB.collection('groups')
 		.doc(vnode.attrs.groupId)
 		.collection('questions')
@@ -391,6 +404,8 @@ function updateOption(vnode) {
 		.collection('options')
 		.doc(vnode.attrs.optionId)
 		.update({
+			creatorUid:store.user.uid,			
+			creatorName,			
 			title: vnode.state.title,
 			description: vnode.state.description,
 			more: {
@@ -404,6 +419,7 @@ module.exports = {
 	updateOption,
 	addToFeed,
 	createGroup,
+	updateGroup,
 	createQuestion,
 	updateQuestion,
 	createSubQuestion,

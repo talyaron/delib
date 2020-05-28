@@ -15,7 +15,7 @@ module.exports = {
                 <input type="checkbox"
                     onclick={(e) => {
                         vnode.attrs.vp.state.alertsSetting[vnode.attrs.index].isOn = e.target.checked;
-                        console.dir(vnode.attrs.vp.state.alertsSetting)
+                      
                        
                     }} />
 				<span class="slider round" />

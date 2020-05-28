@@ -8,9 +8,14 @@
     ],
     "rewrites": [
       {
+        "source": "/subApps/mass-names{,/**}",
+        "destination": "/subApps/mass-names/index.html"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
+      
     ]
   },
   "functions": {

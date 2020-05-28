@@ -11,7 +11,7 @@
     --textHeaderSubTitleSize: 1rem;
     --textRegular: rgba(0, 0, 0, 0.55);
     --textRegularSize: 1rem;
-    --maxWidthOnPC:550px;
+    --maxWidthOnPC: 550px;
 }
 
 html, body {
@@ -20,6 +20,7 @@ html, body {
     margin: 0px;
     font-family: 'Varela Round', sans-serif;
     font-size: 12px;
+    background: #e8e8e8;
 }
 
 body {
@@ -131,6 +132,8 @@ body {
     padding: 12px 25px;
     margin: 5px 10px;
     background: teal;
+    color:white;
+    border: none;
     border-radius: 5px;
     /* box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5); */
     user-select: none;
@@ -232,4 +235,29 @@ body {
     border-radius: 5px 5px 0px 0px;
     font-size: 1.2rem;
     font-weight: 600;
+}
+
+/* Inputs */
+
+.inputs {
+    display: flex;
+    flex-direction: column;
+}
+
+.inputs>* {
+    margin-bottom: 10px;
+    resize: none;
+}
+
+.inputDescription {
+    height: 4rem;
+}
+
+.input {
+    border-bottom: 2px solid #f97676;
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    font-family: 'Varela Round', sans-serif;
+    opacity: 0.75;
 }

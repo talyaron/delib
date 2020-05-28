@@ -4,16 +4,18 @@ import m from "mithril";
 import store from "../../data/store";
 import settings from "../../data/settings";
 
-
 //components
-import './SubQuestionsPage.css'
+import "./SubQuestionsPage.css";
 import SubQuestion from "../Question/SubQuestions/SubQuestion";
 import Modal from "../Commons/Modal/Modal";
 import Spinner from "../Commons/Spinner/Spinner";
 
 //functions
-import { getSubQuestion } from "../../functions/firebase/get/get";
-import { set } from "lodash";
+import {
+  getSubQuestion,
+  getGroupDetails
+} from "../../functions/firebase/get/get";
+import { get } from "lodash";
 
 let unsubscribe = () => {};
 
@@ -34,7 +36,8 @@ module.exports = {
         isShow: false,
         which: "subQuestion",
         title: "הוספת אפשרות"
-      }
+      },
+      group: { logo: "", title: "" }
     };
   },
   oncreate: vnode => {
@@ -43,23 +46,38 @@ module.exports = {
       vnode.attrs.questionId,
       vnode.attrs.subQuestionId
     );
+
+    getGroupDetails(vnode.attrs.groupId);
   },
   onbeforeupdate: vnode => {
     if (store.subQuestions.hasOwnProperty(vnode.attrs.subQuestionId)) {
       vnode.state.details = store.subQuestions[vnode.attrs.subQuestionId];
     }
+
+    let groupObj = get(store, `groups[${vnode.attrs.groupId}]`, {
+      logo: "",
+      title: ""
+    });
+    vnode.state.group = groupObj;
   },
   onremove: vnode => {
     unsubscribe();
   },
   view: vnode => {
-  
     return (
       <div>
         {vnode.state.details.title ? (
           <div>
-            <div class='headers subQuestionHeader'>
-              <div class='title'>{vnode.state.details.title}</div>              
+            <div class="subQuestionHeader">
+              <div>
+                <div class='subQuestionTitle'>{vnode.state.group.title}</div>
+                {vnode.state.group.logo ? (
+                  <img src={vnode.state.group.logo} />
+                ) : (
+                  <div />
+                )}
+              </div>
+              <div class="title">{vnode.state.details.title}</div>
             </div>
             <SubQuestion
               groupId={vnode.attrs.groupId}
@@ -91,7 +109,7 @@ module.exports = {
                     : "footerButton"
                 }
                 onclick={() => {
-                  vnode.state.details.orderBy = 'new'
+                  vnode.state.details.orderBy = "new";
                 }}
               >
                 חדשות
@@ -103,7 +121,7 @@ module.exports = {
                     : "footerButton"
                 }
                 onclick={() => {
-                  vnode.state.details.orderBy = 'top'
+                  vnode.state.details.orderBy = "top";
                 }}
               >
                 הכי מוסכמות
@@ -115,9 +133,11 @@ module.exports = {
                     : "footerButton"
                 }
                 onclick={() => {
-                  vnode.state.details.orderBy = 'message'
+                  vnode.state.details.orderBy = "message";
                 }}
-              >שיחות אחרונות</div>
+              >
+                שיחות אחרונות
+              </div>
             </div>
             <Modal
               showModal={vnode.state.showModal.isShow}

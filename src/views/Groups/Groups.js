@@ -13,7 +13,6 @@ import Feed from '../Commons/Feed/Feed';
 //functions
 import { getUserGroups } from '../../functions/firebase/get/get';
 import { restrictedPage } from '../../functions/logins';
-import { createGroup } from '../../functions/firebase/set/set';
 import { setWrapperHeight } from '../../functions/general';
 
 import store from '../../data/store';
@@ -26,16 +25,13 @@ module.exports = {
         if (restrictedPage('/groups')) {
             getUserGroups('on', store.user.uid);
         }
-
-
-
-
     },
     oncreate: vnode => {
         setWrapperHeight('headerContainer', 'groupsWrapper');
     },
     onupdate: vnode => {
         setWrapperHeight('headerContainer', 'groupsWrapper');
+        console.dir(store.userGroups)
     },
     onremove: vnode => {
         getUserGroups('off', store.user.uid);
@@ -54,11 +50,13 @@ module.exports = {
                                 title={group.title}
                                 description={group.description}
                                 id={group.id}
-                                key={key} />
+                                key={key}
+                                logo={group.logo}
+                                />
                         })
                     }
                 </div>
-                <div class='fav' onclick={() => { createGroup(store.user.uid, 'some title', 'some description') }} >
+                <div class='fav' onclick={() => { m.route.set('/newgroup') }} >
                     <div>+</div>
                 </div>
                 <Feed />

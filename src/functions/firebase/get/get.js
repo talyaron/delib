@@ -1,5 +1,5 @@
 import m from "mithril";
-import DB from "../config";
+import {DB} from "../config";
 import store from "../../../data/store";
 
 
@@ -104,8 +104,8 @@ function getGroupDetails(groupId, vnode) {
   return DB.collection("groups")
     .doc(groupId)
     .onSnapshot(groupDB => {
-      store.groups[groupId] = groupDB.data();
-      vnode.state.groupName = groupDB.data().description;
+      store.groups[groupId] = groupDB.data();   
+     
       m.redraw();
     });
 }
@@ -213,7 +213,6 @@ function getSubQuestionOptions(
 
   return optionRef
     .orderBy(orderBy, "desc")
-    .limit(20)
     .onSnapshot(optionsDB => {
       let optionsArray = [];
       optionsDB.forEach(optionDB => {
@@ -242,6 +241,7 @@ function getSubQuestionOptions(
       });
 
       set(store, `options[${subQuestionId}]`, optionsArray);
+      console.dir(store.options[subQuestionId]);
 
       m.redraw();
     });

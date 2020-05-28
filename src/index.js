@@ -37,8 +37,8 @@ import QuestionEdit from './views/QuestionEdit/QuestionEdit';
 import ChatPage from './views/ChatPage/ChatPage';
 import SubQuestionsPage from './views/SubQuestionsPage/SubQuestionsPage';
 import Edit from './views/Commons/Edit/Edit';
-
-
+import NewGroupPage from './views/Groups/NewGroupPage/NewGroupPage';
+import EditGroupPage from './views/GroupPage/EditGroupPage/EditGroupPage';
 
 
 
@@ -48,6 +48,8 @@ m.route(root, "/login", {
     "/logout": Logout,
     "/groups": Groups,
     "/group/:id": GroupPage,
+    "/newgroup": NewGroupPage,
+    "/editgroup/:id":EditGroupPage,
     '/question/:groupId/:questionId': Question,
     "/questionEdit/:groupId/:questionId": QuestionEdit,
     '/optionchat/:groupId/:questionId/:subQuestionId/:optionId': ChatPage,
