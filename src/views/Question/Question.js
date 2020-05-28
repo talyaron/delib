@@ -13,7 +13,7 @@ import AlertsSetting from '../Commons/AlertsSetting/AlertsSetting';
 
 //model
 import store from '../../data/store';
-import settings from '../../data/settings';
+// import settings from '../../data/settings';
 
 
 //functions
