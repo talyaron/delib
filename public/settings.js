@@ -96,5 +96,3 @@ const settings = {
         'votes'
     ]
 }
-
-export default settings; 

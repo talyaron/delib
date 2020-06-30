@@ -139,7 +139,7 @@ function setNewInfo(vnp, vnode) {
 	}
 
   let userName = vnode.state.isNamed ? store.user.name : 'אונוימי/ת';
-  console.log(userName, vnode.state.isNamed)
+  
 	createOption(
 		vnp.attrs.groupId,
 		questionId,
