@@ -16,13 +16,13 @@ import { getSubQuestion, getSubQuestionOptions } from '../../../functions/fireba
 import { subscribeToNotification, unsubscribeFromNotification } from '../../../functions/firebase/messaging';
 import { get } from 'lodash';
 
-let unsubscribe = () => {};
-let unsubscribeOptions = () => {};
+let unsubscribe = () => { };
+let unsubscribeOptions = () => { };
 let subQuestionObj;
 
 module.exports = {
 	oninit: (vnode) => {
-	
+
 		vnode.state = {
 			options: [],
 			orderBy: get(store, `subQuestions[${vnode.attrs.subQuestionId}].orderBy`, vnode.attrs.orderBy)
@@ -45,7 +45,7 @@ module.exports = {
 	},
 	onbeforeupdate: (vnode) => {
 		vnode.state.orderBy = vnode.attrs.orderBy;
-	
+
 	},
 	onremove: (vnode) => {
 		unsubscribe();
@@ -57,28 +57,27 @@ module.exports = {
 				<div class="questionSection">
 					<div
 						class="questionSectionTitle questions"
-						style={`color:${vnode.attrs.info.colors.color}; background:${vnode.attrs.info.colors
-							.background}`}>
-					
+						style={`color:${vnode.attrs.info.colors.color};`}>
+
 						{
 							store.push.includes(vnode.attrs.subQuestionId) ? (
-							<div
-								
-								onclick={() => {
-									unsubscribeFromNotification(vnode.attrs.subQuestionId);
-								}}>									
+								<div
+
+									onclick={() => {
+										unsubscribeFromNotification(vnode.attrs.subQuestionId);
+									}}>
 									<img src="img/round_speaker_notes_off_white_24dp.png" />
-							</div>
-						) : (
-							<div
-								
-								onclick={() => {
-									subscribeToNotification(vnode.attrs.subQuestionId);
-								}}>
-								<img src="img/round_speaker_notes_white_24dp.png" />
-							</div>
-							)}
-							<div>{vnode.attrs.title}</div>
+								</div>
+							) : (
+									<div
+
+										onclick={() => {
+											subscribeToNotification(vnode.attrs.subQuestionId);
+										}}>
+										<img src="img/round_speaker_notes_white_24dp.png" />
+									</div>
+								)}
+						<div>{vnode.attrs.title}</div>
 						{vnode.attrs.isAlone ? (
 							<div
 								onclick={() => {
@@ -87,27 +86,29 @@ module.exports = {
 								<img src="img/icons8-back-24.png" />
 							</div>
 						) : (
-							<div
-								onclick={() => {
-									m.route.set(
-										`/subquestions/${vnode.attrs.groupId}/${vnode.attrs.questionId}/${vnode.attrs
-											.subQuestionId}`
-									);
-								}}>
-								<img src="img/icons8-advertisement-page-24-white.png" />
-							</div>
-						)}
+								<div
+									onclick={() => {
+										m.route.set(
+											`/subquestions/${vnode.attrs.groupId}/${vnode.attrs.questionId}/${vnode.attrs
+												.subQuestionId}`
+										);
+									}}>
+									<img src="img/icons8-advertisement-page-24-white.png" />
+								</div>
+							)}
 					</div>
 					{switchProcess(vnode.state.processType, vnode)}
-					<div class="questionSectionFooter">
-						<div
-							class="buttons questionSectionAddButton"
-							onclick={() => {
-								addQuestion(vnode, vnode.attrs.info.type);
-							}}>
-							{vnode.attrs.info.add}
-						</div>
-					</div>
+					{vnode.attrs.isAlone ?
+						<div class="questionSectionFooter">
+							<div
+								class="buttons questionSectionAddButton"
+								onclick={() => {
+									addQuestion(vnode, vnode.attrs.info.type);
+								}}>
+								{vnode.attrs.info.add}
+							</div>
+						</div> : null
+					}
 				</div>
 			</div>
 		);
@@ -126,7 +127,7 @@ function addQuestion(vnode, type) {
 function switchProcess(type, vnode) {
 	let options = get(store, `options[${vnode.attrs.subQuestionId}]`, []);
 	options = orderOptionsBy(options, vnode.state.orderBy);
-	
+
 
 	switch (type) {
 		case settings.processes.suggestions:
@@ -150,7 +151,7 @@ function switchProcess(type, vnode) {
 				/>
 			);
 	}
-	
+
 }
 
 function orderOptionsBy(options, orderBy) {
