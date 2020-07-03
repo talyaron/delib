@@ -1,6 +1,6 @@
 var store = {
     user: {},
-    userTempName:'',
+    userTempName: '',
     userGroups: [],
     current: {
         org: {
@@ -13,7 +13,7 @@ var store = {
     orgs: [],
     teams: [],
     lastPage: "",
-    loginType:'',
+    loginType: '',
     questions: {}, //list of questions in groupPage
     groups: {}, //groups name
     options: [],//options in a given question
@@ -28,7 +28,7 @@ var store = {
     subscribed: {}, //subscribed entityes
     subQuestions: {},
     editEntity: false,
-    subQuestions: {},
+
     push: []
 }
 

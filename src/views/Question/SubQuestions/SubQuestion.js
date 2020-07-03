@@ -5,6 +5,7 @@ import './SubQuestion.css';
 //componetns
 import Suggests from './Suggests/Suggets';
 import Votes from './Votes/Votes';
+import Modal from '../../Commons/Modal/Modal';
 
 //model
 import settings from '../../../data/settings';
@@ -25,7 +26,14 @@ module.exports = {
 
 		vnode.state = {
 			options: [],
-			orderBy: get(store, `subQuestions[${vnode.attrs.subQuestionId}].orderBy`, vnode.attrs.orderBy)
+			orderBy: get(store, `subQuestions[${vnode.attrs.subQuestionId}].orderBy`, vnode.attrs.orderBy),
+			showModal: {
+				isShow: false,
+				which: 'subQuestion',
+				subQuestionId: vnode.attrs.subQuestionId,
+				title: vnode.attrs.title
+			},
+			details: { title: vnode.attrs.title }
 		};
 
 		//get user before login to page
@@ -77,9 +85,10 @@ module.exports = {
 										<img src="img/round_speaker_notes_white_24dp.png" />
 									</div>
 								)}
-						<div>{vnode.attrs.title}</div>
+						<div >{vnode.attrs.title}</div>
 						{vnode.attrs.isAlone ? (
 							<div
+
 								onclick={() => {
 									m.route.set(`/question/${vnode.attrs.groupId}/${vnode.attrs.questionId}`);
 								}}>
@@ -98,6 +107,9 @@ module.exports = {
 							)}
 					</div>
 					{switchProcess(vnode.state.processType, vnode)}
+					<div class="fav subQuestionFav" onclick={() => { vnode.state.showModal.isShow = true; }}>
+						<div>+</div>
+					</div>
 					{vnode.attrs.isAlone ?
 						<div class="questionSectionFooter">
 							<div
@@ -110,6 +122,13 @@ module.exports = {
 						</div> : null
 					}
 				</div>
+				<Modal
+					showModal={vnode.state.showModal.isShow}
+					whichModal={vnode.state.showModal.which}
+					title={vnode.state.showModal.title}
+					placeholderTitle="כותרת"
+					placeholderDescription="הסבר"
+					vnode={vnode} />
 			</div>
 		);
 	}

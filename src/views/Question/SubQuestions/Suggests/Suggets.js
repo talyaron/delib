@@ -1,4 +1,5 @@
-import m from 'mithril'
+import m from 'mithril';
+import './Suggests.css';
 
 //components
 import Option from './Option/Option';
@@ -11,7 +12,7 @@ module.exports = {
     view: vnode => {
         
         return (
-            <div>
+            <div class='suggestsWrapper'>
                 {vnode.attrs.options.map((option, index) => {
                    
                     return <Option

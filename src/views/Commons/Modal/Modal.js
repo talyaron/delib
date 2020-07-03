@@ -140,7 +140,9 @@ function setNewInfo(vnp, vnode) {
 
   let userName = vnode.state.isNamed ? store.user.name : 'אונוימי/ת';
   
-	createOption(
+  console.log(vnp.state)
+	
+  createOption(
 		vnp.attrs.groupId,
 		questionId,
 		subQuestionId,
@@ -168,6 +170,7 @@ function setNewInfo(vnp, vnode) {
 }
 
 function toggleShowModal(onOff, vnode) {
+	debugger;
 	if (onOff == 'on') {
 		vnode.state.showModal = true;
 	} else {

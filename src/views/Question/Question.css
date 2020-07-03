@@ -16,6 +16,13 @@
     text-align: center;
 }
 
+.wrapperSubQuestions {
+    position: relative;
+    margin: auto;
+   
+    padding: 10px;
+}
+
 .subHeader {
     background: var(--accent);
     color: white;
@@ -69,4 +76,16 @@
     box-sizing: 2px 2px;
     box-shadow: 2px 2px 4px #0000006e;
     color: #4c4a4a;
+}
+
+.subQuestionsWrapper{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+@media only screen and (max-width: 900px){
+    .subQuestionsWrapper{
+     
+        grid-template-columns: repeat(1, 1fr);
+    }
 }
