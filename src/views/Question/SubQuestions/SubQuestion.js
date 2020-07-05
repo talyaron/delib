@@ -61,7 +61,7 @@ module.exports = {
 	},
 	view: (vnode) => {
 		return (
-			<div class="wrapper" id="optionsWrapper">
+			<div class="wrapper subQuestionWrapper" id="optionsWrapper">
 				<div class="questionSection">
 					<div
 						class="questionSectionTitle questions"
