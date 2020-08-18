@@ -29,7 +29,7 @@
     "webpack-cli": "^3.1.0"
   },
   "dependencies": {
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "mithril": "^1.1.6",
     "sortablejs": "^1.8.4"
   }
