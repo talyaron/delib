@@ -170,7 +170,7 @@ function setNewInfo(vnp, vnode) {
 }
 
 function toggleShowModal(onOff, vnode) {
-	debugger;
+	
 	if (onOff == 'on') {
 		vnode.state.showModal = true;
 	} else {

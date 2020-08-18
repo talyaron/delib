@@ -15,3 +15,11 @@
 .subQuestionWrapper{
     width: 100%;
 }
+
+.addOptionButton{
+    border-radius: 5px;
+    border: 2px solid white;
+    padding: 4px 20px;
+    user-select: none;
+    cursor: pointer;
+}
