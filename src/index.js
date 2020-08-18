@@ -14,7 +14,16 @@ m.route.prefix('?');
 //model
 import { EntityModel } from './data/dataTypes';
 
+//dealing with URLs from facebook with %
 let nativeURL = window.document.URL;
+
+let decoded1 = decodeURIComponent(nativeURL);
+let decoded2 = decodeURIComponent(decoded1);
+if(nativeURL !== decoded2){
+    window.history.pushState(null, 'test', `/?/${decoded2}`);
+    nativeURL = decoded2;
+}
+
 //deal with facebook additions of url
 if (nativeURL.includes('&')) {
     let indexAnd = nativeURL.indexOf('&');
