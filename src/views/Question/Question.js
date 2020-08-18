@@ -59,7 +59,12 @@ module.exports = {
                 public: false,
                 registered: false
             },
-            isAlertsSetting:false
+            isAlertsSetting:false,
+            showModal:{
+                isShow:true,
+                which:'subQuestion',
+                subQuestionId:''
+            }
         }
 
         //get user before login to page
@@ -122,7 +127,7 @@ module.exports = {
                     />
 
                 </div>
-                <div class='wrapperAll' id='questionWrapperAll'>
+                <div class='wrapperSubQuestions' id='questionWrapperAll'>
 
                     <div class='wrapper'>
                         <Description
@@ -133,6 +138,7 @@ module.exports = {
                             creatorId={vnode.state.creatorId}
                         />
                     </div>
+                    <div class='subQuestionsWrapper'>
                     {
                         vnode.state.subQuestions.map((subQuestion, index) => {
 
@@ -153,6 +159,7 @@ module.exports = {
                             )
                         })
                     }
+                    </div>
 
                 </div>
 
@@ -163,14 +170,15 @@ module.exports = {
                         :
                         <div />
                 }
-                <Modal
+                {/* <Modal
                     showModal={vnode.state.showModal.isShow}
                     whichModal={vnode.state.showModal.which}
                     title={vnode.state.showModal.title}
                     placeholderTitle='כותרת'
                     placeholderDescription='הסבר'
                     vnode={vnode}
-                />
+                    id={vnode.attrs.questionId}
+                /> */}
                 <Feed />
                 <AlertsSetting
                     isAlertsSetting={vnode.state.isAlertsSetting}
