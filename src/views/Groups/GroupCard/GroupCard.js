@@ -1,5 +1,5 @@
 import m from 'mithril';
-import './Group.css';
+import './GroupCard.css';
 import store from '../../../data/store';
 
 module.exports = {

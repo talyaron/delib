@@ -5,7 +5,7 @@ import omit from 'lodash/omit';
 import values from 'lodash/values';
 
 import './Groups.css';
-import Group from './Group/Group';
+import Group from './GroupCard/GroupCard';
 import Header from '../Commons/Header/Header';
 import Feed from '../Commons/Feed/Feed';
 
@@ -45,7 +45,7 @@ module.exports = {
                     {
                         store.userGroups.map((group, key) => {
 
-                            return <Group
+                            return <f
                                 route='/group/'
                                 title={group.title}
                                 description={group.description}
