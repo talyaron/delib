@@ -1,13 +1,13 @@
 import m from "mithril";
 
 import "./Option.css";
-import store from "../../../../../data/store";
+import store from "../../../../data/store";
 
 import {
   setLike,
   updateOption
-} from "../../../../../functions/firebase/set/set";
-import { getOptionVote } from "../../../../../functions/firebase/get/get";
+} from "../../../../functions/firebase/set/set";
+import { getOptionVote } from "../../../../functions/firebase/get/get";
 
 module.exports = {
   oninit: vnode => {

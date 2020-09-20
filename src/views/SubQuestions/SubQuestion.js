@@ -5,16 +5,16 @@ import './SubQuestion.css';
 //componetns
 import Suggests from './Suggests/Suggets';
 import Votes from './Votes/Votes';
-import Modal from '../../Commons/Modal/Modal';
+import Modal from '../Commons/Modal/Modal';
 
 //model
-import settings from '../../../data/settings';
-import store from '../../../data/store';
-import { EntityModel } from '../../../data/dataTypes';
+import settings from '../../data/settings';
+import store from '../../data/store';
+import { EntityModel } from '../../data/dataTypes';
 
 //functions
-import { getSubQuestion, getSubQuestionOptions } from '../../../functions/firebase/get/get';
-import { subscribeToNotification, unsubscribeFromNotification } from '../../../functions/firebase/messaging';
+import { getSubQuestion, getSubQuestionOptions } from '../../functions/firebase/get/get';
+import { subscribeToNotification, unsubscribeFromNotification } from '../../functions/firebase/messaging';
 import { get } from 'lodash';
 
 let unsubscribe = () => { };
