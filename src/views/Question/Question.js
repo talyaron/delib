@@ -108,6 +108,7 @@ module.exports = {
 
         setWrapperHeight('headerContainer', 'questionWrapperAll');
 
+        console.log(store)
     },
     onremove: vnode => {
         if (typeof vnode.state.unsbscribe.subQuestions === 'function') {

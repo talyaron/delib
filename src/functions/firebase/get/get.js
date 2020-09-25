@@ -183,7 +183,7 @@ function getSubQuestion(groupId, questionId, subQuestionId) {
 
 }
 
-function getSubQuestionOptions(
+function listenToOptions(
   groupId,
   questionId,
   subQuestionId,
@@ -217,9 +217,11 @@ function getSubQuestionOptions(
       let optionsArray = [];
       optionsDB.forEach(optionDB => {
         let optionObj = optionDB.data();
-        optionObj.id = optionDB.id;
+        optionObj.id = optionObj.optionId= optionDB.id; //the preferd syntax is 'optionId' and not id, but we left the old 'id' for backward compatability purpose (Tal Yaron)
+        optionObj.subQuestionId = subQuestionId;
 
         //get before position
+        //Align for animation
         let elm = document.getElementById(optionObj.id);
         if (elm) {
           store.optionsLoc[optionObj.id] = {
@@ -241,6 +243,8 @@ function getSubQuestionOptions(
       });
 
       set(store, `options[${subQuestionId}]`, optionsArray);
+
+      //add or update or delete an option
     
 
       m.redraw();
@@ -547,7 +551,7 @@ module.exports = {
   getQuestionDetails,
   getSubQuestions,
   getSubQuestion,
-  getSubQuestionOptions,
+  listenToOptions,
   getOptionVote,
   getSubItems,
   getSubItemLikes,

@@ -1,7 +1,7 @@
 var store = {
     user: {},
     userTempName: '',
-    userGroups: [],
+    userGroups: [],// groups the users is listeneing for
     current: {
         org: {
             title: 'שם הארגון'
@@ -10,15 +10,15 @@ var store = {
             title: 'שם הקבוצה'
         }
     },
-    orgs: [],
-    teams: [],
-    lastPage: "",
+    orgs: [], //not used?
+    teams: [], //not used?
+    lastPage: "", //used to understand where the user was befrore login
     loginType: '',
-    questions: {}, //list of questions in groupPage
-    groups: {}, //groups name
-    options: [],//options in a given question
-    optionsVotes: {},
-    optionsLoc: {},
+    questions: {}, //list of questions. stored as {groupId:{questionId:{} }}
+    groups: {}, //groups stored as {groupId:{group info}}
+    options: [],//options in a given question. stored as subQuestionID:[options] 
+    optionsVotes: {}, //store how the user voted on each option. stored as {optionId: -1 to 1}
+    optionsLoc: {}, //options location. used for animations
     optionsDetails: {}, //vote on options by user
     messagesShow: {}, // history of messages to show
     feedsUnsubscribe: {}, // used for feed unsubscribes

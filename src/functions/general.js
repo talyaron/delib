@@ -95,7 +95,7 @@ class Reference {
             return refString;
 
         } else {
-            console.log('didnt created doc convertor yet');
+            console.info('didnt created doc convertor yet');
             return false;
         }
     }

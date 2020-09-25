@@ -13,7 +13,7 @@ import store from '../../../data/store';
 import { EntityModel } from '../../../data/dataTypes';
 
 //functions
-import { getSubQuestion, getSubQuestionOptions } from '../../../functions/firebase/get/get';
+import { getSubQuestion, listenToOptions } from '../../../functions/firebase/get/get';
 import { subscribeToNotification, unsubscribeFromNotification } from '../../../functions/firebase/messaging';
 import { get } from 'lodash';
 
@@ -49,7 +49,10 @@ module.exports = {
 		let va = vnode.attrs;
 
 		unsubscribe = getSubQuestion(va.groupId, va.questionId, va.subQuestionId);
-		unsubscribeOptions = getSubQuestionOptions(va.groupId, va.questionId, va.subQuestionId, 'top');
+		unsubscribeOptions = listenToOptions(va.groupId, va.questionId, va.subQuestionId, 'top');
+	},
+	onupdate:vnode=>{
+		console.log(store)
 	},
 	onbeforeupdate: (vnode) => {
 		vnode.state.orderBy = vnode.attrs.orderBy;
