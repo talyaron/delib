@@ -51,9 +51,7 @@ module.exports = {
 		unsubscribe = getSubQuestion(va.groupId, va.questionId, va.subQuestionId);
 		unsubscribeOptions = listenToOptions(va.groupId, va.questionId, va.subQuestionId, 'top');
 	},
-	onupdate:vnode=>{
-		console.log(store)
-	},
+
 	onbeforeupdate: (vnode) => {
 		vnode.state.orderBy = vnode.attrs.orderBy;
 
