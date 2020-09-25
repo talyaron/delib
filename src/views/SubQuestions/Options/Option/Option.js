@@ -5,16 +5,21 @@ import store from "../../../../data/store";
 
 import {
   setLike,
+<<<<<<< HEAD:src/views/SubQuestions/Options/Option/Option.js
   updateOption
 } from "../../../../functions/firebase/set/set";
 import { getOptionVote } from "../../../../functions/firebase/get/get";
+=======
+  updateOption,
+} from "../../../../../functions/firebase/set/set";
+import { getOptionVote } from "../../../../../functions/firebase/get/get";
+>>>>>>> Huka1:src/views/Question/SubQuestions/Suggests/Option/Option.js
 
 module.exports = {
-  oninit: vnode => {
-   
+  oninit: (vnode) => {
     vnode.state = {
-      creatorName:vnode.attrs.creatorName || 'אנונימי',
-      title:vnode.attrs.title,
+      creatorName: vnode.attrs.creatorName || "אנונימי",
+      title: vnode.attrs.title,
       description: vnode.attrs.description,
       up: false,
       down: false,
@@ -24,15 +29,12 @@ module.exports = {
       isAnimating: false,
       oldElement: {
         offsetTop: 0,
-        offsetLeft: 0
+        offsetLeft: 0,
       },
       isEdit: false,
-      isNamed:true,
-      more: vnode.attrs.more || { text: "", URL: "" }
+      isNamed: true,
+      more: vnode.attrs.more || { text: "", URL: "" },
     };
-
-        
-    
 
     vnode.state.likeUnsubscribe = getOptionVote(
       vnode.attrs.groupId,
@@ -44,10 +46,10 @@ module.exports = {
 
     store.optionsDetails[vnode.attrs.optionId] = {
       title: vnode.attrs.title,
-      description: vnode.attrs.description
+      description: vnode.attrs.description,
     };
   },
-  onbeforeupdate: vnode => {
+  onbeforeupdate: (vnode) => {
     let optionVote = store.optionsVotes[vnode.attrs.optionId];
 
     //set conesnsus level to string
@@ -76,7 +78,7 @@ module.exports = {
       vnode.state.down = false;
     }
   },
-  onupdate: vnode => {
+  onupdate: (vnode) => {
     // vnode.state.title = vnode.attrs.title;
     // vnode.state.description = vnode.attrs.description;
 
@@ -102,7 +104,7 @@ module.exports = {
       store.optionsLoc[vnode.attrs.optionId] = {
         offsetTop: 0,
         offsetLeft: 0,
-        toAnimate: false
+        toAnimate: false,
       };
 
       elementDOM
@@ -110,23 +112,23 @@ module.exports = {
           { top: -1 * topMove + "px", left: -1 * leftMove + "px" },
           {
             duration: 0,
-            begin: elms => {}
+            begin: (elms) => {},
           }
         )
         .velocity(
           { top: "0px", left: "0px" },
           {
             duration: 750,
-            complete: elms => {}
+            complete: (elms) => {},
           },
           "easeInOutCubic"
         );
     }
   },
-  onremove: vnode => {
+  onremove: (vnode) => {
     vnode.state.likeUnsubscribe();
   },
-  view: vnode => {
+  view: (vnode) => {
     return (
       <div
         class="card optionCard"
@@ -146,23 +148,26 @@ module.exports = {
             />
           </div>
           <div class="optionContent">
-            {!vnode.state.isEdit ?
-              <div class='option_creator'>מציע/ה: {vnode.state.creatorName}</div>
-              :
-              <div class='option_creator'>
-                <input
-									type="checkbox"
-									defaultChecked={vnode.state.isNamed}
-									onchange={(e) => {
-										isAnonymous(e, vnode);
-									}}
-                />
-                {vnode.state.isNamed ?
-                  <span>מציע\ה: {vnode.state.creatorName}</span> :
-                  <span>אנונימי/ת</span>
-                }
+            {!vnode.state.isEdit ? (
+              <div class="option_creator">
+                מציע/ה: {vnode.state.creatorName}
               </div>
-            }
+            ) : (
+              <div class="option_creator">
+                <input
+                  type="checkbox"
+                  defaultChecked={vnode.state.isNamed}
+                  onchange={(e) => {
+                    isAnonymous(e, vnode);
+                  }}
+                />
+                {vnode.state.isNamed ? (
+                  <span>מציע\ה: {vnode.state.creatorName}</span>
+                ) : (
+                  <span>אנונימי/ת</span>
+                )}
+              </div>
+            )}
             <div class="cardTitle">
               {!vnode.state.isEdit ? (
                 <span>{vnode.attrs.title}</span>
@@ -170,19 +175,19 @@ module.exports = {
                 <input
                   type="text"
                   value={vnode.state.title}
-                  onkeyup={e => {
+                  onkeyup={(e) => {
                     vnode.state.title = e.target.value;
                   }}
                 />
               )}
             </div>
-            <div class="cardDescription">
+            <div class="option__card__description">
               {!vnode.state.isEdit ? (
                 <span>{vnode.attrs.description}</span>
               ) : (
                 <textarea
                   value={vnode.state.description}
-                  onkeyup={e => {
+                  onkeyup={(e) => {
                     vnode.state.description = e.target.value;
                   }}
                 />
@@ -203,7 +208,7 @@ module.exports = {
                     <input
                       placeholder="טקסט"
                       type="text"
-                      oninput={e => {
+                      oninput={(e) => {
                         vnode.state.more.text = e.target.value;
                       }}
                       value={vnode.state.more.text}
@@ -211,7 +216,7 @@ module.exports = {
                     <input
                       type="url"
                       placeholder="URL"
-                      oninput={e => {
+                      oninput={(e) => {
                         vnode.state.more.URL = e.target.value;
                       }}
                       value={vnode.state.more.URL}
@@ -227,7 +232,7 @@ module.exports = {
                   <div class="cardTitle">
                     <input
                       type="text"
-                      oninput={e => {
+                      oninput={(e) => {
                         vnode.state.more.text = e.target.value;
                       }}
                       placeholder="טקסט"
@@ -235,7 +240,7 @@ module.exports = {
                     ></input>
                     <input
                       type="url"
-                      oninput={e => {
+                      oninput={(e) => {
                         vnode.state.more.URL = e.target.value;
                       }}
                       placeholder="URL"
@@ -314,7 +319,7 @@ module.exports = {
         </div>
       </div>
     );
-  }
+  },
 };
 
 function setSelection(upDown, vnode) {
@@ -368,5 +373,4 @@ function setSelection(upDown, vnode) {
 
 function isAnonymous(e, vnode) {
   vnode.state.isNamed = e.target.checked;
- 
 }
