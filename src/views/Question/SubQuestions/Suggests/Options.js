@@ -1,5 +1,5 @@
 import m from 'mithril';
-import './Suggests.css';
+import './Options.css';
 
 //components
 import Option from './Option/Option';

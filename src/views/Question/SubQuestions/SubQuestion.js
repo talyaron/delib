@@ -3,7 +3,7 @@ import m from 'mithril';
 import './SubQuestion.css';
 
 //componetns
-import Suggests from './Suggests/Suggets';
+import Suggests from './Suggests/Options';
 import Votes from './Votes/Votes';
 import Modal from '../../Commons/Modal/Modal';
 
