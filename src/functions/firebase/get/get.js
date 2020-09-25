@@ -241,7 +241,7 @@ function getSubQuestionOptions(
       });
 
       set(store, `options[${subQuestionId}]`, optionsArray);
-      console.dir(store.options[subQuestionId]);
+    
 
       m.redraw();
     });
