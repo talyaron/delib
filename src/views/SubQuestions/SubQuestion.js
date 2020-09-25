@@ -3,7 +3,7 @@ import m from 'mithril';
 import './SubQuestion.css';
 
 //componetns
-import Suggests from './Suggests/Suggets';
+import Options from './Options/Option/Option';
 import Votes from './Votes/Votes';
 import Modal from '../Commons/Modal/Modal';
 
@@ -151,7 +151,7 @@ function switchProcess(type, vnode) {
 	switch (type) {
 		case settings.processes.suggestions:
 			return (
-				<Suggests
+				<Options
 					groupId={vnode.attrs.groupId}
 					questionId={vnode.attrs.questionId}
 					subQuestionId={vnode.attrs.subQuestionId}
@@ -162,7 +162,7 @@ function switchProcess(type, vnode) {
 			return <Votes />;
 		default:
 			return (
-				<Suggests
+				<Options
 					groupId={vnode.attrs.groupId}
 					questionId={vnode.attrs.questionId}
 					subQuestionId={vnode.attrs.subQuestionId}

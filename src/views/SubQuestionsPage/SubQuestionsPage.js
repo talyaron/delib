@@ -6,7 +6,7 @@ import settings from "../../data/settings";
 
 //components
 import "./SubQuestionsPage.css";
-import SubQuestion from "../Question/SubQuestions/SubQuestion";
+import SubQuestion from "../SubQuestions/SubQuestion";
 import Modal from "../Commons/Modal/Modal";
 import Spinner from "../Commons/Spinner/Spinner";
 

@@ -3,3 +3,4 @@ node_modules/
 configKey.js
 firebase-debug.log
 \.firebase/hosting\.cHVibGlj\.cache
+.DS_Store
