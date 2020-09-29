@@ -1,7 +1,11 @@
 import m from 'mithril';
-import {DB} from '../config';
+import {
+	DB
+} from '../config';
 import store from '../../../data/store';
-import { Reference } from '../../general';
+import {
+	Reference
+} from '../../general';
 
 function createGroup(creatorId, title, description) {
 	DB.collection('groups')
@@ -11,14 +15,14 @@ function createGroup(creatorId, title, description) {
 			creatorId: creatorId,
 			time: new Date().getTime()
 		})
-		.then(function(docRef) {
+		.then(function (docRef) {
 			DB.collection('users').doc(creatorId).collection('groupsOwned').doc(docRef.id).set({
 				id: docRef.id,
 				date: new Date().getTime()
 			});
 			m.route.set(`/group/${docRef.id}`);
-		})		
-		.catch(function(error) {
+		})
+		.catch(function (error) {
 			console.error('Error adding document: ', error);
 		});
 }
@@ -26,7 +30,7 @@ function createGroup(creatorId, title, description) {
 function updateGroup(vnode) {
 	DB.collection('groups').doc(vnode.attrs.id).update({
 		title: vnode.state.title,
-		description:vnode.state.description
+		description: vnode.state.description
 	}).then(doc => {
 		m.route.set(`/group/${vnode.attrs.id}`);
 	}).catch(err => {
@@ -35,21 +39,24 @@ function updateGroup(vnode) {
 }
 
 function createQuestion(groupId, creatorId, title, description) {
+	console.log('creatorId:',creatorId)
 	DB.collection('groups')
 		.doc(groupId)
 		.collection('questions')
 		.add({
-			title: title,
-			description: description,
+			title,
+			description,
 			time: new Date().getTime(),
 			creatorId
 		})
-		.then((something) => {
-			DB.collection('groups').doc(groupId).collection('questions').doc(something.id).update({ id: something.id });
+		.then(something => {
+			DB.collection('groups').doc(groupId).collection('questions').doc(something.id).update({
+				id: something.id
+			});
 			console.log(something.id);
 			console.log('writen succesufuly');
 		})
-		.catch(function(error) {
+		.catch(function (error) {
 			console.error('Error adding document: ', error);
 		});
 }
@@ -67,7 +74,7 @@ function updateQuestion(groupId, questionId, title, description, authorizationOb
 		.then((something) => {
 			console.log('writen succesufuly');
 		})
-		.catch(function(error) {
+		.catch(function (error) {
 			console.error('Error adding document: ', error);
 		});
 }
@@ -84,10 +91,10 @@ function createSubQuestion(groupId, questionId, title, order) {
 			creator: store.user.uid,
 			orderBy: 'top'
 		})
-		.then(function(docRef) {
+		.then(function (docRef) {
 			console.log('doc wrirten succesfully');
 		})
-		.catch(function(error) {
+		.catch(function (error) {
 			console.error('Error adding document: ', error);
 		});
 }
@@ -99,7 +106,9 @@ function updateSubQuestion(groupId, questionId, subQuestionId, title) {
 		.doc(questionId)
 		.collection('subQuestions')
 		.doc(subQuestionId)
-		.update({ title });
+		.update({
+			title
+		});
 }
 
 function updateSubQuestionProcess(groupId, questionId, subQuestionId, processType) {
@@ -109,7 +118,9 @@ function updateSubQuestionProcess(groupId, questionId, subQuestionId, processTyp
 		.doc(questionId)
 		.collection('subQuestions')
 		.doc(subQuestionId)
-		.update({ processType });
+		.update({
+			processType
+		});
 }
 
 function updateSubQuestionOrderBy(groupId, questionId, subQuestionId, orderBy) {
@@ -119,7 +130,9 @@ function updateSubQuestionOrderBy(groupId, questionId, subQuestionId, orderBy) {
 		.doc(questionId)
 		.collection('subQuestions')
 		.doc(subQuestionId)
-		.update({ orderBy });
+		.update({
+			orderBy
+		});
 }
 
 function updateSubQuestionsOrder(groupId, questionId, newOrderArray) {
@@ -135,7 +148,7 @@ function updateSubQuestionsOrder(groupId, questionId, newOrderArray) {
 		.then((something) => {
 			console.log('writen succesufuly');
 		})
-		.catch(function(error) {
+		.catch(function (error) {
 			console.error('Error adding document: ', error);
 		});
 }
@@ -153,7 +166,7 @@ function setSubQuestionsOrder(groupId, questionId, subQuestionId, order) {
 		.then((something) => {
 			console.log(`writen to ${subQuestionId} succesufuly`);
 		})
-		.catch(function(error) {
+		.catch(function (error) {
 			console.error('Error adding document: ', error);
 		});
 }
@@ -188,16 +201,39 @@ function createOption(
 			creatorName,
 			subQuestionTitle,
 			time: firebase.firestore.FieldValue.serverTimestamp(),
-			consensusPrecentage: 0
+			consensusPrecentage: 0,
+			isActive:true
 		})
 		.then((newOption) => {
-			optionRef.doc(newOption.id).update({ id: newOption.id });
+			optionRef.doc(newOption.id).update({
+				id: newOption.id
+			});
 		})
-		.catch(function(error) {
+		.catch(function (error) {
 			console.error('Error adding document: ', error);
 		});
 }
 
+
+function setOptionActive(groupId, questionId, subQuestionId, optionId, isActive){
+
+	console.log(groupId, questionId, subQuestionId, optionId, isActive)
+
+	try{
+		DB.collection('groups')
+		.doc(groupId)
+		.collection('questions')
+		.doc(questionId)
+		.collection('subQuestions')
+		.doc(subQuestionId)
+		.collection('options')
+		.doc(optionId)
+		.update({isActive})
+	}catch(err){
+		console.error(err)
+	}
+
+}
 function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like) {
 	DB.collection('groups')
 		.doc(groupId)
@@ -209,9 +245,11 @@ function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like) 
 		.doc(optionId)
 		.collection('likes')
 		.doc(creatorId)
-		.set({ like })
+		.set({
+			like
+		})
 		.then((newLike) => {})
-		.catch(function(error) {
+		.catch(function (error) {
 			console.error('Error adding document: ', error);
 		});
 }
@@ -290,7 +328,7 @@ function createSubItem(subItemsType, groupId, questionId, creatorId, creatorName
 	};
 	addObj.roles[creatorId] = 'owner';
 
-	subQuestionRef.add(addObj).then((newItem) => {}).catch(function(error) {
+	subQuestionRef.add(addObj).then((newItem) => {}).catch(function (error) {
 		console.error('Error adding document: ', error);
 	});
 }
@@ -309,7 +347,7 @@ function updateSubItem(subItemsType, groupId, questionId, subQuestionId, title, 
 		time: firebase.firestore.FieldValue.serverTimestamp()
 	};
 
-	subQuestionRef.update(updateObj).then((newOption) => {}).catch(function(error) {
+	subQuestionRef.update(updateObj).then((newOption) => {}).catch(function (error) {
 		console.error('Error updating document: ', error);
 	});
 }
@@ -325,10 +363,14 @@ function setLikeToSubItem(subItemsType, groupId, questionId, subQuestionId, crea
 		.doc(creatorId);
 
 	if (isUp) {
-		subQuestionRef.set({ like: 1 });
+		subQuestionRef.set({
+			like: 1
+		});
 		console.log('set like to ', subQuestionId);
 	} else {
-		subQuestionRef.set({ like: 0 });
+		subQuestionRef.set({
+			like: 0
+		});
 		console.log('unset like to ', subQuestionId);
 	}
 }
@@ -352,7 +394,7 @@ function setSubAnswer(groupId, questionId, subQuestionId, creatorId, creatorName
 			message
 		})
 		.then((newLike) => {})
-		.catch(function(error) {
+		.catch(function (error) {
 			console.error('Error adding document: ', error);
 		});
 }
@@ -384,17 +426,17 @@ function addToFeed(addRemove, pathArray, refString, collectionOrDoc) {
 			.collection('feeds')
 			.doc(refString)
 			.delete()
-			.then(function() {
+			.then(function () {
 				delete store.subscribed[refString];
 			})
-			.catch(function(error) {
+			.catch(function (error) {
 				console.error('Error removing document: ', error);
 			});
 	}
 }
 
 function updateOption(vnode) {
-	let creatorName = vnode.state.isNamed?vnode.state.creatorName:'אנונימי/ת' 
+	let creatorName = vnode.state.isNamed ? vnode.state.creatorName : 'אנונימי/ת'
 	DB.collection('groups')
 		.doc(vnode.attrs.groupId)
 		.collection('questions')
@@ -404,8 +446,8 @@ function updateOption(vnode) {
 		.collection('options')
 		.doc(vnode.attrs.optionId)
 		.update({
-			creatorUid:store.user.uid,			
-			creatorName,			
+			creatorUid: store.user.uid,
+			creatorName,
 			title: vnode.state.title,
 			description: vnode.state.description,
 			more: {
@@ -426,6 +468,7 @@ module.exports = {
 	updateSubQuestion,
 	setSubQuestionsOrder,
 	createOption,
+	setOptionActive,
 	createSubItem,
 	updateSubItem,
 	setLikeToSubItem,

@@ -127,7 +127,7 @@ function getGroupDetails(groupId, vnode) {
         m.redraw();
       }, err => {
         console.error(`At getGroupDetails: ${err.name}, ${err.message}`);
-        if(err.message === 'Missing or insufficient permissions.'){
+        if (err.message === 'Missing or insufficient permissions.') {
           m.route.set('/unauthorized');
         }
 
@@ -218,7 +218,7 @@ function listenToOptions(
 ) {
 
 
-  let optionRef = DB.collection("groups")
+  let optionsRef = DB.collection("groups")
     .doc(groupId)
     .collection("questions")
     .doc(questionId)
@@ -238,35 +238,46 @@ function listenToOptions(
       orderBy = "time";
   }
 
-  return optionRef
+  return optionsRef
     .orderBy(orderBy, "desc")
     .onSnapshot(optionsDB => {
       let optionsArray = [];
       optionsDB.forEach(optionDB => {
-        let optionObj = optionDB.data();
-        optionObj.id = optionObj.optionId = optionDB.id; //the preferd syntax is 'optionId' and not id, but we left the old 'id' for backward compatability purpose (Tal Yaron)
-        optionObj.subQuestionId = subQuestionId;
 
-        //get before position
-        //Align for animation
-        let elm = document.getElementById(optionObj.id);
-        if (elm) {
-          store.optionsLoc[optionObj.id] = {
-            offsetTop: elm.offsetTop,
-            offsetLeft: elm.offsetLeft,
-            toAnimate: true,
-            new: false
-          };
+        //this is a patch TODO: change all data to query of active or not active options
+        if (optionDB.data().isActive == null || optionDB.data().isActive == true) {
+       
+          
+          let optionObj = optionDB.data();
+          optionObj.id = optionObj.optionId = optionDB.id; //the preferd syntax is 'optionId' and not id, but we left the old 'id' for backward compatability purpose (Tal Yaron)
+          optionObj.subQuestionId = subQuestionId;
+
+          //get before position
+          //Align for animation
+          let elm = document.getElementById(optionObj.id);
+          if (elm) {
+            store.optionsLoc[optionObj.id] = {
+              offsetTop: elm.offsetTop,
+              offsetLeft: elm.offsetLeft,
+              toAnimate: true,
+              new: false
+            };
+          } else {
+            store.optionsLoc[optionObj.id] = {
+              offsetTop: 0,
+              offsetLeft: 0,
+              toAnimate: false,
+              new: true
+            };
+          }
+
+          optionsArray.push(optionObj);
+
         } else {
-          store.optionsLoc[optionObj.id] = {
-            offsetTop: 0,
-            offsetLeft: 0,
-            toAnimate: false,
-            new: true
-          };
-        }
+          console.info(optionDB.data().id, 'is not active')
+        };
 
-        optionsArray.push(optionObj);
+
       });
 
       set(store, `options[${subQuestionId}]`, optionsArray);

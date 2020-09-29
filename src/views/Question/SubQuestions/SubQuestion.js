@@ -13,7 +13,7 @@ import store from '../../../data/store';
 import { EntityModel } from '../../../data/dataTypes';
 
 //functions
-import { getSubQuestion, listenToOptions } from '../../../functions/firebase/get/get';
+import { getSubQuestion, listenToOptions, getGroupDetails } from '../../../functions/firebase/get/get';
 import { subscribeToNotification, unsubscribeFromNotification } from '../../../functions/firebase/messaging';
 import { get } from 'lodash';
 
@@ -23,6 +23,8 @@ let subQuestionObj;
 
 module.exports = {
 	oninit: (vnode) => {
+
+		getGroupDetails(vnode.attrs.groupId)
 
 		vnode.state = {
 			options: [],
@@ -54,7 +56,8 @@ module.exports = {
 
 	onbeforeupdate: (vnode) => {
 		vnode.state.orderBy = vnode.attrs.orderBy;
-
+		
+		
 	},
 	onremove: (vnode) => {
 		unsubscribe();

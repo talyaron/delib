@@ -1,4 +1,5 @@
 import m from "mithril";
+import {get} from 'lodash';
 
 import "./Option.css";
 import store from "../../../../../data/store";
@@ -6,6 +7,7 @@ import store from "../../../../../data/store";
 import {
   setLike,
   updateOption,
+  setOptionActive
 } from "../../../../../functions/firebase/set/set";
 import { getOptionVote } from "../../../../../functions/firebase/get/get";
 
@@ -25,6 +27,7 @@ module.exports = {
         offsetTop: 0,
         offsetLeft: 0,
       },
+      isAdmin:false,
       isEdit: false,
       isNamed: true,
       more: vnode.attrs.more || { text: "", URL: "" },
@@ -44,6 +47,11 @@ module.exports = {
     };
   },
   onbeforeupdate: (vnode) => {
+
+    //get admin
+    vnode.state.admin = get(store.groups,`[${vnode.attrs.groupId}].creatorId`,'')
+    
+
     let optionVote = store.optionsVotes[vnode.attrs.optionId];
 
     //set conesnsus level to string
@@ -73,9 +81,7 @@ module.exports = {
     }
   },
   onupdate: (vnode) => {
-    // vnode.state.title = vnode.attrs.title;
-    // vnode.state.description = vnode.attrs.description;
-
+    
     //animation
     let element = vnode.dom;
     let elementY = element.offsetTop;
@@ -259,6 +265,7 @@ module.exports = {
             />
           </div>
         </div>
+        {/* options information panel */}
         <div class="optionInfo">
           <div class="optionLikes">
             <img src="img/icons8-user-groups-24.png" />
@@ -310,6 +317,12 @@ module.exports = {
               <div />
             )}
           </div>
+          {vnode.attrs.creatorId == store.user.uid || vnode.state.admin == store.user.uid ?
+            <div class="optionLikes" onclick={()=>handleHide(vnode)}>
+              <img src="img/visibility_off-24px.svg" />
+            </div>
+            :null
+          }
         </div>
       </div>
     );
@@ -367,4 +380,17 @@ function setSelection(upDown, vnode) {
 
 function isAnonymous(e, vnode) {
   vnode.state.isNamed = e.target.checked;
+}
+
+function handleHide(vnode){
+  try{
+    let isDeactivate = confirm("האם אתם בטוחים שיש להחביא אופציה זאת?");
+
+    if(isDeactivate){
+      setOptionActive(vnode.attrs.groupId, vnode.attrs.questionId,vnode.attrs.subQuestionId, vnode.attrs.optionId, false)
+    }
+  }
+    catch(err){
+      console.error(err)
+    }
 }
