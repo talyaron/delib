@@ -1,43 +1,58 @@
 import m from 'mithril';
 
-import {DB} from './config';
+import {
+    DB
+} from './config';
 
 //model
 import store from '../../data/store';
-import { EntityModel } from '../../data/dataTypes';
+import {
+    EntityModel
+} from '../../data/dataTypes';
 
 let MESSAGING;
 
 if ('Notification' in window) {
 
-	// Retrieve Firebase Messaging object.
-	MESSAGING = firebase.messaging();
-	// Add the public key generated from the console here.
-	MESSAGING.usePublicVapidKey(
-		'BOXKnicJW5Cu3xwRG7buXf-JU8tS-AErJX_Ax7CsUwqZQvBvo2E-ECnE-uGvUKcgeL-1nT-cJw8qGo4dH-zrfGA'
-	);
+    // Retrieve Firebase Messaging object.
+    MESSAGING = firebase.messaging();
+    // Add the public key generated from the console here.
+    MESSAGING.usePublicVapidKey(
+        'BOXKnicJW5Cu3xwRG7buXf-JU8tS-AErJX_Ax7CsUwqZQvBvo2E-ECnE-uGvUKcgeL-1nT-cJw8qGo4dH-zrfGA'
+    );
 
-	// Callback fired if Instance ID token is updated.
-	MESSAGING.onTokenRefresh(function() {
-		handleTokenRefresh();
-	});
+    // Callback fired if Instance ID token is updated.
+    MESSAGING.onTokenRefresh(function () {
+        handleTokenRefresh();
+    });
 
-	MESSAGING.onMessage(function(payload) {
-		console.log('Message received. ', payload);
-		// ...
-	});
-} 
+    MESSAGING.onMessage(function (payload) {
+        console.log('Message received. ', payload);
+        // ...
+    });
+}
 
 // update which enteties are subscribed
 function getSubscriptions() {
     if ('Notification' in window) {
-        DB.collection('tokens').doc(store.user.uid).onSnapshot((userTokenDB) => {
-            if (userTokenDB.exists && userTokenDB.data().pushEntities) {
-                store.push = userTokenDB.data().pushEntities;
-          
-                m.redraw();
+        try {
+            DB.collection('tokens').doc(store.user.uid).onSnapshot(
+                userTokenDB => {
+                    if (userTokenDB.exists && userTokenDB.data().pushEntities) {
+                        store.push = userTokenDB.data().pushEntities;
+
+                        m.redraw();
+                    }
+                }, err => {
+                    console.error('On getSubscriptions:', err.name, err.message)
+                })
+        } catch (err) {
+            if (err.message === 'Missing or insufficient permissions.') {
+                console.error('Cant get subscriptions because of insufficient perpmissions')
+            } else {
+                console.error(err)
             }
-        });
+        }
     }
 }
 
@@ -76,7 +91,9 @@ function unsubscribeFromNotification(entityId) {
                         console.dir(entitiesSet);
                         let entitiesArray = new Array(...entitiesSet);
 
-                        DB.collection('tokens').doc(store.user.uid).update({ pushEntities: entitiesArray });
+                        DB.collection('tokens').doc(store.user.uid).update({
+                            pushEntities: entitiesArray
+                        });
                     }
                 });
             });
@@ -125,4 +142,8 @@ function handleTokenRefresh(entityId) {
     }
 }
 
-module.exports = { getSubscriptions, subscribeToNotification, unsubscribeFromNotification };
+module.exports = {
+    getSubscriptions,
+    subscribeToNotification,
+    unsubscribeFromNotification
+};
