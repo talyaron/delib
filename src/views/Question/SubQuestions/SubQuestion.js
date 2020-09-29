@@ -3,7 +3,7 @@ import m from 'mithril';
 import './SubQuestion.css';
 
 //componetns
-import Suggests from './Suggests/Suggets';
+import Suggests from './Suggests/Options';
 import Votes from './Votes/Votes';
 import Modal from '../../Commons/Modal/Modal';
 
@@ -13,7 +13,7 @@ import store from '../../../data/store';
 import { EntityModel } from '../../../data/dataTypes';
 
 //functions
-import { getSubQuestion, getSubQuestionOptions } from '../../../functions/firebase/get/get';
+import { getSubQuestion, listenToOptions } from '../../../functions/firebase/get/get';
 import { subscribeToNotification, unsubscribeFromNotification } from '../../../functions/firebase/messaging';
 import { get } from 'lodash';
 
@@ -49,8 +49,9 @@ module.exports = {
 		let va = vnode.attrs;
 
 		unsubscribe = getSubQuestion(va.groupId, va.questionId, va.subQuestionId);
-		unsubscribeOptions = getSubQuestionOptions(va.groupId, va.questionId, va.subQuestionId, 'top');
+		unsubscribeOptions = listenToOptions(va.groupId, va.questionId, va.subQuestionId, 'top');
 	},
+
 	onbeforeupdate: (vnode) => {
 		vnode.state.orderBy = vnode.attrs.orderBy;
 
@@ -68,24 +69,19 @@ module.exports = {
 						style={`color:${vnode.attrs.info.colors.color};`}>
 
 						{
-							store.push.includes(vnode.attrs.subQuestionId) ? (
-								<div
-
-									onclick={() => {
-										unsubscribeFromNotification(vnode.attrs.subQuestionId);
-									}}>
+							store.push.includes(vnode.attrs.subQuestionId) ?
+								<div onclick={() => { unsubscribeFromNotification(vnode.attrs.subQuestionId) }}>
 									<img src="img/round_speaker_notes_off_white_24dp.png" />
 								</div>
-							) : (
-									<div
-
-										onclick={() => {
-											subscribeToNotification(vnode.attrs.subQuestionId);
-										}}>
-										<img src="img/round_speaker_notes_white_24dp.png" />
-									</div>
-								)}
+								:
+								<div onclick={() => { subscribeToNotification(vnode.attrs.subQuestionId) }}>
+									<img src="img/round_speaker_notes_white_24dp.png" />
+								</div>
+						}
 						<div >{vnode.attrs.title}</div>
+						<div class="addOptionButton" onclick={() => { vnode.state.showModal.isShow = true; }}>
+							הוספת פתרון
+						</div>
 						{vnode.attrs.isAlone ? (
 							<div
 
@@ -107,20 +103,8 @@ module.exports = {
 							)}
 					</div>
 					{switchProcess(vnode.state.processType, vnode)}
-					<div class="fav subQuestionFav" onclick={() => { vnode.state.showModal.isShow = true; }}>
-						<div>+</div>
-					</div>
-					{vnode.attrs.isAlone ?
-						<div class="questionSectionFooter">
-							<div
-								class="buttons questionSectionAddButton"
-								onclick={() => {
-									addQuestion(vnode, vnode.attrs.info.type);
-								}}>
-								{vnode.attrs.info.add}
-							</div>
-						</div> : null
-					}
+
+					
 				</div>
 				<Modal
 					showModal={vnode.state.showModal.isShow}

@@ -11,6 +11,7 @@ module.exports = {
   onbeforeupdate: vnode => {
     checkIfGroupOwnedByUser(vnode);
   },
+ 
   view: vnode => {
     return (
       <div

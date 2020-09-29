@@ -1,67 +1,84 @@
 import m from "mithril";
-import {DB} from "../config";
+import {
+  DB
+} from "../config";
 import store from "../../../data/store";
 
 
 //functions
-import { set } from 'lodash'
+import {
+  set
+} from 'lodash'
 
 var unsubscribe = {};
 
 function getUserGroups(onOff, userId) {
-  if (onOff == "on") {
-    DB.collection("users")
-      .doc(userId)
-      .collection("groupsOwned")
-      .onSnapshot(groupsOwnedDB => {
-        //unsubsribe from previous listeners
-        for (let i in unsubscribe) {
-          unsubscribe[i]();
-        }
-        unsubscribe = {};
 
-        const groupsNumber = groupsOwnedDB.size;
-        let count = 0;
-        var groupsObj = {},
-          groupsArray = [];
 
-        groupsOwnedDB.forEach(groupOwnedDB => {
-          //listen a group and update...
-          unsubscribe[groupOwnedDB.data().id] = DB.collection("groups")
-            .doc(groupOwnedDB.data().id)
-            .onSnapshot(groupDB => {
-              let tempObj = groupDB.data();
-              tempObj.id = groupOwnedDB.id;
+  try {
+    if (onOff == "on") {
+      try {
+        console.log('userId', userId)
+        DB.collection("users")
+          .doc(userId)
+          .collection("groupsOwned")
+          .onSnapshot(groupsOwnedDB => {
+            //unsubsribe from previous listeners
+            for (let i in unsubscribe) {
+              unsubscribe[i]();
+            }
+            unsubscribe = {};
 
-              groupsObj[groupOwnedDB.data().id] = tempObj;
-              count++;
+            const groupsNumber = groupsOwnedDB.size;
+            let count = 0;
+            var groupsObj = {},
+              groupsArray = [];
 
-              if (count == groupsNumber) {
-                //first update
-                for (let i in groupsObj) {
-                  groupsArray.push(groupsObj[i]);
-                }
+            groupsOwnedDB.forEach(groupOwnedDB => {
+              //listen a group and update...
+              unsubscribe[groupOwnedDB.data().id] = DB.collection("groups")
+                .doc(groupOwnedDB.data().id)
+                .onSnapshot(groupDB => {
+                  let tempObj = groupDB.data();
+                  tempObj.id = groupOwnedDB.id;
 
-                store.userGroups = groupsArray;
-                m.redraw();
-              } else if (count > groupsNumber) {
-                //net updates after initial update
+                  groupsObj[groupOwnedDB.data().id] = tempObj;
+                  count++;
 
-                //search in array and replace
-                let indexOfGroup = store.userGroups.findIndex(group => {
-                  return group.id === tempObj.id;
+                  if (count == groupsNumber) {
+                    //first update
+                    for (let i in groupsObj) {
+                      groupsArray.push(groupsObj[i]);
+                    }
+
+                    store.userGroups = groupsArray;
+                    m.redraw();
+                  } else if (count > groupsNumber) {
+                    //net updates after initial update
+
+                    //search in array and replace
+                    let indexOfGroup = store.userGroups.findIndex(group => {
+                      return group.id === tempObj.id;
+                    });
+                    store.userGroups[indexOfGroup] = tempObj;
+                    m.redraw();
+                  }
                 });
-                store.userGroups[indexOfGroup] = tempObj;
-                m.redraw();
-              }
             });
-        });
-      });
-  } else {
-    //turn off listeners
-    for (let i in unsubscribe) {
-      unsubscribe[i]();
+          }, err => {
+            console.error('On getUserGroups:', err.name, err.message)
+          });
+      } catch (err) {
+        console.error(err)
+      }
+    } else {
+      //turn off listeners
+      for (let i in unsubscribe) {
+        unsubscribe[i]();
+      }
     }
+  } catch (err) {
+    console.error(err)
   }
 }
 
@@ -101,13 +118,23 @@ function setStore(obj, groupId, questionId, data) {
 }
 
 function getGroupDetails(groupId, vnode) {
-  return DB.collection("groups")
-    .doc(groupId)
-    .onSnapshot(groupDB => {
-      store.groups[groupId] = groupDB.data();   
-     
-      m.redraw();
-    });
+  try {
+    return DB.collection("groups")
+      .doc(groupId)
+      .onSnapshot(groupDB => {
+        store.groups[groupId] = groupDB.data();
+
+        m.redraw();
+      }, err => {
+        console.error(`At getGroupDetails: ${err.name}, ${err.message}`);
+        if(err.message === 'Missing or insufficient permissions.'){
+          m.route.set('/unauthorized');
+        }
+
+      });
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 function getQuestionDetails(groupId, questionId, vnode) {
@@ -172,7 +199,7 @@ function getSubQuestion(groupId, questionId, subQuestionId) {
   return optionRef.onSnapshot(subQuestionDB => {
     if (subQuestionDB.exists) {
       set(store, `subQuestions[${subQuestionId}]`, subQuestionDB.data())
-    
+
       m.redraw();
     } else {
       console.error(`subQuestion ${groupId}/${questionId}/${subQuestionId} dont exists `)
@@ -183,13 +210,13 @@ function getSubQuestion(groupId, questionId, subQuestionId) {
 
 }
 
-function getSubQuestionOptions(
+function listenToOptions(
   groupId,
   questionId,
   subQuestionId,
   order
 ) {
- 
+
 
   let optionRef = DB.collection("groups")
     .doc(groupId)
@@ -217,9 +244,11 @@ function getSubQuestionOptions(
       let optionsArray = [];
       optionsDB.forEach(optionDB => {
         let optionObj = optionDB.data();
-        optionObj.id = optionDB.id;
+        optionObj.id = optionObj.optionId = optionDB.id; //the preferd syntax is 'optionId' and not id, but we left the old 'id' for backward compatability purpose (Tal Yaron)
+        optionObj.subQuestionId = subQuestionId;
 
         //get before position
+        //Align for animation
         let elm = document.getElementById(optionObj.id);
         if (elm) {
           store.optionsLoc[optionObj.id] = {
@@ -241,7 +270,9 @@ function getSubQuestionOptions(
       });
 
       set(store, `options[${subQuestionId}]`, optionsArray);
-      console.dir(store.options[subQuestionId]);
+
+      //add or update or delete an option
+
 
       m.redraw();
     });
@@ -513,14 +544,16 @@ function listenToFeed(path, onOff = "on") {
             //add feed-inputs to feed
             store.feed[path] = newFeed;
 
-            store.numberOfNewMessages++;  
-              
-              audio.play();
-            
+            store.numberOfNewMessages++;
+
+            audio.play();
+
             const playPromise = audio.play()
             // const playPromise = media.play();
             if (playPromise !== null) {
-              playPromise.catch(() => { audio.play(); })
+              playPromise.catch(() => {
+                audio.play();
+              })
             }
 
             m.redraw();
@@ -547,7 +580,7 @@ module.exports = {
   getQuestionDetails,
   getSubQuestions,
   getSubQuestion,
-  getSubQuestionOptions,
+  listenToOptions,
   getOptionVote,
   getSubItems,
   getSubItemLikes,

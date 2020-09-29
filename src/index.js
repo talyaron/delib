@@ -14,7 +14,16 @@ m.route.prefix('?');
 //model
 import { EntityModel } from './data/dataTypes';
 
+//dealing with URLs from facebook with %
 let nativeURL = window.document.URL;
+
+let decoded1 = decodeURIComponent(nativeURL);
+let decoded2 = decodeURIComponent(decoded1);
+if(nativeURL !== decoded2){
+    window.history.pushState(null, 'test', `/?/${decoded2}`);
+    nativeURL = decoded2;
+}
+
 //deal with facebook additions of url
 if (nativeURL.includes('&')) {
     let indexAnd = nativeURL.indexOf('&');
@@ -39,6 +48,7 @@ import SubQuestionsPage from './views/SubQuestionsPage/SubQuestionsPage';
 import Edit from './views/Commons/Edit/Edit';
 import NewGroupPage from './views/Groups/NewGroupPage/NewGroupPage';
 import EditGroupPage from './views/GroupPage/EditGroupPage/EditGroupPage';
+import UnAuthorized from './views/UnAuthorized/UnAuthorized';
 
 
 
@@ -54,7 +64,8 @@ m.route(root, "/login", {
     "/questionEdit/:groupId/:questionId": QuestionEdit,
     '/optionchat/:groupId/:questionId/:subQuestionId/:optionId': ChatPage,
     "/subquestions/:groupId/:questionId/:subQuestionId": SubQuestionsPage,
-    "/edit":Edit
+    "/edit":Edit,
+    '/unauthorized':UnAuthorized
 
 })
 
