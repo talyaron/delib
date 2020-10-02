@@ -3,7 +3,7 @@ import m from 'mithril';
 import './SubQuestion.css';
 
 //componetns
-import Suggests from './Suggests/Options';
+import Options from './Options/Options';
 import Votes from './Votes/Votes';
 import Modal from '../../Commons/Modal/Modal';
 
@@ -64,9 +64,11 @@ module.exports = {
 		unsubscribeOptions();
 	},
 	view: (vnode) => {
+
+		console.log('is alone?', vnode.attrs.isAlone)
 		return (
 			<div class="wrapper subQuestionWrapper" id="optionsWrapper">
-				<div class="questionSection">
+				<div class={vnode.attrs.isAlone?"questionSection questionSection--alone":"questionSection"}>
 					<div
 						class="questionSectionTitle questions"
 						style={`color:${vnode.attrs.info.colors.color};`}>
@@ -134,26 +136,30 @@ function switchProcess(type, vnode) {
 	let options = get(store, `options[${vnode.attrs.subQuestionId}]`, []);
 	options = orderOptionsBy(options, vnode.state.orderBy);
 
-
+	
 	switch (type) {
+
+		
 		case settings.processes.suggestions:
 			return (
-				<Suggests
+				<Options
 					groupId={vnode.attrs.groupId}
 					questionId={vnode.attrs.questionId}
 					subQuestionId={vnode.attrs.subQuestionId}
 					options={options}
+					isAlone={vnode.attrs.isAlone}
 				/>
 			);
 		case settings.processes.votes:
 			return <Votes />;
 		default:
 			return (
-				<Suggests
+				<Options
 					groupId={vnode.attrs.groupId}
 					questionId={vnode.attrs.questionId}
 					subQuestionId={vnode.attrs.subQuestionId}
 					options={options}
+					isAlone={vnode.attrs.isAlone}	
 				/>
 			);
 	}

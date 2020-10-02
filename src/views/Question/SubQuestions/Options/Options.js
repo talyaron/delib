@@ -10,9 +10,9 @@ module.exports = {
         
     },
     view: vnode => {
-        
+        console.log('is alome options', vnode.attrs.isAlone)
         return (
-            <div class='suggestsWrapper'>
+            <div class={vnode.attrs.isAlone?'optionsWrapper optionsWrapper--alone':'optionsWrapper'}>
                 {vnode.attrs.options.map((option, index) => {
                    
                     return <Option
