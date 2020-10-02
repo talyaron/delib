@@ -44,7 +44,7 @@ import GroupPage from './views/GroupPage/GroupPage';
 import Question from './views/Question/Question';
 import QuestionEdit from './views/QuestionEdit/QuestionEdit';
 import ChatPage from './views/ChatPage/ChatPage';
-import SubQuestionsPage from './views/SubQuestionsPage/SubQuestionsPage';
+import SubQuestionsPage from './views/SubQuestionsPage/SubQuestionPage';
 import Edit from './views/Commons/Edit/Edit';
 import NewGroupPage from './views/Groups/NewGroupPage/NewGroupPage';
 import EditGroupPage from './views/GroupPage/EditGroupPage/EditGroupPage';

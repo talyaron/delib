@@ -73,6 +73,7 @@ module.exports = {
                     title={vnode.state.groupName}
                     isAdmin={vnode.state.isAdmin}
                     editPageLink={`/editgroup/${vnode.attrs.id}`}
+                    groupId={vnode.attrs.id}
                 />
                 <div class='questionsWrapper' id='groupWrapper'>
                     {
