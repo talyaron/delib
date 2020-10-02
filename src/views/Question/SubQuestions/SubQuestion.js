@@ -65,7 +65,7 @@ module.exports = {
 	},
 	view: (vnode) => {
 
-		console.log('is alone?', vnode.attrs.isAlone)
+		
 		return (
 			<div class="wrapper subQuestionWrapper" id="optionsWrapper">
 				<div class={vnode.attrs.isAlone?"questionSection questionSection--alone":"questionSection"}>

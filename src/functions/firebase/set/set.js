@@ -1,7 +1,7 @@
 import m from 'mithril';
 import {DB} from '../config';
 import store from '../../../data/store';
-import {Reference} from '../../general';
+import {Reference,concatenatePath} from '../../general';
 
 function createGroup(creatorId, title, description) {
     DB
@@ -466,34 +466,38 @@ function updateOption(vnode) {
             }
         });
 }
-function subscribersCUD(entitiy) {
+function subscribersCUD(settings) {
     try {
-        const {groupId, questionId, subQuestionId, optionId} = entitiy.vnode.attrs;
-        const {subscribe} = entitiy;
+        const {groupId, questionId, subQuestionId, optionId} = settings.vnode.attrs;
+        const {subscribe} = settings;
 
-		console.log(groupId, questionId, subQuestionId, optionId, subscribe);
+        console.log(groupId, questionId, subQuestionId, optionId, subscribe);
 
-		// DB.doc(`groups/${groupId}`).get().then(groupDB=>{console.log(groupDB.data())})
+        // DB.doc(`groups/${groupId}`).get().then(groupDB=>{console.log(groupDB.data())}
+        // ) build path for the enenties subscription collection
+        let subscriptionPath = concatenatePath(groupId, questionId, subQuestionId, optionId);
 
-		//build path for the enenties subscription collection
-		let subscriptionPath = 'groups/'
-		if(groupId !== undefined){
-			subscriptionPath += `${groupId}`;
-			if(questionId !== undefined){
-				subscriptionPath += `/questions/${questionId}`;
-				if(subQuestionId !== undefined){
-					subscriptionPath += `/subQuestions/${subQuestionId}`;
-					if(optionId !== undefined){
-						subscriptionPath += `/options/${optionId}`
-					}
-				}
-			}
-		}else{
-			throw new Error(`No groupId was given ${groupId}`)
+		const {uid, displayName, email,photoURL} = store.user
+		subscriptionPath = subscriptionPath + '/subscribers/' + uid;
+		
+		if(subscribe === true){
+		
+        DB
+            .doc(subscriptionPath)
+            .set({uid, displayName, email,photoURL})
+            .then(() => {
+                console.info('User subscribed succsefuly to entity')
+            })
+			.catch(err => console.error(err))
+		} else {
+			DB
+            .doc(subscriptionPath)
+            .delete() 
+            .then(() => {
+                console.info('User unsubscribed succsefuly from entity')
+            })
+			.catch(err => console.error(err))
 		}
-
-		console.log(subscriptionPath)
-
 
     } catch (err) {
         console.error(err)

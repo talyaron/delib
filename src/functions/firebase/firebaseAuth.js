@@ -34,7 +34,7 @@ function onAuth() {
 
 			if (user) {
 				getSubscriptions();
-				console.dir(user);
+				
 				console.log('User', store.user.uid, 'is signed in.');
 				if (!user.isAnonymous) {
 					console.log('user', user.displayName, 'is logged in');

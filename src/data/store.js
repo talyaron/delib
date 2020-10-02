@@ -26,6 +26,7 @@ var store = {
     showFeed: false,
     numberOfNewMessages: 0,
     subscribed: {}, //subscribed entityes
+    subscribe:{}, //subscribed entities - second trial (orderd as path eg: 'groups/groupId/questions/...':true)
     subQuestions: {},
     editEntity: false,
 

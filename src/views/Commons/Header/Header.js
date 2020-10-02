@@ -1,52 +1,80 @@
 import m from 'mithril';
+import "regenerator-runtime/runtime.js";
 import './Header.css';
+import {get, set} from 'lodash';
 
 //functions
 import {subscribersCUD} from '../../../functions/firebase/set/set';
+import {listenToSubscription} from '../../../functions/firebase/get/get';
 
 import store from '../../../data/store';
-import {Reference} from '../../../functions/general';
+import {Reference, concatenatePath} from '../../../functions/general';
 
 //components
 import Aside from '../Aside/Aside';
 
+function getUser() {
+
+    return new Promise((resolve, reject) => {
+        const int = setInterval(() => {
+            if ({}.hasOwnProperty.call(store.user, 'uid')) {
+                resolve(store.user)
+                clearInterval(int)
+            }
+            console.info('waiting for user')
+        }, 100)
+    })
+}
+
 module.exports = {
     oninit: vnode => {
 
+        const {groupId, questionId, subQuestionId, optionId} = vnode.attrs;
+       
         vnode.state = {
             previousCount: 0,
             subscribed: false,
             refArray: [
                 'groups',
-                vnode.attrs.groupId,
+                groupId,
                 'questions',
-                vnode.attrs.questionId,
+                questionId,
                 'subQuestions',
-                vnode.attrs.subQuestionId,
+                subQuestionId,
                 'options',
-                vnode.attrs.optionId,
+                optionId,
                 'messages'
             ],
             refString: '',
-            isMenuOpen: false
+            isMenuOpen: false,
+            path:concatenatePath(groupId, questionId, subQuestionId, optionId)
         }
         //set refernce string
         let reference = new Reference(vnode.state.refArray, 'array', 'collection');
         vnode.state.refString = reference.fromArrayToSring();
 
+
+         // on groups, check for subscription
+         (async() => {
+            await getUser();
+            
+            if (groupId !== undefined) {
+                
+                vnode.state.subscribed = get(store.subscribe, `[${vnode.state.path}]`, false)
+                listenToSubscription(vnode.state.path)
+            }
+        })();
+
+
     },
-    onbeforeupdate: vnode => {
-
-        //TODO: connect subscription to store fore better preoformance
-
-        //does this feed is subscribed?
-        // if (store.subscribed.hasOwnProperty(vnode.state.refString)) {
-        //     vnode.state.subscribed = true;
-
-        // } else {
-        //     vnode.state.subscribed = false;
-
-        // }
+    oncreate: () => {
+        console.log('create header')
+    },
+    onbeforeupdate:vnode=>{
+        
+        if({}.hasOwnProperty.call(store.subscribe, vnode.state.path)){
+            vnode.state.subscribed = store.subscribe[vnode.state.path];
+            console.log(store.subscribe[vnode.state.path]);        }
     },
     onupdate: vnode => {
 
@@ -55,7 +83,7 @@ module.exports = {
 
     },
     view: (vnode) => {
-
+        console.log('is subscribed?', vnode.state.subscribed)
         return (
             <div>
                 <header id='headerContainer'>
@@ -140,18 +168,23 @@ function onNewMessageJumpCounter(vnode) {
 
 function handleSubscription(vnode) {
 
-    console.log('Is subscribed?', vnode.state.subscribed)
+    //path for subscription object
+    const {groupId, questionId, subQuestionId, optionId} = vnode.attrs;
+    const path = concatenatePath(groupId, questionId, subQuestionId, optionId);
 
-    subscribersCUD({vnode, subscribe: !vnode.state.subscribed})
+    subscribersCUD({
+        vnode,
+        subscribe: !vnode.state.subscribed
+    })
 
     if (vnode.state.subscribed == false) {
-       
 
         vnode.state.subscribed = true;
+        set(store.subscribe, `[${path}]`, true)
     } else {
-       
 
         vnode.state.subscribed = false;
+        set(store.subscribe, `[${path}]`, false)
     }
 }
 

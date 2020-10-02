@@ -499,6 +499,23 @@ function getSubItemUserLike(
   });
 }
 
+function listenToSubscription(path){
+  if({}.hasOwnProperty.call(store.subscribe, path) === false){
+    console.log(`${path}/subscribers/${store.user.uid}`)
+    DB.doc(`${path}/subscribers/${store.user.uid}`).onSnapshot(subscriberDB=>{
+      
+        set(store.subscribe,`[${path}]`, subscriberDB.exists);
+        m.redraw();
+      
+      
+      if(subscriberDB.exists) console.log('user is subscribed')
+      else{ console.log('user is not subscribed')}
+    },err=>{
+      console.error(err)
+    })
+  }
+}
+
 function listenToFeeds() {
   if (store.user.hasOwnProperty("uid")) {
     let feedsRef = DB.collection("users")
@@ -599,5 +616,6 @@ module.exports = {
   getSubAnswers,
   getOptionDetails,
   getMessages,
-  listenToFeeds
+  listenToFeeds,
+  listenToSubscription
 };
