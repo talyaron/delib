@@ -21,7 +21,7 @@ function getUser() {
                 resolve(store.user)
                 clearInterval(int)
             }
-            console.info('waiting for user')
+            
         }, 100)
     })
 }
@@ -30,7 +30,7 @@ module.exports = {
     oninit: vnode => {
 
         const {groupId, questionId, subQuestionId, optionId} = vnode.attrs;
-       
+
         vnode.state = {
             previousCount: 0,
             subscribed: false,
@@ -47,34 +47,29 @@ module.exports = {
             ],
             refString: '',
             isMenuOpen: false,
-            path:concatenatePath(groupId, questionId, subQuestionId, optionId)
+            path: concatenatePath(groupId, questionId, subQuestionId, optionId)
         }
         //set refernce string
         let reference = new Reference(vnode.state.refArray, 'array', 'collection');
         vnode.state.refString = reference.fromArrayToSring();
 
-
-         // on groups, check for subscription
-         (async() => {
+        // on groups, check for subscription
+        (async() => {
             await getUser();
-            
+
             if (groupId !== undefined) {
-                
+
                 vnode.state.subscribed = get(store.subscribe, `[${vnode.state.path}]`, false)
                 listenToSubscription(vnode.state.path)
             }
         })();
 
+    },
+    onbeforeupdate: vnode => {
 
-    },
-    oncreate: () => {
-        console.log('create header')
-    },
-    onbeforeupdate:vnode=>{
-        
-        if({}.hasOwnProperty.call(store.subscribe, vnode.state.path)){
+        if ({}.hasOwnProperty.call(store.subscribe, vnode.state.path)) {
             vnode.state.subscribed = store.subscribe[vnode.state.path];
-            console.log(store.subscribe[vnode.state.path]);        }
+        }
     },
     onupdate: vnode => {
 
@@ -83,7 +78,7 @@ module.exports = {
 
     },
     view: (vnode) => {
-        console.log('is subscribed?', vnode.state.subscribed)
+      
         return (
             <div>
                 <header id='headerContainer'>

@@ -1,621 +1,622 @@
 import m from "mithril";
-import {
-  DB
-} from "../config";
+import {DB} from "../config";
 import store from "../../../data/store";
 
-
 //functions
-import {
-  set
-} from 'lodash'
+import {set} from 'lodash'
 
 var unsubscribe = {};
 
 function getUserGroups(onOff, userId) {
 
+    try {
+        if (onOff == "on") {
+            try {
+                console.log('userId', userId)
+                DB
+                    .collection("users")
+                    .doc(userId)
+                    .collection("groupsOwned")
+                    .onSnapshot(groupsOwnedDB => {
+                        //unsubsribe from previous listeners
+                        for (let i in unsubscribe) {
+                            unsubscribe[i]();
+                        }
+                        unsubscribe = {};
 
-  try {
-    if (onOff == "on") {
-      try {
-        console.log('userId', userId)
-        DB.collection("users")
-          .doc(userId)
-          .collection("groupsOwned")
-          .onSnapshot(groupsOwnedDB => {
-            //unsubsribe from previous listeners
-            for (let i in unsubscribe) {
-              unsubscribe[i]();
-            }
-            unsubscribe = {};
+                        const groupsNumber = groupsOwnedDB.size;
+                        let count = 0;
+                        var groupsObj = {},
+                            groupsArray = [];
 
-            const groupsNumber = groupsOwnedDB.size;
-            let count = 0;
-            var groupsObj = {},
-              groupsArray = [];
+                        groupsOwnedDB.forEach(groupOwnedDB => {
+                            //listen a group and update...
+                            unsubscribe[
+                                groupOwnedDB
+                                    .data()
+                                    .id
+                            ] = DB
+                                .collection("groups")
+                                .doc(groupOwnedDB.data().id)
+                                .onSnapshot(groupDB => {
+                                    let tempObj = groupDB.data();
+                                    tempObj.id = groupOwnedDB.id;
 
-            groupsOwnedDB.forEach(groupOwnedDB => {
-              //listen a group and update...
-              unsubscribe[groupOwnedDB.data().id] = DB.collection("groups")
-                .doc(groupOwnedDB.data().id)
-                .onSnapshot(groupDB => {
-                  let tempObj = groupDB.data();
-                  tempObj.id = groupOwnedDB.id;
+                                    groupsObj[
+                                        groupOwnedDB
+                                            .data()
+                                            .id
+                                    ] = tempObj;
+                                    count++;
 
-                  groupsObj[groupOwnedDB.data().id] = tempObj;
-                  count++;
+                                    if (count == groupsNumber) {
+                                        //first update
+                                        for (let i in groupsObj) {
+                                            groupsArray.push(groupsObj[i]);
+                                        }
 
-                  if (count == groupsNumber) {
-                    //first update
-                    for (let i in groupsObj) {
-                      groupsArray.push(groupsObj[i]);
-                    }
-
-                    store.userGroups = groupsArray;
-                    m.redraw();
-                  } else if (count > groupsNumber) {
-                    //net updates after initial update
-
-                    //search in array and replace
-                    let indexOfGroup = store.userGroups.findIndex(group => {
-                      return group.id === tempObj.id;
+                                        store.userGroups = groupsArray;
+                                        m.redraw();
+                                    } else if (count > groupsNumber) {
+                                        //net updates after initial update search in array and replace
+                                        let indexOfGroup = store
+                                            .userGroups
+                                            .findIndex(group => {
+                                                return group.id === tempObj.id;
+                                            });
+                                        store.userGroups[indexOfGroup] = tempObj;
+                                        m.redraw();
+                                    }
+                                });
+                        });
+                    }, err => {
+                        console.error('On getUserGroups:', err.name, err.message)
                     });
-                    store.userGroups[indexOfGroup] = tempObj;
-                    m.redraw();
-                  }
-                });
-            });
-          }, err => {
-            console.error('On getUserGroups:', err.name, err.message)
-          });
-      } catch (err) {
+            } catch (err) {
+                console.error(err)
+            }
+        } else {
+            //turn off listeners
+            for (let i in unsubscribe) {
+                unsubscribe[i]();
+            }
+        }
+    } catch (err) {
         console.error(err)
-      }
-    } else {
-      //turn off listeners
-      for (let i in unsubscribe) {
-        unsubscribe[i]();
-      }
     }
-  } catch (err) {
-    console.error(err)
-  }
 }
 
 function getQuestions(onOff, groupId, vnode) {
-  if (onOff === "on") {
-    vnode.state.unsubscribe = DB.collection("groups")
-      .doc(groupId)
-      .collection("questions")
-      .orderBy("time", "desc")
-      .onSnapshot(questionsDb => {
-        questionsDb.forEach(questionDB => {
-          if (questionDB.data().id) {
-            // set(store.questions, `[${groupId}][${questionDB.data().id}]`, questionDB.data())
-            setStore(
-              store.questions,
-              groupId,
-              questionDB.data().id,
-              questionDB.data()
-            );
-          }
-        });
+    if (onOff === "on") {
+        vnode.state.unsubscribe = DB
+            .collection("groups")
+            .doc(groupId)
+            .collection("questions")
+            .orderBy("time", "desc")
+            .onSnapshot(questionsDb => {
+                questionsDb.forEach(questionDB => {
+                    if (questionDB.data().id) {
+                        // set(store.questions, `[${groupId}][${questionDB.data().id}]`,
+                        // questionDB.data())
+                        setStore(store.questions, groupId, questionDB.data().id, questionDB.data());
+                    }
+                });
 
-        m.redraw();
-      });
-  } else {
-    vnode.state.unsubscribe();
-  }
+                m.redraw();
+            });
+    } else {
+        vnode
+            .state
+            .unsubscribe();
+    }
 }
 
 function setStore(obj, groupId, questionId, data) {
-  if (!obj.hasOwnProperty(groupId)) {
-    obj[groupId] = {};
-    obj[groupId][questionId] = data;
-  } else {
-    obj[groupId][questionId] = data;
-  }
+    if (!obj.hasOwnProperty(groupId)) {
+        obj[groupId] = {};
+        obj[groupId][questionId] = data;
+    } else {
+        obj[groupId][questionId] = data;
+    }
 }
 
 function getGroupDetails(groupId, vnode) {
-  try {
-    return DB.collection("groups")
-      .doc(groupId)
-      .onSnapshot(groupDB => {
-        store.groups[groupId] = groupDB.data();
+    try {
+        return DB
+            .collection("groups")
+            .doc(groupId)
+            .onSnapshot(groupDB => {
+                store.groups[groupId] = groupDB.data();
 
-        m.redraw();
-      }, err => {
-        console.error(`At getGroupDetails: ${err.name}, ${err.message}`);
-        if (err.message === 'Missing or insufficient permissions.') {
-          m.route.set('/unauthorized');
-        }
+                m.redraw();
+            }, err => {
+                console.error(`At getGroupDetails: ${err.name}, ${err.message}`);
+                if (err.message === 'Missing or insufficient permissions.') {
+                    m
+                        .route
+                        .set('/unauthorized');
+                }
 
-      });
-  } catch (err) {
-    console.log(err)
-  }
+            });
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 function getQuestionDetails(groupId, questionId, vnode) {
-  let unsubscribe = DB.collection("groups")
-    .doc(groupId)
-    .collection("questions")
-    .doc(questionId)
-    .onSnapshot(questionDB => {
-      // set(store.questions, `[${groupId}][${questionId}]`, questionDB.data());
-      setStore(store.questions, groupId, questionId, questionDB.data());
+    let unsubscribe = DB
+        .collection("groups")
+        .doc(groupId)
+        .collection("questions")
+        .doc(questionId)
+        .onSnapshot(questionDB => {
+            // set(store.questions, `[${groupId}][${questionId}]`, questionDB.data());
+            setStore(store.questions, groupId, questionId, questionDB.data());
 
-      vnode.state.title = questionDB.data().title;
-      vnode.state.description = questionDB.data().description;
-      vnode.state.creatorId = questionDB.data().creatorId;
-      if (questionDB.data().authorization) {
-        vnode.state.authorized = questionDB.data().authorization;
-      }
+            vnode.state.title = questionDB
+                .data()
+                .title;
+            vnode.state.description = questionDB
+                .data()
+                .description;
+            vnode.state.creatorId = questionDB
+                .data()
+                .creatorId;
+            if (questionDB.data().authorization) {
+                vnode.state.authorized = questionDB
+                    .data()
+                    .authorization;
+            }
 
-      m.redraw();
-    });
+            m.redraw();
+        });
 
-  return unsubscribe;
+    return unsubscribe;
 }
 
 function getSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
-  let subQuestionRef = DB.collection("groups")
-    .doc(groupId)
-    .collection("questions")
-    .doc(questionId)
-    .collection("subQuestions");
+    let subQuestionRef = DB
+        .collection("groups")
+        .doc(groupId)
+        .collection("questions")
+        .doc(questionId)
+        .collection("subQuestions");
 
-  return subQuestionRef
-    .orderBy("order", "asc")
-    .get()
-    .then(subQuestionsDB => {
-      let subQuestionsArray = [];
-      let subQuestionsObj = {};
+    return subQuestionRef
+        .orderBy("order", "asc")
+        .get()
+        .then(subQuestionsDB => {
+            let subQuestionsArray = [];
+            let subQuestionsObj = {};
 
-      subQuestionsDB.forEach(subQuestionDB => {
-        let subQuestionObj = subQuestionDB.data();
-        subQuestionObj.id = subQuestionDB.id;
+            subQuestionsDB.forEach(subQuestionDB => {
+                let subQuestionObj = subQuestionDB.data();
+                subQuestionObj.id = subQuestionDB.id;
 
-        subQuestionsArray.push(subQuestionObj);
-        subQuestionsObj[subQuestionObj.id] = {};
-      });
+                subQuestionsArray.push(subQuestionObj);
+                subQuestionsObj[subQuestionObj.id] = {};
+            });
 
-      vnode.state.subQuestions = subQuestionsArray;
+            vnode.state.subQuestions = subQuestionsArray;
 
-      m.redraw();
-    });
+            m.redraw();
+        });
 }
 
 function getSubQuestion(groupId, questionId, subQuestionId) {
 
-  let optionRef = DB.collection("groups")
-    .doc(groupId)
-    .collection("questions")
-    .doc(questionId)
-    .collection("subQuestions")
-    .doc(subQuestionId);
+    let optionRef = DB
+        .collection("groups")
+        .doc(groupId)
+        .collection("questions")
+        .doc(questionId)
+        .collection("subQuestions")
+        .doc(subQuestionId);
 
-  return optionRef.onSnapshot(subQuestionDB => {
-    if (subQuestionDB.exists) {
-      set(store, `subQuestions[${subQuestionId}]`, subQuestionDB.data())
+    return optionRef.onSnapshot(subQuestionDB => {
+        if (subQuestionDB.exists) {
+            set(store, `subQuestions[${subQuestionId}]`, subQuestionDB.data())
 
-      m.redraw();
-    } else {
-      console.error(`subQuestion ${groupId}/${questionId}/${subQuestionId} dont exists `)
-    }
-  })
-
-
+            m.redraw();
+        } else {
+            console.error(`subQuestion ${groupId}/${questionId}/${subQuestionId} dont exists `)
+        }
+    })
 
 }
 
-function listenToOptions(
-  groupId,
-  questionId,
-  subQuestionId,
-  order
-) {
+function listenToOptions(groupId, questionId, subQuestionId, order) {
 
+    let optionsRef = DB
+        .collection("groups")
+        .doc(groupId)
+        .collection("questions")
+        .doc(questionId)
+        .collection("subQuestions")
+        .doc(subQuestionId)
+        .collection("options");
 
-  let optionsRef = DB.collection("groups")
-    .doc(groupId)
-    .collection("questions")
-    .doc(questionId)
-    .collection("subQuestions")
-    .doc(subQuestionId)
-    .collection("options");
+    let orderBy = "time";
+    switch (order) {
+        case "new":
+            orderBy = "time";
+            break;
+        case "top":
+            orderBy = "consensusPrecentage";
+            break;
+        default:
+            orderBy = "time";
+    }
 
-  let orderBy = "time";
-  switch (order) {
-    case "new":
-      orderBy = "time";
-      break;
-    case "top":
-      orderBy = "consensusPrecentage";
-      break;
-    default:
-      orderBy = "time";
-  }
+    return optionsRef
+        .orderBy(orderBy, "desc")
+        .onSnapshot(optionsDB => {
+            let optionsArray = [];
+            optionsDB.forEach(optionDB => {
 
-  return optionsRef
-    .orderBy(orderBy, "desc")
-    .onSnapshot(optionsDB => {
-      let optionsArray = [];
-      optionsDB.forEach(optionDB => {
+                //this is a patch TODO: change all data to query of active or not active options
+                if (optionDB.data().isActive == null || optionDB.data().isActive == true) {
 
-        //this is a patch TODO: change all data to query of active or not active options
-        if (optionDB.data().isActive == null || optionDB.data().isActive == true) {
-       
-          
-          let optionObj = optionDB.data();
-          optionObj.id = optionObj.optionId = optionDB.id; //the preferd syntax is 'optionId' and not id, but we left the old 'id' for backward compatability purpose (Tal Yaron)
-          optionObj.subQuestionId = subQuestionId;
+                    let optionObj = optionDB.data();
+                    optionObj.id = optionObj.optionId = optionDB.id; //the preferd syntax is 'optionId' and not id, but we left the old 'id' for backward compatability purpose (Tal Yaron)
+                    optionObj.subQuestionId = subQuestionId;
 
-          //get before position
-          //Align for animation
-          let elm = document.getElementById(optionObj.id);
-          if (elm) {
-            store.optionsLoc[optionObj.id] = {
-              offsetTop: elm.offsetTop,
-              offsetLeft: elm.offsetLeft,
-              toAnimate: true,
-              new: false
-            };
-          } else {
-            store.optionsLoc[optionObj.id] = {
-              offsetTop: 0,
-              offsetLeft: 0,
-              toAnimate: false,
-              new: true
-            };
-          }
+                    //get before position Align for animation
+                    let elm = document.getElementById(optionObj.id);
+                    if (elm) {
+                        store.optionsLoc[optionObj.id] = {
+                            offsetTop: elm.offsetTop,
+                            offsetLeft: elm.offsetLeft,
+                            toAnimate: true,
+                            new: false
+                        };
+                    } else {
+                        store.optionsLoc[optionObj.id] = {
+                            offsetTop: 0,
+                            offsetLeft: 0,
+                            toAnimate: false,
+                            new: true
+                        };
+                    }
 
-          optionsArray.push(optionObj);
+                    optionsArray.push(optionObj);
 
-        } else {
-          console.info(optionDB.data().id, 'is not active')
-        };
+                } else {
+                    console.info(optionDB.data().id, 'is not active')
+                };
 
+            });
 
-      });
+            set(store, `options[${subQuestionId}]`, optionsArray);
 
-      set(store, `options[${subQuestionId}]`, optionsArray);
+            //add or update or delete an option
 
-      //add or update or delete an option
-
-
-      m.redraw();
-    });
-
+            m.redraw();
+        });
 
 }
 
 function getOptionDetails(groupId, questionId, subQuestionId, optionId, vnode) {
-  let optionRef = DB.collection("groups")
-    .doc(groupId)
-    .collection("questions")
-    .doc(questionId)
-    .collection("subQuestions")
-    .doc(subQuestionId)
-    .collection("options")
-    .doc(optionId);
+    let optionRef = DB
+        .collection("groups")
+        .doc(groupId)
+        .collection("questions")
+        .doc(questionId)
+        .collection("subQuestions")
+        .doc(subQuestionId)
+        .collection("options")
+        .doc(optionId);
 
-  return optionRef.onSnapshot(optionDB => {
-    store.optionsDetails[optionId] = optionDB.data();
-    vnode.state.option.title = optionDB.data().title;
+    return optionRef.onSnapshot(optionDB => {
+        store.optionsDetails[optionId] = optionDB.data();
+        vnode.state.option.title = optionDB
+            .data()
+            .title;
 
-    m.redraw();
-  });
+        m.redraw();
+    });
 }
 
-function getOptionVote(
-  groupId,
-  questionId,
-  subQuestionId,
-  optionId,
-  creatorId
-) {
-  let voteRef = DB.collection("groups")
-    .doc(groupId)
-    .collection("questions")
-    .doc(questionId)
-    .collection("subQuestions")
-    .doc(subQuestionId)
-    .collection("options")
-    .doc(optionId)
-    .collection("likes")
-    .doc(creatorId);
+function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId) {
+    let voteRef = DB
+        .collection("groups")
+        .doc(groupId)
+        .collection("questions")
+        .doc(questionId)
+        .collection("subQuestions")
+        .doc(subQuestionId)
+        .collection("options")
+        .doc(optionId)
+        .collection("likes")
+        .doc(creatorId);
 
-  let unsubscribe = voteRef.onSnapshot(voteDB => {
-    if (voteDB.exists) {
-      store.optionsVotes[optionId] = voteDB.data().like;
-    } else {
-      store.optionsVotes[optionId] = 0;
-    }
-    m.redraw();
-  });
-  return unsubscribe;
+    let unsubscribe = voteRef.onSnapshot(voteDB => {
+        if (voteDB.exists) {
+            store.optionsVotes[optionId] = voteDB
+                .data()
+                .like;
+        } else {
+            store.optionsVotes[optionId] = 0;
+        }
+        m.redraw();
+    });
+    return unsubscribe;
 }
 
 function getSubAnswers(groupId, questionId, subQuestionId, vnode) {
-  let subAnswersRef = DB.collection("groups")
-    .doc(groupId)
-    .collection("questions")
-    .doc(questionId)
-    .collection("subQuestions")
-    .doc(subQuestionId)
-    .collection("subAnswers")
-    .orderBy("time", "desc")
-    .limit(100);
+    let subAnswersRef = DB
+        .collection("groups")
+        .doc(groupId)
+        .collection("questions")
+        .doc(questionId)
+        .collection("subQuestions")
+        .doc(subQuestionId)
+        .collection("subAnswers")
+        .orderBy("time", "desc")
+        .limit(100);
 
-  unsubscribe = subAnswersRef.onSnapshot(subAnswersDB => {
-    let subAnswersArr = [];
-    subAnswersDB.forEach(subAnswerDB => {
-      let subAnswerObj = subAnswerDB.data();
+    unsubscribe = subAnswersRef.onSnapshot(subAnswersDB => {
+        let subAnswersArr = [];
+        subAnswersDB.forEach(subAnswerDB => {
+            let subAnswerObj = subAnswerDB.data();
 
-      subAnswerObj.id = subAnswerDB.id;
-      subAnswersArr.push(subAnswerObj);
+            subAnswerObj.id = subAnswerDB.id;
+            subAnswersArr.push(subAnswerObj);
+        });
+
+        vnode.state.subAnswers[subQuestionId] = subAnswersArr;
+        m.redraw();
     });
-
-    vnode.state.subAnswers[subQuestionId] = subAnswersArr;
-    m.redraw();
-  });
-  return unsubscribe;
+    return unsubscribe;
 }
 
 function getMessages(groupId, questionId, subQuestionId, optionId, vnode) {
-  let messagesRef = DB.collection("groups")
-    .doc(groupId)
-    .collection("questions")
-    .doc(questionId)
-    .collection("subQuestions")
-    .doc(subQuestionId)
-    .collection("options")
-    .doc(optionId)
-    .collection("messages");
+    let messagesRef = DB
+        .collection("groups")
+        .doc(groupId)
+        .collection("questions")
+        .doc(questionId)
+        .collection("subQuestions")
+        .doc(subQuestionId)
+        .collection("options")
+        .doc(optionId)
+        .collection("messages");
 
-  return messagesRef
-    .orderBy("time", "desc")
-    .limit(20)
-    .onSnapshot(messagesDB => {
-      let messagesArray = [];
+    return messagesRef
+        .orderBy("time", "desc")
+        .limit(20)
+        .onSnapshot(messagesDB => {
+            let messagesArray = [];
 
-      let numberOfMessages = messagesDB.size;
-      messagesDB.forEach(messageDB => {
-        let tempMessage = messageDB.data();
+            let numberOfMessages = messagesDB.size;
+            messagesDB.forEach(messageDB => {
+                let tempMessage = messageDB.data();
 
-        //check if message is new
-        if (!vnode.state.messagesIds.hasOwnProperty(messageDB.id)) {
-          tempMessage.isNew = true;
-        } else {
-          tempMessage.isNew = false;
-        }
+                //check if message is new
+                if (!vnode.state.messagesIds.hasOwnProperty(messageDB.id)) {
+                    tempMessage.isNew = true;
+                } else {
+                    tempMessage.isNew = false;
+                }
 
-        messagesArray.unshift(tempMessage);
-        vnode.state.messagesIds[messageDB.id] = true;
-      });
-      vnode.state.messages = messagesArray;
-      // vnode.state.numberOfMessages = numberOfMessages;
+                messagesArray.unshift(tempMessage);
+                vnode.state.messagesIds[messageDB.id] = true;
+            });
+            vnode.state.messages = messagesArray;
+            // vnode.state.numberOfMessages = numberOfMessages;
 
-      m.redraw();
-    });
+            m.redraw();
+        });
 }
 
 function getSubItems(subItemsType, groupId, questionId, vnode) {
-  let subItemsRef = DB.collection("groups")
-    .doc(groupId)
-    .collection("questions")
-    .doc(questionId)
-    .collection(subItemsType);
+    let subItemsRef = DB
+        .collection("groups")
+        .doc(groupId)
+        .collection("questions")
+        .doc(questionId)
+        .collection(subItemsType);
 
-  unsubscribe = subItemsRef
-    .orderBy("totalVotes", "desc")
-    .onSnapshot(SubItemsDB => {
-      SubItemsDB.docChanges().forEach(function (change) {
-        if (change.type === "added") {
-          vnode.state.subAnswersUnsb[change.doc.id] = getSubAnswers(
-            groupId,
-            questionId,
-            change.doc.id,
-            vnode
-          ); //listen to answers
+    unsubscribe = subItemsRef
+        .orderBy("totalVotes", "desc")
+        .onSnapshot(SubItemsDB => {
+            SubItemsDB
+                .docChanges()
+                .forEach(function (change) {
+                    if (change.type === "added") {
+                        vnode.state.subAnswersUnsb[change.doc.id] = getSubAnswers(groupId, questionId, change.doc.id, vnode); //listen to answers
+                    }
+
+                    if (change.type === "removed") {
+                        //unsubscribe from answers
+                    }
+                });
+
+            let subItemArr = [];
+            SubItemsDB.forEach(SubItemDB => {
+                let subItemObj = SubItemDB.data();
+
+                subItemObj.id = SubItemDB.id;
+                subItemArr.push(subItemObj);
+            });
+
+            vnode.state[subItemsType] = subItemArr;
+            m.redraw();
+        });
+    return unsubscribe;
+}
+
+function getSubItemLikes(subItemsType, groupId, questionId, subQuestionId, creatorId, vnode) {
+    let subQuestionRef = DB
+        .collection("groups")
+        .doc(groupId)
+        .collection("questions")
+        .doc(questionId)
+        .collection(subItemsType)
+        .doc(subQuestionId);
+
+    return subQuestionRef.onSnapshot(likeDB => {
+        if (likeDB.data().totalVotes != undefined) {
+            vnode.state.likes = likeDB
+                .data()
+                .totalVotes;
+        } else {
+            vnode.state.likes = 0;
         }
 
-        if (change.type === "removed") {
-          //unsubscribe from answers
-        }
-      });
-
-      let subItemArr = [];
-      SubItemsDB.forEach(SubItemDB => {
-        let subItemObj = SubItemDB.data();
-
-        subItemObj.id = SubItemDB.id;
-        subItemArr.push(subItemObj);
-      });
-
-      vnode.state[subItemsType] = subItemArr;
-      m.redraw();
-    });
-  return unsubscribe;
-}
-
-function getSubItemLikes(
-  subItemsType,
-  groupId,
-  questionId,
-  subQuestionId,
-  creatorId,
-  vnode
-) {
-  let subQuestionRef = DB.collection("groups")
-    .doc(groupId)
-    .collection("questions")
-    .doc(questionId)
-    .collection(subItemsType)
-    .doc(subQuestionId);
-
-  return subQuestionRef.onSnapshot(likeDB => {
-    if (likeDB.data().totalVotes != undefined) {
-      vnode.state.likes = likeDB.data().totalVotes;
-    } else {
-      vnode.state.likes = 0;
-    }
-
-    m.redraw();
-  });
-}
-
-function getSubItemUserLike(
-  subItemsType,
-  groupId,
-  questionId,
-  subQuestionId,
-  creatorId,
-  vnode
-) {
-  let subQuestionRef = DB.collection("groups")
-    .doc(groupId)
-    .collection("questions")
-    .doc(questionId)
-    .collection(subItemsType)
-    .doc(subQuestionId)
-    .collection("likes")
-    .doc(creatorId);
-
-  return subQuestionRef.onSnapshot(likeDB => {
-    if (likeDB.exists) {
-      if (likeDB.data().like == 1) {
-        vnode.state.up = true;
-      } else {
-        vnode.state.up = false;
-      }
-    } else {
-      vnode.state.up = false;
-    }
-
-    m.redraw();
-  });
-}
-
-function listenToSubscription(path){
-  if({}.hasOwnProperty.call(store.subscribe, path) === false){
-    console.log(`${path}/subscribers/${store.user.uid}`)
-    DB.doc(`${path}/subscribers/${store.user.uid}`).onSnapshot(subscriberDB=>{
-      
-        set(store.subscribe,`[${path}]`, subscriberDB.exists);
         m.redraw();
-      
-      
-      if(subscriberDB.exists) console.log('user is subscribed')
-      else{ console.log('user is not subscribed')}
-    },err=>{
-      console.error(err)
-    })
-  }
+    });
+}
+
+function getSubItemUserLike(subItemsType, groupId, questionId, subQuestionId, creatorId, vnode) {
+    let subQuestionRef = DB
+        .collection("groups")
+        .doc(groupId)
+        .collection("questions")
+        .doc(questionId)
+        .collection(subItemsType)
+        .doc(subQuestionId)
+        .collection("likes")
+        .doc(creatorId);
+
+    return subQuestionRef.onSnapshot(likeDB => {
+        if (likeDB.exists) {
+            if (likeDB.data().like == 1) {
+                vnode.state.up = true;
+            } else {
+                vnode.state.up = false;
+            }
+        } else {
+            vnode.state.up = false;
+        }
+
+        m.redraw();
+    });
+}
+
+function listenToSubscription(path) {
+    if ({}.hasOwnProperty.call(store.subscribe, path) === false) {
+
+        DB
+            .doc(`${path}/subscribers/${store.user.uid}`)
+            .onSnapshot(subscriberDB => {
+
+                set(store.subscribe, `[${path}]`, subscriberDB.exists);
+                m.redraw();
+
+                if (subscriberDB.exists) 
+                    console.info('user is subscribed')
+                else {
+                    console.info('user is not subscribed')
+                }
+            }, err => {
+                console.error(err)
+            })
+    }
 }
 
 function listenToFeeds() {
-  if (store.user.hasOwnProperty("uid")) {
-    let feedsRef = DB.collection("users")
-      .doc(store.user.uid)
-      .collection("feeds");
-    feedsRef.onSnapshot(feedsDB => {
-      feedsDB.docChanges().forEach(feedDB => {
-        //listen to changes
-        let path = feedDB.doc.data().path;
+    if (store.user.hasOwnProperty("uid")) {
+        let feedsRef = DB
+            .collection("users")
+            .doc(store.user.uid)
+            .collection("feeds");
+        feedsRef.onSnapshot(feedsDB => {
+            feedsDB
+                .docChanges()
+                .forEach(feedDB => {
+                    //listen to changes
+                    let path = feedDB
+                        .doc
+                        .data()
+                        .path;
 
-        if (feedDB.type === "added") {
-          listenToFeed(path);
+                    if (feedDB.type === "added") {
+                        listenToFeed(path);
 
-          store.subscribed[path] = true;
+                        store.subscribed[path] = true;
 
-          m.redraw();
-        } else if (feedDB.type === "removed") {
-          listenToFeed(path, "off");
-        }
-      });
-    });
-  } else {
-    console.error(
-      "User is not logged in and I can not subscribe to his/her feeds"
-    );
-  }
+                        m.redraw();
+                    } else if (feedDB.type === "removed") {
+                        listenToFeed(path, "off");
+                    }
+                });
+        });
+    } else {
+        console.error("User is not logged in and I can not subscribe to his/her feeds");
+    }
 }
 
-
 function listenToFeed(path, onOff = "on") {
-  let path1 = path;
-  path = path.replace(/--/g, "/");
+    let path1 = path;
+    path = path.replace(/--/g, "/");
 
-  if (onOff === "on") {
-    let feedRef = DB.collection(path);
+    if (onOff === "on") {
+        let feedRef = DB.collection(path);
 
-    //for how long should a message appear in the feed
-    let dayPassed = 1;
-    let hoursPassed = 12;
-    let timeOfActiveMessage =
-      (dayPassed + (hoursPassed * 1) / 24) * 24 * 3600 * 1000;
-    let timePassed = new Date().getTime() - timeOfActiveMessage;
+        //for how long should a message appear in the feed
+        let dayPassed = 1;
+        let hoursPassed = 12;
+        let timeOfActiveMessage = (dayPassed + (hoursPassed * 1) / 24) * 24 * 3600 * 1000;
+        let timePassed = new Date().getTime() - timeOfActiveMessage;
 
-    store.feedsUnsubscribe[path1] = feedRef
-      .where("timeSeconds", ">", timePassed)
-      .orderBy("timeSeconds", "desc")
-      .limit(1)
-      .onSnapshot(feedsDB => {
-        feedsDB.forEach(feedDB => {
-          if (feedDB.data().time !== null) {
-            let newFeed = feedDB.data();
+        store.feedsUnsubscribe[path1] = feedRef
+            .where("timeSeconds", ">", timePassed)
+            .orderBy("timeSeconds", "desc")
+            .limit(1)
+            .onSnapshot(feedsDB => {
+                feedsDB.forEach(feedDB => {
+                    if (feedDB.data().time !== null) {
+                        let newFeed = feedDB.data();
 
-            newFeed.path = path1;
-            //add feed-inputs to feed
-            store.feed[path] = newFeed;
+                        newFeed.path = path1;
+                        //add feed-inputs to feed
+                        store.feed[path] = newFeed;
 
-            store.numberOfNewMessages++;
+                        store.numberOfNewMessages++;
 
-            audio.play();
+                        audio.play();
 
-            const playPromise = audio.play()
-            // const playPromise = media.play();
-            if (playPromise !== null) {
-              playPromise.catch(() => {
-                audio.play();
-              })
-            }
+                        const playPromise = audio.play()
+                        // const playPromise = media.play();
+                        if (playPromise !== null) {
+                            playPromise.catch(() => {
+                                audio.play();
+                            })
+                        }
 
-            m.redraw();
-          }
-        });
-      });
-  } else {
-    //unsubscribe
+                        m.redraw();
+                    }
+                });
+            });
+    } else {
+        //unsubscribe
 
-    if (store.feedsUnsubscribe.hasOwnProperty(path1)) {
-      store.feedsUnsubscribe[path1]();
+        if (store.feedsUnsubscribe.hasOwnProperty(path1)) {
+            store.feedsUnsubscribe[path1]();
+        }
+
+        delete store.subscribed[path1]; //delete indciation that this feed is regigsterd
+
+        m.redraw();
     }
-
-    delete store.subscribed[path1]; //delete indciation that this feed is regigsterd
-
-    m.redraw();
-  }
 }
 
 module.exports = {
-  getUserGroups,
-  getQuestions,
-  getGroupDetails,
-  getQuestionDetails,
-  getSubQuestions,
-  getSubQuestion,
-  listenToOptions,
-  getOptionVote,
-  getSubItems,
-  getSubItemLikes,
-  getSubItemUserLike,
-  getSubAnswers,
-  getOptionDetails,
-  getMessages,
-  listenToFeeds,
-  listenToSubscription
+    getUserGroups,
+    getQuestions,
+    getGroupDetails,
+    getQuestionDetails,
+    getSubQuestions,
+    getSubQuestion,
+    listenToOptions,
+    getOptionVote,
+    getSubItems,
+    getSubItemLikes,
+    getSubItemUserLike,
+    getSubAnswers,
+    getOptionDetails,
+    getMessages,
+    listenToFeeds,
+    listenToSubscription
 };
