@@ -28,8 +28,8 @@ exports.totalVotes = functions.firestore
       .collection("options")
       .doc(context.params.optionId);
 
-    return db.runTransaction(transaction => {
-      return transaction.get(optionLikesRef).then(optionDoc => {
+    return db.runTransaction((transaction) => {
+      return transaction.get(optionLikesRef).then((optionDoc) => {
         // Compute new number of ratings
         var totalVotes = 0;
         if (optionDoc.data().totalVotes !== undefined) {
@@ -47,7 +47,8 @@ exports.totalVotes = functions.firestore
           // consensusPrecentage = totalVotes / totalVoters;
 
           //consensus with respect to group size
-          consensusPrecentage = (totalVotes / totalVoters) * (Math.log(totalVoters) / Math.log(10));
+          consensusPrecentage =
+            (totalVotes / totalVoters) * (Math.log(totalVoters) / Math.log(10));
         }
 
         // Compute new average rating
@@ -57,7 +58,7 @@ exports.totalVotes = functions.firestore
         // Update restaurant info
         return transaction.update(optionLikesRef, {
           totalVotes,
-          consensusPrecentage
+          consensusPrecentage,
         });
       });
     });
@@ -80,8 +81,8 @@ exports.totalVoters = functions.firestore
       .collection("options")
       .doc(context.params.optionId);
 
-    return db.runTransaction(transaction => {
-      return transaction.get(optionLikesRef).then(optionDoc => {
+    return db.runTransaction((transaction) => {
+      return transaction.get(optionLikesRef).then((optionDoc) => {
         // Compute new number of ratings
         var totalVotes = newLike;
         if (optionDoc.data().totalVotes !== undefined) {
@@ -104,7 +105,7 @@ exports.totalVoters = functions.firestore
         return transaction.update(optionLikesRef, {
           totalVoters,
           totalVotes,
-          consensusPrecentage
+          consensusPrecentage,
         });
       });
     });
@@ -131,8 +132,8 @@ exports.totalLikesForSubQuestion = functions.firestore
       .collection("subQuestions")
       .doc(context.params.subQuestionId);
 
-    return db.runTransaction(transaction => {
-      return transaction.get(subQuestionLikesRef).then(subQuestionDoc => {
+    return db.runTransaction((transaction) => {
+      return transaction.get(subQuestionLikesRef).then((subQuestionDoc) => {
         // Compute new number of ratings
         var totalVotes = 0;
         if (subQuestionDoc.data().totalVotes !== undefined) {
@@ -143,7 +144,7 @@ exports.totalLikesForSubQuestion = functions.firestore
 
         // Update restaurant info
         return transaction.update(subQuestionLikesRef, {
-          totalVotes
+          totalVotes,
         });
       });
     });
@@ -236,7 +237,7 @@ exports.countNumbeOfMessages = functions.firestore
       // New document Created : add one to count
       docRef
         .get()
-        .then(snap => {
+        .then((snap) => {
           //check if new
           let numberOfMessages = 0;
           if (isNaN(snap.data().numberOfMessages)) {
@@ -247,7 +248,7 @@ exports.countNumbeOfMessages = functions.firestore
           docRef.update({ numberOfMessages });
           return true;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     } else if (change.before.exists && change.after.exists) {
@@ -257,84 +258,122 @@ exports.countNumbeOfMessages = functions.firestore
       // Deleting document : subtract one from count
       docRef
         .get()
-        .then(snap => {
+        .then((snap) => {
           docRef.update({ numberOfMessages: snap.data().numberOfMessages - 1 });
           return true;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     }
   });
 
-
 // ========= push notifications =======
-exports.sendPushForNewOptions =
-    functions.firestore
-        .document('groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}')
-        .onWrite((change, context) => {
-            const CP = context.params;
-            const OPTION_DATA = change.after.data()
-            
+exports.sendPushForNewOptions = functions.firestore
+  .document(
+    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}"
+  )
+  .onWrite((change, context) => {
+    const CP = context.params;
+    const OPTION_DATA = change.after.data();
 
-            // Setup notification
-            
-            const payload = {
-                notification: {
-                    title: `הצעה חדשה: ${OPTION_DATA.title}`,
-                    body: `${OPTION_DATA.creatorName} מציע ש ${OPTION_DATA.title} \nהיא תשובה טובה ל-\n ${OPTION_DATA.subQuestionTitle}`,
-                    icon: 'https://delib.tech/img/logo-192.png',
-                    click_action: `https://delib.tech/?/subquestions/${CP.groupId}/${CP.questionId}/${CP.subQuestionId}`
+    // Setup notification
 
-                }
-            }
+    const payload = {
+      notification: {
+        title: `הצעה חדשה: ${OPTION_DATA.title}`,
+        body: `${OPTION_DATA.creatorName} מציע ש ${OPTION_DATA.title} \nהיא תשובה טובה ל-\n ${OPTION_DATA.subQuestionTitle}`,
+        icon: "https://delib.tech/img/logo-192.png",
+        click_action: `https://delib.tech/?/subquestions/${CP.groupId}/${CP.questionId}/${CP.subQuestionId}`,
+      },
+    };
 
-            // Clean invalid tokens
-            function cleanInvalidTokens(tokensWithKey, results) {
+    // Clean invalid tokens
+    function cleanInvalidTokens(tokensWithKey, results) {
+      const invalidTokens = [];
 
-                const invalidTokens = [];
+      results.forEach((result, i) => {
+        if (!result.error) return;
 
-                results.forEach((result, i) => {
-                    if (!result.error) return;
+        console.error(
+          "Failure sending notification to",
+          tokensWithKey[i].token,
+          result.error
+        );
 
-                    console.error('Failure sending notification to', tokensWithKey[i].token, result.error);
+        switch (result.error.code) {
+          case "messaging/invalid-registration-token":
+          case "messaging/registration-token-not-registered":
+            invalidTokens.push(
+              admin
+                .database()
+                .ref("/tokens")
+                .child(tokensWithKey[i].key)
+                .remove()
+            );
+            break;
+          default:
+            break;
+        }
+      });
 
-                    switch (result.error.code) {
-                        case "messaging/invalid-registration-token":
-                        case "messaging/registration-token-not-registered":
-                            invalidTokens.push(admin.database().ref('/tokens').child(tokensWithKey[i].key).remove());
-                            break;
-                        default:
-                            break;
-                    }
-                });
+      return Promise.all(invalidTokens);
+    }
 
-                return Promise.all(invalidTokens);
-            }
+    // go over all token given by users and see which user set a token for this entity
+    return db
+      .collection("tokens")
+      .where("pushEntities", "array-contains", context.params.subQuestionId)
+      .get()
+      .then((tokensDB) => {
+        if (tokensDB.size === 0) return;
 
-            // go over all token given by users and see which user set a token for this entity
-            return db.collection('tokens')
-                .where('pushEntities', "array-contains", context.params.subQuestionId)
-                .get().then(tokensDB => {
+        // const snapshot = tokensDB.data();
+        const snapshot = [];
+        const tokensWithKey = [];
+        const tokens = [];
+        let counter = 0;
+        tokensDB.forEach((tokenDb) => {
+          //gather all users in this entity
+          tokens.push(tokenDb.data().token);
+        });
+        //send notifications to all users that are registerd to this entity
+        return admin.messaging().sendToDevice(tokens, payload);
+        // .then((response) => cleanInvalidTokens(tokensWithKey, response.results))
+        // .then(() => admin.database().ref('/notifications').child(NOTIFICATION_SNAPSHOT.key).remove())
+      })
+      .catch((err) => {
+        console.log("Error2:", err);
+      });
+  });
 
-                
-                if (tokensDB.size === 0) return;
+//update subscribers on CUD of questions under a group
+exports.updateSubscribers = functions.firestore
+  .document("groups/{groupId}/questions/{questionId}")
+  .onWrite((change, context) => {
+    try{
+    const CP = context.params;
+    const { groupId,questionId } = CP;
+    const DATA = change.after.data();
 
-                // const snapshot = tokensDB.data();
-                const snapshot = [];
-                const tokensWithKey = [];
-                const tokens = [];
-                let counter = 0;
-                  tokensDB.forEach(tokenDb => {
-                  //gather all users in this entity
-                    tokens.push(tokenDb.data().token)                    
-                })
-               //send notifications to all users that are registerd to this entity
-                return admin.messaging().sendToDevice(tokens, payload)
-                // .then((response) => cleanInvalidTokens(tokensWithKey, response.results))
-                // .then(() => admin.database().ref('/notifications').child(NOTIFICATION_SNAPSHOT.key).remove())
-            }).catch(err => {
-                console.log('Error2:', err)
-            });
+    console.log(CP);
+    console.log(DATA);
+    console.log("groupId:", groupId);
+
+    return db
+      .collection("groups")
+      .doc(groupId)
+      .collection("subscribers")
+      .get()
+      .then(subscribersDB =>{
+        subscribersDB.forEach(subscriberDB=>{
+          console.log('subscriber ID:',subscriberDB.id )
+          db.collection('users').doc(subscriberDB.id).collection('feed').add({message:"question created",groupId, questionId, question:DATA}).then(()=>console.log('add to user', subscriberDB.id)).catch(err=>console.log(err.message))
+
         })
-
+      })
+      .catch((err) => console.log(err.message));
+    } catch(err){
+      console.log(err)
+    }
+  });
