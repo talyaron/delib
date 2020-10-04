@@ -2,12 +2,15 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 admin.initializeApp();
 const db = admin.firestore();
-const settings = { timestampsInSnapshots: true };
+const settings = {
+  timestampsInSnapshots: true,
+};
 db.settings(settings);
 
 exports.totalVotes = functions.firestore
   .document(
-    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}/likes/{userId}"
+    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{op" +
+      "tionId}/likes/{userId}"
   )
   .onUpdate((change, context) => {
     var newLike = change.after.data().like;
@@ -43,19 +46,15 @@ exports.totalVotes = functions.firestore
         if (optionDoc.data().totalVoters !== undefined) {
           let totalVoters = optionDoc.data().totalVoters;
 
-          //old method
-          // consensusPrecentage = totalVotes / totalVoters;
-
-          //consensus with respect to group size
+          // old method consensusPrecentage = totalVotes / totalVoters; consensus with
+          // respect to group size
           consensusPrecentage =
             (totalVotes / totalVoters) * (Math.log(totalVoters) / Math.log(10));
         }
 
-        // Compute new average rating
-        // var oldRatingTotal = optionDoc.data('avgRating') * optionDoc.data('numRatings');
-        // var newAvgRating = (oldRatingTotal + newLike) / newNumRatings;
-
-        // Update restaurant info
+        // Compute new average rating var oldRatingTotal = optionDoc.data('avgRating') *
+        // optionDoc.data('numRatings'); var newAvgRating = (oldRatingTotal + newLike) /
+        // newNumRatings; Update restaurant info
         return transaction.update(optionLikesRef, {
           totalVotes,
           consensusPrecentage,
@@ -66,7 +65,8 @@ exports.totalVotes = functions.firestore
 
 exports.totalVoters = functions.firestore
   .document(
-    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}/likes/{userId}"
+    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{op" +
+      "tionId}/likes/{userId}"
   )
   .onCreate((change, context) => {
     var newLike = change.data().like;
@@ -93,11 +93,8 @@ exports.totalVoters = functions.firestore
           totalVoters = optionDoc.data().totalVoters + 1;
         }
 
-        //calaculate consensus precentage:
-        //simple consensus
-        // let consensusPrecentage = totalVotes / totalVoters;
-
-        //consensus with respect to group size
+        // calaculate consensus precentage: simple consensus let consensusPrecentage =
+        // totalVotes / totalVoters; consensus with respect to group size
         let consensusPrecentage =
           (totalVotes / totalVoters) * (Math.log(totalVoters) / Math.log(10));
 
@@ -113,7 +110,8 @@ exports.totalVoters = functions.firestore
 
 exports.totalLikesForSubQuestion = functions.firestore
   .document(
-    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/likes/{userId}"
+    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/likes/{user" +
+      "Id}"
   )
   .onUpdate((change, context) => {
     var newLike = change.after.data().like;
@@ -143,84 +141,54 @@ exports.totalLikesForSubQuestion = functions.firestore
         }
 
         // Update restaurant info
-        return transaction.update(subQuestionLikesRef, {
-          totalVotes,
-        });
+        return transaction.update(subQuestionLikesRef, { totalVotes });
       });
     });
   });
 
 // exports.totalLikesForQuestionsGoals = functions.firestore
-//     .document('groups/{groupId}/questions/{questionId}/goals/{subGoalId}/likes/{userId}')
-//     .onUpdate((change, context) => {
-//         var newLike = change.after.data().like;
-//         var previousLike = 0;
-//         if (change.before.data() !== undefined) {
-//             previousLike = change.before.data().like;
-//         }
-
-//         var like = newLike - previousLike;
-
-//         var subGoalLikesRef = db.collection('groups').doc(context.params.groupId)
-//             .collection('questions').doc(context.params.questionId)
-//             .collection('goals').doc(context.params.subGoalId);
-
-//         return db.runTransaction(transaction => {
-//             return transaction.get(subGoalLikesRef).then(subGoalDoc => {
-//                 // Compute new number of ratings
-//                 var totalVotes = 0;
-//                 if (subGoalDoc.data().totalVotes !== undefined) {
-//                     totalVotes = subGoalDoc.data().totalVotes + like;
-//                 } else {
-//                     totalVotes = like;
-//                 }
-
-//                 // Update restaurant info
-//                 return transaction.update(subGoalLikesRef, {
-//                     totalVotes
-
-//                 });
-//             })
-//         })
-//     })
-
+// .document('groups/{groupId}/questions/{questionId}/goals/{subGoalId}/likes/{us
+// erId}')     .onUpdate((change, context) => {         var newLike =
+// change.after.data().like;         var previousLike = 0;         if
+// (change.before.data() !== undefined) {             previousLike =
+// change.before.data().like;         }         var like = newLike -
+// previousLike;         var subGoalLikesRef =
+// db.collection('groups').doc(context.params.groupId)
+// .collection('questions').doc(context.params.questionId)
+// .collection('goals').doc(context.params.subGoalId);         return
+// db.runTransaction(transaction => {             return
+// transaction.get(subGoalLikesRef).then(subGoalDoc => {                 //
+// Compute new number of ratings                 var totalVotes = 0;
+//     if (subGoalDoc.data().totalVotes !== undefined) {
+// totalVotes = subGoalDoc.data().totalVotes + like;                 } else {
+//                  totalVotes = like;                 }                 //
+// Update restaurant info                 return
+// transaction.update(subGoalLikesRef, {                     totalVotes
+//        });             })         })     })
 // exports.totalLikesForQuestionsValues = functions.firestore
-//     .document('groups/{groupId}/questions/{questionId}/values/{subValueId}/likes/{userId}')
-//     .onUpdate((change, context) => {
-//         var newLike = change.after.data().like;
-//         var previousLike = 0;
-//         if (change.before.data() !== undefined) {
-//             previousLike = change.before.data().like;
-//         }
-
-//         var like = newLike - previousLike;
-
-//         var subValueLikesRef = db.collection('groups').doc(context.params.groupId)
-//             .collection('questions').doc(context.params.questionId)
-//             .collection('values').doc(context.params.subValueId);
-
-//         return db.runTransaction(transaction => {
-//             return transaction.get(subValueLikesRef).then(subGoalDoc => {
-//                 // Compute new number of ratings
-//                 var totalVotes = 0;
-//                 if (subGoalDoc.data().totalVotes !== undefined) {
-//                     totalVotes = subGoalDoc.data().totalVotes + like;
-//                 } else {
-//                     totalVotes = like;
-//                 }
-
-//                 // Update restaurant info
-//                 return transaction.update(subValueLikesRef, {
-//                     totalVotes
-
-//                 });
-//             })
-//         })
-//     })
+// .document('groups/{groupId}/questions/{questionId}/values/{subValueId}/likes/{
+// userId}')     .onUpdate((change, context) => {         var newLike =
+// change.after.data().like;         var previousLike = 0;         if
+// (change.before.data() !== undefined) {             previousLike =
+// change.before.data().like;         }         var like = newLike -
+// previousLike;         var subValueLikesRef =
+// db.collection('groups').doc(context.params.groupId)
+// .collection('questions').doc(context.params.questionId)
+// .collection('values').doc(context.params.subValueId);         return
+// db.runTransaction(transaction => {             return
+// transaction.get(subValueLikesRef).then(subGoalDoc => {                 //
+// Compute new number of ratings                 var totalVotes = 0;
+//     if (subGoalDoc.data().totalVotes !== undefined) {
+// totalVotes = subGoalDoc.data().totalVotes + like;                 } else {
+//                  totalVotes = like;                 }                 //
+// Update restaurant info                 return
+// transaction.update(subValueLikesRef, {                     totalVotes
+//         });             })         })     })
 
 exports.countNumbeOfMessages = functions.firestore
   .document(
-    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}/messages/{messageId}"
+    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{op" +
+      "tionId}/messages/{messageId}"
   )
   .onWrite((change, context) => {
     let docRef = db
@@ -259,7 +227,9 @@ exports.countNumbeOfMessages = functions.firestore
       docRef
         .get()
         .then((snap) => {
-          docRef.update({ numberOfMessages: snap.data().numberOfMessages - 1 });
+          docRef.update({
+            numberOfMessages: snap.data().numberOfMessages - 1,
+          });
           return true;
         })
         .catch((err) => {
@@ -271,7 +241,8 @@ exports.countNumbeOfMessages = functions.firestore
 // ========= push notifications =======
 exports.sendPushForNewOptions = functions.firestore
   .document(
-    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}"
+    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{op" +
+      "tionId}"
   )
   .onWrite((change, context) => {
     const CP = context.params;
@@ -320,7 +291,8 @@ exports.sendPushForNewOptions = functions.firestore
       return Promise.all(invalidTokens);
     }
 
-    // go over all token given by users and see which user set a token for this entity
+    // go over all token given by users and see which user set a token for this
+    // entity
     return db
       .collection("tokens")
       .where("pushEntities", "array-contains", context.params.subQuestionId)
@@ -340,7 +312,9 @@ exports.sendPushForNewOptions = functions.firestore
         //send notifications to all users that are registerd to this entity
         return admin.messaging().sendToDevice(tokens, payload);
         // .then((response) => cleanInvalidTokens(tokensWithKey, response.results))
-        // .then(() => admin.database().ref('/notifications').child(NOTIFICATION_SNAPSHOT.key).remove())
+        // .then(() =>
+        // admin.database().ref('/notifications').child(NOTIFICATION_SNAPSHOT.key).remove
+        // ())
       })
       .catch((err) => {
         console.log("Error2:", err);
@@ -348,32 +322,53 @@ exports.sendPushForNewOptions = functions.firestore
   });
 
 //update subscribers on CUD of questions under a group
-exports.updateSubscribers = functions.firestore
+exports.updateGroupSubscribers = functions.firestore
   .document("groups/{groupId}/questions/{questionId}")
   .onWrite((change, context) => {
-    try{
-    const CP = context.params;
-    const { groupId,questionId } = CP;
-    const DATA = change.after.data();
+    try {
+      const CP = context.params;
+      const { groupId, questionId } = CP;
+      const DATA = change.after.data();
+      const { before, after } = change;
+      console.log("================start======================");
+      console.log("Before:", before.data());
+      console.log("After:", after.data());
 
-    console.log(CP);
-    console.log(DATA);
-    console.log("groupId:", groupId);
+      let message;
+      if (before.data() === undefined && after.data() !== undefined)
+        message = "created";
+      else if (before.data() !== undefined && after.data() !== undefined)
+        message = "updated";
+      else if (before.data() !== undefined && after.data() === undefined)
+        message = "deleted";
+      else
+        throw new Error(
+          `Unkown firestore event! before: '${before}', after: '${after}'`
+        );
 
-    return db
-      .collection("groups")
-      .doc(groupId)
-      .collection("subscribers")
-      .get()
-      .then(subscribersDB =>{
-        subscribersDB.forEach(subscriberDB=>{
-          console.log('subscriber ID:',subscriberDB.id )
-          db.collection('users').doc(subscriberDB.id).collection('feed').add({message:"question created",groupId, questionId, question:DATA}).then(()=>console.log('add to user', subscriberDB.id)).catch(err=>console.log(err.message))
-
+      return db
+        .collection("groups")
+        .doc(groupId)
+        .collection("subscribers")
+        .get()
+        .then((subscribersDB) => {
+          subscribersDB.forEach((subscriberDB) => {
+            console.log("subscriber ID:", subscriberDB.id);
+            db.collection("users")
+              .doc(subscriberDB.id)
+              .collection("feed")
+              .add({
+                message: `Message was ${message}`,
+                groupId,
+                questionId,
+                question: DATA,
+              })
+              .then(() => console.log("add to user", subscriberDB.id))
+              .catch((err) => console.log(err.message));
+          });
         })
-      })
-      .catch((err) => console.log(err.message));
-    } catch(err){
-      console.log(err)
+        .catch((err) => console.log(err.message));
+    } catch (err) {
+      console.log(err);
     }
   });
