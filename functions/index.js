@@ -323,52 +323,53 @@ exports.sendPushForNewOptions = functions.firestore
 
 //update subscribers on CUD of questions under a group
 exports.updateGroupSubscribers = functions.firestore
-  .document("groups/{groupId}/questions/{questionId}")
-  .onWrite((change, context) => {
-    try {
-      const CP = context.params;
-      const { groupId, questionId } = CP;
-      const DATA = change.after.data();
-      const { before, after } = change;
-      console.log("================start======================");
-      console.log("Before:", before.data());
-      console.log("After:", after.data());
+.document("groups/{groupId}/questions/{questionId}")
+.onWrite((change, context) => {
+  try {
+    const CP = context.params;
+    const { groupId, questionId } = CP;
+    const DATA = change.after.data();
+    const { before, after } = change;
+    console.log("================start======================");
+    console.log("Before:", before.data());
+    console.log("After:", after.data());
 
-      let message;
-      if (before.data() === undefined && after.data() !== undefined)
-        message = "created";
-      else if (before.data() !== undefined && after.data() !== undefined)
-        message = "updated";
-      else if (before.data() !== undefined && after.data() === undefined)
-        message = "deleted";
-      else
-        throw new Error(
-          `Unkown firestore event! before: '${before}', after: '${after}'`
-        );
+    let message;
+    if (before.data() === undefined && after.data() !== undefined)
+      message = "created";
+    else if (before.data() !== undefined && after.data() !== undefined)
+      message = "updated";
+    else if (before.data() !== undefined && after.data() === undefined)
+      message = "deleted";
+    else
+      throw new Error(
+        `Unkown firestore event! before: '${before}', after: '${after}'`
+      );
 
-      return db
-        .collection("groups")
-        .doc(groupId)
-        .collection("subscribers")
-        .get()
-        .then((subscribersDB) => {
-          subscribersDB.forEach((subscriberDB) => {
-            console.log("subscriber ID:", subscriberDB.id);
-            db.collection("users")
-              .doc(subscriberDB.id)
-              .collection("feed")
-              .add({
-                message: `Message was ${message}`,
-                groupId,
-                questionId,
-                question: DATA,
-              })
-              .then(() => console.log("add to user", subscriberDB.id))
-              .catch((err) => console.log(err.message));
-          });
-        })
-        .catch((err) => console.log(err.message));
-    } catch (err) {
-      console.log(err);
-    }
-  });
+    return db
+      .collection("groups")
+      .doc(groupId)
+      .collection("subscribers")
+      .get()
+      .then((subscribersDB) => {
+        subscribersDB.forEach((subscriberDB) => {
+          console.log("subscriber ID:", subscriberDB.id);
+          db.collection("users")
+            .doc(subscriberDB.id)
+            .collection("feed")
+            .add({
+              message: `Message was ${message}`,
+              groupId,
+              questionId,
+              question: DATA,
+              date: new Date()
+            })
+            .then(() => console.log("add to user", subscriberDB.id))
+            .catch((err) => console.log(err.message));
+        });
+      })
+      .catch((err) => console.log(err.message));
+  } catch (err) {
+    console.log(err);
+  }
+});
