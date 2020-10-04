@@ -323,16 +323,22 @@ exports.sendPushForNewOptions = functions.firestore
 
 //update subscribers on CUD of questions under a group
 exports.updateGroupSubscribers = functions.firestore
-.document("groups/{groupId}/questions/{questionId}")
-.onWrite((change, context) => {
+  .document("groups/{groupId}/questions/{questionId}")
+  .onWrite((change, context) => {
+    try {
+      return sendToSubscribers({ change, context });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+function sendToSubscribers(info) {
   try {
+    const { change, context } = info;
     const CP = context.params;
-    const { groupId, questionId } = CP;
+    let { groupId, questionId, subQuestionId, optionId } = CP;
     const DATA = change.after.data();
     const { before, after } = change;
-    console.log("================start======================");
-    console.log("Before:", before.data());
-    console.log("After:", after.data());
 
     let message;
     if (before.data() === undefined && after.data() !== undefined)
@@ -346,6 +352,39 @@ exports.updateGroupSubscribers = functions.firestore
         `Unkown firestore event! before: '${before}', after: '${after}'`
       );
 
+    //find update level
+    let updateLevel = "group",
+      url = message !== "deleted" ? `/group/${groupId}` : "/groups";
+    if (questionId === undefined) {
+      updateLevel = "group";
+      questionId = false;
+      subQuestionId = false;
+      optionId = false;
+    } else if (subQuestionId === undefined) {
+      updateLevel = "question";
+      subQuestionId = false;
+      optionId = false;
+      url =
+        message !== "deleted"
+          ? `/question/${groupId}/${questionId}`
+          : `/group/${groupId}`;
+    } else if (questionId === undefined) {
+      updateLevel = "subQuestion";
+      optionId = false;
+      url =
+        message !== "deleted"
+          ? `/subQuestion/${groupId}/${questionId}/${subQuestionId}`
+          : `/question/${groupId}/${questionId}`;
+    } else {
+      updateLevel = "option";
+      url =
+        message !== "deleted"
+          ? `/subQuestion/${groupId}/${questionId}/${subQuestionId}/${optionId}`
+          : `/subQuestion/${groupId}/${questionId}/${subQuestionId}`;
+    }
+
+    console.log("update level is:", updateLevel);
+
     return db
       .collection("groups")
       .doc(groupId)
@@ -358,11 +397,14 @@ exports.updateGroupSubscribers = functions.firestore
             .doc(subscriberDB.id)
             .collection("feed")
             .add({
-              message: `Message was ${message}`,
+              message: updateLevel !== 'option'? `A ${updateLevel} was ${message}`: `An ${updateLevel} was ${message}`,
               groupId,
               questionId,
+              subQuestionId,
+              optionId,
               question: DATA,
-              date: new Date()
+              date: new Date(),
+              url,
             })
             .then(() => console.log("add to user", subscriberDB.id))
             .catch((err) => console.log(err.message));
@@ -372,4 +414,4 @@ exports.updateGroupSubscribers = functions.firestore
   } catch (err) {
     console.log(err);
   }
-});
+}
