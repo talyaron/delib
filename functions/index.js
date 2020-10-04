@@ -332,6 +332,26 @@ exports.updateGroupSubscribers = functions.firestore
     }
   });
 
+  exports.updateQuestionSubscribers = functions.firestore
+  .document("groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}")
+  .onWrite((change, context) => {
+    try {
+      return sendToSubscribers({ change, context });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  exports.updateSubQuestionSubscribers = functions.firestore
+  .document("groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}")
+  .onWrite((change, context) => {
+    try {
+      return sendToSubscribers({ change, context });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
 function sendToSubscribers(info) {
   try {
     const { change, context } = info;
@@ -340,6 +360,8 @@ function sendToSubscribers(info) {
     const DATA = change.after.data();
     const { before, after } = change;
 
+
+    console.log( groupId, questionId, subQuestionId, optionId )
     let message;
     if (before.data() === undefined && after.data() !== undefined)
       message = "created";
@@ -357,19 +379,22 @@ function sendToSubscribers(info) {
       url = message !== "deleted" ? `/group/${groupId}` : "/groups";
     if (questionId === undefined) {
       updateLevel = "group";
+      console.log('..... update level: ',updateLevel)
       questionId = false;
       subQuestionId = false;
       optionId = false;
     } else if (subQuestionId === undefined) {
       updateLevel = "question";
+      console.log('..... update level: ',updateLevel)
       subQuestionId = false;
       optionId = false;
       url =
         message !== "deleted"
           ? `/question/${groupId}/${questionId}`
           : `/group/${groupId}`;
-    } else if (questionId === undefined) {
+    } else if (optionId === undefined) {
       updateLevel = "subQuestion";
+      console.log('..... update level: ',updateLevel)
       optionId = false;
       url =
         message !== "deleted"
@@ -378,9 +403,9 @@ function sendToSubscribers(info) {
     } else {
       updateLevel = "option";
       url =
-        message !== "deleted"
-          ? `/subQuestion/${groupId}/${questionId}/${subQuestionId}/${optionId}`
-          : `/subQuestion/${groupId}/${questionId}/${subQuestionId}`;
+      message !== "deleted"
+        ? `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`
+        : `/subQuestion/${groupId}/${questionId}/${subQuestionId}`;
     }
 
     console.log("update level is:", updateLevel);
@@ -397,7 +422,7 @@ function sendToSubscribers(info) {
             .doc(subscriberDB.id)
             .collection("feed")
             .add({
-              message: updateLevel !== 'option'? `A ${updateLevel} was ${message}`: `An ${updateLevel} was ${message}`,
+              message: (updateLevel !== 'option')? `A ${updateLevel} was ${message}`: `An ${updateLevel} was ${message}`,
               groupId,
               questionId,
               subQuestionId,
