@@ -14,7 +14,21 @@
     --maxWidthOnPC: 550px;
 
     --white:white;
+    --black:black;
     --gray5:#F9F9F9;
+    --gray1:#7C7C7C;
+
+    --roundBorder:12px;
+
+    /* font sizes */
+    --size15:1.2rem;
+    --size13:1rem;
+
+    /* padding */
+    --regPadding:16px;
+
+    /* shadows */
+    --mediumShadow: 0px 10px 20px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.04);
 }
 
 html,
@@ -23,7 +37,7 @@ body {
     height: 100%;
     margin: 0px;
     font-family: 'Varela Round', sans-serif;
-    font-size: 12px;
+    font-size: 13px;
     background: #e8e8e8;
 }
 

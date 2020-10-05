@@ -75,6 +75,7 @@ module.exports = {
                     isAdmin={vnode.state.isAdmin}
                     editPageLink={`/editgroup/${vnode.attrs.id}`}
                     groupId={vnode.attrs.id}
+                    showSubscribe={true}
                 />
                 <div class='questionsWrapper' id='groupWrapper'>
                     {

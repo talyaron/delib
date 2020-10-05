@@ -1,0 +1,27 @@
+.feedItem{
+    background: var(--white);
+    border-radius: var(--roundBorder);
+    
+    padding: var(--regPadding);
+    box-shadow: var(--mediumShadow);
+    margin-bottom: var(--regPadding);
+
+    cursor: pointer;
+    user-select: none;
+    
+}
+
+.feedItem h1, .feedItem p{
+    margin: 3px 0px;
+   
+}
+
+.feedItem h1{
+    font-size: var(--size15);
+    color: var(--black);
+}
+
+.feedItem p{
+    font-size: var(--size13);
+    color: var(--gray1);
+}

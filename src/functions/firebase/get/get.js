@@ -1,9 +1,9 @@
 import m from "mithril";
-import {DB} from "../config";
+import { DB } from "../config";
 import store from "../../../data/store";
 
 //functions
-import {set} from 'lodash'
+import { set } from 'lodash'
 
 var unsubscribe = {};
 
@@ -504,7 +504,7 @@ function listenToSubscription(path) {
                 set(store.subscribe, `[${path}]`, subscriberDB.exists);
                 m.redraw();
 
-                if (subscriberDB.exists) 
+                if (subscriberDB.exists)
                     console.info('user is subscribed')
                 else {
                     console.info('user is not subscribed')
@@ -515,92 +515,84 @@ function listenToSubscription(path) {
     }
 }
 
-function listenToFeeds() {
-    if (store.user.hasOwnProperty("uid")) {
-        let feedsRef = DB
-            .collection("users")
-            .doc(store.user.uid)
-            .collection("feeds");
-        feedsRef.onSnapshot(feedsDB => {
-            feedsDB
-                .docChanges()
-                .forEach(feedDB => {
-                    //listen to changes
-                    let path = feedDB
-                        .doc
-                        .data()
-                        .path;
+function listenToFeed() {
+    try {
+        DB.collection('users').doc(store.user.uid).collection('feed')
+            .limit(20)
+            .orderBy('date', 'desc')
+            .onSnapshot(feedDB => {
 
-                    if (feedDB.type === "added") {
-                        listenToFeed(path);
-
-                        store.subscribed[path] = true;
-
-                        m.redraw();
-                    } else if (feedDB.type === "removed") {
-                        listenToFeed(path, "off");
+                feedDB.docChanges().forEach(function (change) {
+                    if (change.type === "added") {
+                        const feedItem = change.doc.data();
+                        feedItem.feedItemId = change.doc.id;
+                        store.feed2.push(feedItem)
+                        console.log(feedItem);
                     }
+
                 });
-        });
-    } else {
-        console.error("User is not logged in and I can not subscribe to his/her feeds");
+
+                m.redraw();
+            })
+    } catch (err) {
+        console.error(err)
     }
 }
 
-function listenToFeed(path, onOff = "on") {
-    let path1 = path;
-    path = path.replace(/--/g, "/");
+// function listenToFeed(path, onOff = "on") {
+//     let path1 = path;
+//     path = path.replace(/--/g, "/");
 
-    if (onOff === "on") {
-        let feedRef = DB.collection(path);
+//     if (onOff === "on") {
+//         let feedRef = DB.collection(path);
 
-        //for how long should a message appear in the feed
-        let dayPassed = 1;
-        let hoursPassed = 12;
-        let timeOfActiveMessage = (dayPassed + (hoursPassed * 1) / 24) * 24 * 3600 * 1000;
-        let timePassed = new Date().getTime() - timeOfActiveMessage;
+//         //for how long should a message appear in the feed
+//         let dayPassed = 1;
+//         let hoursPassed = 12;
+//         let timeOfActiveMessage = (dayPassed + (hoursPassed * 1) / 24) * 24 * 3600 * 1000;
+//         let timePassed = new Date().getTime() - timeOfActiveMessage;
 
-        store.feedsUnsubscribe[path1] = feedRef
-            .where("timeSeconds", ">", timePassed)
-            .orderBy("timeSeconds", "desc")
-            .limit(1)
-            .onSnapshot(feedsDB => {
-                feedsDB.forEach(feedDB => {
-                    if (feedDB.data().time !== null) {
-                        let newFeed = feedDB.data();
+//         store.feedsUnsubscribe[path1] = feedRef
+//             .where("timeSeconds", ">", timePassed)
+//             .orderBy("timeSeconds", "desc")
+//             .limit(1)
+//             .onSnapshot(feedsDB => {
+//                 feedsDB.forEach(feedDB => {
+//                     if (feedDB.data().time !== null) {
+//                         let newFeed = feedDB.data();
 
-                        newFeed.path = path1;
-                        //add feed-inputs to feed
-                        store.feed[path] = newFeed;
+//                         newFeed.path = path1;
+//                         //add feed-inputs to feed
+//                         store.feed[path] = newFeed;
 
-                        store.numberOfNewMessages++;
+//                         store.numberOfNewMessages++;
 
-                        audio.play();
+//                         audio.play();
 
-                        const playPromise = audio.play()
-                        // const playPromise = media.play();
-                        if (playPromise !== null) {
-                            playPromise.catch(() => {
-                                audio.play();
-                            })
-                        }
+//                         const playPromise = audio.play()
+//                         // const playPromise = media.play();
+//                         if (playPromise !== null) {
+//                             playPromise.catch(() => {
+//                                 audio.play();
+//                             })
+//                         }
 
-                        m.redraw();
-                    }
-                });
-            });
-    } else {
-        //unsubscribe
+//                         m.redraw();
+//                     }
+//                 });
+//             });
+//     } else {
+//         //unsubscribe
 
-        if (store.feedsUnsubscribe.hasOwnProperty(path1)) {
-            store.feedsUnsubscribe[path1]();
-        }
+//         if (store.feedsUnsubscribe.hasOwnProperty(path1)) {
+//             store.feedsUnsubscribe[path1]();
+//         }
 
-        delete store.subscribed[path1]; //delete indciation that this feed is regigsterd
+//         delete store.subscribed[path1]; //delete indciation that this feed is regigsterd
 
-        m.redraw();
-    }
-}
+//         m.redraw();
+//     }
+// }
 
 module.exports = {
     getUserGroups,
@@ -617,6 +609,6 @@ module.exports = {
     getSubAnswers,
     getOptionDetails,
     getMessages,
-    listenToFeeds,
+    listenToFeed,
     listenToSubscription
 };

@@ -1,14 +1,14 @@
 import m from 'mithril';
 import "regenerator-runtime/runtime.js";
 import './Header.css';
-import {get, set} from 'lodash';
+import { get, set } from 'lodash';
 
 //functions
-import {subscribersCUD} from '../../../functions/firebase/set/set';
-import {listenToSubscription} from '../../../functions/firebase/get/get';
+import { subscribersCUD } from '../../../functions/firebase/set/set';
+import { listenToSubscription } from '../../../functions/firebase/get/get';
 
 import store from '../../../data/store';
-import {Reference, concatenatePath} from '../../../functions/general';
+import { Reference, concatenatePath } from '../../../functions/general';
 
 //components
 import Aside from '../Aside/Aside';
@@ -21,7 +21,7 @@ function getUser() {
                 resolve(store.user)
                 clearInterval(int)
             }
-            
+
         }, 100)
     })
 }
@@ -29,7 +29,7 @@ function getUser() {
 module.exports = {
     oninit: vnode => {
 
-        const {groupId, questionId, subQuestionId, optionId} = vnode.attrs;
+        const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
 
         vnode.state = {
             previousCount: 0,
@@ -54,7 +54,7 @@ module.exports = {
         vnode.state.refString = reference.fromArrayToSring();
 
         // on groups, check for subscription
-        (async() => {
+        (async () => {
             await getUser();
 
             if (groupId !== undefined) {
@@ -78,7 +78,7 @@ module.exports = {
 
     },
     view: (vnode) => {
-      
+
         return (
             <div>
                 <header id='headerContainer'>
@@ -86,59 +86,63 @@ module.exports = {
 
                         <img
                             onclick={(e) => {
-                            e.stopPropagation();
-                            toggleMenu(vnode);
-                        }}
+                                e.stopPropagation();
+                                toggleMenu(vnode);
+                            }}
                             class='headerHamburger'
-                            src='img/icons8-menu-24.png'/>
+                            src='img/icons8-menu-24.png' />
                         <div class='headerTitle'>
                             {vnode.attrs.topic}: {vnode.attrs.title}
                         </div>
-                        <div
-                            class='headerSetFeed'
-                            onclick={e => {
-                            e.stopPropagation();
-                            handleSubscription(vnode);
-                        }}>
-                            <img
-                                src={vnode.state.subscribed
-                                ? 'img/icons8-rss-32-white.png'
-                                : 'img/icons8-rss-32-gray.png'}/>
-                        </div>
+                        {vnode.attrs.showSubscribe == true ?
+                            <div
+                                class='headerSetFeed'
+                                onclick={e => {
+                                    e.stopPropagation();
+                                    handleSubscription(vnode);
+                                }}>
+                                <img
+                                    src={vnode.state.subscribed
+                                        ? 'img/icons8-rss-32-white.png'
+                                        : 'img/icons8-rss-32-gray.png'} />
+                            </div>
+                            :
+                            null
+                        }
                         <div
                             class='headerMessage'
                             onclick={(e) => {
-                            e.stopPropagation();
-                            store.showFeed = !store.showFeed;
-                            store.numberOfNewMessages = 0;
-                        }}>
-                            <img src='img/icons8-secured-letter-32.png'/>
+                                e.stopPropagation();
+                                store.showFeed = !store.showFeed;
+                                store.numberOfNewMessages = 0;
+                            }}>
+                            <img src='img/icons8-secured-letter-32.png' />
                             <div class='headerMesaggeCounter' id='newFeedCounter'>
                                 {store.numberOfNewMessages}</div>
                         </div>
                         {vnode.attrs.upLevelUrl
                             ? <div
-                                    class='headerBack'
-                                    onclick={(e) => {
+                                class='headerBack'
+                                onclick={(e) => {
                                     e.stopPropagation();
                                     m
                                         .route
                                         .set(vnode.attrs.upLevelUrl)
                                 }}>
-                                    <img src='img/icons8-back-24.png'/>
-                                </div>
-                            : <div class='headerEmptyBack'/>
-}
+                                <img src='img/icons8-back-24.png' />
+                            </div>
+                            : <div class='headerEmptyBack' />
+                        }
                     </div>
                     {!vnode.attrs.option == undefined
                         ? <div class='chatOptionHeader'>
-                                אופציה: {vnode.attrs.option}
-                            </div>
-                        : <div/>
-}
+                            אופציה: {vnode.attrs.option}
+                        </div>
+                        : <div />
+                    }
 
                 </header>
-                <Aside isAdmin={vnode.attrs.isAdmin} editPageLink={vnode.attrs.editPageLink}/>
+                <Aside isAdmin={vnode.attrs.isAdmin} editPageLink={vnode.attrs.editPageLink} />
             </div>
         )
     }
@@ -164,7 +168,7 @@ function onNewMessageJumpCounter(vnode) {
 function handleSubscription(vnode) {
 
     //path for subscription object
-    const {groupId, questionId, subQuestionId, optionId} = vnode.attrs;
+    const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
     const path = concatenatePath(groupId, questionId, subQuestionId, optionId);
 
     subscribersCUD({

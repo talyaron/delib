@@ -356,7 +356,7 @@ function concatenatePath(groupId, questionId, subQuestionId, optionId) {
             }
             return subscriptionPath
         } else {
-            throw new Error(`No groupId was given ${groupId}`)
+            return '/groups'
             
         }
 

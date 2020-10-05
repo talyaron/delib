@@ -129,7 +129,9 @@ module.exports = {
                         title={vnode.state.title}
                         upLevelUrl={`/group/${vnode.attrs.groupId}`}
                         groupId={vnode.attrs.groupId}
+                        showSubscribe={true}
                         questionId={vnode.attrs.questionId}/>
+                        
 
                 </div>
                 <div class='wrapperSubQuestions' id='questionWrapperAll'>

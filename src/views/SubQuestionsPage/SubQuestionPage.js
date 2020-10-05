@@ -73,6 +73,7 @@ module.exports = {
                                   upLevelUrl={`/question/${vnode.attrs.groupId}/${vnode.attrs.questionId}`}
                                     groupId={vnode.attrs.groupId}
                                     questionId={vnode.attrs.questionId}
+                                    showSubscribe={true}
                                     subQuestionId={vnode.attrs.subQuestionId}/>
                                 <div class="title">{vnode.state.details.title}</div>
                             </div>

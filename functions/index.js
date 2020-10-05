@@ -405,7 +405,7 @@ function sendToSubscribers(info) {
       optionId = false;
       url =
         message !== "deleted"
-          ? `/subQuestion/${groupId}/${questionId}/${subQuestionId}`
+          ? `/subQuestions/${groupId}/${questionId}/${subQuestionId}`
           : `/question/${groupId}/${questionId}`;
     } else {
       //update in subscribers in level subQuestion - listen to options
