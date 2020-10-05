@@ -50,6 +50,7 @@ import NewGroupPage from './views/Groups/NewGroupPage/NewGroupPage';
 import EditGroupPage from './views/GroupPage/EditGroupPage/EditGroupPage';
 import UnAuthorized from './views/UnAuthorized/UnAuthorized';
 
+import FeedPage from './views/FeedPage/FeedPage';
 
 
 m.route(root, "/login", {
@@ -65,7 +66,9 @@ m.route(root, "/login", {
     '/optionchat/:groupId/:questionId/:subQuestionId/:optionId': ChatPage,
     "/subquestions/:groupId/:questionId/:subQuestionId": SubQuestionsPage,
     "/edit":Edit,
-    '/unauthorized':UnAuthorized
+    '/unauthorized':UnAuthorized,
+    "/feed":FeedPage
+
 
 })
 

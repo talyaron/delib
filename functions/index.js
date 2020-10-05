@@ -428,7 +428,7 @@ function sendToSubscribers(info) {
       .collection("subscribers")
       .get()
       .then((subscribersDB) => {
-        subscribersDB.forEach((subscriberDB) => {
+        return subscribersDB.forEach((subscriberDB) => {
           console.log("subscriber ID:", subscriberDB.id);
           db.collection("users")
             .doc(subscriberDB.id)
