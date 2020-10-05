@@ -12,6 +12,9 @@
     --textRegular: rgba(0, 0, 0, 0.55);
     --textRegularSize: 1rem;
     --maxWidthOnPC: 550px;
+
+    --white:white;
+    --gray5:#F9F9F9;
 }
 
 html,

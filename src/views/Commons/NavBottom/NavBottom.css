@@ -1,0 +1,22 @@
+.navBottom{
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    display: flex
+}
+
+.navBottom__btn{
+    flex:1;
+    background-color: var(--white);
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.navBottom__btn:hover, .navBottom__btn:active{
+    background-color: var(--gray5);
+}
+.navBottom__btnInfo{
+    text-align: center;
+}

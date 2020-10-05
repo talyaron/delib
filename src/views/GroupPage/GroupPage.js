@@ -11,6 +11,7 @@ import Group from './Group/Group';
 import Header from '../Commons/Header/Header';
 import Feed from '../Commons/Feed/Feed';
 import Edit from '../Commons/Edit/Edit';
+import NavBottom from '../Commons/NavBottom/NavBottom';
 
 
 //functions
@@ -123,6 +124,7 @@ module.exports = {
                         <div />
                 }
                 <Feed />
+                <NavBottom />
             </div >
 
         )
