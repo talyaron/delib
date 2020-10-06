@@ -25,3 +25,17 @@
     font-size: var(--size13);
     color: var(--gray1);
 }
+
+.feedItem--new{
+    /* animation: name duration timing-function delay iteration-count direction fill-mode; */
+    animation: newFeedItem 300ms;
+}
+@keyframes newFeedItem{
+    from{
+        transform: scaleY(.2) translateY(-50%);
+        height: 0px;
+    } to{
+        transform: scaleY(1) translateY(0%);
+        height: 40px;
+    }
+}
