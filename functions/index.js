@@ -382,7 +382,7 @@ function sendToSubscribers(info) {
     //find update level
     let listenToLevel = "group",
       dbLevelSubscribers = db.collection("groups").doc(groupId);
-    url = message !== "deleted" ? `/group/${groupId}` : "/groups";
+    url = message !== "deleted" ? `group/${groupId}` : "/groups";
     if (subQuestionId === undefined) {
       //update in subscribers in level group - listen to questions
       listenToLevel = "question";
@@ -405,7 +405,7 @@ function sendToSubscribers(info) {
       optionId = false;
       url =
         message !== "deleted"
-          ? `/subQuestions/${groupId}/${questionId}/${subQuestionId}`
+          ? `/subquestions/${groupId}/${questionId}/${subQuestionId}`
           : `/question/${groupId}/${questionId}`;
     } else {
       //update in subscribers in level subQuestion - listen to options
@@ -421,7 +421,7 @@ function sendToSubscribers(info) {
       url =
         message !== "deleted"
           ? `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`
-          : `/subQuestion/${groupId}/${questionId}/${subQuestionId}`;
+          : `/subquestion/${groupId}/${questionId}/${subQuestionId}`;
     }
 
     return dbLevelSubscribers

@@ -4,7 +4,7 @@ import './FeedItem.css';
 module.exports = {
     view:vnode=>{
         const {data, message, url} = vnode.attrs.feedItem;
-        console.log(url)
+        console.log('url:.....',url)
         return(
             <div class='feedItem' onclick={()=>{m.route.set(url)}}>
                 <h1>{data.title}</h1>
