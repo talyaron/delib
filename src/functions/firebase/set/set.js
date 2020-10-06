@@ -1,30 +1,26 @@
 import m from 'mithril';
-import {DB} from '../config';
+import { DB } from '../config';
 import store from '../../../data/store';
-import {Reference,concatenatePath} from '../../general';
+import { Reference, concatenatePath, uniqueId } from '../../general';
 
 function createGroup(creatorId, title, description) {
+    
+    const groupId = uniqueId()
+
     DB
         .collection('groups')
-        .add({
+        .doc(groupId)
+        .set({
             title: title,
             description: description,
             creatorId: creatorId,
-            time: new Date().getTime()
+            time: new Date().getTime(),
+            groupId,
+            id:groupId
         })
         .then(function (docRef) {
-            DB
-                .collection('users')
-                .doc(creatorId)
-                .collection('groupsOwned')
-                .doc(docRef.id)
-                .set({
-                    id: docRef.id,
-                    date: new Date().getTime()
-                });
-            m
-                .route
-                .set(`/group/${docRef.id}`);
+
+            m.route.set(`/group/${docRef.id}`);
         })
         .catch(function (error) {
             console.error('Error adding document: ', error);
@@ -35,7 +31,7 @@ function updateGroup(vnode) {
     DB
         .collection('groups')
         .doc(vnode.attrs.id)
-        .update({title: vnode.state.title, description: vnode.state.description})
+        .update({ title: vnode.state.title, description: vnode.state.description })
         .then(doc => {
             m
                 .route
@@ -47,26 +43,19 @@ function updateGroup(vnode) {
 }
 
 function createQuestion(groupId, creatorId, title, description) {
-    console.log('creatorId:', creatorId)
+    const questionId = uniqueId();
     DB
         .collection('groups')
         .doc(groupId)
         .collection('questions')
-        .add({
+        .doc(questionId)
+        .set({
             title,
             description,
             time: new Date().getTime(),
-            creatorId
-        })
-        .then(something => {
-            DB
-                .collection('groups')
-                .doc(groupId)
-                .collection('questions')
-                .doc(something.id)
-                .update({id: something.id});
-            console.log(something.id);
-            console.log('writen succesufuly');
+            creatorId,
+            questionId,
+            id:questionId
         })
         .catch(function (error) {
             console.error('Error adding document: ', error);
@@ -79,7 +68,7 @@ function updateQuestion(groupId, questionId, title, description, authorizationOb
         .doc(groupId)
         .collection('questions')
         .doc(questionId)
-        .update({title, description, authorization: authorizationObj})
+        .update({ title, description, authorization: authorizationObj })
         .then((something) => {
             console.log('writen succesufuly');
         })
@@ -89,16 +78,17 @@ function updateQuestion(groupId, questionId, title, description, authorizationOb
 }
 
 function createSubQuestion(groupId, questionId, title, order) {
+    
+    const subQuestionId = uniqueId()
+    
     DB
         .collection('groups')
         .doc(groupId)
         .collection('questions')
         .doc(questionId)
         .collection('subQuestions')
-        .add({title, order, creator: store.user.uid, orderBy: 'top'})
-        .then(function (docRef) {
-            console.log('doc wrirten succesfully');
-        })
+        .doc(subQuestionId)
+        .set({ title, order, creator: store.user.uid, orderBy: 'top',subQuestionId, id:subQuestionId })
         .catch(function (error) {
             console.error('Error adding document: ', error);
         });
@@ -112,7 +102,7 @@ function updateSubQuestion(groupId, questionId, subQuestionId, title) {
         .doc(questionId)
         .collection('subQuestions')
         .doc(subQuestionId)
-        .update({title});
+        .update({ title });
 }
 
 function updateSubQuestionProcess(groupId, questionId, subQuestionId, processType) {
@@ -123,7 +113,7 @@ function updateSubQuestionProcess(groupId, questionId, subQuestionId, processTyp
         .doc(questionId)
         .collection('subQuestions')
         .doc(subQuestionId)
-        .update({processType});
+        .update({ processType });
 }
 
 function updateSubQuestionOrderBy(groupId, questionId, subQuestionId, orderBy) {
@@ -134,7 +124,7 @@ function updateSubQuestionOrderBy(groupId, questionId, subQuestionId, orderBy) {
         .doc(questionId)
         .collection('subQuestions')
         .doc(subQuestionId)
-        .update({orderBy});
+        .update({ orderBy });
 }
 
 function updateSubQuestionsOrder(groupId, questionId, newOrderArray) {
@@ -164,7 +154,7 @@ function setSubQuestionsOrder(groupId, questionId, subQuestionId, order) {
         .doc(questionId)
         .collection('subQuestions')
         .doc(subQuestionId)
-        .update({order})
+        .update({ order })
         .then((something) => {
             console.log(`writen to ${subQuestionId} succesufuly`);
         })
@@ -174,6 +164,9 @@ function setSubQuestionsOrder(groupId, questionId, subQuestionId, order) {
 }
 
 function createOption(groupId, questionId, subQuestionId, type, creatorId, title, description, creatorName, subQuestionTitle) {
+    
+    const optionId = uniqueId();
+
     let optionRef = DB
         .collection('groups')
         .doc(groupId)
@@ -183,9 +176,12 @@ function createOption(groupId, questionId, subQuestionId, type, creatorId, title
         .doc(subQuestionId)
         .collection('options');
 
-    optionRef.add({
+    optionRef.doc(optionId).set({
         groupId,
         questionId,
+        subQuestionId,
+        optionId,
+        id:optionId,
         creatorId,
         type,
         title,
@@ -198,14 +194,9 @@ function createOption(groupId, questionId, subQuestionId, type, creatorId, title
             .serverTimestamp(),
         consensusPrecentage: 0,
         isActive: true
-    }).then((newOption) => {
-        optionRef
-            .doc(newOption.id)
-            .update({id: newOption.id});
-    })
-        .catch(function (error) {
-            console.error('Error adding document: ', error);
-        });
+    }).catch(function (error) {
+        console.error('Error adding document: ', error);
+    });
 }
 
 function setOptionActive(groupId, questionId, subQuestionId, optionId, isActive) {
@@ -222,7 +213,7 @@ function setOptionActive(groupId, questionId, subQuestionId, optionId, isActive)
             .doc(subQuestionId)
             .collection('options')
             .doc(optionId)
-            .update({isActive})
+            .update({ isActive })
     } catch (err) {
         console.error(err)
     }
@@ -240,8 +231,8 @@ function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like) 
         .doc(optionId)
         .collection('likes')
         .doc(creatorId)
-        .set({like})
-        .then((newLike) => {})
+        .set({ like })
+        .then((newLike) => { })
         .catch(function (error) {
             console.error('Error adding document: ', error);
         });
@@ -324,7 +315,7 @@ function createSubItem(subItemsType, groupId, questionId, creatorId, creatorName
 
     subQuestionRef
         .add(addObj)
-        .then((newItem) => {})
+        .then((newItem) => { })
         .catch(function (error) {
             console.error('Error adding document: ', error);
         });
@@ -350,7 +341,7 @@ function updateSubItem(subItemsType, groupId, questionId, subQuestionId, title, 
 
     subQuestionRef
         .update(updateObj)
-        .then((newOption) => {})
+        .then((newOption) => { })
         .catch(function (error) {
             console.error('Error updating document: ', error);
         });
@@ -368,10 +359,10 @@ function setLikeToSubItem(subItemsType, groupId, questionId, subQuestionId, crea
         .doc(creatorId);
 
     if (isUp) {
-        subQuestionRef.set({like: 1});
+        subQuestionRef.set({ like: 1 });
         console.log('set like to ', subQuestionId);
     } else {
-        subQuestionRef.set({like: 0});
+        subQuestionRef.set({ like: 0 });
         console.log('unset like to ', subQuestionId);
     }
 }
@@ -398,7 +389,7 @@ function setSubAnswer(groupId, questionId, subQuestionId, creatorId, creatorName
                 .serverTimestamp(),
             message
         })
-        .then((newLike) => {})
+        .then((newLike) => { })
         .catch(function (error) {
             console.error('Error adding document: ', error);
         });
@@ -468,8 +459,8 @@ function updateOption(vnode) {
 }
 function subscribersCUD(settings) {
     try {
-        const {groupId, questionId, subQuestionId, optionId} = settings.vnode.attrs;
-        const {subscribe} = settings;
+        const { groupId, questionId, subQuestionId, optionId } = settings.vnode.attrs;
+        const { subscribe } = settings;
 
         console.log(groupId, questionId, subQuestionId, optionId, subscribe);
 
@@ -477,27 +468,27 @@ function subscribersCUD(settings) {
         // ) build path for the enenties subscription collection
         let subscriptionPath = concatenatePath(groupId, questionId, subQuestionId, optionId);
 
-		const {uid, displayName, email,photoURL} = store.user
-		subscriptionPath = subscriptionPath + '/subscribers/' + uid;
-		
-		if(subscribe === true){
-		
-        DB
-            .doc(subscriptionPath)
-            .set({uid, displayName, email,photoURL})
-            .then(() => {
-                console.info('User subscribed succsefuly to entity')
-            })
-			.catch(err => console.error(err))
-		} else {
-			DB
-            .doc(subscriptionPath)
-            .delete() 
-            .then(() => {
-                console.info('User unsubscribed succsefuly from entity')
-            })
-			.catch(err => console.error(err))
-		}
+        const { uid, displayName, email, photoURL } = store.user
+        subscriptionPath = subscriptionPath + '/subscribers/' + uid;
+
+        if (subscribe === true) {
+
+            DB
+                .doc(subscriptionPath)
+                .set({ uid, displayName, email, photoURL })
+                .then(() => {
+                    console.info('User subscribed succsefuly to entity')
+                })
+                .catch(err => console.error(err))
+        } else {
+            DB
+                .doc(subscriptionPath)
+                .delete()
+                .then(() => {
+                    console.info('User unsubscribed succsefuly from entity')
+                })
+                .catch(err => console.error(err))
+        }
 
     } catch (err) {
         console.error(err)
