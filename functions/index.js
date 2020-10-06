@@ -10,7 +10,7 @@ db.settings(settings);
 exports.totalVotes = functions.firestore
   .document(
     "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{op" +
-      "tionId}/likes/{userId}"
+    "tionId}/likes/{userId}"
   )
   .onUpdate((change, context) => {
     var newLike = change.after.data().like;
@@ -66,7 +66,7 @@ exports.totalVotes = functions.firestore
 exports.totalVoters = functions.firestore
   .document(
     "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{op" +
-      "tionId}/likes/{userId}"
+    "tionId}/likes/{userId}"
   )
   .onCreate((change, context) => {
     var newLike = change.data().like;
@@ -111,7 +111,7 @@ exports.totalVoters = functions.firestore
 exports.totalLikesForSubQuestion = functions.firestore
   .document(
     "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/likes/{user" +
-      "Id}"
+    "Id}"
   )
   .onUpdate((change, context) => {
     var newLike = change.after.data().like;
@@ -188,7 +188,7 @@ exports.totalLikesForSubQuestion = functions.firestore
 exports.countNumbeOfMessages = functions.firestore
   .document(
     "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{op" +
-      "tionId}/messages/{messageId}"
+    "tionId}/messages/{messageId}"
   )
   .onWrite((change, context) => {
     let docRef = db
@@ -242,7 +242,7 @@ exports.countNumbeOfMessages = functions.firestore
 exports.sendPushForNewOptions = functions.firestore
   .document(
     "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{op" +
-      "tionId}"
+    "tionId}"
   )
   .onWrite((change, context) => {
     const CP = context.params;
@@ -361,12 +361,11 @@ exports.updateSubQuestionSubscribers = functions.firestore
 function sendToSubscribers(info) {
   try {
     const { change, context } = info;
-    const CP = context.params;
-    let { groupId, questionId, subQuestionId, optionId } = CP;
+    let { groupId, questionId, subQuestionId, optionId } = context.params;
     const DATA = change.after.data();
     const { before, after } = change;
 
-    console.log(groupId, questionId, subQuestionId, optionId);
+    
     let message;
     if (before.data() === undefined && after.data() !== undefined)
       message = "created";
@@ -380,11 +379,15 @@ function sendToSubscribers(info) {
       );
 
     //find update level
-    let listenToLevel = "group",
+    let listenToLevel = "group", entityId = 'groups',
       dbLevelSubscribers = db.collection("groups").doc(groupId);
+
     url = message !== "deleted" ? `group/${groupId}` : "/groups";
+
     if (subQuestionId === undefined) {
       //update in subscribers in level group - listen to questions
+      
+      entityId = questionId;
       listenToLevel = "question";
       dbLevelSubscribers = db.collection("groups").doc(groupId);
       subQuestionId = false;
@@ -394,14 +397,16 @@ function sendToSubscribers(info) {
           ? `/question/${groupId}/${questionId}`
           : `/group/${groupId}`;
     } else if (optionId === undefined) {
-        //update in subscribers in level question - listen to subQuestions
+      //update in subscribers in level question - listen to subQuestions
+
+      entityId = subQuestionId;
       listenToLevel = "subQuestion";
       dbLevelSubscribers = db
         .collection("groups")
         .doc(groupId)
         .collection("questions")
         .doc(questionId)
-        
+
       optionId = false;
       url =
         message !== "deleted"
@@ -409,6 +414,8 @@ function sendToSubscribers(info) {
           : `/question/${groupId}/${questionId}`;
     } else {
       //update in subscribers in level subQuestion - listen to options
+
+      entityId = optionId;
       listenToLevel = "option";
       dbLevelSubscribers = db
         .collection("groups")
@@ -417,7 +424,7 @@ function sendToSubscribers(info) {
         .doc(questionId)
         .collection("subQuestions")
         .doc(subQuestionId)
-        
+
       url =
         message !== "deleted"
           ? `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`
@@ -442,7 +449,9 @@ function sendToSubscribers(info) {
               questionId,
               subQuestionId,
               optionId,
+              entityId,
               data: DATA,
+              change: JSON.stringify(change),
               date: new Date(),
               url,
             })

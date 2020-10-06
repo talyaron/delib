@@ -527,7 +527,7 @@ function listenToFeed() {
                         const feedItem = change.doc.data();
                         feedItem.feedItemId = change.doc.id;
                         store.feed2.push(feedItem)
-                        console.log(feedItem);
+                       
                     }
 
                 });
