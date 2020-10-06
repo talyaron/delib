@@ -326,6 +326,7 @@ exports.updateGroupSubscribers = functions.firestore
   .document("groups/{groupId}/questions/{questionId}")
   .onWrite((change, context) => {
     try {
+     
       return sendToSubscribers({ change, context });
     } catch (err) {
       console.log(err);
@@ -455,7 +456,7 @@ function sendToSubscribers(info) {
               date: new Date(),
               url,
             })
-            .then(() => console.log("add to user", subscriberDB.id))
+            .then(() => console.log("add to user", subscriberDB.id,"action:", message))
             .catch((err) => console.log(err.message));
         });
       })
