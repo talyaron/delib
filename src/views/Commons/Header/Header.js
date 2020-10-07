@@ -90,10 +90,12 @@ module.exports = {
                                 toggleMenu(vnode);
                             }}
                             class='headerHamburger'
-                            src='img/icons8-menu-24.png' />
+                            src='img/hamburger.svg' />
+                        
                         <div class='headerTitle'>
-                            {vnode.attrs.topic}: {vnode.attrs.title}
+                            {vnode.attrs.title}
                         </div>
+
                         {vnode.attrs.showSubscribe == true ?
                             <div
                                 class='headerSetFeed'
@@ -101,22 +103,11 @@ module.exports = {
                                     e.stopPropagation();
                                     handleSubscription(vnode);
                                 }}>
-                               {vnode.state.subscribed?<div class='setButton setButton--activate'>הרשמה</div>:<div class='setButton setButton--cancel'>ביטול הרשמה</div>}
+                                {vnode.state.subscribed ? <div class='setButton setButton--activate'>הרשמה</div> : <div class='setButton setButton--cancel'>ביטול הרשמה</div>}
                             </div>
                             :
                             null
                         }
-                        <div
-                            class='headerMessage'
-                            onclick={(e) => {
-                                e.stopPropagation();
-                                store.showFeed = !store.showFeed;
-                                store.numberOfNewMessages = 0;
-                            }}>
-                            <img src='img/icons8-secured-letter-32.png' />
-                            <div class='headerMesaggeCounter' id='newFeedCounter'>
-                                {store.numberOfNewMessages}</div>
-                        </div>
                         {vnode.attrs.upLevelUrl
                             ? <div
                                 class='headerBack'

@@ -12,6 +12,7 @@ import Header from '../Commons/Header/Header';
 import Feed from '../Commons/Feed/Feed';
 import Edit from '../Commons/Edit/Edit';
 import NavBottom from '../Commons/NavBottom/NavBottom';
+import NavTop from '../Commons/NavTop/NavTop';
 
 
 //functions
@@ -77,6 +78,7 @@ module.exports = {
                     groupId={vnode.attrs.id}
                     showSubscribe={true}
                 />
+                <NavTop level={'קבוצה'} current='main'/>
                 <div class='questionsWrapper' id='groupWrapper'>
                     {
                         vnode.state.questions.map((question, key) => {
