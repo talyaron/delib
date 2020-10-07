@@ -26,8 +26,10 @@
     color: var(--gray1);
 }
 
+
+/* TODO: better scroll up */
 .feedItem--new{
-    /* animation: name duration timing-function delay iteration-count direction fill-mode; */
+ 
     animation: newFeedItem 300ms;
 }
 @keyframes newFeedItem{

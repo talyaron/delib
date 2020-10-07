@@ -13,9 +13,12 @@
     --textRegularSize: 1rem;
     --maxWidthOnPC: 550px;
 
+    --primary: #4269E2;
+    --additional:#F2F2F2;
     --white:white;
     --black:black;
     --gray5:#F9F9F9;
+    --gray2:#D6D6D6;
     --gray1:#7C7C7C;
 
     --roundBorder:12px;

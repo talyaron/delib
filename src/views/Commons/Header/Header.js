@@ -101,10 +101,7 @@ module.exports = {
                                     e.stopPropagation();
                                     handleSubscription(vnode);
                                 }}>
-                                <img
-                                    src={vnode.state.subscribed
-                                        ? 'img/icons8-rss-32-white.png'
-                                        : 'img/icons8-rss-32-gray.png'} />
+                               {vnode.state.subscribed?<div class='setButton setButton--activate'>הרשמה</div>:<div class='setButton setButton--cancel'>ביטול הרשמה</div>}
                             </div>
                             :
                             null
@@ -129,7 +126,7 @@ module.exports = {
                                         .route
                                         .set(vnode.attrs.upLevelUrl)
                                 }}>
-                                <img src='img/icons8-back-24.png' />
+                                <img src='img/back.svg' />
                             </div>
                             : <div class='headerEmptyBack' />
                         }

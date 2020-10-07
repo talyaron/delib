@@ -3,10 +3,10 @@ header {
     top: 0px;
     left: 0px;
     width: 100%;
-    background: var(--mainBackground);
+    background: var(--white);
     box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.5);
     padding: 10px 0px;
-    color: var(--mainColor);
+    color: var(--black);
     text-align: center;
     font-size: 1.3rem;
     font-weight: 600;
@@ -51,4 +51,26 @@ header {
 
 .headerHamburger {
     padding: 0px 14px;
+}
+
+.setButton{
+    height: 40px;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 0px 16px;
+    color: var(--white);
+    border-radius: 20px;
+}
+
+.setButton--activate{
+    background-color: var(--primary);
+}
+
+.setButton--cancel{
+    background-color: var(--additional);
+    color: var(--gray1);
+    font-size: 1rem;
 }

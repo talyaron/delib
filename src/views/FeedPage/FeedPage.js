@@ -2,7 +2,10 @@ import m from 'mithril';
 import './FeedPage.css';
 
 //data
-import store, { feed } from '../../data/store'
+import store, { feed } from '../../data/store';
+
+//functions 
+import {setToFeedLastEntrance} from '../../functions/firebase/set/set';
 
 //components
 import Header from '../Commons/Header/Header';
@@ -45,6 +48,9 @@ module.exports = {
             window.scrollTo(0,document.body.scrollHeight);
             vnode.state.feedLength = store.feed2.length;
         }
+    },
+    onremove:()=>{
+        setToFeedLastEntrance();
     },
     view:vnode=>{
         return(

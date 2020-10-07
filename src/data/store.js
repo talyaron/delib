@@ -23,7 +23,8 @@ var store = {
     messagesShow: {}, // history of messages to show
     feedsUnsubscribe: {}, // used for feed unsubscribes
     feed: {}, //the feed,
-    feed2:[],
+    feed2:[], //new feed system
+    feed2Info:{lastEntrance:0}, //used to store last entrence to feed. in miliseconds from 1970
     showFeed: false,
     numberOfNewMessages: 0,
     subscribed: {}, //subscribed entityes

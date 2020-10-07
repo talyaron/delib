@@ -539,6 +539,20 @@ function listenToFeed() {
     }
 }
 
+function listenToFeedLastEntrance(){
+try{
+    DB.collection('users').doc(store.user.uid).collection('feedLastEntrence').doc('info')
+    .onSnapshot(infoDB=>{
+        const {lastEntrance} = infoDB.data()
+        store.feed2Info = {lastEntrance}
+        
+    },err=>{
+        console.error(err)
+    })
+} catch(err){
+    console.error(err)
+}
+}
 // function listenToFeed(path, onOff = "on") {
 //     let path1 = path;
 //     path = path.replace(/--/g, "/");
@@ -610,5 +624,6 @@ module.exports = {
     getOptionDetails,
     getMessages,
     listenToFeed,
+    listenToFeedLastEntrance,
     listenToSubscription
 };

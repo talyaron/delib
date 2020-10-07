@@ -3,10 +3,8 @@ import './FeedItem.css';
 
 module.exports = {
     view:vnode=>{
-        const {data, message, url, change, isNew} = vnode.attrs.feedItem;
+        const {data, message, url, isNew} = vnode.attrs.feedItem;
        
-        if(change) console.log(JSON.parse(change));
-
         return(
             <div class={isNew?'feedItem feedItem--new':'feedItem'} onclick={()=>{m.route.set(url)}}>
                 

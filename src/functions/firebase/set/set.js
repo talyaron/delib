@@ -433,6 +433,17 @@ function addToFeed(addRemove, pathArray, refString, collectionOrDoc) {
     }
 }
 
+function setToFeedLastEntrance(){
+   try{
+    DB.collection('users').doc(store.user.uid).collection('feedLastEntrence').doc('info')
+    .set({lastEntrance:new Date().getTime()})
+    .catch(err=>{console.error(err)});
+   } catch(err){
+       console.error(err)
+   }
+}
+
+
 function updateOption(vnode) {
     let creatorName = vnode.state.isNamed
         ? vnode.state.creatorName
@@ -516,5 +527,6 @@ module.exports = {
     setSubAnswer,
     updateSubQuestionProcess,
     updateSubQuestionOrderBy,
-    subscribersCUD
+    subscribersCUD,
+    setToFeedLastEntrance
 };
