@@ -28,7 +28,8 @@
 
 .message__username{
     font-size: var(--size16);
-    color:var(--black)
+    color:var(--black);
+    text-align: left;
 }
 
 .message__text{
@@ -48,5 +49,15 @@
 
 .message__time{
     color: var(--gray1);
-    font-size: (--size11);
+    font-size: var(--size11);
+    text-align: left;
+}
+
+
+.message--me .message__time{
+    text-align: right;
+}
+
+.message--me .message__username{
+    text-align: right;
 }
