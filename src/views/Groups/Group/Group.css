@@ -2,7 +2,13 @@
     user-select: none;
     cursor: pointer;
     display: grid;
-    grid-template-columns: auto 120px;
+    grid-template-rows: auto 60px;
+    border-radius: var(--roundBorder);
+}
+
+.groupCard__img{
+    height: 250px;
+    border-radius: var(--roundBorder);
 }
 
 .groupImg{

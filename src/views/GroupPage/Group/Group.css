@@ -1,6 +1,12 @@
 .questionCard {
     user-select: none;
     cursor: pointer;
+    border-radius: var(--roundBorder);
+}
+
+.questionCard__img{
+    height: 150px;
+    width: 100%;
 }
 
 .questionOwned{

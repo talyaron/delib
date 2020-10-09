@@ -1,18 +1,18 @@
 .groupsWrapper {
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: repeat(3,1fr);
   
   margin-top:80px;
 }
 
 @media screen and (max-width: 1000px) {
   .groupsWrapper {
-    grid-template-columns: auto auto;
+    grid-template-columns: repeat(2,1fr);
   }
 }
 
 @media screen and (max-width: 480px) {
   .groupsWrapper {
-    grid-template-columns: auto;
+    grid-template-columns: repeat(1,1fr);
   }
 }

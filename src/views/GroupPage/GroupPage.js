@@ -29,8 +29,8 @@ module.exports = {
                 title: '',
                 description: ''
             },
-            isAdmin:false,
-            edit:true,
+            isAdmin: false,
+            edit: true,
             addQuestion: false,
             questions: [],
             unsubscribe: {},
@@ -45,7 +45,7 @@ module.exports = {
     },
     onbeforeupdate: vnode => {
         //check is admin
-        vnode.state.isAdmin = (store.user.uid == get(store, 'groups[' + vnode.attrs.id + '].creatorId', 'aaaaa'));   
+        vnode.state.isAdmin = (store.user.uid == get(store, 'groups[' + vnode.attrs.id + '].creatorId', 'aaaaa'));
 
         //update name of group
         vnode.state.groupName = get(store, 'groups[' + vnode.attrs.id + '].title', 'שם הקבוצה');
@@ -66,69 +66,70 @@ module.exports = {
         vnode.state.undbGroupDetails();
     },
     view: vnode => {
-       
+
         return (
             <div class='page'>
-                <Header
-                    upLevelUrl='/groups'
-                    topic='קבוצה'
-                    title={vnode.state.groupName}
-                    isAdmin={vnode.state.isAdmin}
-                    editPageLink={`/editgroup/${vnode.attrs.id}`}
-                    groupId={vnode.attrs.id}
-                    showSubscribe={true}
-                />
-                <NavTop level={'קבוצה'} current='main'/>
-                <div class='questionsWrapper' id='groupWrapper'>
+                <div class='page-grid'>
+                    <Header
+                        upLevelUrl='/groups'
+                        topic='קבוצה'
+                        title={vnode.state.groupName}
+                        isAdmin={vnode.state.isAdmin}
+                        editPageLink={`/editgroup/${vnode.attrs.id}`}
+                        groupId={vnode.attrs.id}
+                        showSubscribe={true}
+                    />
+                    <NavTop level={'קבוצה'} current='main' />
+                    <div class='questionsWrapper' id='groupWrapper'>
+                        {
+                            vnode.state.questions.map((question, key) => {
+
+                                return (
+                                    <Group
+                                        route={'/question/' + vnode.attrs.id + '/'}
+                                        question={question}
+                                        key={key}
+                                    />
+                                )
+                            })
+                        }
+                    </div>
+                    <div class='fav' onclick={() => { toggleAddQuestion(vnode) }} >
+                        <div>+</div>
+                    </div>
+                    <NavBottom />
                     {
-                        vnode.state.questions.map((question, key) => {
-                         
-                            return (
-                                <Group
-                                    route={'/question/' + vnode.attrs.id + '/'}
-                                    question={question}
-                                    key={key}
-                                />
-                            )
-                        })
-                    }
-                </div>
-                <div class='fav' onclick={() => { toggleAddQuestion(vnode) }} >
-                    <div>+</div>
-                </div>
-                {
-                    vnode.state.addQuestion ?
-                        <div class='module'>
-                            <div class='moduleBox'>
-                                <div class='moduleTitle'>הוספת שאלה</div>
-                                <div class='moduleInputs'>
-                                    <textarea
-                                        class='moduleQuestionTitle'
-                                        autofocus='true'
-                                        placeholder='כותרת השאלה'
-                                        onkeyup={(e) => { vnode.state.add.title = e.target.value }}
-                                    ></textarea>
-                                    <textarea
-                                        class='moduleQuestionTitle moduleDescription'
-                                        placeholder='הסבר על השאלה'
-                                        onkeyup={(e) => { vnode.state.add.description = e.target.value }}
-                                    ></textarea>
-                                </div>
-                                <div class='moduleButtons'>
-                                    <div class='buttons confirm' onclick={() => {
-                                        vnode.state.addQuestion = !vnode.state.addQuestion;
-                                        createQuestion(vnode.attrs.id, store.user.uid, vnode.state.add.title, vnode.state.add.description)
-                                    }}>הוספה</div>
-                                    <div class='buttons cancel' onclick={() => { toggleAddQuestion(vnode) }}>ביטול</div>
+                        vnode.state.addQuestion ?
+                            <div class='module'>
+                                <div class='moduleBox'>
+                                    <div class='moduleTitle'>הוספת שאלה</div>
+                                    <div class='moduleInputs'>
+                                        <textarea
+                                            class='moduleQuestionTitle'
+                                            autofocus='true'
+                                            placeholder='כותרת השאלה'
+                                            onkeyup={(e) => { vnode.state.add.title = e.target.value }}
+                                        ></textarea>
+                                        <textarea
+                                            class='moduleQuestionTitle moduleDescription'
+                                            placeholder='הסבר על השאלה'
+                                            onkeyup={(e) => { vnode.state.add.description = e.target.value }}
+                                        ></textarea>
+                                    </div>
+                                    <div class='moduleButtons'>
+                                        <div class='buttons confirm' onclick={() => {
+                                            vnode.state.addQuestion = !vnode.state.addQuestion;
+                                            createQuestion(vnode.attrs.id, store.user.uid, vnode.state.add.title, vnode.state.add.description)
+                                        }}>הוספה</div>
+                                        <div class='buttons cancel' onclick={() => { toggleAddQuestion(vnode) }}>ביטול</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        :
-                        <div />
-                }
-                <Feed />
-                <NavBottom />
-            </div >
+                            :
+                            <div />
+                    }
+                </div >
+            </div>
 
         )
     }

@@ -53,6 +53,12 @@ body {
     width: 100%;
     height: 100%;
 }
+.page-grid{
+    width: 100%;
+    height: 100vh;
+    display: grid;
+    grid-template-rows: 52px 40px auto 61px;
+}
 
 .wrapperAll {
     position: relative;
