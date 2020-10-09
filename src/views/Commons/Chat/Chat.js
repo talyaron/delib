@@ -13,11 +13,11 @@ module.exports = {
                     <Message />
                     <Message />
 
+                    <Message me={true}/>
                     <Message />
                     <Message />
                     <Message />
-                    <Message />
-                    <Message />
+                    <Message me={true}/>
                     <Message />
                     <Message />
                     <Message />

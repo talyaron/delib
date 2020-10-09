@@ -41,7 +41,7 @@ module.exports = {
         vnode.state.undbGroupDetails = getGroupDetails(vnode.attrs.id, vnode);
     },
     oncreate: vnode => {
-       
+
     },
     onbeforeupdate: vnode => {
         //check is admin
@@ -59,7 +59,7 @@ module.exports = {
         vnode.state.questions = questionsArray;
     },
     onupdate: vnode => {
-       
+
     },
     onremove: vnode => {
         getQuestions('off', vnode.attrs.id, vnode);
@@ -79,7 +79,7 @@ module.exports = {
                         groupId={vnode.attrs.id}
                         showSubscribe={true}
                     />
-                    <NavTop level={'קבוצה'} current={vnode.state.subPage} pvs={vnode.state}/>
+                    <NavTop level={'קבוצה'} current={vnode.state.subPage} pvs={vnode.state} />
                     {vnode.state.subPage == 'main' ?
                         <div class='questionsWrapper' id='groupWrapper'>
                             {
@@ -96,11 +96,14 @@ module.exports = {
                             }
                         </div>
                         :
-                        <Chat entity='group' ids={{groupId:vnode.attrs.id}} />
+                        <Chat entity='group' ids={{ groupId: vnode.attrs.id }} />
                     }
-                    <div class='fav' onclick={() => { toggleAddQuestion(vnode) }} >
-                        <div>+</div>
-                    </div>
+                    {vnode.state.subPage == 'main' ?
+                        <div class='fav' onclick={() => { toggleAddQuestion(vnode) }} >
+                            <div>+</div>
+                        </div>
+                        : null
+                    }
                     <NavBottom />
                     {
                         vnode.state.addQuestion ?
