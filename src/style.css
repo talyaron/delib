@@ -18,6 +18,7 @@
     --white:white;
     --black:black;
     --gray5:#F9F9F9;
+    --gray4:#F2F2F2;
     --gray2:#D6D6D6;
     --gray1:#7C7C7C;
 
@@ -25,8 +26,10 @@
 
     /* font sizes */
     --size17:1.4rem;
+    --size16:1.3rem;
     --size15:1.2rem;
     --size13:1rem;
+    --size11:.8rem;
 
     /* padding */
     --regPadding:16px;
@@ -293,10 +296,10 @@ body {
 }
 
 .input {
-    border-bottom: 2px solid #f97676;
+    /* border-bottom: 2px solid #f97676;
     border-top: 0px;
     border-left: 0px;
     border-right: 0px;
     font-family: 'Varela Round', sans-serif;
-    opacity: 0.75;
+    opacity: 0.75; */
 }

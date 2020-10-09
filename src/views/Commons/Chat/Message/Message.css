@@ -1,0 +1,41 @@
+.message{
+    display: flex;
+    margin: 0px auto 16px auto;
+    max-width: 600px;
+    
+}
+
+.message__user{
+    margin-right: 12px;
+}
+
+.message__user img{
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+}
+
+.message__texts{
+    display: flex;
+    flex-direction: column;
+    margin-right: 12px;
+}
+
+.message__username{
+    font-size: var(--size16);
+    color:var(--black)
+}
+
+.message__text{
+    background-color: var(--gray4);
+    border-radius: 24px 0px 24px 24px;
+    color: var(--black);
+    padding: 12px;
+    font-size: var(--size15);
+    line-height: 1.9rem;
+}
+
+.message__time{
+    color: var(--gray1);
+    font-size: (--size11);
+}

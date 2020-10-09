@@ -1,0 +1,30 @@
+.input{
+    display: grid;
+    grid-template-columns: 60px auto;
+   
+    width: 100%;
+    background: var(--white);
+    padding: 4px;
+    box-sizing: border-box;
+}
+
+.input textarea{
+    background-color: var(--gray5);
+    border-radius: 6px;
+    border:2px solid var(--primary);
+    min-height: 4rem;
+    resize: none;
+    height: 80%;
+    width: 98%;
+}
+
+.input__send{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.input__send:hover, .input__send:active{
+    background-color: var(--gray5);
+}

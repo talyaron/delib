@@ -1,16 +1,28 @@
 import m from 'mithril';
 import './Chat.css';
 
+//components
+import Message from './Message/Message';
+import Input from './Input/Input';
+
 module.exports = {
-    view:vnode=>{
-        return(
-            <div class='chatWrapper'>
-                <p>chat</p>
-                <p>chat</p>
-                <p>chat</p>
-                <p>chat</p>
-                <p>chat</p>
-                <p>chat</p>
+    view: vnode => {
+        return (
+            <div class='chat'>
+                <div class='chatWrapper'>
+                    <Message />
+                    <Message />
+
+                    <Message />
+                    <Message />
+                    <Message />
+                    <Message />
+                    <Message />
+                    <Message />
+                    <Message />
+                    <Message />
+                </div>
+                <Input />
             </div>
         )
     }
