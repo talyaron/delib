@@ -4,7 +4,7 @@ import store from '../../../data/store';
 import { Reference, concatenatePath, uniqueId } from '../../general';
 
 function createGroup(creatorId, title, description) {
-    
+
     const groupId = uniqueId()
 
     DB
@@ -16,7 +16,7 @@ function createGroup(creatorId, title, description) {
             creatorId: creatorId,
             time: new Date().getTime(),
             groupId,
-            id:groupId
+            id: groupId
         })
         .then(function (docRef) {
 
@@ -55,7 +55,7 @@ function createQuestion(groupId, creatorId, title, description) {
             time: new Date().getTime(),
             creatorId,
             questionId,
-            id:questionId
+            id: questionId
         })
         .catch(function (error) {
             console.error('Error adding document: ', error);
@@ -78,9 +78,9 @@ function updateQuestion(groupId, questionId, title, description, authorizationOb
 }
 
 function createSubQuestion(groupId, questionId, title, order) {
-    
+
     const subQuestionId = uniqueId()
-    
+
     DB
         .collection('groups')
         .doc(groupId)
@@ -88,7 +88,7 @@ function createSubQuestion(groupId, questionId, title, order) {
         .doc(questionId)
         .collection('subQuestions')
         .doc(subQuestionId)
-        .set({ title, order, creator: store.user.uid, orderBy: 'top',subQuestionId, id:subQuestionId })
+        .set({ title, order, creator: store.user.uid, orderBy: 'top', subQuestionId, id: subQuestionId })
         .catch(function (error) {
             console.error('Error adding document: ', error);
         });
@@ -164,7 +164,7 @@ function setSubQuestionsOrder(groupId, questionId, subQuestionId, order) {
 }
 
 function createOption(groupId, questionId, subQuestionId, type, creatorId, title, description, creatorName, subQuestionTitle) {
-    
+
     const optionId = uniqueId();
 
     let optionRef = DB
@@ -181,7 +181,7 @@ function createOption(groupId, questionId, subQuestionId, type, creatorId, title
         questionId,
         subQuestionId,
         optionId,
-        id:optionId,
+        id: optionId,
         creatorId,
         type,
         title,
@@ -237,6 +237,49 @@ function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like) 
             console.error('Error adding document: ', error);
         });
 }
+
+function sendMessage({ groupId, questionId, subQuestionId, optionId, user, message }) {
+    try {
+        console.log(groupId, questionId, subQuestionId, optionId, user, message)
+        const { displayName, photoURL, name, uid } = user;
+
+        let ref = 'groups', location = {}
+        if (groupId != undefined) {
+            ref += `/${groupId}`;
+            location.groupId = groupId
+        } else {
+            throw 'No groupId was provdided'
+        }
+        if (questionId != undefined) {
+            ref += `/${questionId}`
+            location.questionId = questionId
+        }
+        if (subQuestionId != undefined) {
+            ref += `/${subQuestionId}`;
+            location.subQuestionId = subQuestionId;
+        }
+        if (optionId != undefined) {
+            ref += `/${optionId}`;
+            location.optionId = optionId;
+        }
+
+        if (message) {
+
+            DB.doc(ref).collection('chat').add({
+               location, displayName, photoURL, name, uid, message
+            })
+            .then(()=>{console.log('saved correctly')})
+            .catch(err=>{
+                console.error(err)
+            })
+        }
+
+
+    } catch (err) {
+        console.error(err)
+    }
+}
+
 
 function setMessage(groupId, questionId, subQuestionId, optionId, creatorId, creatorName, message, groupName, questionName, optionName) {
     DB
@@ -433,14 +476,14 @@ function addToFeed(addRemove, pathArray, refString, collectionOrDoc) {
     }
 }
 
-function setToFeedLastEntrance(){
-   try{
-    DB.collection('users').doc(store.user.uid).collection('feedLastEntrence').doc('info')
-    .set({lastEntrance:new Date().getTime()})
-    .catch(err=>{console.error(err)});
-   } catch(err){
-       console.error(err)
-   }
+function setToFeedLastEntrance() {
+    try {
+        DB.collection('users').doc(store.user.uid).collection('feedLastEntrence').doc('info')
+            .set({ lastEntrance: new Date().getTime() })
+            .catch(err => { console.error(err) });
+    } catch (err) {
+        console.error(err)
+    }
 }
 
 
@@ -523,6 +566,7 @@ module.exports = {
     updateSubItem,
     setLikeToSubItem,
     setLike,
+    sendMessage,
     setMessage,
     setSubAnswer,
     updateSubQuestionProcess,
