@@ -7,12 +7,11 @@ import store from '../../data/store';
 
 //components
 import './GroupPage.css';
-import Group from './Group/Group';
+import QuestionCard from './QuestionCard/QuestionCard';
 import Header from '../Commons/Header/Header';
-import Feed from '../Commons/Feed/Feed';
-import Edit from '../Commons/Edit/Edit';
 import NavBottom from '../Commons/NavBottom/NavBottom';
 import NavTop from '../Commons/NavTop/NavTop';
+import Chat from '../Commons/Chat/Chat';
 
 
 //functions
@@ -29,6 +28,7 @@ module.exports = {
                 title: '',
                 description: ''
             },
+            subPage: 'main',
             isAdmin: false,
             edit: true,
             addQuestion: false,
@@ -41,7 +41,7 @@ module.exports = {
         vnode.state.undbGroupDetails = getGroupDetails(vnode.attrs.id, vnode);
     },
     oncreate: vnode => {
-        setWrapperHeight('headerContainer', 'groupWrapper');
+       
     },
     onbeforeupdate: vnode => {
         //check is admin
@@ -59,7 +59,7 @@ module.exports = {
         vnode.state.questions = questionsArray;
     },
     onupdate: vnode => {
-        setWrapperHeight('headerContainer', 'groupWrapper');
+       
     },
     onremove: vnode => {
         getQuestions('off', vnode.attrs.id, vnode);
@@ -79,21 +79,25 @@ module.exports = {
                         groupId={vnode.attrs.id}
                         showSubscribe={true}
                     />
-                    <NavTop level={'קבוצה'} current='main' />
-                    <div class='questionsWrapper' id='groupWrapper'>
-                        {
-                            vnode.state.questions.map((question, key) => {
+                    <NavTop level={'קבוצה'} current={vnode.state.subPage} pvs={vnode.state}/>
+                    {vnode.state.subPage == 'main' ?
+                        <div class='questionsWrapper' id='groupWrapper'>
+                            {
+                                vnode.state.questions.map((question, key) => {
 
-                                return (
-                                    <Group
-                                        route={'/question/' + vnode.attrs.id + '/'}
-                                        question={question}
-                                        key={key}
-                                    />
-                                )
-                            })
-                        }
-                    </div>
+                                    return (
+                                        <QuestionCard
+                                            route={'/question/' + vnode.attrs.id + '/'}
+                                            question={question}
+                                            key={key}
+                                        />
+                                    )
+                                })
+                            }
+                        </div>
+                        :
+                        <Chat entity='group' ids={{groupId:vnode.attrs.id}} />
+                    }
                     <div class='fav' onclick={() => { toggleAddQuestion(vnode) }} >
                         <div>+</div>
                     </div>

@@ -2,13 +2,10 @@
     user-select: none;
     cursor: pointer;
     border-radius: var(--roundBorder);
+    box-shadow: var(--mediumShadow);
 }
 
-.questionCard__img{
-    height: 150px;
-    width: 100%;
-}
 
 .questionOwned{
-    background: #ef4a497d;
+    border-left: 9px solid var(--gray2);
 }

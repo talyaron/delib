@@ -19,6 +19,8 @@
     font-size: var(--size15);
     color: var(--black);
     color: var(--gray1);
+    user-select: none;
+    cursor: pointer;
 }
 
 .navTop__btn--selected{

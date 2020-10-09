@@ -83,6 +83,16 @@ body {
     margin: 5px;
 }
 
+.card h2{
+    color: var(--black);
+    font-size: var(--size15);
+}
+
+.card p{
+    color: var(--gray1);
+    font-size: var(--size13);
+}
+
 .cardTitle {
     color: var(--textHeader);
     font-size: var(--textHeaderSize);

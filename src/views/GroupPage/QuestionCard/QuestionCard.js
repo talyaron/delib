@@ -1,5 +1,5 @@
 import m from "mithril";
-import "./Group.css";
+import "./QuestionCard.css";
 
 //data
 import store from "../../../data/store";
@@ -21,16 +21,16 @@ module.exports = {
     return (
       <div
         class={
-          vnode.state.owned ? "questionCard questionOwned" : "card groupCard"
+          vnode.state.owned ? "card questionCard questionOwned" : "card questionCard"
         }
         onclick={() => {
           m.route.set(vnode.attrs.route + vnode.attrs.question.id);
         }}
       >
-        <div class='groupCard__img' style={`background:${getRandomColor()}`}></div>
-        <div class='groupCard__info'>
-          <div class="cardTitle">{vnode.attrs.question.title}</div>
-          <div class="cardDescription">{vnode.attrs.question.description}</div>
+        
+        <div class='questionCard__info'>
+          <h2>{vnode.attrs.question.title}</h2>
+          <p>{vnode.attrs.question.description}</p>
         </div>
       </div>
     );
