@@ -18,9 +18,9 @@ module.exports = {
                     :`background:${getRandomColor()}`}>
                    
                 </div>
-                <div>
-                    <div class='cardTitle'>{vnode.attrs.title}</div>
-                    <div class='cardDescription'>{vnode.attrs.description}</div>
+                <div class='groupCard__info'>
+                    <h1 class='cardTitle'>{vnode.attrs.title}</h1>
+                    <p class='cardDescription'>{vnode.attrs.description}</p>
                 </div>
                 
             </div>
