@@ -495,24 +495,31 @@ function getSubItemUserLike(subItemsType, groupId, questionId, subQuestionId, cr
 }
 
 function listenToSubscription(path) {
-    if ({}.hasOwnProperty.call(store.subscribe, path) === false) {
+    return new Promise((resolve, reject) => {
 
-        DB
-            .doc(`${path}/subscribers/${store.user.uid}`)
-            .onSnapshot(subscriberDB => {
 
-                set(store.subscribe, `[${path}]`, subscriberDB.exists);
-                m.redraw();
+        if ({}.hasOwnProperty.call(store.subscribe, path) === false) {
 
-                if (subscriberDB.exists)
-                    console.info('user is subscribed')
-                else {
-                    console.info('user is not subscribed')
-                }
-            }, err => {
-                console.error(err)
-            })
-    }
+            DB
+                .doc(`${path}/subscribers/${store.user.uid}`)
+                .onSnapshot(subscriberDB => {
+
+                    set(store.subscribe, `[${path}]`, subscriberDB.exists);
+                    console.log(store.subscribe)
+                    m.redraw();
+
+                    if (subscriberDB.exists)
+                        console.info('user is subscribed')
+                    else {
+                        console.info('user is not subscribed')
+                    }
+                    resolve();
+                }, err => {
+                    console.error(err)
+                    reject(err)
+                })
+        }
+    })
 }
 
 function listenToFeed() {
@@ -527,7 +534,7 @@ function listenToFeed() {
                         const feedItem = change.doc.data();
                         feedItem.feedItemId = change.doc.id;
                         store.feed2.push(feedItem)
-                       
+
                     }
 
                 });
@@ -539,19 +546,19 @@ function listenToFeed() {
     }
 }
 
-function listenToFeedLastEntrance(){
-try{
-    DB.collection('users').doc(store.user.uid).collection('feedLastEntrence').doc('info')
-    .onSnapshot(infoDB=>{
-        const {lastEntrance} = infoDB.data()
-        store.feed2Info = {lastEntrance}
-        
-    },err=>{
+function listenToFeedLastEntrance() {
+    try {
+        DB.collection('users').doc(store.user.uid).collection('feedLastEntrence').doc('info')
+            .onSnapshot(infoDB => {
+                const { lastEntrance } = infoDB.data()
+                store.feed2Info = { lastEntrance }
+
+            }, err => {
+                console.error(err)
+            })
+    } catch (err) {
         console.error(err)
-    })
-} catch(err){
-    console.error(err)
-}
+    }
 }
 // function listenToFeed(path, onOff = "on") {
 //     let path1 = path;
@@ -608,26 +615,26 @@ try{
 //     }
 // }
 
-function listenToChatFeed(){
+function listenToChatFeed() {
 
-    try{
+    try {
 
-        if(store.listen.chatFeed == false){
+        if (store.listen.chatFeed == false) {
             DB.collection('users').doc(store.user.uid).collection('chat')
-            .onSnapshot(chatDB=>{
-                const messages = [];
-                chatDB.forEach(newMessageDB=>{
-                    messages.push(newMessageDB.data());
-                })
+                .onSnapshot(chatDB => {
+                    const messages = [];
+                    chatDB.forEach(newMessageDB => {
+                        messages.push(newMessageDB.data());
+                    })
 
-                store.chatFeed = messages;
-                m.redraw()
-            })
+                    store.chatFeed = messages;
+                    m.redraw()
+                })
 
             store.listen.chatFeed = true;
         }
-   
-    } catch(e){
+
+    } catch (e) {
         console.error(e)
     }
 }

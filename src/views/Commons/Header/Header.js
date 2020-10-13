@@ -1,10 +1,10 @@
-import m from 'mithril';
+import m, { jsonp } from 'mithril';
 import "regenerator-runtime/runtime.js";
 import './Header.css';
 import { get, set } from 'lodash';
 
 //functions
-import { subscribersCUD } from '../../../functions/firebase/set/set';
+import { subscribeUser } from '../../../functions/firebase/set/set';
 import { listenToSubscription } from '../../../functions/firebase/get/get';
 
 import store from '../../../data/store';
@@ -59,8 +59,11 @@ module.exports = {
 
             if (groupId !== undefined) {
 
+                await listenToSubscription(vnode.state.path);
+                console.log('store.subscribe', vnode.state.path, JSON.stringify(store.subscribe))
                 vnode.state.subscribed = get(store.subscribe, `[${vnode.state.path}]`, false)
-                listenToSubscription(vnode.state.path)
+                console.log('vnode.state.subscribed',vnode.state.subscribed)
+                
             }
         })();
 
@@ -103,7 +106,7 @@ module.exports = {
                                     e.stopPropagation();
                                     handleSubscription(vnode);
                                 }}>
-                                {vnode.state.subscribed ? <div class='setButton setButton--activate'>הרשמה</div> : <div class='setButton setButton--cancel'>ביטול הרשמה</div>}
+                                {vnode.state.subscribed ? <div class='setButton setButton--cancel'>ביטול הרשמה</div>:<div class='setButton setButton--activate'>הרשמה</div>}
                             </div>
                             :
                             null
@@ -159,9 +162,9 @@ function handleSubscription(vnode) {
     const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
     const path = concatenatePath(groupId, questionId, subQuestionId, optionId);
 
-    subscribersCUD({
+    subscribeUser({
         vnode,
-        subscribe: !vnode.state.subscribed
+        subscribe: vnode.state.subscribed
     })
 
     if (vnode.state.subscribed == false) {

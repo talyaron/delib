@@ -1,11 +1,14 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
+const { async } = require("regenerator-runtime");
+const { firebaseConfig } = require("firebase-functions");
 admin.initializeApp();
 const db = admin.firestore();
 const settings = {
   timestampsInSnapshots: true,
 };
 db.settings(settings);
+const FieldValue = require('firebase-admin').firestore.FieldValue;
 
 
 
@@ -354,11 +357,11 @@ exports.updateSubQuestionSubscribers = functions.firestore
     "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}"
   )
   .onWrite((change, context) => {
-    try {
-      return sendToSubscribers({ change, context });
-    } catch (err) {
-      console.log(err);
-    }
+    // try {
+    //   return sendToSubscribers({ change, context });
+    // } catch (err) {
+    //   console.log('err')
+    // }
   });
 
 function sendToSubscribers(info) {
@@ -477,40 +480,41 @@ exports.listenToGroupChats = functions.firestore
       const { groupId, chatMassageId } = context.params;
       console.log(newMsg.data())
 
-      console.log('start');
+      console.log('start in group:', `/groups/${groupId}/subscribers`);
 
-      return db.collection('groups')
-        .doc(groupId)
-        .collection('subscribers')
+      return db
+        .collection(`/groups/${groupId}/subscribers`)
         .get()
         .then(subscribersDB => {
-          subscribersDB.forEach(async subscriberDB => {
 
-            const userChatRef = db.collection('users').doc(subscriberDB.id).collection('chat').doc(`${generateChatEntitiyId({ groupId })}`)
-            await db.runTransaction(async t => {
+          console.log('going to subscribers.....', subscribersDB.size)
+          return subscribersDB.forEach(subscriberDB => {
+            console.log('update user ', subscriberDB.id)
 
-              const msg = await t.get(userChatRef)
 
-              console.log('msg:',newMsg.data())
+            const userChatRef = db.collection('users').doc(subscriberDB.id).collection('chat').doc(`${generateChatEntitiyId({ groupId })}`);
 
-              const newMsgNumber = msg.data().msgNumber+1;
-              const msgsNotSeen = newMsgNumber - msg.data().msgLastSeen ;
-              console.log('msg number is 22:', newMsgNumber,msgsNotSeen)
-              t.update(userChatRef, {
-                msg:newMsg.data(),
-                msgNumber: newMsgNumber,
-                msgsNotSeen
+            return userChatRef.update({ msgNumber: FieldValue.increment(1) })
 
-              });
-            })
-            // await db.collection('users').doc(subscriberDB.id).collection('chat').doc(`${groupId}`)
-            //   .set({
+            // return db.runTransaction(async t => {
+
+            //   const msg = await t.get(userChatRef)
+
+            //   console.log('msg:', newMsg.data())
+
+            //   const newMsgNumber = msg.data().msgNumber + 1;
+            //   const msgsNotSeen = newMsgNumber - msg.data().msgLastSeen;
+            //   console.log('msg number is 22:', newMsgNumber, msgsNotSeen)
+
+            //   return t.update(userChatRef, {
             //     msg: newMsg.data(),
-            //     date: new Date(),
-            //     msgNumber: 223,
-            //     msgLastSeen: 210,
-            //     msgsNotSeen: 13
+            //     msgNumber: newMsgNumber,
+            //     msgsNotSeen
+
             //   })
+            // })
+
+
           })
 
         })
@@ -522,17 +526,20 @@ exports.listenToGroupChats = functions.firestore
 
 function generateChatEntitiyId(ids) {
   try {
+    if (ids === undefined) { throw new Error("No ids were given") }
     const { groupId, questionId, subQuestionId, optionId } = ids;
-    if (groupId === undefined) { throw 'Missing groupId in generateChatEntitiyId' }
+
+    if (groupId === undefined) { throw new Error('Missing groupId in generateChatEntitiyId') }
 
 
     let entityChatId = `${groupId}`;
-    if (questionId !== undefined) { entityChatId += `--${questionId}` };
-    if (subQuestionId !== undefined) { entityChatId += `--${subQuestionId}` };
-    if (optionId !== undefined) { entityChatId += `--${optionId}` };
+    if (questionId !== undefined) { entityChatId += `--${questionId}` }
+    if (subQuestionId !== undefined) { entityChatId += `--${subQuestionId}` }
+    if (optionId !== undefined) { entityChatId += `--${optionId}` }
 
     return entityChatId;
   } catch (e) {
-    console.error(e)
+    console.error(e);
+    return e;
   }
 }

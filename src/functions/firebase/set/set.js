@@ -511,7 +511,7 @@ function updateOption(vnode) {
             }
         });
 }
-function subscribersCUD(settings) {
+function subscribeUser(settings) {
     try {
         const { groupId, questionId, subQuestionId, optionId } = settings.vnode.attrs;
         const { subscribe } = settings;
@@ -522,37 +522,50 @@ function subscribersCUD(settings) {
 
         // DB.doc(`groups/${groupId}`).get().then(groupDB=>{console.log(groupDB.data())}
         // ) build path for the enenties subscription collection
-        let subscriptionPath = concatenatePath(groupId, questionId, subQuestionId, optionId);
-        let cahtEntitiyId = generateChatEntitiyId({ groupId, questionId, subQuestionId, optionId });
+        const subscriptionPath = concatenatePath(groupId, questionId, subQuestionId, optionId);
+        let chatEntityId = generateChatEntitiyId({ groupId, questionId, subQuestionId, optionId });
 
-        console.log(cahtEntitiyId)
+        console.log(subscriptionPath)
+        console.log(chatEntityId)
+        console.log('is subscribed:', subscribe)
 
         const { uid, displayName, email, photoURL } = store.user
-        subscriptionPath = subscriptionPath + '/subscribers/' + uid;
 
-        if (subscribe === true) {
+
+        if (subscribe === false) {
+            //if user is not subscribed then subscribe the user
 
             DB
                 .doc(subscriptionPath)
+                .collection('subscribers')
+                .doc(uid)
                 .set({ uid, displayName, email, photoURL })
                 .then(() => {
                     console.info('User subscribed succsefuly to entity');
                     DB.collection('users').doc(uid)
-                        .collection('chat').doc(cahtEntitiyId).set({
+                        .collection('chat').doc(chatEntityId).set({
                             msgNumber: 0,
                             msgLastSeen: 0,
                             msgsNotSeen: 0
-                        }).catch(e=>{
-                            console.error('Error in saving new chat following on the user' , e)
+                        }).catch(e => {
+                            console.error('Error in saving new chat following on the user', e)
                         })
                 })
                 .catch(err => console.error(err))
         } else {
             DB
                 .doc(subscriptionPath)
+                .collection('subscribers')
+                .doc(uid)
                 .delete()
                 .then(() => {
-                    console.info('User unsubscribed succsefuly from entity')
+                    DB.collection('users').doc(uid)
+                        .collection('chat').doc(chatEntityId).delete().then(() => {
+                            console.info('User unsubscribed succsefuly from entity')
+                        }).catch(e=>{
+                            console.error(e)
+                        })
+
                 })
                 .catch(err => console.error(err))
         }
@@ -584,6 +597,6 @@ module.exports = {
     setSubAnswer,
     updateSubQuestionProcess,
     updateSubQuestionOrderBy,
-    subscribersCUD,
+    subscribeUser,
     setToFeedLastEntrance
 };

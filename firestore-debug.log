@@ -5,208 +5,423 @@ If you are using a library that supports the FIRESTORE_EMULATOR_HOST environment
 
 Dev App Server is now running.
 
-Oct 13, 2020 9:08:35 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:22:18 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:08:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:22:18 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected HTTP/2 connection.
-Oct 13, 2020 9:08:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:22:19 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:08:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:22:19 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:08:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:22:19 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:08:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:22:19 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:08:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:22:19 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:08:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:22:19 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:08:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:22:19 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:08:53 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:22:19 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:09:03 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:22:27 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:09:03 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:22:38 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:09:03 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:22:38 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:09:03 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:22:38 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:09:03 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:22:38 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:09:03 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:22:38 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:09:14 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:22:38 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:09:14 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:22:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:09:34 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher lambda$publishEvent$0
+Oct 13, 2020 2:22:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:22:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:22:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:23:00 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:23:00 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:23:00 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:23:15 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:23:15 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:23:30 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:23:30 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:23:30 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:23:30 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:23:30 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:23:31 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+Oct 13, 2020 2:23:33 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:23:33 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:23:34 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:23:34 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:23:34 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:23:42 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:23:42 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:23:42 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:23:42 PM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose
+INFO: channel closed
+Oct 13, 2020 2:23:42 PM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreListenHandler onClose
+INFO: channel closed
+Oct 13, 2020 2:23:50 PM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher lambda$publishEvent$0
 WARNING: Failed to publish event to localhost:5002: Read timed out
-Oct 13, 2020 9:09:55 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:23:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:10:14 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:23:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:10:14 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:23:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:10:14 AM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose
+Oct 13, 2020 2:23:55 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:23:55 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:23:55 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:24:21 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:24:21 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:24:21 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:24:34 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:24:34 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:24:34 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:24:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:24:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:24:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:24:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:25:01 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:25:01 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:25:01 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:25:16 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:25:16 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:25:16 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:25:16 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:25:18 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:25:18 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:26:01 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:26:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:26:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:26:08 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:26:41 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:26:50 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:26:50 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:26:57 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:26:57 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:26:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:26:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:26:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:26:59 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:27:06 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:27:06 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:27:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:27:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:27:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:27:09 PM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose
 INFO: channel closed
-Oct 13, 2020 9:10:14 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:27:09 PM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreListenHandler onClose
+INFO: channel closed
+Oct 13, 2020 2:27:09 PM io.netty.channel.DefaultChannelPipeline onUnhandledInboundException
+WARNING: An exceptionCaught() event was fired, and it reached at the tail of the pipeline. It usually means the last handler in the pipeline did not handle the exception.
+java.nio.channels.ClosedChannelException
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.newClosedChannelException(AbstractChannel.java:957)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.write(AbstractChannel.java:865)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.write(DefaultChannelPipeline.java:1367)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeWrite0(AbstractChannelHandlerContext.java:717)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeWrite(AbstractChannelHandlerContext.java:709)
+	at io.netty.channel.AbstractChannelHandlerContext$WriteTask.run(AbstractChannelHandlerContext.java:1102)
+	at io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:164)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:472)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:497)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:989)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.lang.Thread.run(Thread.java:748)
+
+Oct 13, 2020 2:27:19 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:10:22 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:27:19 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:10:22 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:27:19 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:10:22 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:27:20 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:10:23 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher sendHttpRequest
-WARNING: Unsuccessful HTTP response when publishing event for projects/synthesistalyaron/triggers/updateSubQuestionSubscribers: 500 Internal Server Error
-TypeError: Cannot read property 'name' of undefined
-    at Firestore.snapshot_ (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/@google-cloud/firestore/build/src/index.js:628:128)
-    at beforeSnapshotConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:139:30)
-    at changeConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:143:49)
-    at cloudFunction (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/cloud-functions.js:133:34)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:583:20
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:568:19
-    at Generator.next (<anonymous>)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:8:71
-    at new Promise (<anonymous>)
-    at __awaiter (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:4:12)
-Oct 13, 2020 9:10:43 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher lambda$publishEvent$0
+Oct 13, 2020 2:27:20 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:27:21 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:27:21 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:27:21 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:27:22 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:27:25 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:27:26 PM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher lambda$publishEvent$0
 WARNING: Failed to publish event to localhost:5002: Read timed out
-Oct 13, 2020 9:11:22 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:28:25 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:11:22 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:29:25 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:11:23 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:30:25 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:11:23 AM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose
+Oct 13, 2020 2:31:25 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:31:53 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:31:53 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:31:53 PM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreListenHandler onClose
 INFO: channel closed
-Oct 13, 2020 9:12:23 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:31:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:13:23 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:31:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:14:08 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:31:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:14:53 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:32:00 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:15:53 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:32:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:16:53 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:32:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:17:53 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:32:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:18:53 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:32:10 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+Oct 13, 2020 2:32:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:20:08 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:32:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:21:08 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:32:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:22:08 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:23:08 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:24:23 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:25:01 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:25:01 AM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreListenHandler onClose
+Oct 13, 2020 2:32:11 PM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreListenHandler onClose
 INFO: channel closed
-Oct 13, 2020 9:25:01 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:25:01 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:25:16 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:25:16 AM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreListenHandler onClose
+Oct 13, 2020 2:32:11 PM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose
 INFO: channel closed
-Oct 13, 2020 9:25:17 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:32:29 PM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher lambda$publishEvent$0
+WARNING: Failed to publish event to localhost:5002: Read timed out
+Oct 13, 2020 2:33:31 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:25:17 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:33:31 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:26:17 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:33:31 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:27:33 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:33:34 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:28:33 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:33:40 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:29:17 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:33:40 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:29:17 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:33:40 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:29:17 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:33:40 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+Oct 13, 2020 2:33:41 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:29:17 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:33:41 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:29:17 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:33:41 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:29:17 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:33:41 PM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreListenHandler onClose
+INFO: channel closed
+Oct 13, 2020 2:33:41 PM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose
+INFO: channel closed
+Oct 13, 2020 2:34:00 PM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher lambda$publishEvent$0
+WARNING: Failed to publish event to localhost:5002: Read timed out
+Oct 13, 2020 2:35:52 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:29:17 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:35:52 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:29:26 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:35:52 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:29:26 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:37:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:29:26 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:37:55 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:29:26 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:38:55 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:29:43 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:40:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:29:43 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:41:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:29:47 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:42:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:29:47 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:43:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:29:49 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:43:56 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:29:50 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:44:56 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:29:50 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:46:12 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:30:02 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:47:12 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:30:02 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:48:12 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:30:02 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 2:49:12 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:30:03 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher sendHttpRequest
-WARNING: Unsuccessful HTTP response when publishing event for projects/synthesistalyaron/triggers/updateSubQuestionSubscribers: 500 Internal Server Error
-TypeError: Cannot read property 'name' of undefined
-    at Firestore.snapshot_ (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/@google-cloud/firestore/build/src/index.js:628:128)
-    at beforeSnapshotConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:139:30)
-    at changeConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:143:49)
-    at cloudFunction (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/cloud-functions.js:133:34)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:583:20
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:568:19
-    at Generator.next (<anonymous>)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:8:71
-    at new Promise (<anonymous>)
-    at __awaiter (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:4:12)
-Oct 13, 2020 9:30:04 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher sendHttpRequest
+Oct 13, 2020 2:50:12 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:51:28 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:52:28 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:53:28 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:54:28 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:55:28 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:56:28 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:57:28 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:58:28 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:59:28 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:59:32 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:59:32 PM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreListenHandler onClose
+INFO: channel closed
+Oct 13, 2020 2:59:33 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:59:33 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:59:39 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:59:39 PM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreListenHandler onClose
+INFO: channel closed
+Oct 13, 2020 2:59:40 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 2:59:40 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 3:00:55 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 3:01:55 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 3:02:55 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 3:04:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 3:05:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 3:06:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 3:07:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 3:08:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 3:09:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 3:10:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 3:11:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 3:11:29 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 3:16:35 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 3:17:21 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 3:18:37 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 3:19:42 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 3:19:42 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 3:19:42 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+Oct 13, 2020 3:19:42 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 3:19:50 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 3:19:50 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 3:19:50 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Oct 13, 2020 3:19:51 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+Oct 13, 2020 3:19:51 PM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher sendHttpRequest
 WARNING: Unsuccessful HTTP response when publishing event for projects/synthesistalyaron/triggers/listenToGroupChats: 500 Internal Server Error
-ReferenceError: params is not defined
-    at /Users/talyaron/Documents/gitHub/delib-v3-p/functions/index.js:477:17
-    at cloudFunction (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/cloud-functions.js:134:23)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:583:20
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:568:19
-    at Generator.next (<anonymous>)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:8:71
-    at new Promise (<anonymous>)
-    at __awaiter (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:4:12)
-    at runFunction (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:565:12)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:582:15
-Oct 13, 2020 9:30:22 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+ReferenceError: firebase is not defined
+    at /Users/talyaron/Documents/gitHub/delib-v3-p/functions/index.js:497:43
+    at QuerySnapshot.forEach (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/@google-cloud/firestore/build/src/reference.js:785:22)
+    at /Users/talyaron/Documents/gitHub/delib-v3-p/functions/index.js:491:32
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+Oct 13, 2020 3:19:51 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:30:22 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:19:51 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:30:22 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:19:51 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:30:22 AM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose
+Oct 13, 2020 3:19:51 PM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose
 INFO: channel closed
-Oct 13, 2020 9:30:22 AM io.netty.channel.DefaultChannelPipeline onUnhandledInboundException
+Oct 13, 2020 3:19:51 PM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreListenHandler onClose
+INFO: channel closed
+Oct 13, 2020 3:19:51 PM io.netty.channel.DefaultChannelPipeline onUnhandledInboundException
 WARNING: An exceptionCaught() event was fired, and it reached at the tail of the pipeline. It usually means the last handler in the pipeline did not handle the exception.
 java.io.IOException: Connection reset by peer
 	at sun.nio.ch.FileDispatcherImpl.read0(Native Method)
@@ -227,15 +442,22 @@ java.io.IOException: Connection reset by peer
 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
 	at java.lang.Thread.run(Thread.java:748)
 
-Oct 13, 2020 9:30:22 AM io.netty.channel.DefaultChannelPipeline onUnhandledInboundException
+Oct 13, 2020 3:19:51 PM io.netty.channel.DefaultChannelPipeline onUnhandledInboundException
 WARNING: An exceptionCaught() event was fired, and it reached at the tail of the pipeline. It usually means the last handler in the pipeline did not handle the exception.
-java.nio.channels.ClosedChannelException
-	at io.netty.channel.AbstractChannel$AbstractUnsafe.newClosedChannelException(AbstractChannel.java:957)
-	at io.netty.channel.AbstractChannel$AbstractUnsafe.write(AbstractChannel.java:865)
-	at io.netty.channel.DefaultChannelPipeline$HeadContext.write(DefaultChannelPipeline.java:1367)
-	at io.netty.channel.AbstractChannelHandlerContext.invokeWrite0(AbstractChannelHandlerContext.java:717)
-	at io.netty.channel.AbstractChannelHandlerContext.invokeWrite(AbstractChannelHandlerContext.java:709)
-	at io.netty.channel.AbstractChannelHandlerContext$WriteTask.run(AbstractChannelHandlerContext.java:1102)
+java.io.IOException: Broken pipe
+	at sun.nio.ch.FileDispatcherImpl.writev0(Native Method)
+	at sun.nio.ch.SocketDispatcher.writev(SocketDispatcher.java:51)
+	at sun.nio.ch.IOUtil.write(IOUtil.java:148)
+	at sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:501)
+	at io.netty.channel.socket.nio.NioSocketChannel.doWrite(NioSocketChannel.java:423)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.flush0(AbstractChannel.java:930)
+	at io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.flush0(AbstractNioChannel.java:354)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.flush(AbstractChannel.java:897)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.flush(DefaultChannelPipeline.java:1372)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeFlush0(AbstractChannelHandlerContext.java:750)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeFlush(AbstractChannelHandlerContext.java:742)
+	at io.netty.channel.AbstractChannelHandlerContext.access$2200(AbstractChannelHandlerContext.java:61)
+	at io.netty.channel.AbstractChannelHandlerContext$Tasks$4.run(AbstractChannelHandlerContext.java:1157)
 	at io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:164)
 	at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:472)
 	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:497)
@@ -244,781 +466,64 @@ java.nio.channels.ClosedChannelException
 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
 	at java.lang.Thread.run(Thread.java:748)
 
-Oct 13, 2020 9:30:22 AM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreListenHandler onClose
-INFO: channel closed
-Oct 13, 2020 9:30:22 AM io.netty.channel.DefaultChannelPipeline onUnhandledInboundException
-WARNING: An exceptionCaught() event was fired, and it reached at the tail of the pipeline. It usually means the last handler in the pipeline did not handle the exception.
-java.nio.channels.ClosedChannelException
-	at io.netty.channel.AbstractChannel$AbstractUnsafe.newClosedChannelException(AbstractChannel.java:957)
-	at io.netty.channel.AbstractChannel$AbstractUnsafe.write(AbstractChannel.java:865)
-	at io.netty.channel.DefaultChannelPipeline$HeadContext.write(DefaultChannelPipeline.java:1367)
-	at io.netty.channel.AbstractChannelHandlerContext.invokeWrite0(AbstractChannelHandlerContext.java:717)
-	at io.netty.channel.AbstractChannelHandlerContext.invokeWrite(AbstractChannelHandlerContext.java:709)
-	at io.netty.channel.AbstractChannelHandlerContext$WriteTask.run(AbstractChannelHandlerContext.java:1102)
-	at io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:164)
-	at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:472)
-	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:497)
-	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:989)
-	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
-	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
-	at java.lang.Thread.run(Thread.java:748)
-
-Oct 13, 2020 9:32:01 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:21:46 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:32:01 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:21:46 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:32:01 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:21:46 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:32:03 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:21:49 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:32:09 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:21:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:32:09 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:21:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:32:09 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:21:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:32:09 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher sendHttpRequest
-WARNING: Unsuccessful HTTP response when publishing event for projects/synthesistalyaron/triggers/updateSubQuestionSubscribers: 500 Internal Server Error
-TypeError: Cannot read property 'name' of undefined
-    at Firestore.snapshot_ (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/@google-cloud/firestore/build/src/index.js:628:128)
-    at beforeSnapshotConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:139:30)
-    at changeConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:143:49)
-    at cloudFunction (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/cloud-functions.js:133:34)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:583:20
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:568:19
-    at Generator.next (<anonymous>)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:8:71
-    at new Promise (<anonymous>)
-    at __awaiter (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:4:12)
-Oct 13, 2020 9:32:10 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:21:55 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected HTTP/2 connection.
-Oct 13, 2020 9:32:10 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher sendHttpRequest
+Oct 13, 2020 3:21:55 PM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher sendHttpRequest
 WARNING: Unsuccessful HTTP response when publishing event for projects/synthesistalyaron/triggers/listenToGroupChats: 500 Internal Server Error
-TypeError: db.collection(...).doc(...).collection(...).set is not a function
-    at /Users/talyaron/Documents/gitHub/delib-v3-p/functions/index.js:487:16
+ReferenceError: FieldValue is not defined
+    at /Users/talyaron/Documents/gitHub/delib-v3-p/functions/index.js:497:50
     at QuerySnapshot.forEach (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/@google-cloud/firestore/build/src/reference.js:785:22)
-    at /Users/talyaron/Documents/gitHub/delib-v3-p/functions/index.js:485:25
+    at /Users/talyaron/Documents/gitHub/delib-v3-p/functions/index.js:491:32
     at processTicksAndRejections (internal/process/task_queues.js:97:5)
-Oct 13, 2020 9:32:19 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:21:56 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:32:19 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:21:56 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:32:19 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:21:56 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:32:19 AM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose
+Oct 13, 2020 3:21:56 PM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose
 INFO: channel closed
-Oct 13, 2020 9:32:19 AM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreListenHandler onClose
+Oct 13, 2020 3:21:56 PM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreListenHandler onClose
 INFO: channel closed
-Oct 13, 2020 9:33:22 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:23:27 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:33:22 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:23:27 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:33:22 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:23:27 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:33:23 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:23:30 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:33:28 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:23:36 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:33:28 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:23:36 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:33:29 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:23:36 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:33:29 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher sendHttpRequest
-WARNING: Unsuccessful HTTP response when publishing event for projects/synthesistalyaron/triggers/updateSubQuestionSubscribers: 500 Internal Server Error
-TypeError: Cannot read property 'name' of undefined
-    at Firestore.snapshot_ (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/@google-cloud/firestore/build/src/index.js:628:128)
-    at beforeSnapshotConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:139:30)
-    at changeConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:143:49)
-    at cloudFunction (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/cloud-functions.js:133:34)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:583:20
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:568:19
-    at Generator.next (<anonymous>)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:8:71
-    at new Promise (<anonymous>)
-    at __awaiter (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:4:12)
-Oct 13, 2020 9:33:30 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:23:37 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected HTTP/2 connection.
-Oct 13, 2020 9:33:35 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:23:39 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:33:35 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:23:39 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:33:35 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Oct 13, 2020 3:23:39 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:33:38 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:33:39 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:33:49 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher lambda$publishEvent$0
-WARNING: Failed to publish event to localhost:5002: Read timed out
-Oct 13, 2020 9:34:09 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:34:29 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:34:29 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:34:29 AM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose
+Oct 13, 2020 3:23:39 PM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreListenHandler onClose
 INFO: channel closed
-Oct 13, 2020 9:34:54 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:35:54 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:36:54 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:37:54 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:39:09 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:40:09 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:41:09 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:42:09 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:43:09 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:44:09 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:45:09 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:46:25 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:47:25 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:48:25 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:49:25 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:50:11 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:51:11 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:52:11 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:53:11 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:54:11 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:55:11 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:56:26 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:57:26 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:58:26 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 9:59:42 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:00:28 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:01:43 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:02:29 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:03:45 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:04:45 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:05:45 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:07:01 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:08:01 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:09:01 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:10:01 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:10:47 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:11:33 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:12:33 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:13:33 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:14:33 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:15:33 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:16:33 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:17:33 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:18:33 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:19:33 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:20:15 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:31:26 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:32:26 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:33:26 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:34:26 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:35:26 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:36:26 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:37:26 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:38:12 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:39:12 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:40:12 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:40:57 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:41:57 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:42:57 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:43:15 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:43:15 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:43:15 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:43:15 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected HTTP/2 connection.
-Oct 13, 2020 10:43:16 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:43:16 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:43:16 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:43:18 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:43:24 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:43:24 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:43:24 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:43:24 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher sendHttpRequest
-WARNING: Unsuccessful HTTP response when publishing event for projects/synthesistalyaron/triggers/updateSubQuestionSubscribers: 500 Internal Server Error
-TypeError: Cannot read property 'name' of undefined
-    at Firestore.snapshot_ (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/@google-cloud/firestore/build/src/index.js:628:128)
-    at beforeSnapshotConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:139:30)
-    at changeConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:143:49)
-    at cloudFunction (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/cloud-functions.js:133:34)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:583:20
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:568:19
-    at Generator.next (<anonymous>)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:8:71
-    at new Promise (<anonymous>)
-    at __awaiter (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:4:12)
-Oct 13, 2020 10:43:25 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected HTTP/2 connection.
-Oct 13, 2020 10:43:44 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher lambda$publishEvent$0
-WARNING: Failed to publish event to localhost:5002: Read timed out
-Oct 13, 2020 10:43:54 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:43:54 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:43:54 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:43:54 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:43:56 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:43:57 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:43:57 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:44:09 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:44:24 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:44:24 AM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose
+Oct 13, 2020 3:23:39 PM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose
 INFO: channel closed
-Oct 13, 2020 10:44:45 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:44:45 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:44:45 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:44:46 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:44:46 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:44:46 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:44:47 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:44:52 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:44:52 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:44:52 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:44:53 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher sendHttpRequest
-WARNING: Unsuccessful HTTP response when publishing event for projects/synthesistalyaron/triggers/updateSubQuestionSubscribers: 500 Internal Server Error
-TypeError: Cannot read property 'name' of undefined
-    at Firestore.snapshot_ (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/@google-cloud/firestore/build/src/index.js:628:128)
-    at beforeSnapshotConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:139:30)
-    at changeConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:143:49)
-    at cloudFunction (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/cloud-functions.js:133:34)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:583:20
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:568:19
-    at Generator.next (<anonymous>)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:8:71
-    at new Promise (<anonymous>)
-    at __awaiter (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:4:12)
-Oct 13, 2020 10:44:53 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected HTTP/2 connection.
-Oct 13, 2020 10:44:54 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:44:54 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:44:54 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:44:55 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:44:56 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:45:13 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher lambda$publishEvent$0
+Oct 13, 2020 3:23:56 PM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher lambda$publishEvent$0
 WARNING: Failed to publish event to localhost:5002: Read timed out
-Oct 13, 2020 10:45:52 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:45:52 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:45:52 AM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose
-INFO: channel closed
-Oct 13, 2020 10:45:56 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:45:59 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:45:59 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:46:01 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:46:01 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:46:01 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:46:02 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:46:08 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:46:08 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:46:08 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:46:08 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher sendHttpRequest
-WARNING: Unsuccessful HTTP response when publishing event for projects/synthesistalyaron/triggers/updateSubQuestionSubscribers: 500 Internal Server Error
-TypeError: Cannot read property 'name' of undefined
-    at Firestore.snapshot_ (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/@google-cloud/firestore/build/src/index.js:628:128)
-    at beforeSnapshotConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:139:30)
-    at changeConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:143:49)
-    at cloudFunction (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/cloud-functions.js:133:34)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:583:20
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:568:19
-    at Generator.next (<anonymous>)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:8:71
-    at new Promise (<anonymous>)
-    at __awaiter (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:4:12)
-Oct 13, 2020 10:46:09 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected HTTP/2 connection.
-Oct 13, 2020 10:46:28 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher lambda$publishEvent$0
-WARNING: Failed to publish event to localhost:5002: Read timed out
-Oct 13, 2020 10:46:33 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:46:34 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:46:39 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:46:40 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher sendHttpRequest
-WARNING: Unsuccessful HTTP response when publishing event for projects/synthesistalyaron/triggers/updateSubQuestionSubscribers: 500 Internal Server Error
-TypeError: Cannot read property 'name' of undefined
-    at Firestore.snapshot_ (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/@google-cloud/firestore/build/src/index.js:628:128)
-    at beforeSnapshotConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:139:30)
-    at changeConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:143:49)
-    at cloudFunction (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/cloud-functions.js:133:34)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:583:20
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:568:19
-    at Generator.next (<anonymous>)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:8:71
-    at new Promise (<anonymous>)
-    at __awaiter (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:4:12)
-Oct 13, 2020 10:47:00 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher lambda$publishEvent$0
-WARNING: Failed to publish event to localhost:5002: Read timed out
-Oct 13, 2020 10:47:09 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:47:22 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:47:22 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:47:23 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:47:23 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:47:23 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:47:23 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:47:24 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:47:25 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:47:30 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:47:31 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher sendHttpRequest
-WARNING: Unsuccessful HTTP response when publishing event for projects/synthesistalyaron/triggers/updateSubQuestionSubscribers: 500 Internal Server Error
-TypeError: Cannot read property 'name' of undefined
-    at Firestore.snapshot_ (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/@google-cloud/firestore/build/src/index.js:628:128)
-    at beforeSnapshotConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:139:30)
-    at changeConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:143:49)
-    at cloudFunction (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/cloud-functions.js:133:34)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:583:20
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:568:19
-    at Generator.next (<anonymous>)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:8:71
-    at new Promise (<anonymous>)
-    at __awaiter (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:4:12)
-Oct 13, 2020 10:47:51 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher lambda$publishEvent$0
-WARNING: Failed to publish event to localhost:5002: Read timed out
-Oct 13, 2020 10:48:01 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:48:01 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:48:01 AM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose
-INFO: channel closed
-Oct 13, 2020 10:48:01 AM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreListenHandler onClose
-INFO: channel closed
-Oct 13, 2020 10:48:01 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:48:01 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:48:06 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:48:06 AM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreListenHandler onClose
-INFO: channel closed
-Oct 13, 2020 10:48:06 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:48:06 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:48:15 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:48:15 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:48:15 AM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreListenHandler onClose
-INFO: channel closed
-Oct 13, 2020 10:48:15 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:48:35 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:48:35 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:48:35 AM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreListenHandler onClose
-INFO: channel closed
-Oct 13, 2020 10:48:35 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:49:31 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:49:32 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:49:32 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:49:33 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:49:39 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:49:39 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:49:39 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:49:39 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher sendHttpRequest
-WARNING: Unsuccessful HTTP response when publishing event for projects/synthesistalyaron/triggers/updateSubQuestionSubscribers: 500 Internal Server Error
-TypeError: Cannot read property 'name' of undefined
-    at Firestore.snapshot_ (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/@google-cloud/firestore/build/src/index.js:628:128)
-    at beforeSnapshotConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:139:30)
-    at changeConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:143:49)
-    at cloudFunction (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/cloud-functions.js:133:34)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:583:20
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:568:19
-    at Generator.next (<anonymous>)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:8:71
-    at new Promise (<anonymous>)
-    at __awaiter (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:4:12)
-Oct 13, 2020 10:49:40 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected HTTP/2 connection.
-Oct 13, 2020 10:49:59 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:49:59 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher lambda$publishEvent$0
-WARNING: Failed to publish event to localhost:5002: Read timed out
-Oct 13, 2020 10:49:59 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:50:05 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:50:06 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher sendHttpRequest
-WARNING: Unsuccessful HTTP response when publishing event for projects/synthesistalyaron/triggers/updateSubQuestionSubscribers: 500 Internal Server Error
-TypeError: Cannot read property 'name' of undefined
-    at Firestore.snapshot_ (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/@google-cloud/firestore/build/src/index.js:628:128)
-    at beforeSnapshotConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:139:30)
-    at changeConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:143:49)
-    at cloudFunction (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/cloud-functions.js:133:34)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:583:20
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:568:19
-    at Generator.next (<anonymous>)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:8:71
-    at new Promise (<anonymous>)
-    at __awaiter (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:4:12)
-Oct 13, 2020 10:50:26 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher lambda$publishEvent$0
-WARNING: Failed to publish event to localhost:5002: Read timed out
-Oct 13, 2020 10:50:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:50:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:51:06 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:51:06 AM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose
-INFO: channel closed
-Oct 13, 2020 10:51:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:52:02 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:52:03 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:52:10 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:52:10 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:52:10 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:52:10 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher sendHttpRequest
-WARNING: Unsuccessful HTTP response when publishing event for projects/synthesistalyaron/triggers/updateSubQuestionSubscribers: 500 Internal Server Error
-TypeError: Cannot read property 'name' of undefined
-    at Firestore.snapshot_ (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/@google-cloud/firestore/build/src/index.js:628:128)
-    at beforeSnapshotConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:139:30)
-    at changeConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:143:49)
-    at cloudFunction (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/cloud-functions.js:133:34)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:583:20
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:568:19
-    at Generator.next (<anonymous>)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:8:71
-    at new Promise (<anonymous>)
-    at __awaiter (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:4:12)
-Oct 13, 2020 10:52:11 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected HTTP/2 connection.
-Oct 13, 2020 10:52:30 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher lambda$publishEvent$0
-WARNING: Failed to publish event to localhost:5002: Read timed out
-Oct 13, 2020 10:52:40 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:53:10 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:53:10 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:53:10 AM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose
-INFO: channel closed
-Oct 13, 2020 10:53:18 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:53:19 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:53:28 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:53:28 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:53:28 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:53:28 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:53:29 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher sendHttpRequest
-WARNING: Unsuccessful HTTP response when publishing event for projects/synthesistalyaron/triggers/updateSubQuestionSubscribers: 500 Internal Server Error
-TypeError: Cannot read property 'name' of undefined
-    at Firestore.snapshot_ (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/@google-cloud/firestore/build/src/index.js:628:128)
-    at beforeSnapshotConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:139:30)
-    at changeConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:143:49)
-    at cloudFunction (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/cloud-functions.js:133:34)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:583:20
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:568:19
-    at Generator.next (<anonymous>)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:8:71
-    at new Promise (<anonymous>)
-    at __awaiter (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:4:12)
-Oct 13, 2020 10:53:49 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher lambda$publishEvent$0
-WARNING: Failed to publish event to localhost:5002: Read timed out
-Oct 13, 2020 10:54:02 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:54:02 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:54:03 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:54:09 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:54:10 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher sendHttpRequest
-WARNING: Unsuccessful HTTP response when publishing event for projects/synthesistalyaron/triggers/updateSubQuestionSubscribers: 500 Internal Server Error
-TypeError: Cannot read property 'name' of undefined
-    at Firestore.snapshot_ (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/@google-cloud/firestore/build/src/index.js:628:128)
-    at beforeSnapshotConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:139:30)
-    at changeConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:143:49)
-    at cloudFunction (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/cloud-functions.js:133:34)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:583:20
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:568:19
-    at Generator.next (<anonymous>)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:8:71
-    at new Promise (<anonymous>)
-    at __awaiter (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:4:12)
-Oct 13, 2020 10:54:30 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher lambda$publishEvent$0
-WARNING: Failed to publish event to localhost:5002: Read timed out
-Oct 13, 2020 10:54:35 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:54:35 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:54:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:54:42 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:54:42 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:54:42 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher sendHttpRequest
-WARNING: Unsuccessful HTTP response when publishing event for projects/synthesistalyaron/triggers/updateSubQuestionSubscribers: 500 Internal Server Error
-TypeError: Cannot read property 'name' of undefined
-    at Firestore.snapshot_ (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/@google-cloud/firestore/build/src/index.js:628:128)
-    at beforeSnapshotConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:139:30)
-    at changeConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:143:49)
-    at cloudFunction (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/cloud-functions.js:133:34)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:583:20
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:568:19
-    at Generator.next (<anonymous>)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:8:71
-    at new Promise (<anonymous>)
-    at __awaiter (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:4:12)
-Oct 13, 2020 10:54:43 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected HTTP/2 connection.
-Oct 13, 2020 10:55:02 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher lambda$publishEvent$0
-WARNING: Failed to publish event to localhost:5002: Read timed out
-Oct 13, 2020 10:55:27 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:55:42 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:55:42 AM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose
-INFO: channel closed
-Oct 13, 2020 10:56:11 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:56:11 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:56:20 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:56:20 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:56:20 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:56:20 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:56:20 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher sendHttpRequest
-WARNING: Unsuccessful HTTP response when publishing event for projects/synthesistalyaron/triggers/updateSubQuestionSubscribers: 500 Internal Server Error
-TypeError: Cannot read property 'name' of undefined
-    at Firestore.snapshot_ (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/@google-cloud/firestore/build/src/index.js:628:128)
-    at beforeSnapshotConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:139:30)
-    at changeConstructor (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/providers/firestore.js:143:49)
-    at cloudFunction (/Users/talyaron/Documents/gitHub/delib-v3-p/functions/node_modules/firebase-functions/lib/cloud-functions.js:133:34)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:583:20
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:568:19
-    at Generator.next (<anonymous>)
-    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:8:71
-    at new Promise (<anonymous>)
-    at __awaiter (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:4:12)
-Oct 13, 2020 10:56:21 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected HTTP/2 connection.
-Oct 13, 2020 10:56:40 AM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher lambda$publishEvent$0
-WARNING: Failed to publish event to localhost:5002: Read timed out
-Oct 13, 2020 10:57:18 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:57:18 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:57:18 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:57:18 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:57:20 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:57:20 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:57:20 AM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose
-INFO: channel closed
-Oct 13, 2020 10:57:20 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:57:21 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:57:21 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:58:21 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 10:59:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:00:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:01:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:02:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:03:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:04:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:05:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:06:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:07:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:08:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:09:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:10:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:11:36 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:12:21 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:13:21 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:14:21 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:15:06 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:16:06 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:17:21 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:18:07 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:19:22 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:20:07 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:20:53 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:21:53 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:22:53 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:23:38 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:24:38 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:25:38 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:26:24 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:27:24 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:28:24 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:29:24 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:30:40 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:31:26 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:32:42 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:33:57 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-Oct 13, 2020 11:34:57 AM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
