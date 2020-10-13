@@ -608,6 +608,30 @@ try{
 //     }
 // }
 
+function listenToChatFeed(){
+
+    try{
+
+        if(store.listen.chatFeed == false){
+            DB.collection('users').doc(store.user.uid).collection('chat')
+            .onSnapshot(chatDB=>{
+                const messages = [];
+                chatDB.forEach(newMessageDB=>{
+                    messages.push(newMessageDB.data());
+                })
+
+                store.chatFeed = messages;
+                m.redraw()
+            })
+
+            store.listen.chatFeed = true;
+        }
+   
+    } catch(e){
+        console.error(e)
+    }
+}
+
 module.exports = {
     getUserGroups,
     getQuestions,
@@ -624,6 +648,7 @@ module.exports = {
     getOptionDetails,
     getMessages,
     listenToFeed,
+    listenToChatFeed,
     listenToFeedLastEntrance,
     listenToSubscription
 };

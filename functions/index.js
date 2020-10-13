@@ -7,6 +7,8 @@ const settings = {
 };
 db.settings(settings);
 
+
+
 exports.totalVotes = functions.firestore
   .document(
     "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{op" +
@@ -326,7 +328,7 @@ exports.updateGroupSubscribers = functions.firestore
   .document("groups/{groupId}/questions/{questionId}")
   .onWrite((change, context) => {
     try {
-     
+
       return sendToSubscribers({ change, context });
     } catch (err) {
       console.log(err);
@@ -366,7 +368,7 @@ function sendToSubscribers(info) {
     const DATA = change.after.data();
     const { before, after } = change;
 
-    
+
     let message;
     if (before.data() === undefined && after.data() !== undefined)
       message = "created";
@@ -387,7 +389,7 @@ function sendToSubscribers(info) {
 
     if (subQuestionId === undefined) {
       //update in subscribers in level group - listen to questions
-      
+
       entityId = questionId;
       listenToLevel = "question";
       dbLevelSubscribers = db.collection("groups").doc(groupId);
@@ -456,12 +458,81 @@ function sendToSubscribers(info) {
               date: new Date(),
               url,
             })
-            .then(() => console.log("add to user", subscriberDB.id,"action:", message))
+            .then(() => console.log("add to user", subscriberDB.id, "action:", message))
             .catch((err) => console.log(err.message));
         });
       })
       .catch((err) => console.log(err.message));
   } catch (err) {
     console.log(err);
+  }
+}
+
+
+// listen to chats
+exports.listenToGroupChats = functions.firestore
+  .document("groups/{groupId}/chat/{chatMassageId}")
+  .onCreate((newMsg, context) => {
+    try {
+      const { groupId, chatMassageId } = context.params;
+      console.log(newMsg.data())
+
+      console.log('start');
+
+      return db.collection('groups')
+        .doc(groupId)
+        .collection('subscribers')
+        .get()
+        .then(subscribersDB => {
+          subscribersDB.forEach(async subscriberDB => {
+
+            const userChatRef = db.collection('users').doc(subscriberDB.id).collection('chat').doc(`${generateChatEntitiyId({ groupId })}`)
+            await db.runTransaction(async t => {
+
+              const msg = await t.get(userChatRef)
+
+              console.log('msg:',newMsg.data())
+
+              const newMsgNumber = msg.data().msgNumber+1;
+              const msgsNotSeen = newMsgNumber - msg.data().msgLastSeen ;
+              console.log('msg number is 22:', newMsgNumber,msgsNotSeen)
+              t.update(userChatRef, {
+                msg:newMsg.data(),
+                msgNumber: newMsgNumber,
+                msgsNotSeen
+
+              });
+            })
+            // await db.collection('users').doc(subscriberDB.id).collection('chat').doc(`${groupId}`)
+            //   .set({
+            //     msg: newMsg.data(),
+            //     date: new Date(),
+            //     msgNumber: 223,
+            //     msgLastSeen: 210,
+            //     msgsNotSeen: 13
+            //   })
+          })
+
+        })
+    } catch (err) {
+      console.log(err)
+    }
+  })
+
+
+function generateChatEntitiyId(ids) {
+  try {
+    const { groupId, questionId, subQuestionId, optionId } = ids;
+    if (groupId === undefined) { throw 'Missing groupId in generateChatEntitiyId' }
+
+
+    let entityChatId = `${groupId}`;
+    if (questionId !== undefined) { entityChatId += `--${questionId}` };
+    if (subQuestionId !== undefined) { entityChatId += `--${subQuestionId}` };
+    if (optionId !== undefined) { entityChatId += `--${optionId}` };
+
+    return entityChatId;
+  } catch (e) {
+    console.error(e)
   }
 }

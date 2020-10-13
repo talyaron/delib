@@ -119,6 +119,23 @@ function getRandomName() {
     return randomEl(adjectives) + randomEl(nouns)
 }
 
+function generateChatEntitiyId(ids) {
+    try {
+        const { groupId, questionId, subQuestionId, optionId } = ids;
+        if (groupId === undefined) { throw 'Missing groupId in generateChatEntitiyId' }
+
+
+        let entityChatId = `${groupId}`;
+        if (questionId !== undefined) { entityChatId += `--${questionId}` };
+        if (subQuestionId !== undefined) { entityChatId += `--${subQuestionId}` };
+        if (optionId !== undefined) { entityChatId += `--${optionId}` };
+
+        return entityChatId;
+    } catch (e) {
+        console.error(e)
+    }
+}
+
 var adjectives = [
     "Happy",
     "adroit",
@@ -381,10 +398,10 @@ function getRandomColor() {
     var letters = '0123456789ABCDEF';
     var color = '#';
     for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
+        color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
-  }
+}
 
 module.exports = {
     Reference,
@@ -399,5 +416,6 @@ module.exports = {
     setLastPage,
     concatenatePath,
     uniqueId,
-    getRandomColor
+    getRandomColor,
+    generateChatEntitiyId
 }

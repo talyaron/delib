@@ -14,6 +14,9 @@ var store = {
     teams: [], //not used?
     lastPage: "", //used to understand where the user was befrore login
     loginType: '',
+    listen:{
+        chatFeed:false
+    },
     questions: {}, //list of questions. stored as {groupId:{questionId:{} }}
     groups: {}, //groups stored as {groupId:{group info}}
     options: [],//options in a given question. stored as subQuestionID:[options] 
@@ -25,6 +28,7 @@ var store = {
     feed: {}, //the feed,
     feed2:[], //new feed system
     feed2Info:{lastEntrance:0}, //used to store last entrence to feed. in miliseconds from 1970
+    chatFeed:[], //used to shoe feed of chats
     showFeed: false,
     numberOfNewMessages: 0,
     subscribed: {}, //subscribed entityes

@@ -7,7 +7,8 @@ import {
 //functions
 import {
 	listenToFeed,
-	listenToFeedLastEntrance
+	listenToFeedLastEntrance,
+	listenToChatFeed
 } from '../firebase/get/get';
 import {
 	getRandomName
@@ -48,7 +49,8 @@ function onAuth() {
 					};
 
 					listenToFeed();
-					listenToFeedLastEntrance()
+					listenToFeedLastEntrance();
+					listenToChatFeed();
 
 					DB.collection('users').doc(user.uid).set(userSimpleObj).then(function () {}).catch(function (error) {
 						console.error('On login, set user to DB;',error.name, error.message)

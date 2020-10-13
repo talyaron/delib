@@ -1,7 +1,7 @@
 import m from 'mithril';
 import { DB } from '../config';
 import store from '../../../data/store';
-import { Reference, concatenatePath, uniqueId } from '../../general';
+import { Reference, concatenatePath, uniqueId, generateChatEntitiyId } from '../../general';
 
 function createGroup(creatorId, title, description) {
 
@@ -266,12 +266,12 @@ function sendMessage({ groupId, questionId, subQuestionId, optionId, user, messa
         if (message) {
 
             DB.doc(ref).collection('chat').add({
-               location, displayName, photoURL, name, uid, message
+                location, displayName, photoURL, name, uid, message
             })
-            .then(()=>{console.log('saved correctly')})
-            .catch(err=>{
-                console.error(err)
-            })
+                .then(() => { console.log('saved correctly') })
+                .catch(err => {
+                    console.error(err)
+                })
         }
 
 
@@ -516,11 +516,16 @@ function subscribersCUD(settings) {
         const { groupId, questionId, subQuestionId, optionId } = settings.vnode.attrs;
         const { subscribe } = settings;
 
-        console.log(groupId, questionId, subQuestionId, optionId, subscribe);
+        // console.log(groupId, questionId, subQuestionId, optionId, subscribe);
+
+
 
         // DB.doc(`groups/${groupId}`).get().then(groupDB=>{console.log(groupDB.data())}
         // ) build path for the enenties subscription collection
         let subscriptionPath = concatenatePath(groupId, questionId, subQuestionId, optionId);
+        let cahtEntitiyId = generateChatEntitiyId({ groupId, questionId, subQuestionId, optionId });
+
+        console.log(cahtEntitiyId)
 
         const { uid, displayName, email, photoURL } = store.user
         subscriptionPath = subscriptionPath + '/subscribers/' + uid;
@@ -531,7 +536,15 @@ function subscribersCUD(settings) {
                 .doc(subscriptionPath)
                 .set({ uid, displayName, email, photoURL })
                 .then(() => {
-                    console.info('User subscribed succsefuly to entity')
+                    console.info('User subscribed succsefuly to entity');
+                    DB.collection('users').doc(uid)
+                        .collection('chat').doc(cahtEntitiyId).set({
+                            msgNumber: 0,
+                            msgLastSeen: 0,
+                            msgsNotSeen: 0
+                        }).catch(e=>{
+                            console.error('Error in saving new chat following on the user' , e)
+                        })
                 })
                 .catch(err => console.error(err))
         } else {

@@ -49,6 +49,7 @@ import Edit from './views/Commons/Edit/Edit';
 import NewGroupPage from './views/Groups/NewGroupPage/NewGroupPage';
 import EditGroupPage from './views/GroupPage/EditGroupPage/EditGroupPage';
 import UnAuthorized from './views/UnAuthorized/UnAuthorized';
+import ChatFeed from './views/ChatFeed/ChatFeed';
 
 import FeedPage from './views/FeedPage/FeedPage';
 
@@ -67,7 +68,8 @@ m.route(root, "/login", {
     "/subquestions/:groupId/:questionId/:subQuestionId": SubQuestionsPage,
     "/edit":Edit,
     '/unauthorized':UnAuthorized,
-    "/feed":FeedPage
+    "/feed":FeedPage,
+    "/chatfeed":ChatFeed
 
 
 })
