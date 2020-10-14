@@ -17,7 +17,7 @@ module.exports = {
             <div class='page page-grid-feed'>
                 <Header title='התכתבויות' />
                 <div class='scroll'>
-                    <div class='feedWrapper'>
+                    <div class='chatFeed__wrapper'>
                         {
                             store.chatFeed.map((message, index) => {
                                 console.log(message)
