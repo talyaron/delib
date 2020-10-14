@@ -1,0 +1,5 @@
+.chatFeedMessage{
+    border-radius: var(--roundBorder);
+    background-color: var(--white);
+    box-shadow: var(--mediumShadow);
+}

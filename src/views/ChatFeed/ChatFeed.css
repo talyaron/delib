@@ -1,0 +1,5 @@
+.page-grid-feed{
+    display: grid;
+    height: 100vh;
+    grid-template-rows: 44px auto 64px;
+}

@@ -60,6 +60,7 @@ m.route(root, "/login", {
     "/logout": Logout,
     "/groups": Groups,
     "/group/:id": GroupPage,
+    "/group-chat/:id":GroupPage,
     "/newgroup": NewGroupPage,
     "/editgroup/:id":EditGroupPage,
     '/question/:groupId/:questionId': Question,

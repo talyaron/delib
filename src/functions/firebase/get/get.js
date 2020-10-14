@@ -546,6 +546,8 @@ function listenToFeed() {
     }
 }
 
+
+
 function listenToFeedLastEntrance() {
     try {
         DB.collection('users').doc(store.user.uid).collection('feedLastEntrence').doc('info')
@@ -621,6 +623,7 @@ function listenToChatFeed() {
 
         if (store.listen.chatFeed == false) {
             DB.collection('users').doc(store.user.uid).collection('chat')
+            .orderBy("date", "asc")
                 .onSnapshot(chatDB => {
                     const messages = [];
                     chatDB.forEach(newMessageDB => {
@@ -628,6 +631,7 @@ function listenToChatFeed() {
                     })
 
                     store.chatFeed = messages;
+                    console.log(store.chatFeed)
                     m.redraw()
                 })
 

@@ -496,7 +496,9 @@ exports.listenToGroupChats = functions.firestore
 
             return userChatRef.update({ 
               msgNumber: FieldValue.increment(1), 
-              msgDifference: FieldValue.increment(1)
+              msgDifference: FieldValue.increment(1),
+              msg: newMsg.data(),
+              date:new Date()
             })
 
             // return db.runTransaction(async t => {

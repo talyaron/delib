@@ -17,31 +17,33 @@ import Chat from '../Commons/Chat/Chat';
 //functions
 import { createQuestion } from '../../functions/firebase/set/set';
 import { getQuestions, getGroupDetails } from '../../functions/firebase/get/get';
-import { setLastPage } from '../../functions/general';
+import { setLastPage,getIsChat } from '../../functions/general';
 
 module.exports = {
+
     oninit: vnode => {
         setLastPage();
+
+        
+        
 
         vnode.state = {
             add: {
                 title: '',
                 description: ''
             },
-            subPage: 'main',
+            subPage: getIsChat()?'chat':'main',
             isAdmin: false,
             edit: true,
             addQuestion: false,
             questions: [],
             unsubscribe: {},
             groupName: get(store, 'groups[' + vnode.attrs.id + '].title', 'שם הקבוצה')
+            
         }
-
+        
         getQuestions('on', vnode.attrs.id, vnode);
         vnode.state.undbGroupDetails = getGroupDetails(vnode.attrs.id, vnode);
-    },
-    oncreate: vnode => {
-
     },
     onbeforeupdate: vnode => {
         //check is admin
@@ -96,7 +98,13 @@ module.exports = {
                             }
                         </div>
                         :
-                        <Chat entity='group' ids={{ groupId: vnode.attrs.id }} />
+                        <Chat 
+                        entity='group'
+                        topic='קבוצה'
+                        ids={{ groupId: vnode.attrs.id }}
+                        title={vnode.state.groupName}
+                        url={m.route.get()}
+                     />
                     }
                     {vnode.state.subPage == 'main' ?
                         <div class='fav' onclick={() => { toggleAddQuestion(vnode) }} >

@@ -1,3 +1,4 @@
+import { truncate } from 'lodash';
 import m from 'mithril';
 import store from '../data/store';
 
@@ -133,6 +134,23 @@ function generateChatEntitiyId(ids) {
         return entityChatId;
     } catch (e) {
         console.error(e)
+    }
+}
+
+function getIsChat() {
+
+    //in the address add <entity>-chat for chat page
+    try {
+        const routeFirstElement = (m.route.get().split('/')[1]);
+        let isChat = routeFirstElement.split('-')[1];
+        if (isChat === 'chat') {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (e) {
+        console.error(e)
+        return false;
     }
 }
 
@@ -417,5 +435,6 @@ module.exports = {
     concatenatePath,
     uniqueId,
     getRandomColor,
-    generateChatEntitiyId
+    generateChatEntitiyId,
+    getIsChat
 }

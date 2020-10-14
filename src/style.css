@@ -303,3 +303,13 @@ body {
     font-family: 'Varela Round', sans-serif;
     opacity: 0.75; */
 }
+
+.feedWrapper{
+    max-width: var(--maxWidthOnPC);
+    display: flex;
+    flex-direction: column;
+}
+
+.scroll{
+    overflow-y: auto;
+}

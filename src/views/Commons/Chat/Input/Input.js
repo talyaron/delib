@@ -16,9 +16,10 @@ module.exports = {
     },
     view:vnode=>{
         const {groupId, questionId, subQuestionId, optionId} = vnode.attrs.ids;
+        const {title, entity, topic, url} = vnode.attrs;
         return(
             <form class='input'>
-                <div class='input__send' onclick={()=>handleSend({groupId, questionId, subQuestionId, optionId, user:store.user, message:vnode.state.message})}>
+                <div class='input__send' onclick={()=>handleSend({title, entity, topic, url, groupId, questionId, subQuestionId, optionId, user:store.user, message:vnode.state.message, vnode})}>
                     <img src='img/send-24px.svg' alt='send' />
                 </div>
                 <textarea onkeyup={e=>{

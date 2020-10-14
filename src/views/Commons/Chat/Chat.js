@@ -8,7 +8,7 @@ import Input from './Input/Input';
 module.exports = {
     view: vnode => {
 
-        const {ids} = vnode.attrs;
+        const {ids, title, entity, topic, url} = vnode.attrs;
         return (
             <div class='chat'>
                 <div class='chatWrapper'>
@@ -24,7 +24,7 @@ module.exports = {
                     <Message />
                     <Message />
                 </div>
-                <Input ids={ids}/>
+                <Input ids={ids} entity={entity} title={title} name={entity} topic={topic} url={url}/>
             </div>
         )
     }

@@ -238,9 +238,10 @@ function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like) 
         });
 }
 
-function sendMessage({ groupId, questionId, subQuestionId, optionId, user, message }) {
+function sendMessage({ groupId, questionId, subQuestionId, optionId, user, message, vnode, title, entity, topic, url }) {
     try {
-        console.log(groupId, questionId, subQuestionId, optionId, user, message)
+
+
         const { displayName, photoURL, name, uid } = user;
 
         let ref = 'groups', location = {}
@@ -263,10 +264,12 @@ function sendMessage({ groupId, questionId, subQuestionId, optionId, user, messa
             location.optionId = optionId;
         }
 
+        console.log(groupId, questionId, subQuestionId, optionId, user, message, vnode, title, entity, topic, url)
+
         if (message) {
 
             DB.doc(ref).collection('chat').add({
-                location, displayName, photoURL, name, uid, message
+                location, displayName, photoURL, name, uid, message, title, entity, topic, url
             })
                 .then(() => { console.log('saved correctly') })
                 .catch(err => {
@@ -513,7 +516,7 @@ function updateOption(vnode) {
 }
 function subscribeUser(settings) {
     try {
-        const { groupId, questionId, subQuestionId, optionId } = settings.vnode.attrs;
+        const { groupId, questionId, subQuestionId, optionId, title, entityType } = settings.vnode.attrs;
         const { subscribe } = settings;
 
         // console.log(groupId, questionId, subQuestionId, optionId, subscribe);
@@ -539,11 +542,11 @@ function subscribeUser(settings) {
                 .doc(subscriptionPath)
                 .collection('subscribers')
                 .doc(uid)
-                .set({ uid, displayName, email, photoURL })
+                .set({ user: { uid, displayName, email, photoURL } }) //add the user to subscribers
                 .then(() => {
                     console.info('User subscribed succsefuly to entity');
                     DB.collection('users').doc(uid)
-                        .collection('chat').doc(chatEntityId).set({
+                        .collection('chat').doc(chatEntityId).set({  //add initial counter
                             msgNumber: 0,
                             msgLastSeen: 0,
                             msgDifference: 0
@@ -562,7 +565,7 @@ function subscribeUser(settings) {
                     DB.collection('users').doc(uid)
                         .collection('chat').doc(chatEntityId).delete().then(() => {
                             console.info('User unsubscribed succsefuly from entity')
-                        }).catch(e=>{
+                        }).catch(e => {
                             console.error(e)
                         })
 
