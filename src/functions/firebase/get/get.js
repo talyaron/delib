@@ -625,12 +625,19 @@ function listenToChatFeed() {
             DB.collection('users').doc(store.user.uid).collection('chat')
             .orderBy("date", "asc")
                 .onSnapshot(chatDB => {
+                    let unreadMessagesCouner = 0;
                     const messages = [];
                     chatDB.forEach(newMessageDB => {
                         messages.push(newMessageDB.data());
+                        console.log(newMessageDB.data().msgDifference)
+                        unreadMessagesCouner += newMessageDB.data().msgDifference;
                     })
 
+                   
                     store.chatFeed = messages;
+                   
+                    store.chatFeedCounter = unreadMessagesCouner;
+                    console.log(store.chatFeedCounter)
                     console.log(store.chatFeed)
                     m.redraw()
                 })
