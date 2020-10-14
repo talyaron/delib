@@ -546,7 +546,7 @@ function subscribeUser(settings) {
                         .collection('chat').doc(chatEntityId).set({
                             msgNumber: 0,
                             msgLastSeen: 0,
-                            msgsNotSeen: 0
+                            msgDifference: 0
                         }).catch(e => {
                             console.error('Error in saving new chat following on the user', e)
                         })

@@ -494,7 +494,10 @@ exports.listenToGroupChats = functions.firestore
 
             const userChatRef = db.collection('users').doc(subscriberDB.id).collection('chat').doc(`${generateChatEntitiyId({ groupId })}`);
 
-            return userChatRef.update({ msgNumber: FieldValue.increment(1) })
+            return userChatRef.update({ 
+              msgNumber: FieldValue.increment(1), 
+              msgDifference: FieldValue.increment(1)
+            })
 
             // return db.runTransaction(async t => {
 
