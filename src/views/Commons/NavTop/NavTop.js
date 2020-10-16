@@ -2,10 +2,15 @@ import Mithril from "mithril";
 import m from 'mithril';
 import './NavTop.css';
 
+//functions
+import {zeroMessages} from '../../../functions/firebase/set/set';
+
 module.exports = {
     
     view: vnode => {
-        let  { level, current, pvs, mainUrl, chatUrl } = vnode.attrs;
+        let  { level, current, pvs, mainUrl, chatUrl, ids} = vnode.attrs;
+     
+        
         return (
             <div class='navTop'>
                 <div 
@@ -16,7 +21,7 @@ module.exports = {
                     </div>
                 <div 
                 class={current=='chat'?'navTop__btn navTop__btn--selected':'navTop__btn'}
-                onclick={()=>{m.route.set(chatUrl); pvs.subPage='chat'}}
+                onclick={()=>{m.route.set(chatUrl); pvs.subPage='chat'; zeroMessages(ids)}}
                 >
                     שיחה
                     </div>

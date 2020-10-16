@@ -23,14 +23,14 @@ module.exports = {
             feedLength:store.feed2.length
         };
 
-        console.log(store.feed2)
+       
     },
     oncreate:vnode=>{
         window.scrollTo(0,document.body.scrollHeight);
 
     },
     onbeforeupdate:vnode=>{
-        console.log(store.feed2)
+      
         const feedTemp = sortAndOrderFeed(store.feed2);
        
 

@@ -12,7 +12,7 @@ function getUserGroups(onOff, userId) {
     try {
         if (onOff == "on") {
             try {
-                console.log('userId', userId)
+         
                 DB
                     .collection("users")
                     .doc(userId)
@@ -139,7 +139,7 @@ function getGroupDetails(groupId, vnode) {
 
             });
     } catch (err) {
-        console.log(err)
+        console.error(err)
     }
 }
 
@@ -505,7 +505,7 @@ function listenToSubscription(path) {
                 .onSnapshot(subscriberDB => {
 
                     set(store.subscribe, `[${path}]`, subscriberDB.exists);
-                    console.log(store.subscribe)
+                
                     m.redraw();
 
                     if (subscriberDB.exists)
@@ -629,7 +629,7 @@ function listenToChatFeed() {
                     const messages = [];
                     chatDB.forEach(newMessageDB => {
                         messages.push(newMessageDB.data());
-                        console.log(newMessageDB.data().msgDifference)
+                 
                         unreadMessagesCouner += newMessageDB.data().msgDifference;
                     })
 
@@ -637,8 +637,7 @@ function listenToChatFeed() {
                     store.chatFeed = messages;
                    
                     store.chatFeedCounter = unreadMessagesCouner;
-                    console.log(store.chatFeedCounter)
-                    console.log(store.chatFeed)
+              
                     m.redraw()
                 })
 

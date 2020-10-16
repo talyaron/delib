@@ -60,9 +60,9 @@ module.exports = {
             if (groupId !== undefined) {
 
                 await listenToSubscription(vnode.state.path);
-                console.log('store.subscribe', vnode.state.path, JSON.stringify(store.subscribe))
+             
                 vnode.state.subscribed = get(store.subscribe, `[${vnode.state.path}]`, false)
-                console.log('vnode.state.subscribed',vnode.state.subscribed)
+            
                 
             }
         })();

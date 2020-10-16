@@ -579,6 +579,17 @@ function subscribeUser(settings) {
 
 }
 
+function zeroMessages(ids) {
+    try {
+        console.log(ids)
+        const { groupId, questionId, subQuestionId, optionId } = ids;
+        const path = generateChatEntitiyId(ids)
+        DB.collection('users').doc(store.user.uid).collection('chat').doc(path).update({msgDifference:0}).catch(e => console.error(e))
+    } catch (e) {
+        console.error(e)
+    }
+}
+
 module.exports = {
     updateOption,
     addToFeed,
@@ -601,5 +612,6 @@ module.exports = {
     updateSubQuestionProcess,
     updateSubQuestionOrderBy,
     subscribeUser,
-    setToFeedLastEntrance
+    setToFeedLastEntrance,
+    zeroMessages
 };

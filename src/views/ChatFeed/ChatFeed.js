@@ -20,7 +20,7 @@ module.exports = {
                     <div class='chatFeed__wrapper'>
                         {
                             store.chatFeed.map((message, index) => {
-                                console.log(message)
+                            
                                 return <ChatFeedMessage message={message} key={index} />
                             })
                         }
