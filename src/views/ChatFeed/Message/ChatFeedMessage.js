@@ -15,9 +15,9 @@ module.exports = {
                     <img src={msg.photoURL} alt='user'></img>
                 </div>
                 <div class='chatFeedMessage__texts'>
-                    <div class='chatFeedMessage__username'>{msg.displayName}</div>
+        <div class='chatFeedMessage__username'>ב{msg.topic} {msg.title} {msg.displayName} כתב/ה</div>
                     <div class='chatFeedMessage__text'>
-                        <div class='chatFeedMessage__unRead'>{message.msgDifference}</div>
+                        {message.msgDifference>0?<div class='chatFeedMessage__unRead'>{message.msgDifference}</div>:<div />}
                         <div class='chatFeedMessage__textMain'>{msg.message}</div>
                     </div>
                     <div class='chatFeedMessage__time'>12:34</div>
