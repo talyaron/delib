@@ -683,6 +683,9 @@ function listenToChat(ids) {
                     }
                     
                 })
+               
+                store.chat[path] = store.chat[path].sort((a,b)=> a.createdTime.seconds - b.createdTime.seconds)
+                m.redraw();
                 console.log(store.chat);
                 console.log(store.chatLastRead)
 

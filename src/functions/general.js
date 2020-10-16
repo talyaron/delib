@@ -422,6 +422,16 @@ function getRandomColor() {
     return color;
 }
 
+function getRandomColorDark(){
+    var letters = '56789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 11)];
+    }
+    return color;
+    
+}
+
 function createIds(ids){
    
     const outpuIds = {}
@@ -449,6 +459,7 @@ module.exports = {
     concatenatePath,
     uniqueId,
     getRandomColor,
+    getRandomColorDark,
     generateChatEntitiyId,
     getIsChat,
     createIds

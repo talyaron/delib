@@ -12,6 +12,20 @@ import {concatenatePath} from '../../../functions/general'
 import store from '../../../data/store';
 
 module.exports = {
+    oncreate:vnode=>{
+        const chatWrapper = vnode.dom.children[0];
+       
+        chatWrapper.scrollTo(0, chatWrapper.scrollHeight)
+          
+    },
+    onupdate:vnode=>{
+        const chatWrapper = vnode.dom.children[0];
+       
+        chatWrapper.scrollTo({
+            top: chatWrapper.scrollHeight,
+            left: 0,
+            behavior: 'smooth'});
+    },
     view: vnode => {
 
         const {ids, title, entity, topic, url} = vnode.attrs;
@@ -27,7 +41,7 @@ module.exports = {
                 <div class='chatWrapper'>
                     {
                         store.chat[path].map((message, index)=>{
-                            console.log(message)
+                        
                             return(<Message key={index} message={message} me={message.uid === store.user.uid}/>)
                         })
                     }

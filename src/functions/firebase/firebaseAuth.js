@@ -11,7 +11,7 @@ import {
 	listenToChatFeed
 } from '../firebase/get/get';
 import {
-	getRandomName
+	getRandomColorDark
 } from '../general';
 import {
 	getSubscriptions
@@ -45,7 +45,8 @@ function onAuth() {
 						uid: store.user.uid,
 						name: store.user.name,
 						email: store.user.email,
-						isAnonymous: false
+						isAnonymous: false,
+						userColor:getRandomColorDark()
 					};
 
 					listenToFeed();
@@ -65,16 +66,20 @@ function onAuth() {
 
 					console.log('user is anonymous');
 					console.log(store.user);
-					// let lastPage = sessionStorage.getItem('lastPage') || '/login'
+				
 					if (store.userTempName) {
-						console.log('store.userTempName', store.userTempName);
+
+						console.log('store.userTempName')
+						
 						store.user.name = store.userTempName;
+						store.user.userColor = getRandomColorDark()
 						console.log(store.user.name);
 
 						let userSimpleObj = {
 							uid: store.user.uid,
 							name: store.user.name,
-							isAnonymous: true
+							isAnonymous: true,
+							userColor:store.user.userColor
 						};
 						DB.collection('users').doc(user.uid).set(userSimpleObj)
 							.then(function () {})
@@ -83,6 +88,8 @@ function onAuth() {
 								console.error('Error writing User: ', error);
 							});
 					} else {
+
+						console.log('getAnonymousName')
 						getAnonymousName(store.user.uid);
 					}
 
@@ -111,6 +118,7 @@ module.exports = {
 function getAnonymousName(userId) {
 	DB.collection('users').doc(userId).get().then((userDB) => {
 		store.user.name = userDB.data().name;
+		store.user.userColor = userDB.data().userColor || 'teal'
 		console.log('uid:', userDB.data().uid);
 		console.log('store.user.name', store.user.name);
 		m.redraw();

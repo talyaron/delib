@@ -242,7 +242,9 @@ function sendMessage({ groupId, questionId, subQuestionId, optionId, user, messa
     try {
 
 
-        const { displayName, photoURL, name, uid } = user;
+        let { displayName, photoURL, name, uid, userColor } = store.user;
+        console.log(store.user)
+        if(!userColor) {userColor = 'teal'}
 
         let ref = 'groups', location = {}
         if (groupId != undefined) {
@@ -272,7 +274,7 @@ function sendMessage({ groupId, questionId, subQuestionId, optionId, user, messa
         if (message) {
 
             DB.doc(ref).collection('chat').add({
-                location, displayName, photoURL, name, uid, message, title, entity, topic, url, ids,
+                location, displayName, photoURL, name, uid, message, title, entity, topic, url, ids,userColor,
                 createdTime: firebase
                     .firestore
                     .FieldValue
