@@ -12,6 +12,9 @@ import {concatenatePath} from '../../../functions/general'
 import store from '../../../data/store';
 
 module.exports = {
+    oninit:vnode=>{
+        vnode.state = {userUid:''}
+    },
     oncreate:vnode=>{
         const chatWrapper = vnode.dom.children[0];
        
@@ -41,8 +44,11 @@ module.exports = {
                 <div class='chatWrapper'>
                     {
                         store.chat[path].map((message, index)=>{
+
+                            let isSameUser = message.uid == vnode.state.userUid;
+                            vnode.state.userUid = message.uid;
                         
-                            return(<Message key={index} message={message} me={message.uid === store.user.uid}/>)
+                            return(<Message key={index} message={message} me={message.uid === store.user.uid} isSameUser={isSameUser}/>)
                         })
                     }
                     

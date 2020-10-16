@@ -655,7 +655,7 @@ function listenToChat(ids) {
         const { groupId, questionId, subQuestionId, optionId } = ids;
         if (groupId === undefined) throw new Error('No group id in the ids')
         let path = concatenatePath(groupId, questionId, subQuestionId, optionId);
-        console.log(path)
+      
         const chatPath = path + '/chat';
         let lastRead = new Date('2020-01-01');
 
@@ -667,12 +667,11 @@ function listenToChat(ids) {
             lastRead = store.chatLastRead[path]
         }
 
-        console.log('last read', lastRead)
-
-
+       
         return DB.collection(chatPath)
             .where('createdTime', '>', lastRead)
             .orderBy('createdTime', 'desc')
+            .limit(100)
             .onSnapshot(messagesDB => {
                 messagesDB.docChanges().forEach(function (change) {
                     if (change.type === "added") {
@@ -686,10 +685,7 @@ function listenToChat(ids) {
                
                 store.chat[path] = store.chat[path].sort((a,b)=> a.createdTime.seconds - b.createdTime.seconds)
                 m.redraw();
-                console.log(store.chat);
-                console.log(store.chatLastRead)
-
-
+       
                 
             }, e => {
                 console.error(e)

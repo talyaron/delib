@@ -422,27 +422,42 @@ function getRandomColor() {
     return color;
 }
 
-function getRandomColorDark(){
+function getRandomColorDark() {
     var letters = '56789ABCDEF';
     var color = '#';
     for (var i = 0; i < 6; i++) {
         color += letters[Math.floor(Math.random() * 11)];
     }
     return color;
-    
+
 }
 
-function createIds(ids){
-   
+function createIds(ids) {
+
     const outpuIds = {}
-    for (const id in ids){
-        console.log(id)
-        if(ids[id] !== undefined){
+    for (const id in ids) {
+       
+        if (ids[id] !== undefined) {
             outpuIds[id] = ids[id];
         }
     }
 
     return outpuIds
+}
+
+function timeParse(time) {
+    try {
+       
+        if(Object.prototype.toString.call(time) !== '[object Date]') throw new Error('Expected a Date object but got somthing else', time)
+
+        return (
+            ("0" + time.getHours()).slice(-2) + ":" +
+            ("0" + time.getMinutes()).slice(-2)  
+        )
+           
+    } catch (e) {
+        console.error(e)
+    }
 }
 
 module.exports = {
@@ -462,5 +477,6 @@ module.exports = {
     getRandomColorDark,
     generateChatEntitiyId,
     getIsChat,
-    createIds
+    createIds,
+    timeParse
 }

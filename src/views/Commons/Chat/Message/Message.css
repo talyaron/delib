@@ -12,6 +12,7 @@
 
 .message__user{
     margin-right: 12px;
+    min-width: 40px;
 }
 
 .message__user img{
