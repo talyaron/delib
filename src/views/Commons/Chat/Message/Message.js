@@ -3,18 +3,16 @@ import './Message.css';
 
 module.exports = {
     view: vnode => {
-        const {me} = vnode.attrs;
+        const {me, message} = vnode.attrs;
         return (
             <div class={me==true?'message message--me': 'message'}>
                 <div class='message__user'>
-                    <img src='https://233e5r7tfnv3se11m26d4k8g-wpengine.netdna-ssl.com/wp-content/uploads/2017/07/shutterstock_141020407.jpg' alt='user'></img>
+                    <img src={message.photoURL} alt='user'></img>
                 </div>
                 <div class='message__texts'>
-                    <div class='message__username'>username</div>
+                    <div class='message__username'>{message.displayName}</div>
                     <div class='message__text'>
-                        bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla
-                        bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla
-                        bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla
+                        {message.message}
                     </div>
                     <div class='message__time'>12:34</div>
                 </div>

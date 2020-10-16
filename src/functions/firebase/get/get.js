@@ -3,7 +3,8 @@ import { DB } from "../config";
 import store from "../../../data/store";
 
 //functions
-import { set } from 'lodash'
+import { orderBy, set } from 'lodash';
+import { concatenatePath } from '../../general'
 
 var unsubscribe = {};
 
@@ -12,7 +13,7 @@ function getUserGroups(onOff, userId) {
     try {
         if (onOff == "on") {
             try {
-         
+
                 DB
                     .collection("users")
                     .doc(userId)
@@ -505,7 +506,7 @@ function listenToSubscription(path) {
                 .onSnapshot(subscriberDB => {
 
                     set(store.subscribe, `[${path}]`, subscriberDB.exists);
-                
+
                     m.redraw();
 
                     if (subscriberDB.exists)
@@ -623,27 +624,73 @@ function listenToChatFeed() {
 
         if (store.listen.chatFeed == false) {
             DB.collection('users').doc(store.user.uid).collection('chat')
-            .orderBy("date", "asc")
+                .orderBy("date", "asc")
                 .onSnapshot(chatDB => {
                     let unreadMessagesCouner = 0;
                     const messages = [];
                     chatDB.forEach(newMessageDB => {
                         messages.push(newMessageDB.data());
-                 
+
                         unreadMessagesCouner += newMessageDB.data().msgDifference;
                     })
 
-                   
+
                     store.chatFeed = messages;
-                   
+
                     store.chatFeedCounter = unreadMessagesCouner;
-              
+
                     m.redraw()
                 })
 
             store.listen.chatFeed = true;
         }
 
+    } catch (e) {
+        console.error(e)
+    }
+}
+
+function listenToChat(ids) {
+    try {
+        const { groupId, questionId, subQuestionId, optionId } = ids;
+        if (groupId === undefined) throw new Error('No group id in the ids')
+        let path = concatenatePath(groupId, questionId, subQuestionId, optionId);
+        console.log(path)
+        const chatPath = path + '/chat';
+        let lastRead = new Date('2020-01-01');
+
+        if (!(path in store.chatLastRead)) {
+            store.chat[path] = [];
+            store.chatLastRead[path]
+
+        } else {
+            lastRead = store.chatLastRead[path]
+        }
+
+        console.log('last read', lastRead)
+
+
+        return DB.collection(chatPath)
+            .where('createdTime', '>', lastRead)
+            .orderBy('createdTime', 'desc')
+            .onSnapshot(messagesDB => {
+                messagesDB.docChanges().forEach(function (change) {
+                    if (change.type === "added") {
+                      
+                        if (!(path in store.chat)) { store.chat[path] = [] }
+                        store.chat[path].push(change.doc.data());
+                        store.chatLastRead = change.doc.data().createdTime;
+                    }
+                    
+                })
+                console.log(store.chat);
+                console.log(store.chatLastRead)
+
+
+                
+            }, e => {
+                console.error(e)
+            })
     } catch (e) {
         console.error(e)
     }
@@ -665,6 +712,7 @@ module.exports = {
     getOptionDetails,
     getMessages,
     listenToFeed,
+    listenToChat,
     listenToChatFeed,
     listenToFeedLastEntrance,
     listenToSubscription

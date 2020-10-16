@@ -272,7 +272,11 @@ function sendMessage({ groupId, questionId, subQuestionId, optionId, user, messa
         if (message) {
 
             DB.doc(ref).collection('chat').add({
-                location, displayName, photoURL, name, uid, message, title, entity, topic, url, ids
+                location, displayName, photoURL, name, uid, message, title, entity, topic, url, ids,
+                createdTime: firebase
+                    .firestore
+                    .FieldValue
+                    .serverTimestamp()
             })
                 .then(() => { console.log('saved correctly') })
                 .catch(err => {
@@ -585,7 +589,7 @@ function subscribeUser(settings) {
 function zeroMessages(ids) {
     try {
         if (ids === undefined) throw new Error('No ids were in the message')
-      
+
         const path = generateChatEntitiyId(ids)
         DB.collection('users').doc(store.user.uid).collection('chat').doc(path).update({ msgDifference: 0 }).catch(e => console.error(e))
     } catch (e) {

@@ -28,7 +28,9 @@ var store = {
     feed: {}, //the feed,
     feed2:[], //new feed system
     feed2Info:{lastEntrance:0}, //used to store last entrence to feed. in miliseconds from 1970
-    chatFeed:[], //used to shoe feed of chats
+    chatFeed:[], //used to show feed of chats
+    chat:{}, //used to store chats {chatId:[messages]}
+    chatLastRead:{}, //used to store last read of a message
     chatFeedCounter:0,
     showFeed: false,
     numberOfNewMessages: 0,

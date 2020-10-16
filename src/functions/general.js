@@ -121,6 +121,7 @@ function getRandomName() {
 }
 
 function generateChatEntitiyId(ids) {
+    //generate unique id from ids 
     try {
         const { groupId, questionId, subQuestionId, optionId } = ids;
         if (groupId === undefined) { throw 'Missing groupId in generateChatEntitiyId' }
@@ -404,7 +405,7 @@ function concatenatePath(groupId, questionId, subQuestionId, optionId) {
 
 function uniqueId() {
 
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    return 'xxxxxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
     });

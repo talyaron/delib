@@ -16,7 +16,7 @@ import Chat from '../Commons/Chat/Chat';
 
 //functions
 import { createQuestion } from '../../functions/firebase/set/set';
-import { getQuestions, getGroupDetails } from '../../functions/firebase/get/get';
+import { getQuestions, getGroupDetails,listenToChat } from '../../functions/firebase/get/get';
 import { setLastPage,getIsChat } from '../../functions/general';
 
 module.exports = {
@@ -44,6 +44,8 @@ module.exports = {
         
         getQuestions('on', vnode.attrs.id, vnode);
         vnode.state.undbGroupDetails = getGroupDetails(vnode.attrs.id, vnode);
+
+        vnode.state.unsubscribe.chat =  listenToChat({groupId:vnode.attrs.id})
     },
     onbeforeupdate: vnode => {
         //check is admin
@@ -60,7 +62,7 @@ module.exports = {
         }
         vnode.state.questions = questionsArray;
 
-        
+
     },
     onupdate: vnode => {
 
@@ -68,6 +70,7 @@ module.exports = {
     onremove: vnode => {
         getQuestions('off', vnode.attrs.id, vnode);
         vnode.state.undbGroupDetails();
+        vnode.state.unsubscribe.chat();
     },
     view: vnode => {
 
