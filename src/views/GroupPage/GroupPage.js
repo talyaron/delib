@@ -59,6 +59,8 @@ module.exports = {
             questionsArray.push(store.questions[vnode.attrs.id][i]);
         }
         vnode.state.questions = questionsArray;
+
+        
     },
     onupdate: vnode => {
 

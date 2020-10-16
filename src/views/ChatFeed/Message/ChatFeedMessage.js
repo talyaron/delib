@@ -2,6 +2,10 @@ import m from 'mithril';
 import { messagesShow } from '../../../data/store';
 import './ChatFeedMessage.css';
 
+//functions
+
+import {zeroMessages} from '../../../functions/firebase/set/set';
+
 
 
 module.exports = {
@@ -10,7 +14,7 @@ module.exports = {
         const { msg } = message;
 
         return (
-            <div class='chatFeedMessage' onclick={() => { m.route.set(msg.url) }}>
+            <div class='chatFeedMessage' onclick={() => { zeroMessages(msg.ids);m.route.set(msg.url) }}>
                 <div class='chatFeedMessage__user'>
                     <img src={msg.photoURL} alt='user'></img>
                 </div>

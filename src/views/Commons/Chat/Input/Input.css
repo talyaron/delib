@@ -23,6 +23,7 @@
     flex-direction: column;
     justify-content: center;
     text-align: center;
+    border:none;
 }
 
 .input__send:hover, .input__send:active{

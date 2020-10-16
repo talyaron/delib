@@ -1,7 +1,7 @@
 import m from 'mithril';
 import { DB } from '../config';
 import store from '../../../data/store';
-import { Reference, concatenatePath, uniqueId, generateChatEntitiyId } from '../../general';
+import { Reference, concatenatePath, uniqueId, generateChatEntitiyId, createIds } from '../../general';
 
 function createGroup(creatorId, title, description) {
 
@@ -264,12 +264,15 @@ function sendMessage({ groupId, questionId, subQuestionId, optionId, user, messa
             location.optionId = optionId;
         }
 
-        console.log(groupId, questionId, subQuestionId, optionId, user, message, vnode, title, entity, topic, url)
+
+        let ids = { groupId, questionId, subQuestionId, optionId }
+        ids = createIds(ids)
+        console.log('ids', ids)
 
         if (message) {
 
             DB.doc(ref).collection('chat').add({
-                location, displayName, photoURL, name, uid, message, title, entity, topic, url
+                location, displayName, photoURL, name, uid, message, title, entity, topic, url, ids
             })
                 .then(() => { console.log('saved correctly') })
                 .catch(err => {
@@ -581,10 +584,10 @@ function subscribeUser(settings) {
 
 function zeroMessages(ids) {
     try {
-        console.log(ids)
-        const { groupId, questionId, subQuestionId, optionId } = ids;
+        if (ids === undefined) throw new Error('No ids were in the message')
+      
         const path = generateChatEntitiyId(ids)
-        DB.collection('users').doc(store.user.uid).collection('chat').doc(path).update({msgDifference:0}).catch(e => console.error(e))
+        DB.collection('users').doc(store.user.uid).collection('chat').doc(path).update({ msgDifference: 0 }).catch(e => console.error(e))
     } catch (e) {
         console.error(e)
     }

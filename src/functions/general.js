@@ -421,6 +421,19 @@ function getRandomColor() {
     return color;
 }
 
+function createIds(ids){
+   
+    const outpuIds = {}
+    for (const id in ids){
+        console.log(id)
+        if(ids[id] !== undefined){
+            outpuIds[id] = ids[id];
+        }
+    }
+
+    return outpuIds
+}
+
 module.exports = {
     Reference,
     createRefString,
@@ -436,5 +449,6 @@ module.exports = {
     uniqueId,
     getRandomColor,
     generateChatEntitiyId,
-    getIsChat
+    getIsChat,
+    createIds
 }
