@@ -211,7 +211,7 @@ body {
 }
 
 .fav {
-    background: var(--accent);
+    background: var(--primary);
     width: 60px;
     height: 60px;
     display: flex;

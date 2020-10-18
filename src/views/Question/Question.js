@@ -79,7 +79,7 @@ module.exports = {
 
     },
     oncreate: vnode => {
-     
+
         // setWrapperFromFooter('questionFooter', 'questionWrapperAll');
         if (vnode.state.callDB) {
             //subscribe to subQuestions
@@ -99,7 +99,7 @@ module.exports = {
         }
 
     },
-   
+
     onremove: vnode => {
         if (typeof vnode.state.unsbscribe.subQuestions === 'function') {
             vnode
@@ -141,8 +141,9 @@ module.exports = {
                                 .state
                                 .subQuestions
                                 .map((subQuestion, index) => {
-
+                                    console.log(subQuestion)
                                     return (<SubQuestionSolution
+                                        key={index}
                                         groupId={vnode.attrs.groupId}
                                         questionId={vnode.attrs.questionId}
                                         subQuestionId={subQuestion.id}

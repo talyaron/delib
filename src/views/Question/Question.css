@@ -62,7 +62,7 @@
 }
 
 .questionSection {
-    box-shadow: 1px 1px 2px #00000099;
+   
     border-radius: 10px;
     padding-bottom: 9px;
     margin-top: 17px;
@@ -70,6 +70,10 @@
 
 .questionSection--alone{
     margin-top: 70px;
+}
+
+.questionSection>h1{
+    font-size: var(--size15);
 }
 
 

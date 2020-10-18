@@ -66,16 +66,16 @@ module.exports = {
 	},
 	view: vnode => {
 
-		const {groupId, questionId, subQuestionId} = vnode.attrs;
-		console.log(concatenateURL(groupId, questionId, subQuestionId));
+		const {groupId, questionId, subQuestionId, title} = vnode.attrs;
+	
 
 		const options = get(store, `options[${vnode.attrs.subQuestionId}]`, []);
 		const option = options.sort((b,a)=>a.consensusPrecentage - b.consensusPrecentage)[0]
-		console.log(option)
+	
 		if(option !== undefined){
 		return (
 			<div class='subQuestionSolution' onclick={()=>{m.route.set(concatenateURL(groupId, questionId, subQuestionId))}}>
-				<h1>{option.subQuestionTitle}</h1>
+				<h1>{title}</h1>
 				<p>{option.title}</p>
 				<hr></hr>
 				<div class='subQuestionSolution__info'>

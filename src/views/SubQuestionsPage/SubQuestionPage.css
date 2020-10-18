@@ -32,4 +32,5 @@
 
 .fav__subQuestion{
     bottom: 115px;
+    right: calc(50vw - 336px);
 }

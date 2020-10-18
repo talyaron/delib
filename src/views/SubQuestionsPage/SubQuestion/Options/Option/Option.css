@@ -50,6 +50,11 @@
     }
 }
 
+.optionCard hr{
+    border: 1px solid #0000000d;
+    width: 100%;
+}
+
 .cardTitle>input {
     width: 95%;
     box-shadow: inset -2px 2px 4px #00000077;

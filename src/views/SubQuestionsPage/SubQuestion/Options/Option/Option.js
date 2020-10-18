@@ -267,6 +267,7 @@ module.exports = {
           </div>
         </div>
         {/* options information panel */}
+        <hr></hr>
         <div class="optionCard__info">
           <div class="optionLikes">
             <img src="img/icons8-user-groups-24.png" />
