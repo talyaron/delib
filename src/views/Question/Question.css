@@ -94,6 +94,10 @@
     grid-template-columns: repeat(2, 1fr);
 }
 
+.subQuestionsWrapper >h1{
+    font-size: var(--size15);
+}
+
 @media only screen and (max-width: 900px){
     .subQuestionsWrapper{
      

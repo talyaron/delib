@@ -7,7 +7,7 @@ import settings from "../../data/settings";
 
 //components
 
-import SubQuestion from "../Question/SubQuestions/SubQuestion";
+import SubQuestion from "./SubQuestion/SubQuestion";
 import Modal from "../Commons/Modal/Modal";
 import Spinner from "../Commons/Spinner/Spinner";
 import Header from '../Commons/Header/Header';

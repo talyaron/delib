@@ -403,6 +403,33 @@ function concatenatePath(groupId, questionId, subQuestionId, optionId) {
     }
 }
 
+function concatenateURL(groupId, questionId, subQuestionId, optionId) {
+    try {
+        let subscriptionPath = 'groups/'
+        if (groupId !== undefined) {
+            subscriptionPath = 'group/' + groupId;
+            if (questionId !== undefined) {
+                subscriptionPath = `question/${groupId}/${questionId}`;
+                if (subQuestionId !== undefined) {
+                    subscriptionPath = `/subquestions/${groupId}/${questionId}/${subQuestionId}`;
+                    // if (optionId !== undefined) {
+                    //     subscriptionPath += `/options/${optionId}`
+                    // }
+                }
+            }
+            return subscriptionPath
+        } else {
+            return '/groups'
+
+        }
+
+
+    } catch (err) {
+        console.error(err);
+        return undefined;
+    }
+}
+
 function uniqueId() {
 
     return 'xxxxxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -436,7 +463,7 @@ function createIds(ids) {
 
     const outpuIds = {}
     for (const id in ids) {
-       
+
         if (ids[id] !== undefined) {
             outpuIds[id] = ids[id];
         }
@@ -447,14 +474,14 @@ function createIds(ids) {
 
 function timeParse(time) {
     try {
-       
-        if(Object.prototype.toString.call(time) !== '[object Date]') throw new Error('Expected a Date object but got somthing else', time)
+
+        if (Object.prototype.toString.call(time) !== '[object Date]') throw new Error('Expected a Date object but got somthing else', time)
 
         return (
             ("0" + time.getHours()).slice(-2) + ":" +
-            ("0" + time.getMinutes()).slice(-2)  
+            ("0" + time.getMinutes()).slice(-2)
         )
-           
+
     } catch (e) {
         console.error(e)
     }
@@ -472,6 +499,7 @@ module.exports = {
     loginIfNotRegisterd,
     setLastPage,
     concatenatePath,
+    concatenateURL,
     uniqueId,
     getRandomColor,
     getRandomColorDark,

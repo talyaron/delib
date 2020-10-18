@@ -4,7 +4,7 @@ import m from 'mithril';
 import './Question.css';
 import Header from '../Commons/Header/Header';
 import Feed from '../Commons/Feed/Feed';
-import SubQuestion from './SubQuestions/SubQuestion';
+import SubQuestionSolution from './SubQuestionsSolution/SubQuestionSolution';
 import Spinner from '../Commons/Spinner/Spinner';
 import Description from './Description/Description';
 // import Modal from '../Commons/Modal/Modal';
@@ -135,15 +135,14 @@ module.exports = {
                         questionId={vnode.attrs.questionId}
                         creatorId={vnode.state.creatorId} />
                     <div class='wrapperSubQuestions' id='questionWrapperAll'>
-
-
                         <div class='subQuestionsWrapper'>
+                            <h1>תת שאלות</h1>
                             {vnode
                                 .state
                                 .subQuestions
                                 .map((subQuestion, index) => {
 
-                                    return (<SubQuestion
+                                    return (<SubQuestionSolution
                                         groupId={vnode.attrs.groupId}
                                         questionId={vnode.attrs.questionId}
                                         subQuestionId={subQuestion.id}

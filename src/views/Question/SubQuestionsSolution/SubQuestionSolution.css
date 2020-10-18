@@ -1,0 +1,19 @@
+.subQuestionSolution{
+    border-radius: var(--roundBorder);
+    background-color: var(--white);
+    margin-bottom: var(--regPadding);
+    box-shadow: var(--mediumShadow);
+    padding: var(--regPadding);
+    box-sizing: border-box;
+    cursor: pointer;
+    user-select: none;
+}
+.subQuestionSolution>h1{
+    color: var(--black);
+    font-size: var(--size15);
+}
+
+.subQuestionSolution>p{
+    color: var(--gray1);
+    font-size: var(--size13);
+}

@@ -204,29 +204,34 @@ function getSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
         });
 }
 
-function getSubQuestion(groupId, questionId, subQuestionId) {
+function getSubQuestion(groupId, questionId, subQuestionId, isSingle) {
 
-    let optionRef = DB
-        .collection("groups")
-        .doc(groupId)
-        .collection("questions")
-        .doc(questionId)
-        .collection("subQuestions")
-        .doc(subQuestionId);
+    try {
+        let optionRef = DB
+            .collection("groups")
+            .doc(groupId)
+            .collection("questions")
+            .doc(questionId)
+            .collection("subQuestions")
+            .doc(subQuestionId);
 
-    return optionRef.onSnapshot(subQuestionDB => {
-        if (subQuestionDB.exists) {
-            set(store, `subQuestions[${subQuestionId}]`, subQuestionDB.data())
 
-            m.redraw();
-        } else {
-            console.error(`subQuestion ${groupId}/${questionId}/${subQuestionId} dont exists `)
-        }
-    })
+        return optionRef.onSnapshot(subQuestionDB => {
+            if (subQuestionDB.exists) {
+                set(store, `subQuestions[${subQuestionId}]`, subQuestionDB.data())
+
+                m.redraw();
+            } else {
+                console.error(`subQuestion ${groupId}/${questionId}/${subQuestionId} dont exists `)
+            }
+        })
+    } catch (e) {
+        console.error(e)
+    }
 
 }
 
-function listenToOptions(groupId, questionId, subQuestionId, order) {
+function listenToOptions(groupId, questionId, subQuestionId, order='top', isSingle=false) {
 
     let optionsRef = DB
         .collection("groups")
@@ -249,8 +254,14 @@ function listenToOptions(groupId, questionId, subQuestionId, order) {
             orderBy = "time";
     }
 
+    let limit = 100;
+    if(isSingle === true){
+        limit = 1
+    }
+
     return optionsRef
         .orderBy(orderBy, "desc")
+        .limit(limit)
         .onSnapshot(optionsDB => {
             let optionsArray = [];
             optionsDB.forEach(optionDB => {
@@ -655,7 +666,7 @@ function listenToChat(ids) {
         const { groupId, questionId, subQuestionId, optionId } = ids;
         if (groupId === undefined) throw new Error('No group id in the ids')
         let path = concatenatePath(groupId, questionId, subQuestionId, optionId);
-      
+
         const chatPath = path + '/chat';
         let lastRead = new Date('2020-01-01');
 
@@ -667,7 +678,7 @@ function listenToChat(ids) {
             lastRead = store.chatLastRead[path]
         }
 
-       
+
         return DB.collection(chatPath)
             .where('createdTime', '>', lastRead)
             .orderBy('createdTime', 'desc')
@@ -675,18 +686,18 @@ function listenToChat(ids) {
             .onSnapshot(messagesDB => {
                 messagesDB.docChanges().forEach(function (change) {
                     if (change.type === "added") {
-                      
+
                         if (!(path in store.chat)) { store.chat[path] = [] }
                         store.chat[path].push(change.doc.data());
                         store.chatLastRead = change.doc.data().createdTime;
                     }
-                    
+
                 })
-               
-                store.chat[path] = store.chat[path].sort((a,b)=> a.createdTime.seconds - b.createdTime.seconds)
+
+                store.chat[path] = store.chat[path].sort((a, b) => a.createdTime.seconds - b.createdTime.seconds)
                 m.redraw();
-       
-                
+
+
             }, e => {
                 console.error(e)
             })
