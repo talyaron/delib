@@ -63,6 +63,7 @@ function createQuestion(groupId, creatorId, title, description) {
 }
 
 function updateQuestion(groupId, questionId, title, description, authorizationObj) {
+    try{
     DB
         .collection('groups')
         .doc(groupId)
@@ -75,6 +76,9 @@ function updateQuestion(groupId, questionId, title, description, authorizationOb
         .catch(function (error) {
             console.error('Error adding document: ', error);
         });
+    }catch(e){
+        console.error(e)
+    }
 }
 
 function createSubQuestion(groupId, questionId, title, order) {

@@ -1,0 +1,10 @@
+.questionDescription{
+    background-color: var(--white);
+    width: 100%;
+}
+
+.questionDescription__title{
+    color: var(--black);
+    font-size: var(-size15);
+    padding: var(--regPadding);
+}

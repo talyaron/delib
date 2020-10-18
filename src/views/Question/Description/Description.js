@@ -10,8 +10,8 @@ module.exports = {
     view: (vnode) => {
 
         return (
-            <div class='questionSection'>
-                <div class='questionSectionTitle questions'>הסבר על השאלה</div>
+            <div class='questionDescription '>
+                <div class='questionDescription__title'>{vnode.attrs.title}</div>
                 <div class='questionSectionMain'>
                     {vnode.attrs.content}
                 </div>
@@ -20,7 +20,7 @@ module.exports = {
                         <div
                             class='buttons questionSectionAddButton'
                             onclick={() => { m.route.set(`/questionEdit/${vnode.attrs.groupId}/${vnode.attrs.questionId}`) }}
-                        >עריכת שאלה</div>
+                        >עריכת הנושא</div>
                         :
                         <div />
                     }

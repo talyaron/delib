@@ -6,15 +6,15 @@ import Header from '../Commons/Header/Header';
 import Feed from '../Commons/Feed/Feed';
 import SubQuestion from './SubQuestions/SubQuestion';
 import Spinner from '../Commons/Spinner/Spinner';
-import Description from './SubSection/Description';
+import Description from './Description/Description';
 import Modal from '../Commons/Modal/Modal';
 import AlertsSetting from '../Commons/AlertsSetting/AlertsSetting';
 
 //model
 import store from '../../data/store';
 // import settings from '../../data/settings'; functions
-import {getQuestionDetails, getSubQuestion, getSubQuestions} from '../../functions/firebase/get/get';
-import {deep_value, setWrapperHeight, setWrapperFromFooter} from '../../functions/general';
+import { getQuestionDetails, getSubQuestion, getSubQuestions } from '../../functions/firebase/get/get';
+import { deep_value, setWrapperHeight, setWrapperFromFooter } from '../../functions/general';
 
 module.exports = {
     oninit: vnode => {
@@ -116,27 +116,25 @@ module.exports = {
 
         return (
             <div>
-                
-                    <Header
-                        topic='שאלה'
-                        title={vnode.state.title}
-                        upLevelUrl={`/group/${vnode.attrs.groupId}`}
-                        groupId={vnode.attrs.groupId}
-                        showSubscribe={true}
-                        questionId={vnode.attrs.questionId}/>
-                        
 
-                
+                <Header
+                    topic='שאלה'
+                    title={vnode.state.title}
+                    upLevelUrl={`/group/${vnode.attrs.groupId}`}
+                    groupId={vnode.attrs.groupId}
+                    showSubscribe={true}
+                    questionId={vnode.attrs.questionId} />
+                <Description
+                    title='הסבר'
+                    content={vnode.state.description}
+                    groupId={vnode.attrs.groupId}
+                    questionId={vnode.attrs.questionId}
+                    creatorId={vnode.state.creatorId} />
+
+
                 <div class='wrapperSubQuestions' id='questionWrapperAll'>
 
-                    <div class='wrapper'>
-                        <Description
-                            title='הסבר על השאלה:'
-                            content={vnode.state.description}
-                            groupId={vnode.attrs.groupId}
-                            questionId={vnode.attrs.questionId}
-                            creatorId={vnode.state.creatorId}/>
-                    </div>
+                    
                     <div class='subQuestionsWrapper'>
                         {vnode
                             .state
@@ -153,17 +151,17 @@ module.exports = {
                                     parentVnode={vnode}
                                     info={settings.subItems.options}
                                     processType={subQuestion.processType}
-                                    isAlone={false}/>)
+                                    isAlone={false} />)
                             })
-}
+                        }
                     </div>
 
                 </div>
 
                 {vnode.state.title === 'כותרת השאלה'
-                    ? <Spinner/>
-                    : <div/>
-}
+                    ? <Spinner />
+                    : <div />
+                }
                 {/* <Modal
                     showModal={vnode.state.showModal.isShow}
                     whichModal={vnode.state.showModal.which}
@@ -173,7 +171,7 @@ module.exports = {
                     vnode={vnode}
                     id={vnode.attrs.questionId}
                 /> */}
-                <Feed/>
+                <Feed />
                 <AlertsSetting
                     isAlertsSetting={vnode.state.isAlertsSetting}
                     title={vnode.state.title}
@@ -185,7 +183,7 @@ module.exports = {
                         },
                         isOn: true
                     }
-                ]}/>
+                    ]} />
             </div>
         )
     }
