@@ -12,7 +12,7 @@ module.exports = {
         return (
             <div class='questionDescription '>
                 <div class='questionDescription__title'>{vnode.attrs.title}</div>
-                <div class='questionSectionMain'>
+                <div class='questionDescription__text'>
                     {vnode.attrs.content}
                 </div>
                 <div class='questionSectionFooter'>

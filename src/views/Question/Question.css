@@ -1,3 +1,8 @@
+
+.page-grid-question{
+    display: grid;
+    grid-template-rows: auto auto  auto;
+}
 .questionHeadr {
     background: var(--mainBackground);
     color: white;
@@ -15,7 +20,9 @@
     padding: 10px;
     text-align: center;
 }
-
+.question__main{
+    overflow-y: auto;
+}
 .wrapperSubQuestions {
     position: relative;
     margin: auto;

@@ -7,8 +7,9 @@ import Feed from '../Commons/Feed/Feed';
 import SubQuestion from './SubQuestions/SubQuestion';
 import Spinner from '../Commons/Spinner/Spinner';
 import Description from './Description/Description';
-import Modal from '../Commons/Modal/Modal';
+// import Modal from '../Commons/Modal/Modal';
 import AlertsSetting from '../Commons/AlertsSetting/AlertsSetting';
+import NavBottom from '../Commons/NavBottom/NavBottom';
 
 //model
 import store from '../../data/store';
@@ -115,54 +116,55 @@ module.exports = {
     view: vnode => {
 
         return (
-            <div>
-
-                <Header
-                    topic='שאלה'
-                    title={vnode.state.title}
-                    upLevelUrl={`/group/${vnode.attrs.groupId}`}
-                    groupId={vnode.attrs.groupId}
-                    showSubscribe={true}
-                    questionId={vnode.attrs.questionId} />
-                <Description
-                    title='הסבר'
-                    content={vnode.state.description}
-                    groupId={vnode.attrs.groupId}
-                    questionId={vnode.attrs.questionId}
-                    creatorId={vnode.state.creatorId} />
-
-
-                <div class='wrapperSubQuestions' id='questionWrapperAll'>
-
-                    
-                    <div class='subQuestionsWrapper'>
-                        {vnode
-                            .state
-                            .subQuestions
-                            .map((subQuestion, index) => {
-
-                                return (<SubQuestion
-                                    groupId={vnode.attrs.groupId}
-                                    questionId={vnode.attrs.questionId}
-                                    subQuestionId={subQuestion.id}
-                                    orderBy={subQuestion.orderBy}
-                                    title={subQuestion.title}
-                                    subItems={vnode.state.subItems.options}
-                                    parentVnode={vnode}
-                                    info={settings.subItems.options}
-                                    processType={subQuestion.processType}
-                                    isAlone={false} />)
-                            })
-                        }
-                    </div>
+            <div class='page page-grid-question'>
+                <div class='question__header'>
+                    <Header
+                        topic='שאלה'
+                        title={vnode.state.title}
+                        upLevelUrl={`/group/${vnode.attrs.groupId}`}
+                        groupId={vnode.attrs.groupId}
+                        showSubscribe={true}
+                        questionId={vnode.attrs.questionId} />
 
                 </div>
+                <div class='question__main'>
+                    <Description
+                        title='הסבר'
+                        content={vnode.state.description}
+                        groupId={vnode.attrs.groupId}
+                        questionId={vnode.attrs.questionId}
+                        creatorId={vnode.state.creatorId} />
+                    <div class='wrapperSubQuestions' id='questionWrapperAll'>
 
-                {vnode.state.title === 'כותרת השאלה'
-                    ? <Spinner />
-                    : <div />
-                }
-                {/* <Modal
+
+                        <div class='subQuestionsWrapper'>
+                            {vnode
+                                .state
+                                .subQuestions
+                                .map((subQuestion, index) => {
+
+                                    return (<SubQuestion
+                                        groupId={vnode.attrs.groupId}
+                                        questionId={vnode.attrs.questionId}
+                                        subQuestionId={subQuestion.id}
+                                        orderBy={subQuestion.orderBy}
+                                        title={subQuestion.title}
+                                        subItems={vnode.state.subItems.options}
+                                        parentVnode={vnode}
+                                        info={settings.subItems.options}
+                                        processType={subQuestion.processType}
+                                        isAlone={false} />)
+                                })
+                            }
+                        </div>
+
+                    </div>
+
+                    {vnode.state.title === 'כותרת השאלה'
+                        ? <Spinner />
+                        : <div />
+                    }
+                    {/* <Modal
                     showModal={vnode.state.showModal.isShow}
                     whichModal={vnode.state.showModal.which}
                     title={vnode.state.showModal.title}
@@ -171,7 +173,8 @@ module.exports = {
                     vnode={vnode}
                     id={vnode.attrs.questionId}
                 /> */}
-                <Feed />
+                </div>
+                <NavBottom />
                 <AlertsSetting
                     isAlertsSetting={vnode.state.isAlertsSetting}
                     title={vnode.state.title}
