@@ -75,7 +75,7 @@ module.exports = {
                                     questionId={vnode.attrs.questionId}
                                     showSubscribe={true}
                                     subQuestionId={vnode.attrs.subQuestionId}/>
-                                <div class="title">{vnode.state.details.title}</div>
+                                
                             </div>
                             <SubQuestion
                                 groupId={vnode.attrs.groupId}

@@ -116,14 +116,7 @@ module.exports = {
 
         return (
             <div>
-                <div
-                    class='headerContainer'
-                    id='questionHeadr'
-                    onclick={() => {
-                    m
-                        .route
-                        .set('/group/' + vnode.attrs.groupId)
-                }}>
+                
                     <Header
                         topic='שאלה'
                         title={vnode.state.title}
@@ -133,7 +126,7 @@ module.exports = {
                         questionId={vnode.attrs.questionId}/>
                         
 
-                </div>
+                
                 <div class='wrapperSubQuestions' id='questionWrapperAll'>
 
                     <div class='wrapper'>
