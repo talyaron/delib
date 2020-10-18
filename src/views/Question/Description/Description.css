@@ -14,6 +14,6 @@
 
 .questionDescription__text{
     color: var(--gray1);
-    font-size: var(-size13);
+    font-size: var(--size13);
     margin-bottom: var(--regPadding);
 }

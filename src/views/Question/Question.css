@@ -1,7 +1,7 @@
 
 .page-grid-question{
     display: grid;
-    grid-template-rows: auto auto  auto;
+    grid-template-rows: fit-content(200px) auto  auto;
 }
 .questionHeadr {
     background: var(--mainBackground);
@@ -14,6 +14,7 @@
     z-index: 100;
     user-select: none;
     cursor: pointer;
+    height: fit-content;
 }
 
 .mainHeader {
@@ -91,11 +92,26 @@
 
 .subQuestionsWrapper{
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
 }
 
 .subQuestionsWrapper >h1{
     font-size: var(--size15);
+}
+
+@media only screen and (max-width: 1600px){
+    .subQuestionsWrapper{
+     
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media only screen and (max-width: 1200px){
+    .subQuestionsWrapper{
+     
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media only screen and (max-width: 900px){

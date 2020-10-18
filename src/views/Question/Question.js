@@ -15,7 +15,7 @@ import NavBottom from '../Commons/NavBottom/NavBottom';
 import store from '../../data/store';
 // import settings from '../../data/settings'; functions
 import { getQuestionDetails, getSubQuestion, getSubQuestions } from '../../functions/firebase/get/get';
-import { deep_value, setWrapperHeight, setWrapperFromFooter } from '../../functions/general';
+import { deep_value } from '../../functions/general';
 
 module.exports = {
     oninit: vnode => {
@@ -79,7 +79,7 @@ module.exports = {
 
     },
     oncreate: vnode => {
-        setWrapperHeight('questionHeadr', 'questionWrapperAll')
+     
         // setWrapperFromFooter('questionFooter', 'questionWrapperAll');
         if (vnode.state.callDB) {
             //subscribe to subQuestions
@@ -99,11 +99,7 @@ module.exports = {
         }
 
     },
-    onupdate: vnode => {
-
-        setWrapperHeight('headerContainer', 'questionWrapperAll');
-
-    },
+   
     onremove: vnode => {
         if (typeof vnode.state.unsbscribe.subQuestions === 'function') {
             vnode
@@ -124,19 +120,23 @@ module.exports = {
                         upLevelUrl={`/group/${vnode.attrs.groupId}`}
                         groupId={vnode.attrs.groupId}
                         showSubscribe={true}
-                        questionId={vnode.attrs.questionId} />
-
-                </div>
-                <div class='question__main'>
+                        questionId={vnode.attrs.questionId}
+                    />
                     <Description
                         title='הסבר'
                         content={vnode.state.description}
                         groupId={vnode.attrs.groupId}
                         questionId={vnode.attrs.questionId}
-                        creatorId={vnode.state.creatorId} />
+                        creatorId={vnode.state.creatorId}
+                    />
+
+                </div>
+                <div class='question__main'>
+
                     <div class='wrapperSubQuestions' id='questionWrapperAll'>
+                        <h1>תת שאלות</h1>
                         <div class='subQuestionsWrapper'>
-                            <h1>תת שאלות</h1>
+
                             {vnode
                                 .state
                                 .subQuestions

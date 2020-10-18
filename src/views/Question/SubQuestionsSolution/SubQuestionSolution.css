@@ -1,7 +1,7 @@
 .subQuestionSolution {
     border-radius: var(--roundBorder);
     background-color: var(--white);
-    margin-bottom: var(--regPadding);
+   
     box-shadow: var(--mediumShadow);
     padding: var(--regPadding);
     box-sizing: border-box;
@@ -9,6 +9,17 @@
     user-select: none;
 }
 
+@media only screen and (max-width: 900px){
+    .subQuestionsWrapper{
+     
+        margin-bottom: var(--regPadding);
+    }
+}
+
+
+.subQuestionSolution:hover{
+    background-color: var(--gray5);
+}
 
 
 .subQuestionSolution>h1 {
