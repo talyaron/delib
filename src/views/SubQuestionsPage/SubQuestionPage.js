@@ -11,12 +11,13 @@ import SubQuestion from "../Question/SubQuestions/SubQuestion";
 import Modal from "../Commons/Modal/Modal";
 import Spinner from "../Commons/Spinner/Spinner";
 import Header from '../Commons/Header/Header';
+import NavBottom from '../Commons/NavBottom/NavBottom';
 
 //functions
-import {getSubQuestion, getGroupDetails} from "../../functions/firebase/get/get";
-import {get} from "lodash";
+import { getSubQuestion, getGroupDetails } from "../../functions/firebase/get/get";
+import { get } from "lodash";
 
-let unsubscribe = () => {};
+let unsubscribe = () => { };
 
 module.exports = {
     oninit: vnode => {
@@ -66,16 +67,16 @@ module.exports = {
             <div>
                 {vnode.state.details.title
                     ? (
-                        <div>
+                        <div class='page page-grid-subQuestion'>
                             <div class="subQuestionHeader">
                                 <Header
-                                  title={vnode.state.details.title}
-                                  upLevelUrl={`/question/${vnode.attrs.groupId}/${vnode.attrs.questionId}`}
+                                    title={vnode.state.details.title}
+                                    upLevelUrl={`/question/${vnode.attrs.groupId}/${vnode.attrs.questionId}`}
                                     groupId={vnode.attrs.groupId}
                                     questionId={vnode.attrs.questionId}
                                     showSubscribe={true}
-                                    subQuestionId={vnode.attrs.subQuestionId}/>
-                                
+                                    subQuestionId={vnode.attrs.subQuestionId} />
+
                             </div>
                             <SubQuestion
                                 groupId={vnode.attrs.groupId}
@@ -87,54 +88,64 @@ module.exports = {
                                 parentVnode={vnode}
                                 info={settings.subItems.options}
                                 processType={vnode.state.details.processType}
-                                isAlone={true}/> {/* ------------- Fav --------------- */}
-                            <div
-                                class="fav"
-                                onclick={() => {
-                                vnode.state.showModal.isShow = true;
-                            }}>
-                                <div>+</div>
+                                isAlone={true} /> {/* ------------- Fav --------------- */}
+
+                            <div class='question__footer'>
+                                {/* ---------------- Footer -------------- */}
+                                <div class="subQuestion__arrange" id="questionFooter">
+                                    <div
+                                        class={vnode.state.details.orderBy == "new"
+                                            ? "footerButton footerButtonSelected"
+                                            : "footerButton"}
+                                        onclick={() => {
+                                            vnode.state.details.orderBy = "new";
+                                        }}>
+                                         <img src='img/new.svg' alt='order by newest' />
+                                        <div>New</div>
+                                </div>
+                                    <div
+                                        class={vnode.state.details.orderBy == "top"
+                                            ? "footerButton footerButtonSelected"
+                                            : "footerButton"}
+                                        onclick={() => {
+                                            vnode.state.details.orderBy = "top";
+                                        }}>
+                                        <img src='img/agreed.svg' alt='order by most agreed' />
+                                        <div>Agreed</div>
+                                </div>
+                                  
+                                    <div
+                                        class={vnode.state.details.orderBy == "message"
+                                            ? "footerButton footerButtonSelected"
+                                            : "footerButton"}
+                                        onclick={() => {
+                                            vnode.state.details.orderBy = "message";
+                                        }}>
+                                        <img src='img/talk.svg' alt='order by last talks' />
+                                        <div>Talks</div>
+                                    </div>
+                                    <NavBottom />
+                                </div>
+
                             </div>
-                            {/* ---------------- Footer -------------- */}
-                            <div class="footer" id="questionFooter">
-                                <div
-                                    class={vnode.state.details.orderBy == "new"
-                                    ? "footerButton footerButtonSelected"
-                                    : "footerButton"}
-                                    onclick={() => {
-                                    vnode.state.details.orderBy = "new";
-                                }}>
-                                    חדשות
-                                </div>
-                                <div
-                                    class={vnode.state.details.orderBy == "top"
-                                    ? "footerButton footerButtonSelected"
-                                    : "footerButton"}
-                                    onclick={() => {
-                                    vnode.state.details.orderBy = "top";
-                                }}>
-                                    הכי מוסכמות
-                                </div>
-                                <div
-                                    class={vnode.state.details.orderBy == "message"
-                                    ? "footerButton footerButtonSelected"
-                                    : "footerButton"}
-                                    onclick={() => {
-                                    vnode.state.details.orderBy = "message";
-                                }}>
-                                    שיחות אחרונות
-                                </div>
-                            </div>
-                            <Modal
-                                showModal={vnode.state.showModal.isShow}
-                                whichModal={vnode.state.showModal.which}
-                                title={vnode.state.showModal.title}
-                                placeholderTitle="כותרת"
-                                placeholderDescription="הסבר"
-                                vnode={vnode}/>
                         </div>
                     )
-                    : (<Spinner/>)}
+                    : (<Spinner />)}
+                <div
+                    class="fav fav__subQuestion"
+                    onclick={() => {
+                        vnode.state.showModal.isShow = true;
+                    }}>
+                    <div>+</div>
+
+                </div>
+                <Modal
+                    showModal={vnode.state.showModal.isShow}
+                    whichModal={vnode.state.showModal.which}
+                    title={vnode.state.showModal.title}
+                    placeholderTitle="כותרת"
+                    placeholderDescription="הסבר"
+                    vnode={vnode} />
             </div>
         );
     }

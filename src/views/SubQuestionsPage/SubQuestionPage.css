@@ -1,3 +1,8 @@
+.page-grid-subQuestion{
+    display: grid;
+    grid-template-rows: auto auto auto auto;
+}
+
 .subQuestionHeader {
     background:#1d3e4d;
     color: white;
@@ -15,4 +20,16 @@
 .subQuestionHeader img{
     /* width: 120px; */
     max-height: 120px;
+}
+
+.subQuestion__arrange{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    position: fixed;
+    bottom: 64px;
+}
+
+.fav__subQuestion{
+    bottom: 115px;
 }
