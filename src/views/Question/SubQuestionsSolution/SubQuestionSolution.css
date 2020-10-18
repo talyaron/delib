@@ -1,4 +1,4 @@
-.subQuestionSolution{
+.subQuestionSolution {
     border-radius: var(--roundBorder);
     background-color: var(--white);
     margin-bottom: var(--regPadding);
@@ -8,12 +8,37 @@
     cursor: pointer;
     user-select: none;
 }
-.subQuestionSolution>h1{
+
+
+
+.subQuestionSolution>h1 {
     color: var(--black);
     font-size: var(--size15);
 }
 
-.subQuestionSolution>p{
+.subQuestionSolution>p {
     color: var(--gray1);
-    font-size: var(--size13);
+    font-size: var(--size16);
+}
+
+.subQuestionSolution--noAnswer>p{
+    color: var(--primary);
+}
+
+.subQuestionSolution__info {
+    display: flex;
+    justify-content: center;
+}
+
+.subQuestionSolution__info>div {
+
+    display: flex;
+    margin: 0px 20px;
+}
+
+.subQuestionSolution__info>div>div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: 6px;
 }

@@ -25,7 +25,7 @@ let subQuestionObj;
 module.exports = {
 	oninit: (vnode) => {
 
-		getGroupDetails(vnode.attrs.groupId)
+		// getGroupDetails(vnode.attrs.groupId)
 
 		// vnode.state = {
 		// 	options: [],
@@ -77,13 +77,25 @@ module.exports = {
 			<div class='subQuestionSolution' onclick={()=>{m.route.set(concatenateURL(groupId, questionId, subQuestionId))}}>
 				<h1>{option.subQuestionTitle}</h1>
 				<p>{option.title}</p>
+				<hr></hr>
+				<div class='subQuestionSolution__info'>
+					
+					<div>
+						<img src='img/group.svg' alt='number of voters' />
+						<div>{option.totalVoters}</div>
+					</div>
+					<div>
+						<img src='img/consensus.svg' alt='counsesnsus' />
+						<div>{Math.floor(option.consensusPrecentage*100)}%</div>
+					</div>
+				</div>
 			</div>
 		);
 		} else {
-			<div class='subQuestionSolution'>
-				<div>The best solution so far</div>
-				<div class='subQuestionSolution__text'>No solution was found yet</div>
-			</div>
+			return(<div class='subQuestionSolution subQuestionSolution--noAnswer' onclick={()=>{m.route.set(concatenateURL(groupId, questionId, subQuestionId))}}>
+				<h1>{vnode.attrs.title}</h1>
+				<p>לשאלה זאת עוד לא הוצעו תשובות. מוזמנים להיכנס לשאלה ולהציע תשובות</p>
+			</div>)
 		}
 	}
 };
