@@ -56,8 +56,8 @@ module.exports = {
 
 	onbeforeupdate: (vnode) => {
 		vnode.state.orderBy = vnode.attrs.orderBy;
-		
-		
+
+
 	},
 	onremove: (vnode) => {
 		unsubscribe();
@@ -65,51 +65,14 @@ module.exports = {
 	},
 	view: (vnode) => {
 
-		
+
 		return (
 			<div class="wrapper subQuestionWrapper" id="optionsWrapper">
-				<div class={vnode.attrs.isAlone?"questionSection questionSection--alone":"questionSection"}>
-					<div
-						class="questionSectionTitle questions"
-						style={`color:${vnode.attrs.info.colors.color};`}>
+				<div class={vnode.attrs.isAlone ? "questionSection questionSection--alone" : "questionSection"}>
 
-						{
-							store.push.includes(vnode.attrs.subQuestionId) ?
-								<div onclick={() => { unsubscribeFromNotification(vnode.attrs.subQuestionId) }}>
-									<img src="img/round_speaker_notes_off_white_24dp.png" />
-								</div>
-								:
-								<div onclick={() => { subscribeToNotification(vnode.attrs.subQuestionId) }}>
-									<img src="img/round_speaker_notes_white_24dp.png" />
-								</div>
-						}
-						<div >{vnode.attrs.title}</div>
-						<div class="addOptionButton" onclick={() => { vnode.state.showModal.isShow = true; }}>
-							הוספת פתרון
-						</div>
-						{vnode.attrs.isAlone ? (
-							<div
-
-								onclick={() => {
-									m.route.set(`/question/${vnode.attrs.groupId}/${vnode.attrs.questionId}`);
-								}}>
-								<img src="img/icons8-back-24.png" />
-							</div>
-						) : (
-								<div
-									onclick={() => {
-										m.route.set(
-											`/subquestions/${vnode.attrs.groupId}/${vnode.attrs.questionId}/${vnode.attrs
-												.subQuestionId}`
-										);
-									}}>
-									<img src="img/icons8-advertisement-page-24-white.png" />
-								</div>
-							)}
-					</div>
 					{switchProcess(vnode.state.processType, vnode)}
 
-					
+
 				</div>
 				<Modal
 					showModal={vnode.state.showModal.isShow}
@@ -136,10 +99,10 @@ function switchProcess(type, vnode) {
 	let options = get(store, `options[${vnode.attrs.subQuestionId}]`, []);
 	options = orderOptionsBy(options, vnode.state.orderBy);
 
-	
+
 	switch (type) {
 
-		
+
 		case settings.processes.suggestions:
 			return (
 				<Options
@@ -159,7 +122,7 @@ function switchProcess(type, vnode) {
 					questionId={vnode.attrs.questionId}
 					subQuestionId={vnode.attrs.subQuestionId}
 					options={options}
-					isAlone={vnode.attrs.isAlone}	
+					isAlone={vnode.attrs.isAlone}
 				/>
 			);
 	}

@@ -1,5 +1,5 @@
 import m from "mithril";
-import {get} from 'lodash';
+import { get } from 'lodash';
 
 import "./Option.css";
 import store from "../../../../../data/store";
@@ -27,7 +27,7 @@ module.exports = {
         offsetTop: 0,
         offsetLeft: 0,
       },
-      isAdmin:false,
+      isAdmin: false,
       isEdit: false,
       isNamed: true,
       more: vnode.attrs.more || { text: "", URL: "" },
@@ -49,8 +49,8 @@ module.exports = {
   onbeforeupdate: (vnode) => {
 
     //get admin
-    vnode.state.admin = get(store.groups,`[${vnode.attrs.groupId}].creatorId`,'')
-    
+    vnode.state.admin = get(store.groups, `[${vnode.attrs.groupId}].creatorId`, '')
+
 
     let optionVote = store.optionsVotes[vnode.attrs.optionId];
 
@@ -81,7 +81,7 @@ module.exports = {
     }
   },
   onupdate: (vnode) => {
-    
+
     //animation
     let element = vnode.dom;
     let elementY = element.offsetTop;
@@ -112,14 +112,14 @@ module.exports = {
           { top: -1 * topMove + "px", left: -1 * leftMove + "px" },
           {
             duration: 0,
-            begin: (elms) => {},
+            begin: (elms) => { },
           }
         )
         .velocity(
           { top: "0px", left: "0px" },
           {
             duration: 750,
-            complete: (elms) => {},
+            complete: (elms) => { },
           },
           "easeInOutCubic"
         );
@@ -131,67 +131,68 @@ module.exports = {
   view: (vnode) => {
     return (
       <div
-        class="card optionCard"
+        class="optionCard"
         id={vnode.attrs.optionId}
         key={vnode.attrs.key}
       >
-        <div class="optionMain">
+        <div class="optionCard__main">
           <div
-            class={vnode.state.up ? "optionVote optionSelcetUp" : "optionVote"}
+            class={vnode.state.up ? "optionCard__vote optionSelcetUp" : "optionCard__vote"}
             onclick={() => {
               setSelection("up", vnode);
             }}
           >
             <img
               class={vnode.state.up ? "voteUp" : ""}
-              src="img/icons8-facebook-like-32.png"
+              src={vnode.state.up ?"img/voteUpWhite.svg":"img/voteUp.svg"}
             />
           </div>
           <div class="optionContent">
-            {!vnode.state.isEdit ? (
-              <div class="option_creator">
-                מציע/ה: {vnode.state.creatorName}
-              </div>
-            ) : (
-              <div class="option_creator">
-                <input
-                  type="checkbox"
-                  defaultChecked={vnode.state.isNamed}
-                  onchange={(e) => {
-                    isAnonymous(e, vnode);
-                  }}
-                />
-                {vnode.state.isNamed ? (
-                  <span>מציע\ה: {vnode.state.creatorName}</span>
-                ) : (
-                  <span>אנונימי/ת</span>
-                )}
-              </div>
-            )}
             <div class="cardTitle">
               {!vnode.state.isEdit ? (
                 <span>{vnode.attrs.title}</span>
               ) : (
-                <input
-                  type="text"
-                  value={vnode.state.title}
-                  onkeyup={(e) => {
-                    vnode.state.title = e.target.value;
-                  }}
-                />
-              )}
+                  <input
+                    type="text"
+                    value={vnode.state.title}
+                    onkeyup={(e) => {
+                      vnode.state.title = e.target.value;
+                    }}
+                  />
+                )}
             </div>
+            {!vnode.state.isEdit ? (
+              <div class="optionCard__creator">
+                 {vnode.state.creatorName}
+              </div>
+            ) : (
+                <div class="optionCard__creator">
+                  <input
+                    type="checkbox"
+                    defaultChecked={vnode.state.isNamed}
+                    onchange={(e) => {
+                      isAnonymous(e, vnode);
+                    }}
+                  />
+                  {vnode.state.isNamed ? (
+                    <span>{vnode.state.creatorName}</span>
+                  ) : (
+                      <span>אנונימי/ת</span>
+                    )}
+                </div>
+              )}
+
             <div class="option__card__description">
               {!vnode.state.isEdit ? (
                 <span>{vnode.attrs.description}</span>
               ) : (
-                <textarea
-                  value={vnode.state.description}
-                  onkeyup={(e) => {
-                    vnode.state.description = e.target.value;
-                  }}
-                />
-              )}
+                  <textarea
+                    value={vnode.state.description}
+                    onkeyup={(e) => {
+                      vnode.state.description = e.target.value;
+                    }}
+                  />
+                )}
             </div>
             {vnode.state.more.text.length > 0 ? (
               <div>
@@ -204,56 +205,56 @@ module.exports = {
                     {vnode.state.more.text}
                   </a>
                 ) : (
-                  <div class="cardTitle">
-                    <input
-                      placeholder="טקסט"
-                      type="text"
-                      oninput={(e) => {
-                        vnode.state.more.text = e.target.value;
-                      }}
-                      value={vnode.state.more.text}
-                    ></input>
-                    <input
-                      type="url"
-                      placeholder="URL"
-                      oninput={(e) => {
-                        vnode.state.more.URL = e.target.value;
-                      }}
-                      value={vnode.state.more.URL}
-                    ></input>
-                  </div>
-                )}
+                    <div class="cardTitle">
+                      <input
+                        placeholder="טקסט"
+                        type="text"
+                        oninput={(e) => {
+                          vnode.state.more.text = e.target.value;
+                        }}
+                        value={vnode.state.more.text}
+                      ></input>
+                      <input
+                        type="url"
+                        placeholder="URL"
+                        oninput={(e) => {
+                          vnode.state.more.URL = e.target.value;
+                        }}
+                        value={vnode.state.more.URL}
+                      ></input>
+                    </div>
+                  )}
               </div>
             ) : (
-              <div>
-                {!vnode.state.isEdit ? (
-                  <div />
-                ) : (
-                  <div class="cardTitle">
-                    <input
-                      type="text"
-                      oninput={(e) => {
-                        vnode.state.more.text = e.target.value;
-                      }}
-                      placeholder="טקסט"
-                      value={vnode.state.more.text}
-                    ></input>
-                    <input
-                      type="url"
-                      oninput={(e) => {
-                        vnode.state.more.URL = e.target.value;
-                      }}
-                      placeholder="URL"
-                      value={vnode.state.more.URL}
-                    ></input>
-                  </div>
-                )}
-              </div>
-            )}
+                <div>
+                  {!vnode.state.isEdit ? (
+                    <div />
+                  ) : (
+                      <div class="cardTitle">
+                        <input
+                          type="text"
+                          oninput={(e) => {
+                            vnode.state.more.text = e.target.value;
+                          }}
+                          placeholder="טקסט"
+                          value={vnode.state.more.text}
+                        ></input>
+                        <input
+                          type="url"
+                          oninput={(e) => {
+                            vnode.state.more.URL = e.target.value;
+                          }}
+                          placeholder="URL"
+                          value={vnode.state.more.URL}
+                        ></input>
+                      </div>
+                    )}
+                </div>
+              )}
           </div>
           <div
             class={
-              vnode.state.down ? "optionVote optionSelcetDown" : "optionVote"
+              vnode.state.down ? "optionCard__vote optionSelcetDown" : "optionCard__vote"
             }
             onclick={() => {
               setSelection("down", vnode);
@@ -261,12 +262,12 @@ module.exports = {
           >
             <img
               class={vnode.state.down ? "voteDown" : ""}
-              src="img/icons8-thumbs-down-32.png"
+              src={vnode.state.down ?"img/voteDownWhite.svg":"img/voteDown.svg"}
             />
           </div>
         </div>
         {/* options information panel */}
-        <div class="optionInfo">
+        <div class="optionCard__info">
           <div class="optionLikes">
             <img src="img/icons8-user-groups-24.png" />
             {vnode.attrs.totalVoters}
@@ -303,25 +304,25 @@ module.exports = {
                 {!vnode.state.isEdit ? (
                   <img src="img/icons8-pencil-24.png" />
                 ) : (
-                  <div
-                    class="buttons editOptionBtn"
-                    onclick={() => {
-                      updateOption(vnode);
-                    }}
-                  >
-                    אישור
-                  </div>
-                )}
+                    <div
+                      class="buttons editOptionBtn"
+                      onclick={() => {
+                        updateOption(vnode);
+                      }}
+                    >
+                      אישור
+                    </div>
+                  )}
               </div>
             ) : (
-              <div />
-            )}
+                <div />
+              )}
           </div>
           {vnode.attrs.creatorId == store.user.uid || vnode.state.admin == store.user.uid ?
-            <div class="optionLikes" onclick={()=>handleHide(vnode)}>
+            <div class="optionLikes" onclick={() => handleHide(vnode)}>
               <img src="img/visibility_off-24px.svg" />
             </div>
-            :null
+            : null
           }
         </div>
       </div>
@@ -382,15 +383,15 @@ function isAnonymous(e, vnode) {
   vnode.state.isNamed = e.target.checked;
 }
 
-function handleHide(vnode){
-  try{
+function handleHide(vnode) {
+  try {
     let isDeactivate = confirm("האם אתם בטוחים שיש להחביא אופציה זאת?");
 
-    if(isDeactivate){
-      setOptionActive(vnode.attrs.groupId, vnode.attrs.questionId,vnode.attrs.subQuestionId, vnode.attrs.optionId, false)
+    if (isDeactivate) {
+      setOptionActive(vnode.attrs.groupId, vnode.attrs.questionId, vnode.attrs.subQuestionId, vnode.attrs.optionId, false)
     }
   }
-    catch(err){
-      console.error(err)
-    }
+  catch (err) {
+    console.error(err)
+  }
 }

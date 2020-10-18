@@ -2,6 +2,9 @@
     overflow-y: auto;
      position: relative;
      max-height: 70vh;
+     display: grid;
+     gap: 10px;
+     margin-top:20px;
 }
 
 .optionsWrapper--alone{
