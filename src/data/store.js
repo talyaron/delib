@@ -19,6 +19,7 @@ var store = {
     },
     questions: {}, //list of questions. stored as {groupId:{questionId:{} }}
     groups: {}, //groups stored as {groupId:{group info}}
+    option:{}, //options information, stored in option:{optionId:{}}
     options: [],//options in a given question. stored as subQuestionID:[options] 
     optionsVotes: {}, //store how the user voted on each option. stored as {optionId: -1 to 1}
     optionsLoc: {}, //options location. used for animations

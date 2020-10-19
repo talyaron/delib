@@ -45,7 +45,7 @@ module.exports = {
         getQuestions('on', vnode.attrs.id, vnode);
         vnode.state.undbGroupDetails = getGroupDetails(vnode.attrs.id, vnode);
 
-        vnode.state.unsubscribe.chat =  listenToChat({groupId:vnode.attrs.id})
+            
     },
     onbeforeupdate: vnode => {
         //check is admin

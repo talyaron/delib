@@ -231,7 +231,7 @@ function getSubQuestion(groupId, questionId, subQuestionId, isSingle) {
 
 }
 
-function listenToOptions(groupId, questionId, subQuestionId, order='top', isSingle=false) {
+function listenToOptions(groupId, questionId, subQuestionId, order = 'top', isSingle = false) {
 
     let optionsRef = DB
         .collection("groups")
@@ -255,7 +255,7 @@ function listenToOptions(groupId, questionId, subQuestionId, order='top', isSing
     }
 
     let limit = 100;
-    if(isSingle === true){
+    if (isSingle === true) {
         limit = 1
     }
 
@@ -306,6 +306,37 @@ function listenToOptions(groupId, questionId, subQuestionId, order='top', isSing
             m.redraw();
         });
 
+}
+
+function listenToOption(ids) {
+    try {
+        const { groupId, questionId, subQuestionId, optionId } = ids;
+
+        if (groupId === undefined) throw new Error('missing groupId');
+        if (questionId === undefined) throw new Error('missing questionId');
+        if (subQuestionId === undefined) throw new Error('missing subQuestionId');
+        if (optionId === undefined) throw new Error('missing optionId');
+
+       return DB
+            .collection("groups")
+            .doc(groupId)
+            .collection("questions")
+            .doc(questionId)
+            .collection("subQuestions")
+            .doc(subQuestionId)
+            .collection("options")
+            .doc(optionId)
+            .onSnapshot(optionDB=>{
+                let optionObj = optionDB.data();
+                optionObj.optionId = optionDB.data().id;
+                
+                set(store, `option[${optionId}]`, optionObj);
+                m.redraw()
+            })
+            console.log(store.option)
+    } catch (e) {
+        console.error(e);
+    }
 }
 
 function getOptionDetails(groupId, questionId, subQuestionId, optionId, vnode) {
@@ -662,10 +693,10 @@ function listenToChatFeed() {
 }
 
 function listenToChat(ids) {
-   
+
     try {
         const { groupId, questionId, subQuestionId, optionId } = ids;
-     
+
         if (groupId === undefined) throw new Error('No group id in the ids')
         let path = concatenatePath(groupId, questionId, subQuestionId, optionId);
 
@@ -680,7 +711,7 @@ function listenToChat(ids) {
             lastRead = store.chatLastRead[path]
         }
 
-      
+
         return DB.collection(chatPath)
             .where('createdTime', '>', lastRead)
             .orderBy('createdTime', 'desc')
@@ -698,8 +729,8 @@ function listenToChat(ids) {
 
                 store.chat[path] = store.chat[path].sort((a, b) => a.createdTime.seconds - b.createdTime.seconds);
                 let userUID = ''
-                store.chat[path].map((message, index)=>{
-                    if(message.uid === userUID){
+                store.chat[path].map((message, index) => {
+                    if (message.uid === userUID) {
                         store.chat[path][index].isSameUser = true;
                     } else {
                         store.chat[path][index].isSameUser = false;
@@ -725,6 +756,7 @@ module.exports = {
     getSubQuestions,
     getSubQuestion,
     listenToOptions,
+    listenToOption,
     getOptionVote,
     getSubItems,
     getSubItemLikes,

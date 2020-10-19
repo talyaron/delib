@@ -129,10 +129,11 @@ module.exports = {
     vnode.state.likeUnsubscribe();
   },
   view: (vnode) => {
+    const {groupId, questionId, subQuestionId, optionId} = vnode.attrs;
     return (
       <div
         class="optionCard"
-        id={vnode.attrs.optionId}
+        id={optionId}
         key={vnode.attrs.key}
       >
         <div class="optionCard__main">
@@ -182,7 +183,7 @@ module.exports = {
                 </div>
               )}
 
-            <div class="option__card__description">
+            <div class="option__card__description" onclick={()=>{if(!vnode.state.isEdit){m.route.set(`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`)}}}>
               {!vnode.state.isEdit ? (
                 <span>{vnode.attrs.description}</span>
               ) : (
@@ -283,11 +284,7 @@ module.exports = {
           </div>
           <div
             class="optionChat"
-            onclick={() => {
-              m.route.set(
-                `/optionchat/${vnode.attrs.groupId}/${vnode.attrs.questionId}/${vnode.attrs.subQuestionId}/${vnode.attrs.optionId}`
-              );
-            }}
+            onclick={() => { m.route.set(`/option-chat/${groupId}/${questionId}/${subQuestionId}/${optionId}`)}}
           >
             <img src="img/icons8-chat-room-24.png" />
             {!isNaN(vnode.attrs.messagesCounter)
