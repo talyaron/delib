@@ -1,7 +1,7 @@
 
 .page-grid-question{
     display: grid;
-    grid-template-rows: fit-content(200px) auto  auto;
+    grid-template-rows: fit-content(200px) auto  64px;
 }
 .questionHeadr {
     background: var(--mainBackground);

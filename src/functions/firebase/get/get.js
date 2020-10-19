@@ -694,7 +694,16 @@ function listenToChat(ids) {
 
                 })
 
-                store.chat[path] = store.chat[path].sort((a, b) => a.createdTime.seconds - b.createdTime.seconds)
+                store.chat[path] = store.chat[path].sort((a, b) => a.createdTime.seconds - b.createdTime.seconds);
+                let userUID = ''
+                store.chat[path].map((message, index)=>{
+                    if(message.uid === userUID){
+                        store.chat[path][index].isSameUser = true;
+                    } else {
+                        store.chat[path][index].isSameUser = false;
+                        userUID = message.uid;
+                    }
+                })
                 m.redraw();
 
 

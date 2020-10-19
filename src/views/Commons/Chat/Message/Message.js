@@ -7,6 +7,7 @@ import {timeParse} from '../../../../functions/general';
 module.exports = {
     view: vnode => {
         const { me, message, isSameUser } = vnode.attrs;
+       
         return (
             <div class={me == true ? 'message message--me' : 'message'}>
                 {!isSameUser ?

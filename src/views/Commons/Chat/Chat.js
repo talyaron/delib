@@ -22,6 +22,9 @@ module.exports = {
           
     },
     onupdate:vnode=>{
+      
+      
+        //scroll to bottom
         const chatWrapper = vnode.dom.children[0];
        
         chatWrapper.scrollTo({
@@ -44,11 +47,8 @@ module.exports = {
                 <div class='chatWrapper'>
                     {
                         store.chat[path].map((message, index)=>{
-
-                            let isSameUser = message.uid == vnode.state.userUid;
-                            vnode.state.userUid = message.uid;
-                        
-                            return(<Message key={index} message={message} me={message.uid === store.user.uid} isSameUser={isSameUser}/>)
+                           
+                            return(<Message key={index} message={message} me={message.uid === store.user.uid} isSameUser={message.isSameUser}/>)
                         })
                     }
                     
