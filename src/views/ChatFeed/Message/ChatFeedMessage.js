@@ -4,7 +4,7 @@ import './ChatFeedMessage.css';
 
 //functions
 
-import { zeroMessages } from '../../../functions/firebase/set/set';
+import { zeroChatFeedMessages } from '../../../functions/firebase/set/set';
 
 
 
@@ -16,7 +16,7 @@ module.exports = {
         console.log(msg)
 
         return (
-            <div class='chatFeedMessage' onclick={() => { zeroMessages(msg.ids); m.route.set(msg.url) }}>
+            <div class='chatFeedMessage' onclick={() => { zeroChatFeedMessages(msg.ids); m.route.set(msg.url) }}>
                 <div class='chatFeedMessage__user'>
                     {msg.photoURL ? <img src={msg.photoURL} alt='user'></img> : <div>{msg.name.substring(0, 2)}</div>}
                 </div>

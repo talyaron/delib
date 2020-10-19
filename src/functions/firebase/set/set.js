@@ -592,11 +592,12 @@ function subscribeUser(settings) {
 
 }
 
-function zeroMessages(ids) {
+function zeroChatFeedMessages(ids) {
     try {
         if (ids === undefined) throw new Error('No ids were in the message')
 
         const path = generateChatEntitiyId(ids)
+        console.log(path)
         DB.collection('users').doc(store.user.uid).collection('chat').doc(path).update({ msgDifference: 0 }).catch(e => console.error(e))
     } catch (e) {
         console.error(e)
@@ -626,5 +627,5 @@ module.exports = {
     updateSubQuestionOrderBy,
     subscribeUser,
     setToFeedLastEntrance,
-    zeroMessages
+    zeroChatFeedMessages
 };

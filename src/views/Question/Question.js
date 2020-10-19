@@ -10,12 +10,14 @@ import Description from './Description/Description';
 // import Modal from '../Commons/Modal/Modal';
 import AlertsSetting from '../Commons/AlertsSetting/AlertsSetting';
 import NavBottom from '../Commons/NavBottom/NavBottom';
+import NavTop from '../Commons/NavTop/NavTop';
+import Chat from '../Commons/Chat/Chat';
 
 //model
 import store from '../../data/store';
-// import settings from '../../data/settings'; functions
+//functions
 import { getQuestionDetails, getSubQuestion, getSubQuestions } from '../../functions/firebase/get/get';
-import { deep_value } from '../../functions/general';
+import { deep_value, getIsChat } from '../../functions/general';
 
 module.exports = {
     oninit: vnode => {
@@ -57,7 +59,8 @@ module.exports = {
                 isShow: true,
                 which: 'subQuestion',
                 subQuestionId: ''
-            }
+            },
+            subPage: getIsChat() ? 'chat' : 'main',
         }
 
         //get user before login to page
@@ -111,6 +114,8 @@ module.exports = {
     },
     view: vnode => {
 
+        const{groupId, questionId} = vnode.attrs;
+
         return (
             <div class='page page-grid-question'>
                 <div class='question__header'>
@@ -122,6 +127,7 @@ module.exports = {
                         showSubscribe={true}
                         questionId={vnode.attrs.questionId}
                     />
+                    <NavTop level={'שאלה'} current={vnode.state.subPage} pvs={vnode.state} mainUrl={`/question/${groupId}/${questionId}`} chatUrl={`/question-chat/${groupId}/${questionId}`} ids={{groupId, questionId}} />
                     <Description
                         title='הסבר'
                         content={vnode.state.description}
@@ -131,49 +137,51 @@ module.exports = {
                     />
 
                 </div>
-                <div class='question__main'>
+                {vnode.state.subPage === 'main' ?
+                    <div class='question__main'>
 
-                    <div class='wrapperSubQuestions' id='questionWrapperAll'>
-                        <h1>תת שאלות</h1>
-                        <div class='subQuestionsWrapper'>
+                        <div class='wrapperSubQuestions' id='questionWrapperAll'>
+                            <h1>תת שאלות</h1>
+                            <div class='subQuestionsWrapper'>
 
-                            {vnode
-                                .state
-                                .subQuestions
-                                .map((subQuestion, index) => {
-                                  
-                                    return (<SubQuestionSolution
-                                        key={index}
-                                        groupId={vnode.attrs.groupId}
-                                        questionId={vnode.attrs.questionId}
-                                        subQuestionId={subQuestion.id}
-                                        orderBy={subQuestion.orderBy}
-                                        title={subQuestion.title}
-                                        subItems={vnode.state.subItems.options}
-                                        parentVnode={vnode}
-                                        info={settings.subItems.options}
-                                        processType={subQuestion.processType}
-                                        isAlone={false} />)
-                                })
-                            }
+                                {vnode
+                                    .state
+                                    .subQuestions
+                                    .map((subQuestion, index) => {
+
+                                        return (<SubQuestionSolution
+                                            key={index}
+                                            groupId={vnode.attrs.groupId}
+                                            questionId={vnode.attrs.questionId}
+                                            subQuestionId={subQuestion.id}
+                                            orderBy={subQuestion.orderBy}
+                                            title={subQuestion.title}
+                                            subItems={vnode.state.subItems.options}
+                                            parentVnode={vnode}
+                                            info={settings.subItems.options}
+                                            processType={subQuestion.processType}
+                                            isAlone={false} />)
+                                    })
+                                }
+                            </div>
+
                         </div>
 
+                        {vnode.state.title === 'כותרת השאלה'
+                            ? <Spinner />
+                            : <div />
+                        }
+                       
                     </div>
-
-                    {vnode.state.title === 'כותרת השאלה'
-                        ? <Spinner />
-                        : <div />
-                    }
-                    {/* <Modal
-                    showModal={vnode.state.showModal.isShow}
-                    whichModal={vnode.state.showModal.which}
-                    title={vnode.state.showModal.title}
-                    placeholderTitle='כותרת'
-                    placeholderDescription='הסבר'
-                    vnode={vnode}
-                    id={vnode.attrs.questionId}
-                /> */}
-                </div>
+                    :
+                    <Chat
+                        entity='question'
+                        topic='שאלה'
+                        ids={{groupId:vnode.attrs.groupId, questionId:vnode.attrs.questionId}}
+                        title={vnode.state.title}
+                        url={m.route.get()}
+                    />
+                }
                 <NavBottom />
                 <AlertsSetting
                     isAlertsSetting={vnode.state.isAlertsSetting}
