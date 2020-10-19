@@ -12,17 +12,24 @@ import Modal from "../Commons/Modal/Modal";
 import Spinner from "../Commons/Spinner/Spinner";
 import Header from '../Commons/Header/Header';
 import NavBottom from '../Commons/NavBottom/NavBottom';
+import NavTop from '../Commons/NavTop/NavTop';
+import Chat from '../Commons/Chat/Chat';
 
 //functions
-import { getSubQuestion, getGroupDetails } from "../../functions/firebase/get/get";
+import { getSubQuestion, getGroupDetails,listenToChat } from "../../functions/firebase/get/get";
+import { getIsChat, concatenatePath } from '../../functions/general';
 import { get } from "lodash";
 
-let unsubscribe = () => { };
+let unsubscribe = () => { }, unsubscribeChat=()=>{};
 
 module.exports = {
+
     oninit: vnode => {
+
+        const { groupId, questionId, subQuestionId } = vnode.attrs;
+
         //get user before login to page
-        store.lastPage = `/subquestions/${vnode.attrs.groupId}/${vnode.attrs.questionId}/${vnode.attrs.subQuestionId}`;
+        store.lastPage = `/subquestions/${groupId}/${questionId}/${subQuestionId}`;
         sessionStorage.setItem("lastPage", store.lastPage);
 
         vnode.state = {
@@ -37,32 +44,48 @@ module.exports = {
                 which: "subQuestion",
                 title: "הוספת אפשרות"
             },
+            subPage: getIsChat() ? 'chat' : 'main',
             group: {
                 logo: "",
                 title: ""
-            }
-        };
+            },
+            subscribed: false,
+            path: concatenatePath(groupId, questionId, subQuestionId)
+        }
     },
     oncreate: vnode => {
-        unsubscribe = getSubQuestion(vnode.attrs.groupId, vnode.attrs.questionId, vnode.attrs.subQuestionId);
+        const { groupId, questionId, subQuestionId } = vnode.attrs;
+        unsubscribe = getSubQuestion(groupId, questionId, subQuestionId);
+        unsubscribeChat = listenToChat({groupId, questionId, subQuestionId});
 
-        getGroupDetails(vnode.attrs.groupId);
+
+        vnode.state.subscribed = get(store.subscribe, `[${vnode.state.path}]`, false)
+
+        getGroupDetails(groupId);
     },
     onbeforeupdate: vnode => {
-        if (store.subQuestions.hasOwnProperty(vnode.attrs.subQuestionId)) {
-            vnode.state.details = store.subQuestions[vnode.attrs.subQuestionId];
+        const { groupId, subQuestionId } = vnode.attrs;
+
+        if (store.subQuestions.hasOwnProperty(subQuestionId)) {
+            vnode.state.details = store.subQuestions[subQuestionId];
         }
 
-        let groupObj = get(store, `groups[${vnode.attrs.groupId}]`, {
+        let groupObj = get(store, `groups[${groupId}]`, {
             logo: "",
             title: ""
         });
         vnode.state.group = groupObj;
     },
+    onupdate: vnode => {
+        vnode.state.subscribed = get(store.subscribe, `[${vnode.state.path}]`, false)
+    },
     onremove: vnode => {
         unsubscribe();
+        unsubscribeChat();
     },
     view: vnode => {
+
+        const { groupId, questionId, subQuestionId } = vnode.attrs;
         return (
             <div>
                 {vnode.state.details.title
@@ -71,27 +94,46 @@ module.exports = {
                             <div class="subQuestionHeader">
                                 <Header
                                     title={vnode.state.details.title}
-                                    upLevelUrl={`/question/${vnode.attrs.groupId}/${vnode.attrs.questionId}`}
-                                    groupId={vnode.attrs.groupId}
-                                    questionId={vnode.attrs.questionId}
+                                    upLevelUrl={`/question/${groupId}/${questionId}`}
+                                    groupId={groupId}
+                                    questionId={questionId}
                                     showSubscribe={true}
-                                    subQuestionId={vnode.attrs.subQuestionId} />
+                                    subQuestionId={subQuestionId}
+                                />
+                                <NavTop
+                                    level={'תת שאלה'}
+                                    current={vnode.state.subPage}
+                                    pvs={vnode.state}
+                                    mainUrl={`/subquestions/${groupId}/${questionId}/${subQuestionId}`}
+                                    chatUrl={`/subquestions-chat/${groupId}/${questionId}/${subQuestionId}`}
+                                    ids={{ groupId, questionId, subQuestionId }}
+                                    isSubscribed={vnode.state.subscribed} />
 
                             </div>
-                            <SubQuestion
-                                groupId={vnode.attrs.groupId}
-                                questionId={vnode.attrs.questionId}
-                                subQuestionId={vnode.attrs.subQuestionId}
-                                orderBy={vnode.state.details.orderBy}
-                                title={vnode.state.details.title}
-                                subItems={vnode.state.details.options}
-                                parentVnode={vnode}
-                                info={settings.subItems.options}
-                                processType={vnode.state.details.processType}
-                                isAlone={true} /> {/* ------------- Fav --------------- */}
+                            {vnode.state.subPage === 'main' ?
+                                <SubQuestion
+                                    groupId={groupId}
+                                    questionId={questionId}
+                                    subQuestionId={subQuestionId}
+                                    orderBy={vnode.state.details.orderBy}
+                                    title={vnode.state.details.title}
+                                    subItems={vnode.state.details.options}
+                                    parentVnode={vnode}
+                                    info={settings.subItems.options}
+                                    processType={vnode.state.details.processType}
+                                    isAlone={true} />
+                                :
+                                <Chat
+                                    entity='subQuestion'
+                                    topic='תת שאלה'
+                                    ids={{ groupId: groupId, questionId: questionId, subQuestionId }}
+                                    title={vnode.state.details.title}
+                                    url={m.route.get()}
+                                />
+                            }
 
-                            <div class='question__footer'>
-                                {/* ---------------- Footer -------------- */}
+                            {/* ---------------- Footer -------------- */}
+                            {vnode.state.subPage === 'main' ?
                                 <div class="subQuestion__arrange" id="questionFooter">
                                     <div
                                         class={vnode.state.details.orderBy == "new"
@@ -100,9 +142,9 @@ module.exports = {
                                         onclick={() => {
                                             vnode.state.details.orderBy = "new";
                                         }}>
-                                         <img src='img/new.svg' alt='order by newest' />
+                                        <img src='img/new.svg' alt='order by newest' />
                                         <div>New</div>
-                                </div>
+                                    </div>
                                     <div
                                         class={vnode.state.details.orderBy == "top"
                                             ? "footerButton footerButtonSelected"
@@ -112,8 +154,8 @@ module.exports = {
                                         }}>
                                         <img src='img/agreed.svg' alt='order by most agreed' />
                                         <div>Agreed</div>
-                                </div>
-                                  
+                                    </div>
+
                                     <div
                                         class={vnode.state.details.orderBy == "message"
                                             ? "footerButton footerButtonSelected"
@@ -124,21 +166,24 @@ module.exports = {
                                         <img src='img/talk.svg' alt='order by last talks' />
                                         <div>Talks</div>
                                     </div>
-                                    <NavBottom />
-                                </div>
+                                </div> : null
+                            }
+                            <NavBottom />
 
-                            </div>
+
+
                         </div>
                     )
-                    : (<Spinner />)}
-                <div
+                    : (<Spinner />)
+                }
+                < div
                     class="fav fav__subQuestion"
                     onclick={() => {
                         vnode.state.showModal.isShow = true;
                     }}>
                     <div>+</div>
 
-                </div>
+                </div >
                 <Modal
                     showModal={vnode.state.showModal.isShow}
                     whichModal={vnode.state.showModal.which}
@@ -146,7 +191,7 @@ module.exports = {
                     placeholderTitle="כותרת"
                     placeholderDescription="הסבר"
                     vnode={vnode} />
-            </div>
+            </div >
         );
     }
 };

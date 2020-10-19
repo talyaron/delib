@@ -63,20 +63,20 @@ function createQuestion(groupId, creatorId, title, description) {
 }
 
 function updateQuestion(groupId, questionId, title, description, authorizationObj) {
-    try{
-    DB
-        .collection('groups')
-        .doc(groupId)
-        .collection('questions')
-        .doc(questionId)
-        .update({ title, description, authorization: authorizationObj })
-        .then((something) => {
-            console.log('writen succesufuly');
-        })
-        .catch(function (error) {
-            console.error('Error adding document: ', error);
-        });
-    }catch(e){
+    try {
+        DB
+            .collection('groups')
+            .doc(groupId)
+            .collection('questions')
+            .doc(questionId)
+            .update({ title, description, authorization: authorizationObj })
+            .then((something) => {
+                console.log('writen succesufuly');
+            })
+            .catch(function (error) {
+                console.error('Error adding document: ', error);
+            });
+    } catch (e) {
         console.error(e)
     }
 }
@@ -245,10 +245,11 @@ function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like) 
 function sendMessage({ groupId, questionId, subQuestionId, optionId, message, title, entity, topic, url }) {
     try {
 
+     
 
         let { displayName, photoURL, name, uid, userColor } = store.user;
-        
-        if(!userColor) {userColor = 'teal'}
+
+        if (!userColor) { userColor = 'teal' }
 
         let ref = 'groups', location = {}
         if (groupId != undefined) {
@@ -270,24 +271,24 @@ function sendMessage({ groupId, questionId, subQuestionId, optionId, message, ti
             location.optionId = optionId;
         }
 
-
+       
         let ids = { groupId, questionId, subQuestionId, optionId }
         ids = createIds(ids)
-        
+
 
         if (message) {
 
             DB.doc(ref).collection('chat').add({
-                location, 
-                displayName, 
-                photoURL, 
-                name, 
-                uid, 
-                message, 
-                title, 
-                entity, 
-                topic, 
-                url, 
+                location,
+                displayName,
+                photoURL,
+                name,
+                uid,
+                message,
+                title,
+                entity,
+                topic,
+                url,
                 ids,
                 userColor,
                 createdTime: firebase
@@ -603,13 +604,15 @@ function subscribeUser(settings) {
 
 }
 
-function zeroChatFeedMessages(ids) {
+function zeroChatFeedMessages(ids, isSubscribed = true) {
     try {
-        if (ids === undefined) throw new Error('No ids were in the message')
+        if (isSubscribed) {
+            if (ids === undefined) throw new Error('No ids were in the message')
 
-        const path = generateChatEntitiyId(ids)
-       
-        DB.collection('users').doc(store.user.uid).collection('chat').doc(path).update({ msgDifference: 0 }).catch(e => console.error(e))
+            const path = generateChatEntitiyId(ids)
+
+            DB.collection('users').doc(store.user.uid).collection('chat').doc(path).update({ msgDifference: 0 }).catch(e => console.error(e))
+        }
     } catch (e) {
         console.error(e)
     }

@@ -33,7 +33,6 @@ module.exports = {
 
         vnode.state = {
             previousCount: 0,
-            subscribed: false,
             refArray: [
                 'groups',
                 groupId,
@@ -47,6 +46,7 @@ module.exports = {
             ],
             refString: '',
             isMenuOpen: false,
+            subscribed: false,
             path: concatenatePath(groupId, questionId, subQuestionId, optionId)
         }
         //set refernce string

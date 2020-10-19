@@ -662,8 +662,10 @@ function listenToChatFeed() {
 }
 
 function listenToChat(ids) {
+   
     try {
         const { groupId, questionId, subQuestionId, optionId } = ids;
+     
         if (groupId === undefined) throw new Error('No group id in the ids')
         let path = concatenatePath(groupId, questionId, subQuestionId, optionId);
 
@@ -678,7 +680,7 @@ function listenToChat(ids) {
             lastRead = store.chatLastRead[path]
         }
 
-
+      
         return DB.collection(chatPath)
             .where('createdTime', '>', lastRead)
             .orderBy('createdTime', 'desc')

@@ -1,6 +1,7 @@
 .page-grid-subQuestion{
     display: grid;
-    grid-template-rows: auto auto auto auto;
+    grid-template-rows: fit-content(100px) auto 64px;
+    height: 100vh;
 }
 
 .subQuestionHeader {

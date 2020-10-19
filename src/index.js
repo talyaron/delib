@@ -68,6 +68,7 @@ m.route(root, "/login", {
     "/questionEdit/:groupId/:questionId": QuestionEdit,
     '/optionchat/:groupId/:questionId/:subQuestionId/:optionId': ChatPage,
     "/subquestions/:groupId/:questionId/:subQuestionId": SubQuestionsPage,
+    "/subquestions-chat/:groupId/:questionId/:subQuestionId": SubQuestionsPage,
     "/edit":Edit,
     '/unauthorized':UnAuthorized,
     "/feed":FeedPage,
