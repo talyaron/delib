@@ -6,6 +6,8 @@
     background: var(--white);
     padding: 4px;
     box-sizing: border-box;
+    border: none;
+    border-bottom: 1px solid gray;
 }
 
 .input textarea{

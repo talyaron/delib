@@ -307,14 +307,6 @@ body {
     height: 4rem;
 }
 
-.input {
-    /* border-bottom: 2px solid #f97676;
-    border-top: 0px;
-    border-left: 0px;
-    border-right: 0px;
-    font-family: 'Varela Round', sans-serif;
-    opacity: 0.75; */
-}
 
 .feedWrapper{
     max-width: var(--maxWidthOnPC);

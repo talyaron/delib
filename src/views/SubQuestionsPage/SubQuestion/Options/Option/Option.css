@@ -4,11 +4,11 @@
     flex-direction: column;
     justify-content: space-between;
     position: relative;
-    top: 0px;
-    left: 0px;
+   
     animation-name: show;
     animation-duration: 0.3s;
     background-color: var(--white);
+    width: 99%;
 
 }
 

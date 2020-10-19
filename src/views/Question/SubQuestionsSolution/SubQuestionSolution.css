@@ -32,6 +32,10 @@
     font-size: var(--size16);
 }
 
+.subQuestionSolution hr{
+    border:1px solid #efefef;
+}
+
 .subQuestionSolution--noAnswer>p{
     color: var(--primary);
 }

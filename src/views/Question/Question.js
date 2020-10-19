@@ -141,7 +141,7 @@ module.exports = {
                                 .state
                                 .subQuestions
                                 .map((subQuestion, index) => {
-                                    console.log(subQuestion)
+                                  
                                     return (<SubQuestionSolution
                                         key={index}
                                         groupId={vnode.attrs.groupId}
