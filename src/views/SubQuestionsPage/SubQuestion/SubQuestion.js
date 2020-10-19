@@ -67,7 +67,7 @@ module.exports = {
 
 
 		return (
-			<div class="wrapper subQuestionWrapper" id="optionsWrapper">
+			<div class="subQuestionWrapper" id="optionsWrapper">
 				<div class={vnode.attrs.isAlone ? "questionSection questionSection--alone" : "questionSection"}>
 					<h1>אפשרויות שונות</h1>
 					{switchProcess(vnode.state.processType, vnode)}

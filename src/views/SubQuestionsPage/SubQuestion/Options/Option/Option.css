@@ -8,7 +8,9 @@
     animation-name: show;
     animation-duration: 0.3s;
     background-color: var(--white);
-    width: 99%;
+   width: 500px;
+   margin: 0px auto;
+    
 
 }
 
