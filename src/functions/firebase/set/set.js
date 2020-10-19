@@ -258,15 +258,15 @@ function sendMessage({ groupId, questionId, subQuestionId, optionId, user, messa
             throw 'No groupId was provdided'
         }
         if (questionId != undefined) {
-            ref += `/${questionId}`
+            ref += `/questions/${questionId}`
             location.questionId = questionId
         }
         if (subQuestionId != undefined) {
-            ref += `/${subQuestionId}`;
+            ref += `/subQuestions/${subQuestionId}`;
             location.subQuestionId = subQuestionId;
         }
         if (optionId != undefined) {
-            ref += `/${optionId}`;
+            ref += `/options/${optionId}`;
             location.optionId = optionId;
         }
 
@@ -278,7 +278,18 @@ function sendMessage({ groupId, questionId, subQuestionId, optionId, user, messa
         if (message) {
 
             DB.doc(ref).collection('chat').add({
-                location, displayName, photoURL, name, uid, message, title, entity, topic, url, ids,userColor,
+                location, 
+                displayName, 
+                photoURL, 
+                name, 
+                uid, 
+                message, 
+                title, 
+                entity, 
+                topic, 
+                url, 
+                ids,
+                userColor,
                 createdTime: firebase
                     .firestore
                     .FieldValue
