@@ -1,5 +1,5 @@
 .questionDescription{
-    background-color: var(--white);
+    background-color: var(--gray5);
     width: 100%;
     padding: var(--regPadding);
     box-sizing: border-box;

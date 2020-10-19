@@ -608,7 +608,7 @@ function zeroChatFeedMessages(ids) {
         if (ids === undefined) throw new Error('No ids were in the message')
 
         const path = generateChatEntitiyId(ids)
-        console.log(path)
+       
         DB.collection('users').doc(store.user.uid).collection('chat').doc(path).update({ msgDifference: 0 }).catch(e => console.error(e))
     } catch (e) {
         console.error(e)
