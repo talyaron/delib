@@ -242,12 +242,12 @@ function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like) 
         });
 }
 
-function sendMessage({ groupId, questionId, subQuestionId, optionId, user, message, vnode, title, entity, topic, url }) {
+function sendMessage({ groupId, questionId, subQuestionId, optionId, message, title, entity, topic, url }) {
     try {
 
 
         let { displayName, photoURL, name, uid, userColor } = store.user;
-        console.log(store.user)
+        
         if(!userColor) {userColor = 'teal'}
 
         let ref = 'groups', location = {}
@@ -273,7 +273,7 @@ function sendMessage({ groupId, questionId, subQuestionId, optionId, user, messa
 
         let ids = { groupId, questionId, subQuestionId, optionId }
         ids = createIds(ids)
-        console.log('ids', ids)
+        
 
         if (message) {
 

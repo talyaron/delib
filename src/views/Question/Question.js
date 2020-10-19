@@ -16,14 +16,16 @@ import Chat from '../Commons/Chat/Chat';
 //model
 import store from '../../data/store';
 //functions
-import { getQuestionDetails, getSubQuestion, getSubQuestions } from '../../functions/firebase/get/get';
+import { getQuestionDetails, getSubQuestion, getSubQuestions, listenToChat } from '../../functions/firebase/get/get';
 import { deep_value, getIsChat } from '../../functions/general';
 
 module.exports = {
     oninit: vnode => {
+        
+        const {groupId, questionId} = vnode.attrs;
 
         vnode.state = {
-            title: deep_value(store.questions, `${vnode.attrs.groupId}.${vnode.attrs.questionId}.title`, 'כותרת השאלה'),
+            title: deep_value(store.questions, `${groupId}.${questionId}.title`, 'כותרת השאלה'),
             addOption: false,
             callDB: true,
             subItems: {
@@ -47,7 +49,8 @@ module.exports = {
                 which: 'subQuestion'
             },
             unsbscribe: {
-                subQuestions: {}
+                subQuestions: {},
+                chat:()=>{}
             },
             authorized: {
                 anonymous: false,
@@ -64,7 +67,7 @@ module.exports = {
         }
 
         //get user before login to page
-        store.lastPage = '/question/' + vnode.attrs.groupId + '/' + vnode.attrs.questionId;
+        store.lastPage = '/question/' + groupId + '/' + questionId;
         sessionStorage.setItem('lastPage', store.lastPage);
 
         //check to see if user logged in
@@ -78,7 +81,8 @@ module.exports = {
         }
 
         //propare undubscribe function for question details to be used  onremove
-        vnode.state.unsubscribeQuestionDetails = getQuestionDetails(vnode.attrs.groupId, vnode.attrs.questionId, vnode);
+        vnode.state.unsubscribeQuestionDetails = getQuestionDetails(groupId, questionId, vnode);
+        vnode.state.unsbscribe.chat = listenToChat({ groupId, questionId})
 
     },
     oncreate: vnode => {
@@ -111,10 +115,12 @@ module.exports = {
                 .subQuestions();
         }
 
+        vnode.state.unsbscribe.chat()
+
     },
     view: vnode => {
 
-        const{groupId, questionId} = vnode.attrs;
+        const { groupId, questionId } = vnode.attrs;
 
         return (
             <div class='page page-grid-question'>
@@ -127,7 +133,7 @@ module.exports = {
                         showSubscribe={true}
                         questionId={vnode.attrs.questionId}
                     />
-                    <NavTop level={'שאלה'} current={vnode.state.subPage} pvs={vnode.state} mainUrl={`/question/${groupId}/${questionId}`} chatUrl={`/question-chat/${groupId}/${questionId}`} ids={{groupId, questionId}} />
+                    <NavTop level={'שאלה'} current={vnode.state.subPage} pvs={vnode.state} mainUrl={`/question/${groupId}/${questionId}`} chatUrl={`/question-chat/${groupId}/${questionId}`} ids={{ groupId, questionId }} />
                     <Description
                         title='הסבר'
                         content={vnode.state.description}
@@ -171,13 +177,13 @@ module.exports = {
                             ? <Spinner />
                             : <div />
                         }
-                       
+
                     </div>
                     :
                     <Chat
                         entity='question'
                         topic='שאלה'
-                        ids={{groupId:vnode.attrs.groupId, questionId:vnode.attrs.questionId}}
+                        ids={{ groupId: vnode.attrs.groupId, questionId: vnode.attrs.questionId }}
                         title={vnode.state.title}
                         url={m.route.get()}
                     />
