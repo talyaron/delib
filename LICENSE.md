@@ -19,3 +19,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+In all coming versions, there should be a sentence in the "about" that says. "This software was created based on delib.tect, by Tal Yaron from the Deliberative democracy Instetiute - delib.org"
+delib.org and delib.tech must be linked through a URL.
