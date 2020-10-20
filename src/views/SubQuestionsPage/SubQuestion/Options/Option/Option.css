@@ -4,17 +4,17 @@
     flex-direction: column;
     justify-content: space-between;
     position: relative;
-   
+
     animation-name: show;
     animation-duration: 0.3s;
     background-color: var(--white);
-   width: 500px;
-   margin: 0px auto;
-    
+    width: 100%;
+    margin: 10px 0px;
+
 
 }
 
-.optionCard__main{
+.optionCard__main {
     display: grid;
     grid-template-columns: 60px auto 60px;
     padding: 12px 0px;
@@ -32,14 +32,14 @@
     align-items: center;
 }
 
-.optionCard__info{
+.optionCard__info {
 
     display: flex;
     justify-content: center;
 }
 
-.optionCard__info>*{
-    margin:10px 20px;
+.optionCard__info>* {
+    margin: 10px 20px;
 }
 
 @keyframes show {
@@ -52,7 +52,7 @@
     }
 }
 
-.optionCard hr{
+.optionCard hr {
     border: 1px solid #0000000d;
     width: 100%;
 }
@@ -86,7 +86,7 @@
 
 
 .optionContent {
-   
+
     padding: 5px;
     min-height: 140px;
 }
@@ -167,7 +167,7 @@
 }
 
 .optionCard__creator {
-    color:var(--primary);
+    color: var(--primary);
     font-size: var(--size13);
 
 }
