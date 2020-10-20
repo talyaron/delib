@@ -131,6 +131,25 @@ function updateSubQuestionOrderBy(groupId, questionId, subQuestionId, orderBy) {
         .update({ orderBy });
 }
 
+function updateDoesUserHaveNavigation(groupId, questionId, subQuestionId, userHaveNavigation){
+    try{
+        DB
+        .collection('groups')
+        .doc(groupId)
+        .collection('questions')
+        .doc(questionId)
+        .collection('subQuestions')
+        .doc(subQuestionId)
+        .update({ userHaveNavigation })
+        .catch(e=>{
+            console.error(e)
+        });
+    }catch(e){
+        console.error(e)
+    }
+
+}
+
 function updateSubQuestionsOrder(groupId, questionId, newOrderArray) {
     DB
         .collection('groups')
@@ -639,6 +658,7 @@ module.exports = {
     setSubAnswer,
     updateSubQuestionProcess,
     updateSubQuestionOrderBy,
+    updateDoesUserHaveNavigation,
     subscribeUser,
     setToFeedLastEntrance,
     zeroChatFeedMessages

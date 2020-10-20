@@ -30,6 +30,8 @@
 
 .optionEditContentText {
     margin-bottom: 6px;
+    font-size: var(--size17);
+    font-weight: bolder;
 }
 
 .optionEditContentText>div {

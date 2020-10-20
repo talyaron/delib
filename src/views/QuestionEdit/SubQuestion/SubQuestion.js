@@ -5,7 +5,8 @@ import "./SubQuestion.css";
 import {
   updateSubQuestion,
   updateSubQuestionProcess,
-  updateSubQuestionOrderBy
+  updateSubQuestionOrderBy,
+  updateDoesUserHaveNavigation
 } from "../../../functions/firebase/set/set";
 
 //model
@@ -21,6 +22,8 @@ module.exports = {
   view: vnode => {
     let va = vnode.attrs,
       vs = vnode.state;
+      const {subQuestion} = vnode.attrs;
+      console.log(subQuestion)
 
     return (
       <div
@@ -117,6 +120,28 @@ module.exports = {
                 <option value="new">הכי חדשות קודם</option>
                 <option value="top">הכי מוסכמות קודם</option>
                 <option value="message">אלו שדיברו עליהן לאחרונה</option>
+              </select>
+            </div>
+            <div class="editselectors">
+              <label for={vnode.attrs.id + "orderBy"}>האם לאפשר למשתמש לנווט מחוץ לשאלה?</label>
+              <select
+                id={vnode.attrs.id + "orderBy"}
+                onchange={e => {
+
+                  let hasNavigation = false
+                  if(e.target.value === 'true'){hasNavigation = true};
+
+                  updateDoesUserHaveNavigation(
+                    va.groupId,
+                    va.questionId,
+                    va.subQuestionId,
+                    hasNavigation
+                  );
+                }}
+              >
+                <option value={false} selected={subQuestion.userHaveNavigation == false?'selected':false}>הצגה ללא ניווט</option>
+                <option value={true} selected={subQuestion.userHaveNavigation == true || subQuestion.userHaveNavigation == undefined?'selected':false}>הצגה עם ניווט - שליטה של המשתמש</option>
+               
               </select>
             </div>
           </div>

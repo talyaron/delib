@@ -81,7 +81,7 @@ module.exports = {
   },
 
   onupdate: vnode => {
-    setWrapperHeight("headerContainer", "questionEditWrapperAll");
+    console.log(vnode.state)
   },
   onremove: vnode => {
     vnode.state.unsbscribe.details();
@@ -226,6 +226,7 @@ module.exports = {
                   <SubQuestion
                     groupId={vnode.attrs.groupId}
                     questionId={vnode.attrs.questionId}
+                    subQuestion={subQuestion}
                     subQuestionId={subQuestion.id}
                     number={index}
                     title={subQuestion.title}
