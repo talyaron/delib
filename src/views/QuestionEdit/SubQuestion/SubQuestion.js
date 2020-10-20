@@ -23,8 +23,7 @@ module.exports = {
     let va = vnode.attrs,
       vs = vnode.state;
       const {subQuestion} = vnode.attrs;
-      console.log(subQuestion)
-
+    
     return (
       <div
         class="optionEditBox draggable"

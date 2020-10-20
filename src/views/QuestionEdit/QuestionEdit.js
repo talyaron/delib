@@ -79,10 +79,6 @@ module.exports = {
       }
     });
   },
-
-  onupdate: vnode => {
-    console.log(vnode.state)
-  },
   onremove: vnode => {
     vnode.state.unsbscribe.details();
     // vnode.state.unsbscribe.subQuestions();

@@ -62,12 +62,14 @@ module.exports = {
         vnode.state.subscribed = get(store.subscribe, `[${vnode.state.path}]`, false)
 
         getGroupDetails(groupId);
+        console.log( vnode.state.details)
     },
     onbeforeupdate: vnode => {
         const { groupId, subQuestionId } = vnode.attrs;
 
         if (store.subQuestions.hasOwnProperty(subQuestionId)) {
             vnode.state.details = store.subQuestions[subQuestionId];
+            console.log( vnode.state.details)
         }
 
         let groupObj = get(store, `groups[${groupId}]`, {
@@ -94,7 +96,7 @@ module.exports = {
                             <div class="subQuestionHeader">
                                 <Header
                                     title={vnode.state.details.title}
-                                    upLevelUrl={`/question/${groupId}/${questionId}`}
+                                    upLevelUrl={vnode.state.details.userHaveNavigation || vnode.state.details.userHaveNavigation == undefined?`/question/${groupId}/${questionId}`:false}
                                     groupId={groupId}
                                     questionId={questionId}
                                     showSubscribe={true}
@@ -168,7 +170,7 @@ module.exports = {
                                     </div>
                                 </div> : null
                             }
-                            <NavBottom />
+                            {vnode.state.details.userHaveNavigation == true || vnode.state.details.userHaveNavigation == undefined ?<NavBottom />:<div class='emptyNav' />}
 
 
 

@@ -12,6 +12,11 @@
    
 }
 
+.questionSection h1{
+    text-align: center;
+    font-size: var(--size17);
+}
+
 .subQuestionHeader .title {
     display: flex;
     flex-direction: column;
@@ -34,4 +39,9 @@
 .fav__subQuestion{
     bottom: 115px;
     right: calc(50vw - 336px);
+}
+
+.emptyNav{
+    background-color: var(--white);
+    width:100%;
 }
