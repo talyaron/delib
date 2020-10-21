@@ -379,7 +379,7 @@ exports.questionChatNotifications = functions.firestore
 
 exports.groupChatNotifications = functions.firestore
   .document(
-    "groups/{groupId}/questions/{questionId}/chat/{messageId}"
+    "groups/{groupId}/chat/{messageId}"
 
   )
   .onCreate((snap, context) => {
@@ -564,16 +564,14 @@ exports.listenToGroupChats = functions.firestore
   .onCreate((newMsg, context) => {
     try {
       const { groupId, chatMassageId } = context.params;
-      console.log(newMsg.data())
-
-      console.log('start in group:', `/groups/${groupId}/subscribers`);
+    
 
       return db
         .collection(`/groups/${groupId}/subscribers`)
         .get()
         .then(subscribersDB => {
 
-          console.log('going to subscribers.....', subscribersDB.size)
+       
           return subscribersDB.forEach(subscriberDB => {
             console.log('update user ', subscriberDB.id)
 
