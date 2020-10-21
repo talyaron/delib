@@ -412,9 +412,9 @@ function concatenateURL(groupId, questionId, subQuestionId, optionId) {
                 subscriptionPath = `question/${groupId}/${questionId}`;
                 if (subQuestionId !== undefined) {
                     subscriptionPath = `/subquestions/${groupId}/${questionId}/${subQuestionId}`;
-                    // if (optionId !== undefined) {
-                    //     subscriptionPath += `/options/${optionId}`
-                    // }
+                    if (optionId !== undefined) {
+                        subscriptionPath = `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`
+                    }
                 }
             }
             return subscriptionPath

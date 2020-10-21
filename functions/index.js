@@ -208,7 +208,7 @@ exports.countNumbeOfMessages = functions.firestore
 
     if (!change.before.exists) {
       // New document Created : add one to count
-      docRef
+      return docRef
         .get()
         .then((snap) => {
           //check if new
@@ -229,7 +229,7 @@ exports.countNumbeOfMessages = functions.firestore
       return true;
     } else if (!change.after.exists) {
       // Deleting document : subtract one from count
-      docRef
+      return docRef
         .get()
         .then((snap) => {
           docRef.update({
@@ -239,8 +239,10 @@ exports.countNumbeOfMessages = functions.firestore
         })
         .catch((err) => {
           console.log(err);
+          return
         });
     }
+    return false
   });
 
 // ========= push notifications =======
@@ -249,97 +251,29 @@ exports.sendPushForNewOptions = functions.firestore
     // "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}"
     "groups/{groupId}/questions/{questionId}"
   )
-  .onWrite((change, context) => {
-    const CP = context.params;
-    const { groupId, questionId, subQuestionId, optionId } = context.params;
-    const OPTION_DATA = change.after.data();
-    
-    console.log('title:', OPTION_DATA.title)
+  .onCreate((snap, context) => {
 
-    // Setup notification
+    const { groupId, questionId, subQuestionId, optionId } = context.params;
+    const DATA = snap.data();
+
+    console.log('title:', DATA.title)
+
+    // send notification
+
+    const pathForAction = concatenateURL(groupId, questionId, subQuestionId, optionId)
 
     const payload = {
       notification: {
-        title: `הצעה חדשה: ${OPTION_DATA.title}`,
-        body: `${OPTION_DATA.creatorName} מציע ש ${OPTION_DATA.title} \nהיא תשובה טובה ל-\n ${OPTION_DATA.subQuestionTitle}`,
+        title: `הצעה חדשה: ${DATA.title}`,
+        body: `${DATA.creatorName} מציע ש ${DATA.title} \nהיא תשובה טובה ל-\n ${DATA.subQuestionTitle}`,
         icon: "https://delib.tech/img/logo-192.png",
-        click_action: `https://delib.tech/?/subquestions/${groupId}`,
+        click_action: `https://delib.tech/?/${pathForAction}`,
       },
     };
 
-    // Clean invalid tokens
-    function cleanInvalidTokens(tokensWithKey, results) {
-      const invalidTokens = [];
-
-      results.forEach((result, i) => {
-        if (!result.error) return;
-
-        console.error(
-          "Failure sending notification to",
-          tokensWithKey[i].token,
-          result.error
-        );
-
-        switch (result.error.code) {
-          case "messaging/invalid-registration-token":
-          case "messaging/registration-token-not-registered":
-            invalidTokens.push(
-              admin
-                .database()
-                .ref("/tokens")
-                .child(tokensWithKey[i].key)
-                .remove()
-            );
-            break;
-          default:
-            break;
-        }
-      });
-
-      return Promise.all(invalidTokens);
-    }
-
-    // go over all token given by users and see which user set a token for this
-    // entity
-    return db
-      .collection('groups').doc(groupId)
-      // .collection('questions').doc(questionId)
-      // .collection('subQuestions').doc(subQuestionId)
-      .collection('notifications')
-      .get()
-      .then((usersDB) => {
-        if (usersDB.size === 0) return;
-
-        // const snapshot = tokensDB.data();
-        // const snapshot = [];
-        // const tokensWithKey = [];
-        // const tokens = [];
-        // let counter = 0;
-        usersDB.forEach((userDB) => {
-          const userTokensObj = userDB.data();
-
-          for (let i in userTokensObj) {
-
-            let token = userTokensObj[i].token
-            if (userTokensObj[i].token) {
-              console.log('token:', token)
-              admin.messaging().sendToDevice(token, payload);
-            }
-          }
+    return notifiyUsers(payload, context.params)
 
 
-        });
-
-        //send notifications to all users that are registerd to this entity
-        return
-        // .then((response) => cleanInvalidTokens(tokensWithKey, response.results))
-        // .then(() =>
-        // admin.database().ref('/notifications').child(NOTIFICATION_SNAPSHOT.key).remove
-        // ())
-      })
-      .catch((err) => {
-        console.log("Error2:", err);
-      });
   });
 
 //update subscribers on CUD of questions under a group
@@ -348,7 +282,7 @@ exports.updateGroupSubscribers = functions.firestore
   .onWrite((change, context) => {
     try {
 
-      return sendToSubscribers({ change, context });
+      sendToSubscribers({ change, context });
     } catch (err) {
       console.log(err);
     }
@@ -562,5 +496,131 @@ function generateChatEntitiyId(ids) {
   } catch (e) {
     console.error(e);
     return e;
+  }
+}
+
+function generateCollectionPath(ids) {
+  try {
+    const { groupId, questionId, subQuestionId, optionId } = ids;
+    let path = 'groups'
+    if (groupId !== undefined) { path = 'groups' } else { throw new Error('no group id') }
+    if (questionId !== undefined) { path += `/${groupId}` }
+    if (subQuestionId !== undefined) { path += `/questions/${questionId}` }
+    if (optionId !== undefined) { path += `/subQuestions/${subQuestionId}` }
+
+    return path;
+
+  } catch (e) {
+    console.log('error at generateCollectionPath')
+    console.log(e)
+  }
+}
+
+function notifiyUsers(payload, ids) {
+  try {
+
+    const { groupId, questionId, subQuestionId, optionId } = ids;
+
+
+
+    // Clean invalid tokens
+    // function cleanInvalidTokens(tokensWithKey, results) {
+    //   const invalidTokens = [];
+
+    //   results.forEach((result, i) => {
+    //     if (!result.error) return;
+
+    //     console.error(
+    //       "Failure sending notification to",
+    //       tokensWithKey[i].token,
+    //       result.error
+    //     );
+
+    //     switch (result.error.code) {
+    //       case "messaging/invalid-registration-token":
+    //       case "messaging/registration-token-not-registered":
+    //         invalidTokens.push(
+    //           admin
+    //             .database()
+    //             .ref("/tokens")
+    //             .child(tokensWithKey[i].key)
+    //             .remove()
+    //         );
+    //         break;
+    //       default:
+    //         break;
+    //     }
+    //   });
+
+    //   return Promise.all(invalidTokens);
+    // }
+
+    // go over all token given by users and see which user set a token for this
+    // entity
+    const path2 = generateCollectionPath({ groupId, questionId, subQuestionId, optionId })
+    console.log(`${path2}/notifications`)
+
+    return db
+      .collection(`${path2}/notifications`)
+      .get()
+      .then((usersDB) => {
+        if (usersDB.size === 0) return;
+
+        usersDB.forEach((userDB) => {
+          const userTokensObj = userDB.data();
+
+          for (let i in userTokensObj) {
+
+            let token = userTokensObj[i].token
+            if (userTokensObj[i].token) {
+              console.log(token)
+              admin.messaging().sendToDevice(token, payload);
+            }
+          }
+
+
+        });
+
+
+        return
+        // .then((response) => cleanInvalidTokens(tokensWithKey, response.results))
+        // .then(() =>
+        // admin.database().ref('/notifications').child(NOTIFICATION_SNAPSHOT.key).remove
+        // ())
+      })
+      .catch((err) => {
+        console.log("Error2:", err);
+      });
+  } catch (e) {
+    console.log(e)
+  }
+  return false
+}
+
+
+function concatenateURL(groupId, questionId, subQuestionId, optionId) {
+  try {
+    let subscriptionPath = 'groups/'
+    if (groupId !== undefined) {
+      subscriptionPath = 'group/' + groupId;
+      if (questionId !== undefined) {
+        subscriptionPath = `question/${groupId}/${questionId}`;
+        if (subQuestionId !== undefined) {
+          subscriptionPath = `/subquestions/${groupId}/${questionId}/${subQuestionId}`;
+          if (optionId !== undefined) {
+            subscriptionPath = `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`
+          }
+        }
+      }
+      return subscriptionPath
+    } else {
+      return '/groups'
+
+    }
+
+
+  } catch (err) {
+    console.error(err);
+    return undefined;
   }
 }
