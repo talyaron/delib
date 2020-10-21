@@ -260,7 +260,8 @@ exports.sendPushForNewOptions = functions.firestore
 
     // send notification
 
-    const pathForAction = concatenateURL(groupId, questionId, subQuestionId, optionId)
+    const pathForAction = concatenateURL(groupId, questionId, subQuestionId, optionId);
+    const pathDBNotifications = `groups/${groupId}/questions/${questionId}/subQuestions/${subQuestionId}/notifications`
 
     const payload = {
       notification: {
@@ -271,10 +272,45 @@ exports.sendPushForNewOptions = functions.firestore
       },
     };
 
-    return notifiyUsers(payload, context.params)
+    return notifiyUsers(payload, context.params, pathDBNotifications)
 
 
   });
+
+exports.subQuestionChatNotifications = functions.firestore
+  .document(
+    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/chat/{messageId}"
+
+  )
+  .onCreate((snap, context) => {
+
+    const { groupId, questionId, subQuestionId, optionId } = context.params;
+    const message = snap.data();
+
+
+
+    console.log('message:', message.message)
+
+    // send notification
+
+
+    const pathDBNotifications = `groups/${groupId}/questions/${questionId}/subQuestions/${subQuestionId}/notifications`
+
+    const payload = {
+      notification: {
+        title: `${message.name} אמר ${message.message}`,
+        body: `ב-${message.topic}`,
+        icon: "https://delib.tech/img/logo-192.png",
+        click_action: `https://delib.tech/?/subquestions-chat/${groupId}/${questionId}/${subQuestionId}`,
+      },
+    };
+
+    return notifiyUsers(payload, context.params, pathDBNotifications)
+
+
+  });
+
+// =============== end of notifications ==================
 
 //update subscribers on CUD of questions under a group
 exports.updateGroupSubscribers = functions.firestore
@@ -516,7 +552,7 @@ function generateCollectionPath(ids) {
   }
 }
 
-function notifiyUsers(payload, ids) {
+function notifiyUsers(payload, ids, pathDB) {
   try {
 
     const { groupId, questionId, subQuestionId, optionId } = ids;
@@ -531,7 +567,7 @@ function notifiyUsers(payload, ids) {
     console.log(`${path2}/notifications`)
 
     return db
-      .collection(`${path2}/notifications`)
+      .collection(pathDB)
       .get()
       .then((usersDB) => {
         if (usersDB.size === 0) return;
