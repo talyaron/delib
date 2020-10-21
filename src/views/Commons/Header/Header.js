@@ -4,11 +4,11 @@ import './Header.css';
 import { get, set } from 'lodash';
 
 //functions
-import { subscribeUser } from '../../../functions/firebase/set/set';
+import { subscribeUser,setNotifications} from '../../../functions/firebase/set/set';
 import { listenToSubscription } from '../../../functions/firebase/get/get';
 
 import store from '../../../data/store';
-import { Reference, concatenatePath } from '../../../functions/general';
+import { Reference, concatenateDBPath } from '../../../functions/general';
 
 //components
 import Aside from '../Aside/Aside';
@@ -47,7 +47,8 @@ module.exports = {
             refString: '',
             isMenuOpen: false,
             subscribed: false,
-            path: concatenatePath(groupId, questionId, subQuestionId, optionId)
+            notifications: false,
+            path: concatenateDBPath(groupId, questionId, subQuestionId, optionId)
         }
         //set refernce string
         let reference = new Reference(vnode.state.refArray, 'array', 'collection');
@@ -60,10 +61,10 @@ module.exports = {
             if (groupId !== undefined) {
 
                 await listenToSubscription(vnode.state.path);
-             
+
                 vnode.state.subscribed = get(store.subscribe, `[${vnode.state.path}]`, false)
-            
-                
+
+
             }
         })();
 
@@ -78,6 +79,7 @@ module.exports = {
 
         //make counter jump if new message
         onNewMessageJumpCounter(vnode);
+
 
     },
     view: (vnode) => {
@@ -94,11 +96,19 @@ module.exports = {
                             }}
                             class='headerHamburger'
                             src='img/hamburger.svg' />
-                        
+
                         <div class='headerTitle'>
                             {vnode.attrs.title}
                         </div>
-
+                        {vnode.state.notifications ?
+                            <div class='notifications notifications--on' onclick={() => { handleNotifications(false, vnode) }}>
+                                <img src='img/notifications-on.svg' alt='notifications-on' />
+                            </div>
+                            :
+                            <div class='notifications notifications--off' onclick={() => { handleNotifications(true, vnode) }}>
+                                <img src='img/add_alert.svg' alt='notifications-off' />
+                            </div>
+                        }
                         {vnode.attrs.showSubscribe == true ?
                             <div
                                 class='headerSetFeed'
@@ -106,11 +116,12 @@ module.exports = {
                                     e.stopPropagation();
                                     handleSubscription(vnode);
                                 }}>
-                                {vnode.state.subscribed ? <div class='setButton setButton--cancel'>ביטול הרשמה</div>:<div class='setButton setButton--activate'>הרשמה</div>}
+                                {vnode.state.subscribed ? <div class='setButton setButton--cancel'>ביטול הרשמה</div> : <div class='setButton setButton--activate'>הרשמה</div>}
                             </div>
                             :
                             null
                         }
+
                         {vnode.attrs.upLevelUrl
                             ? <div
                                 class='headerBack'
@@ -139,6 +150,21 @@ module.exports = {
     }
 }
 
+function handleNotifications(setNotificationTo, vnode) {
+    vnode.state.notifications = setNotificationTo;
+
+    const ids = {}
+    const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
+    if (groupId !== undefined) { ids.groupId = groupId };
+    if (questionId !== undefined) { ids.questionId = questionId };
+    if (subQuestionId !== undefined) { ids.subQuestionId = subQuestionId };
+    if (optionId !== undefined) { ids.optionId = optionId };
+
+
+    setNotifications(ids, setNotificationTo)
+
+}
+
 function onNewMessageJumpCounter(vnode) {
     if (vnode.state.previousCount != store.numberOfNewMessages) {
         document
@@ -160,7 +186,7 @@ function handleSubscription(vnode) {
 
     //path for subscription object
     const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
-    const path = concatenatePath(groupId, questionId, subQuestionId, optionId);
+    const path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
     console.log(vnode)
     subscribeUser({
         vnode,

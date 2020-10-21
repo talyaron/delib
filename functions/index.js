@@ -246,8 +246,7 @@ exports.countNumbeOfMessages = functions.firestore
 // ========= push notifications =======
 exports.sendPushForNewOptions = functions.firestore
   .document(
-    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{op" +
-    "tionId}"
+    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}"
   )
   .onWrite((change, context) => {
     const CP = context.params;

@@ -1,7 +1,7 @@
 import m from 'mithril';
 import { DB } from '../config';
 import store from '../../../data/store';
-import { Reference, concatenatePath, uniqueId, generateChatEntitiyId, createIds } from '../../general';
+import { Reference, concatenateDBPath, uniqueId, generateChatEntitiyId, createIds } from '../../general';
 
 function createGroup(creatorId, title, description) {
 
@@ -131,20 +131,20 @@ function updateSubQuestionOrderBy(groupId, questionId, subQuestionId, orderBy) {
         .update({ orderBy });
 }
 
-function updateDoesUserHaveNavigation(groupId, questionId, subQuestionId, userHaveNavigation){
-    try{
+function updateDoesUserHaveNavigation(groupId, questionId, subQuestionId, userHaveNavigation) {
+    try {
         DB
-        .collection('groups')
-        .doc(groupId)
-        .collection('questions')
-        .doc(questionId)
-        .collection('subQuestions')
-        .doc(subQuestionId)
-        .update({ userHaveNavigation })
-        .catch(e=>{
-            console.error(e)
-        });
-    }catch(e){
+            .collection('groups')
+            .doc(groupId)
+            .collection('questions')
+            .doc(questionId)
+            .collection('subQuestions')
+            .doc(subQuestionId)
+            .update({ userHaveNavigation })
+            .catch(e => {
+                console.error(e)
+            });
+    } catch (e) {
         console.error(e)
     }
 
@@ -264,7 +264,7 @@ function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like) 
 function sendMessage({ groupId, questionId, subQuestionId, optionId, message, title, entity, topic, url }) {
     try {
 
-     
+
 
         let { displayName, photoURL, name, uid, userColor } = store.user;
 
@@ -290,7 +290,7 @@ function sendMessage({ groupId, questionId, subQuestionId, optionId, message, ti
             location.optionId = optionId;
         }
 
-       
+
         let ids = { groupId, questionId, subQuestionId, optionId }
         ids = createIds(ids)
 
@@ -569,7 +569,7 @@ function subscribeUser(settings) {
 
         // DB.doc(`groups/${groupId}`).get().then(groupDB=>{console.log(groupDB.data())}
         // ) build path for the enenties subscription collection
-        const subscriptionPath = concatenatePath(groupId, questionId, subQuestionId, optionId);
+        const subscriptionPath = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
         let chatEntityId = generateChatEntitiyId({ groupId, questionId, subQuestionId, optionId });
 
         console.log(subscriptionPath)
@@ -637,6 +637,26 @@ function zeroChatFeedMessages(ids, isSubscribed = true) {
     }
 }
 
+function setNotifications(ids, isSubscribed) {
+
+    try {
+
+        const { groupId, questionId, subQuestionId, optionId } = ids;
+
+        const path = `${concatenateDBPath(groupId, questionId, subQuestionId, optionId)}/notifications/${store.user.uid}`;
+
+        if (isSubscribed) {
+            DB.doc(path).set({ username: store.user.name, email: store.user.email || null }).catch(e=>{console.error(e)})
+        } else {
+            DB.doc(path).delete().catch(e=>{console.error(e)})
+        }
+    } catch (e) {
+        console.error(e)
+    }
+
+
+}
+
 module.exports = {
     updateOption,
     addToFeed,
@@ -661,5 +681,6 @@ module.exports = {
     updateDoesUserHaveNavigation,
     subscribeUser,
     setToFeedLastEntrance,
-    zeroChatFeedMessages
+    zeroChatFeedMessages,
+    setNotifications
 };

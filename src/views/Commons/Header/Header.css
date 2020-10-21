@@ -78,3 +78,27 @@ header {
     color: var(--gray1);
     font-size: 1rem;
 }
+
+.notifications{
+    border-radius: 20px;
+    width: 40px;
+    height: 40px;
+   
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    margin-left: 24px;
+    user-select: none;
+    cursor: pointer;
+}
+
+.notifications--on{
+    background-color: var(--additional);
+}
+
+.notifications--off{
+  
+    background-color: var(--primary);
+   
+}

@@ -17,7 +17,7 @@ import Chat from '../Commons/Chat/Chat';
 
 //functions
 import { getSubQuestion, getGroupDetails,listenToChat } from "../../functions/firebase/get/get";
-import { getIsChat, concatenatePath } from '../../functions/general';
+import { getIsChat, concatenateDBPath } from '../../functions/general';
 import { get } from "lodash";
 
 let unsubscribe = () => { }, unsubscribeChat=()=>{};
@@ -50,7 +50,7 @@ module.exports = {
                 title: ""
             },
             subscribed: false,
-            path: concatenatePath(groupId, questionId, subQuestionId)
+            path: concatenateDBPath(groupId, questionId, subQuestionId)
         }
     },
     oncreate: vnode => {

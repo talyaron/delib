@@ -6,7 +6,7 @@ import Message from './Message/Message';
 import Input from './Input/Input';
 
 //functions
-import {concatenatePath} from '../../../functions/general'
+import {concatenateDBPath} from '../../../functions/general'
 
 //data
 import store from '../../../data/store';
@@ -38,7 +38,7 @@ module.exports = {
         const{groupId, questionId, subQuestionId, optionId} = ids;
 
        
-        const path = concatenatePath(groupId, questionId, subQuestionId, optionId);
+        const path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
 
         if(!(path in store.chat)){store.chat[path] = []}
         

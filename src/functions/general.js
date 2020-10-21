@@ -376,7 +376,7 @@ function setLastPage() {
     sessionStorage.setItem('lastPage', store.lastPage)
 }
 
-function concatenatePath(groupId, questionId, subQuestionId, optionId) {
+function concatenateDBPath(groupId, questionId, subQuestionId, optionId) {
     try {
         let subscriptionPath = 'groups/'
         if (groupId !== undefined) {
@@ -498,7 +498,7 @@ module.exports = {
     getRandomName,
     loginIfNotRegisterd,
     setLastPage,
-    concatenatePath,
+    concatenateDBPath,
     concatenateURL,
     uniqueId,
     getRandomColor,

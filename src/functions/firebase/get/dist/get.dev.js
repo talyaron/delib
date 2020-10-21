@@ -521,7 +521,7 @@ function listenToChat(ids) {
         subQuestionId = ids.subQuestionId,
         optionId = ids.optionId;
     if (groupId === undefined) throw new Error('No group id in the ids');
-    var path = (0, _general.concatenatePath)(groupId, questionId, subQuestionId, optionId);
+    var path = (0, _general.concatenateDBPath)(groupId, questionId, subQuestionId, optionId);
     var chatPath = path + '/chat';
     var lastRead = new Date('2020-01-01');
 

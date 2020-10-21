@@ -4,7 +4,7 @@ import store from "../../../data/store";
 
 //functions
 import { orderBy, set } from 'lodash';
-import { concatenatePath } from '../../general'
+import { concatenateDBPath } from '../../general'
 
 var unsubscribe = {};
 
@@ -698,7 +698,7 @@ function listenToChat(ids) {
         const { groupId, questionId, subQuestionId, optionId } = ids;
 
         if (groupId === undefined) throw new Error('No group id in the ids')
-        let path = concatenatePath(groupId, questionId, subQuestionId, optionId);
+        let path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
 
         const chatPath = path + '/chat';
         let lastRead = new Date('2020-01-01');
