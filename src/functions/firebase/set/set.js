@@ -261,10 +261,10 @@ function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like) 
         });
 }
 
-function sendMessage({ groupId, questionId, subQuestionId, optionId, message, title, entity, topic, url }) {
+function sendMessage({ groupId, questionId, subQuestionId, optionId, message, title, entity, topic, url ,vnode}) {
     try {
 
-
+        if(vnode.attrs.title === undefined) throw new Error(`No title of entity in vnode`)
 
         let { displayName, photoURL, name, uid, userColor } = store.user;
 
@@ -298,6 +298,7 @@ function sendMessage({ groupId, questionId, subQuestionId, optionId, message, ti
         if (message) {
 
             DB.doc(ref).collection('chat').add({
+                entityTitle:vnode.attrs.title,
                 location,
                 displayName,
                 photoURL,

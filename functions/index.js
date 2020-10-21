@@ -277,6 +277,40 @@ exports.sendPushForNewOptions = functions.firestore
 
   });
 
+  exports.optionChatNotifications = functions.firestore
+  .document(
+    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/chat/{messageId}"
+
+  )
+  .onCreate((snap, context) => {
+
+    const { groupId, questionId, subQuestionId, optionId } = context.params;
+    const message = snap.data();
+
+
+
+    console.log('message:', message.message)
+
+    // send notification
+
+
+    const pathDBNotifications = `groups/${groupId}/questions/${questionId}/subQuestions/${subQuestionId}/options/${optionId}/notifications`
+
+    const payload = {
+      notification: {
+        title: `${message.name} אמר ${message.message}`,
+        body: `ב${message.topic}: ${message.entityTitle}`,
+        icon: "https://delib.tech/img/logo-192.png",
+        click_action: `https://delib.tech/?/option-chat/${groupId}/${questionId}/${subQuestionId}/${optionId}`,
+      },
+    };
+
+    return notifiyUsers(payload, context.params, pathDBNotifications)
+
+
+  });
+
+
 exports.subQuestionChatNotifications = functions.firestore
   .document(
     "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/chat/{messageId}"
@@ -299,9 +333,75 @@ exports.subQuestionChatNotifications = functions.firestore
     const payload = {
       notification: {
         title: `${message.name} אמר ${message.message}`,
-        body: `ב-${message.topic}`,
+        body: `ב${message.topic}: ${message.entityTitle}`,
         icon: "https://delib.tech/img/logo-192.png",
         click_action: `https://delib.tech/?/subquestions-chat/${groupId}/${questionId}/${subQuestionId}`,
+      },
+    };
+
+    return notifiyUsers(payload, context.params, pathDBNotifications)
+
+
+  });
+
+exports.questionChatNotifications = functions.firestore
+  .document(
+    "groups/{groupId}/questions/{questionId}/chat/{messageId}"
+
+  )
+  .onCreate((snap, context) => {
+
+    const { groupId, questionId } = context.params;
+    const message = snap.data();
+
+
+
+    console.log('message:', message.message)
+
+    // send notification
+
+
+    const pathDBNotifications = `groups/${groupId}/questions/${questionId}/notifications`
+
+    const payload = {
+      notification: {
+        title: `${message.name} אמר ${message.message}`,
+        body: `ב${message.topic}: ${message.entityTitle}`,
+        icon: "https://delib.tech/img/logo-192.png",
+        click_action: `https://delib.tech/?/question-chat/${groupId}/${questionId}`,
+      },
+    };
+
+    return notifiyUsers(payload, context.params, pathDBNotifications)
+
+
+  });
+
+exports.groupChatNotifications = functions.firestore
+  .document(
+    "groups/{groupId}/questions/{questionId}/chat/{messageId}"
+
+  )
+  .onCreate((snap, context) => {
+
+    const { groupId } = context.params;
+    const message = snap.data();
+
+
+
+    console.log('message:', message.message)
+
+    // send notification
+
+
+    const pathDBNotifications = `groups/${groupId}/notifications`
+
+    const payload = {
+      notification: {
+        title: `${message.name} אמר ${message.message}`,
+        body: `ב${message.topic}: ${message.entityTitle}`,
+        icon: "https://delib.tech/img/logo-192.png",
+        click_action: `https://delib.tech/?/group-chat/${groupId}`,
       },
     };
 
