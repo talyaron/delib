@@ -248,8 +248,8 @@ exports.countNumbeOfMessages = functions.firestore
 // ========= push notifications =======
 exports.sendPushForNewOptions = functions.firestore
   .document(
-    // "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}"
-    "groups/{groupId}/questions/{questionId}"
+    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}"
+    // "groups/{groupId}/questions/{questionId}"
   )
   .onCreate((snap, context) => {
 
@@ -523,37 +523,7 @@ function notifiyUsers(payload, ids) {
 
 
 
-    // Clean invalid tokens
-    // function cleanInvalidTokens(tokensWithKey, results) {
-    //   const invalidTokens = [];
 
-    //   results.forEach((result, i) => {
-    //     if (!result.error) return;
-
-    //     console.error(
-    //       "Failure sending notification to",
-    //       tokensWithKey[i].token,
-    //       result.error
-    //     );
-
-    //     switch (result.error.code) {
-    //       case "messaging/invalid-registration-token":
-    //       case "messaging/registration-token-not-registered":
-    //         invalidTokens.push(
-    //           admin
-    //             .database()
-    //             .ref("/tokens")
-    //             .child(tokensWithKey[i].key)
-    //             .remove()
-    //         );
-    //         break;
-    //       default:
-    //         break;
-    //     }
-    //   });
-
-    //   return Promise.all(invalidTokens);
-    // }
 
     // go over all token given by users and see which user set a token for this
     // entity
@@ -583,6 +553,38 @@ function notifiyUsers(payload, ids) {
 
 
         return
+
+        // Clean invalid tokens
+        // function cleanInvalidTokens(tokensWithKey, results) {
+        //   const invalidTokens = [];
+
+        //   results.forEach((result, i) => {
+        //     if (!result.error) return;
+
+        //     console.error(
+        //       "Failure sending notification to",
+        //       tokensWithKey[i].token,
+        //       result.error
+        //     );
+
+        //     switch (result.error.code) {
+        //       case "messaging/invalid-registration-token":
+        //       case "messaging/registration-token-not-registered":
+        //         invalidTokens.push(
+        //           admin
+        //             .database()
+        //             .ref("/tokens")
+        //             .child(tokensWithKey[i].key)
+        //             .remove()
+        //         );
+        //         break;
+        //       default:
+        //         break;
+        //     }
+        //   });
+
+        //   return Promise.all(invalidTokens);
+        // }
         // .then((response) => cleanInvalidTokens(tokensWithKey, response.results))
         // .then(() =>
         // admin.database().ref('/notifications').child(NOTIFICATION_SNAPSHOT.key).remove
