@@ -4,7 +4,7 @@ import store from "../../../data/store";
 
 //functions
 import { orderBy, set } from 'lodash';
-import { concatenateDBPath } from '../../general'
+import { concatenateDBPath, setBrowserUniqueId,getEntityId} from '../../general'
 
 var unsubscribe = {};
 
@@ -317,7 +317,7 @@ function listenToOption(ids) {
         if (subQuestionId === undefined) throw new Error('missing subQuestionId');
         if (optionId === undefined) throw new Error('missing optionId');
 
-       return DB
+        return DB
             .collection("groups")
             .doc(groupId)
             .collection("questions")
@@ -326,14 +326,14 @@ function listenToOption(ids) {
             .doc(subQuestionId)
             .collection("options")
             .doc(optionId)
-            .onSnapshot(optionDB=>{
+            .onSnapshot(optionDB => {
                 let optionObj = optionDB.data();
                 optionObj.optionId = optionDB.data().id;
-                
+
                 set(store, `option[${optionId}]`, optionObj);
                 m.redraw()
             })
-            console.log(store.option)
+        console.log(store.option)
     } catch (e) {
         console.error(e);
     }
@@ -748,6 +748,49 @@ function listenToChat(ids) {
     }
 }
 
+function listenIfGetsMessages(ids) {
+    try {
+        const { groupId, questionId, subQuestionId, optionId } = ids;
+
+        let entityId = getEntityId(ids);
+      
+        //activate listening only once
+        if (!{}.hasOwnProperty.call(store.listenToMessages, entityId)) {
+            
+
+            const browserUniqueId = setBrowserUniqueId()
+
+            const dbPath = `${concatenateDBPath(groupId, questionId, subQuestionId, optionId)}/notifications/${store.user.uid}`;
+            console.log(dbPath)
+
+            DB.doc(dbPath).onSnapshot(tokensDB => {
+                if (tokensDB.exists) {
+                    if (tokensDB.data()[browserUniqueId] === undefined) {
+                        store.listenToMessages[entityId] = false;
+
+                    } else {
+                        store.listenToMessages[entityId] = true;
+                    }
+
+                } else {
+                    console.log('unregisterd');
+                    store.listenToMessages[entityId] = false;
+                }
+
+                m.redraw();
+            })
+
+           
+
+            console.log(store.listenToMessages);
+
+        }
+    } catch (e) {
+        console.error(e)
+    }
+
+}
+
 module.exports = {
     getUserGroups,
     getQuestions,
@@ -768,5 +811,6 @@ module.exports = {
     listenToChat,
     listenToChatFeed,
     listenToFeedLastEntrance,
-    listenToSubscription
+    listenToSubscription,
+    listenIfGetsMessages
 };

@@ -246,11 +246,15 @@ exports.countNumbeOfMessages = functions.firestore
 // ========= push notifications =======
 exports.sendPushForNewOptions = functions.firestore
   .document(
-    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}"
+    // "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}"
+    "groups/{groupId}/questions/{questionId}"
   )
   .onWrite((change, context) => {
     const CP = context.params;
+    const { groupId, questionId, subQuestionId, optionId } = context.params;
     const OPTION_DATA = change.after.data();
+    
+    console.log('title:', OPTION_DATA.title)
 
     // Setup notification
 
@@ -259,7 +263,7 @@ exports.sendPushForNewOptions = functions.firestore
         title: `הצעה חדשה: ${OPTION_DATA.title}`,
         body: `${OPTION_DATA.creatorName} מציע ש ${OPTION_DATA.title} \nהיא תשובה טובה ל-\n ${OPTION_DATA.subQuestionTitle}`,
         icon: "https://delib.tech/img/logo-192.png",
-        click_action: `https://delib.tech/?/subquestions/${CP.groupId}/${CP.questionId}/${CP.subQuestionId}`,
+        click_action: `https://delib.tech/?/subquestions/${groupId}`,
       },
     };
 
@@ -298,23 +302,36 @@ exports.sendPushForNewOptions = functions.firestore
     // go over all token given by users and see which user set a token for this
     // entity
     return db
-      .collection("tokens")
-      .where("pushEntities", "array-contains", context.params.subQuestionId)
+      .collection('groups').doc(groupId)
+      // .collection('questions').doc(questionId)
+      // .collection('subQuestions').doc(subQuestionId)
+      .collection('notifications')
       .get()
-      .then((tokensDB) => {
-        if (tokensDB.size === 0) return;
+      .then((usersDB) => {
+        if (usersDB.size === 0) return;
 
         // const snapshot = tokensDB.data();
-        const snapshot = [];
-        const tokensWithKey = [];
-        const tokens = [];
-        let counter = 0;
-        tokensDB.forEach((tokenDb) => {
-          //gather all users in this entity
-          tokens.push(tokenDb.data().token);
+        // const snapshot = [];
+        // const tokensWithKey = [];
+        // const tokens = [];
+        // let counter = 0;
+        usersDB.forEach((userDB) => {
+          const userTokensObj = userDB.data();
+
+          for (let i in userTokensObj) {
+
+            let token = userTokensObj[i].token
+            if (userTokensObj[i].token) {
+              console.log('token:', token)
+              admin.messaging().sendToDevice(token, payload);
+            }
+          }
+
+
         });
+
         //send notifications to all users that are registerd to this entity
-        return admin.messaging().sendToDevice(tokens, payload);
+        return
         // .then((response) => cleanInvalidTokens(tokensWithKey, response.results))
         // .then(() =>
         // admin.database().ref('/notifications').child(NOTIFICATION_SNAPSHOT.key).remove
@@ -493,11 +510,11 @@ exports.listenToGroupChats = functions.firestore
 
             const userChatRef = db.collection('users').doc(subscriberDB.id).collection('chat').doc(`${generateChatEntitiyId({ groupId })}`);
 
-            return userChatRef.update({ 
-              msgNumber: FieldValue.increment(1), 
+            return userChatRef.update({
+              msgNumber: FieldValue.increment(1),
               msgDifference: FieldValue.increment(1),
               msg: newMsg.data(),
-              date:new Date()
+              date: new Date()
             })
 
             // return db.runTransaction(async t => {

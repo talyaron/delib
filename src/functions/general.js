@@ -487,6 +487,46 @@ function timeParse(time) {
     }
 }
 
+function setBrowserUniqueId() {
+    // check a unique id for each brawser, for notifications identification, in no exists, it create such id. 
+    //the function return the unique id
+
+    try {
+
+        let deviceUniqueId = localStorage.getItem('deviceUniqueId');
+        if (deviceUniqueId === null) {
+            const id = uniqueId();
+            localStorage.setItem('deviceUniqueId', id);
+            deviceUniqueId = id;
+        }
+
+        return deviceUniqueId;
+
+
+    } catch (e) {
+        console.error(e)
+    }
+}
+
+function getEntityId(ids) {
+
+    try {
+
+        const { groupId, questionId, subQuestionId, optionId } = ids;
+
+        let entityId = '';
+        if (groupId !== undefined) { entityId = groupId };
+        if (questionId !== undefined) { entityId = questionId };
+        if (subQuestionId !== undefined) { entityId = subQuestionId };
+        if (optionId !== undefined) { entityId = optionId };
+
+        return entityId
+
+    } catch (e) {
+        console.error(e)
+    }
+}
+
 module.exports = {
     Reference,
     createRefString,
@@ -506,5 +546,7 @@ module.exports = {
     generateChatEntitiyId,
     getIsChat,
     createIds,
-    timeParse
+    timeParse,
+    setBrowserUniqueId,
+    getEntityId
 }

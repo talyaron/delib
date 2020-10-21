@@ -7,6 +7,7 @@ import './functions/firebase/config';
 import './functions/firebase/messaging';
 import { onAuth } from './functions/firebase/firebaseAuth';
 import { logout } from './functions/firebase/googleLogin';
+import {setBrowserUniqueId} from './functions/general';
 onAuth();
 window.logout = logout;
 m.route.prefix('?');
@@ -23,6 +24,8 @@ if(nativeURL !== decoded2){
     window.history.pushState(null, 'test', `/?/${decoded2}`);
     nativeURL = decoded2;
 }
+
+setBrowserUniqueId()
 
 //deal with facebook additions of url
 if (nativeURL.includes('&')) {

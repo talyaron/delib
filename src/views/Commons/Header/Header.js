@@ -5,10 +5,11 @@ import { get, set } from 'lodash';
 
 //functions
 import { subscribeUser,setNotifications} from '../../../functions/firebase/set/set';
-import { listenToSubscription } from '../../../functions/firebase/get/get';
+import { listenToSubscription ,listenIfGetsMessages } from '../../../functions/firebase/get/get';
+import {subscribeToNotification} from '../../../functions/firebase/messaging';
 
 import store from '../../../data/store';
-import { Reference, concatenateDBPath } from '../../../functions/general';
+import { Reference, concatenateDBPath,getEntityId } from '../../../functions/general';
 
 //components
 import Aside from '../Aside/Aside';
@@ -25,11 +26,19 @@ function getUser() {
         }, 100)
     })
 }
+let entityId = '';
 
 module.exports = {
     oninit: vnode => {
 
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
+
+        
+        entityId = getEntityId({ groupId, questionId, subQuestionId, optionId });
+        console.log('entityId',entityId)
+       
+        
+
 
         vnode.state = {
             previousCount: 0,
@@ -47,7 +56,7 @@ module.exports = {
             refString: '',
             isMenuOpen: false,
             subscribed: false,
-            notifications: false,
+            notifications: get(store.listenToMessages,`[${entityId}]`,false),
             path: concatenateDBPath(groupId, questionId, subQuestionId, optionId)
         }
         //set refernce string
@@ -62,11 +71,14 @@ module.exports = {
 
                 await listenToSubscription(vnode.state.path);
 
-                vnode.state.subscribed = get(store.subscribe, `[${vnode.state.path}]`, false)
-
+                vnode.state.subscribed = get(store.subscribe, `[${vnode.state.path}]`, false);
+                console.log({groupId, questionId, subQuestionId, optionId})
+                listenIfGetsMessages({groupId, questionId, subQuestionId, optionId})
 
             }
         })();
+
+       
 
     },
     onbeforeupdate: vnode => {
@@ -74,6 +86,8 @@ module.exports = {
         if ({}.hasOwnProperty.call(store.subscribe, vnode.state.path)) {
             vnode.state.subscribed = store.subscribe[vnode.state.path];
         }
+
+        vnode.state.notifications = get(store.listenToMessages,`[${entityId}]`,false);
     },
     onupdate: vnode => {
 
@@ -161,8 +175,10 @@ function handleNotifications(setNotificationTo, vnode) {
     if (optionId !== undefined) { ids.optionId = optionId };
 
 
-    setNotifications(ids, setNotificationTo)
-
+    
+        subscribeToNotification(ids,setNotificationTo)
+   
+   
 }
 
 function onNewMessageJumpCounter(vnode) {

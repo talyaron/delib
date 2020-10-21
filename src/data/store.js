@@ -25,6 +25,7 @@ var store = {
     optionsLoc: {}, //options location. used for animations
     optionsDetails: {}, //vote on options by user
     messagesShow: {}, // history of messages to show
+    listenToMessages:{}, //store if user listen to notification {entityId:true}
     feedsUnsubscribe: {}, // used for feed unsubscribes
     feed: {}, //the feed,
     feed2:[], //new feed system
