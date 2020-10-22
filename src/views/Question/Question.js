@@ -123,7 +123,7 @@ module.exports = {
         const { groupId, questionId } = vnode.attrs;
 
         return (
-            <div class='page page-grid-question'>
+            <div class='page page-grid-question' style= {vnode.state.subPage == 'main' ?'':`grid-template-rows: fit-content(200px) auto`}>
                 <div class='question__header'>
                     <Header
                         topic='שאלה'
@@ -188,7 +188,7 @@ module.exports = {
                         url={m.route.get()}
                     />
                 }
-                <NavBottom />
+               {vnode.state.subPage == 'main' ?<NavBottom />:null}
                 <AlertsSetting
                     isAlertsSetting={vnode.state.isAlertsSetting}
                     title={vnode.state.title}

@@ -80,7 +80,7 @@ module.exports = {
 
         return (
             <div class='page'>
-                <div class='page-grid'>
+                <div class='page-grid' style= {vnode.state.subPage == 'main' ?'':`grid-template-rows: 52px 40px auto;`}>
                     <Header
                         upLevelUrl='/groups'
                         topic='קבוצה'
@@ -121,7 +121,7 @@ module.exports = {
                         </div>
                         : null
                     }
-                    <NavBottom />
+                    {vnode.state.subPage == 'main' ?<NavBottom />:null}
                     {
                         vnode.state.addQuestion ?
                             <div class='module'>

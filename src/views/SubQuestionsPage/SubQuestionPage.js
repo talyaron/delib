@@ -92,7 +92,7 @@ module.exports = {
             <div>
                 {vnode.state.details.title
                     ? (
-                        <div class='page page-grid-subQuestion'>
+                        <div class='page page-grid-subQuestion' style= {vnode.state.subPage == 'main' ?'':`grid-template-rows: fit-content(100px) auto;`}>
                             <div class="subQuestionHeader">
                                 <Header
                                     title={vnode.state.details.title}
@@ -170,7 +170,7 @@ module.exports = {
                                     </div>
                                 </div> : null
                             }
-                            {vnode.state.details.userHaveNavigation == true || vnode.state.details.userHaveNavigation == undefined ?<NavBottom />:<div class='emptyNav' />}
+                            {(vnode.state.details.userHaveNavigation == true || vnode.state.details.userHaveNavigation == undefined) && vnode.state.subPage === 'main' ?<NavBottom />:<div class='emptyNav' />}
 
 
 

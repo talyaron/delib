@@ -9,6 +9,13 @@
   box-sizing: border-box;
 }
 
+.page-grid{
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 52px 40px auto 61px;
+}
+
 @media screen and (max-width: 1000px) {
   .questionsWrapper {
     grid-template-columns: auto auto;
@@ -20,4 +27,6 @@
     grid-template-columns: auto;
     padding: 100px 10px 100px 10px;
   }
+
+  
 }
