@@ -54,7 +54,7 @@ module.exports = {
      
         const { option, subPage } = vnode.state;
         return (
-            <div class='page page-grid-option'>
+            <div class='page page-grid-option' style= {subPage == 'main' ?'':`grid-template-rows: fit-content(100px) auto;`}>
                 <div class='optionPage__header'>
                     <Header
                         title={option.title}
@@ -85,7 +85,7 @@ module.exports = {
                         url={m.route.get()}
                     />
                 }
-                <NavBottom />
+                {subPage === 'main' ?<NavBottom />:null}
             </div>
         )
     }
