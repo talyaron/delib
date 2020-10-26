@@ -24,7 +24,12 @@ module.exports = {
     oninit: vnode => {
         setLastPage();
 
-        
+        if (store.user.uid == undefined) {
+            m
+                .route
+                .set('/login');
+            vnode.state.callDB = false;
+        } 
         
 
         vnode.state = {

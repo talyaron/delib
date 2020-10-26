@@ -32,6 +32,13 @@ module.exports = {
         store.lastPage = `/subquestions/${groupId}/${questionId}/${subQuestionId}`;
         sessionStorage.setItem("lastPage", store.lastPage);
 
+        if (store.user.uid == undefined) {
+            m
+                .route
+                .set('/login');
+            
+        } 
+
         vnode.state = {
             orderBy: "top",
             options: [false],

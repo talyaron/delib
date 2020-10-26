@@ -20,12 +20,18 @@ let unsubscribeChat = ()=>{};
 module.exports = {
     oninit: vnode => {
 
+        const {groupId, questionId, subQuestionId, optionId} = vnode.attrs;
 
+        store.lastPage = `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`;
+        
+        if (store.user.uid == undefined) {
+            m
+                .route
+                .set('/login');
+            
+        } 
 
-        const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
-
-
-
+  
         vnode.state = {
             option: get(store, `option[${optionId}]`, {}),
             subPage: 'main',
