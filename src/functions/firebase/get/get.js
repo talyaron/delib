@@ -722,7 +722,8 @@ function listenToChat(ids) {
 
                         if (!(path in store.chat)) { store.chat[path] = [] }
                         store.chat[path].push(change.doc.data());
-                        store.chatLastRead = change.doc.data().createdTime;
+                        store.chatLastRead[path] = change.doc.data().createdTime;
+                        console.log(store)
                     }
 
                 })

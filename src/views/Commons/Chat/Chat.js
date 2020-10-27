@@ -1,6 +1,8 @@
 import m from 'mithril';
 import './Chat.css';
 
+import {set} from 'lodash';
+
 //components
 import Message from './Message/Message';
 import Input from './Input/Input';
@@ -14,6 +16,12 @@ import store from '../../../data/store';
 module.exports = {
     oninit:vnode=>{
         vnode.state = {userUid:''}
+        console.log('initing chat')
+
+        //on chat mark last enternce
+        const {groupId, questionId, subQuestionId, optionId} = vnode.attrs.ids;
+        const path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
+        set(store.chatLastRead,`[${path}].seconds`, new Date().getMilliseconds()/1000);
     },
     oncreate:vnode=>{
         const chatWrapper = vnode.dom.children[0];
