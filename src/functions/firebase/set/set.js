@@ -4,27 +4,37 @@ import store from '../../../data/store';
 import { Reference, concatenateDBPath, uniqueId, generateChatEntitiyId, createIds } from '../../general';
 
 function createGroup(creatorId, title, description) {
+    try {
+        const groupId = uniqueId()
 
-    const groupId = uniqueId()
-
-    DB
-        .collection('groups')
-        .doc(groupId)
-        .set({
-            title: title,
-            description: description,
-            creatorId: creatorId,
-            time: new Date().getTime(),
-            groupId,
-            id: groupId
-        })
-        .then(function (docRef) {
-
-            m.route.set(`/group/${docRef.id}`);
-        })
-        .catch(function (error) {
-            console.error('Error adding document: ', error);
-        });
+        DB
+            .collection('groups')
+            .doc(groupId)
+            .set({
+                title: title,
+                description: description,
+                creatorId: creatorId,
+                time: new Date().getTime(),
+                groupId,
+                id: groupId
+            })
+            .then(() => {
+                console.log(groupId)
+                DB
+                    .collection("users")
+                    .doc(store.user.uid)
+                    .collection("groupsOwned")
+                    .doc(groupId).set({id:groupId, date:new Date().getTime()})
+                    .then(()=>{console.info(`added the group to the groups the user owns`)})
+                    .catch(e=>{console.error(e)})
+                m.route.set(`/group/${groupId}`);
+            })
+            .catch(function (error) {
+                console.error('Error adding document: ', error);
+            });
+    } catch (e) {
+        console.error(e)
+    }
 }
 
 function updateGroup(vnode) {
@@ -261,10 +271,10 @@ function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like) 
         });
 }
 
-function sendMessage({ groupId, questionId, subQuestionId, optionId, message, title, entity, topic, url ,vnode}) {
+function sendMessage({ groupId, questionId, subQuestionId, optionId, message, title, entity, topic, url, vnode }) {
     try {
 
-        if(vnode.attrs.title === undefined) throw new Error(`No title of entity in vnode`)
+        if (vnode.attrs.title === undefined) throw new Error(`No title of entity in vnode`)
 
         let { displayName, photoURL, name, uid, userColor } = store.user;
 
@@ -298,7 +308,7 @@ function sendMessage({ groupId, questionId, subQuestionId, optionId, message, ti
         if (message) {
 
             DB.doc(ref).collection('chat').add({
-                entityTitle:vnode.attrs.title,
+                entityTitle: vnode.attrs.title,
                 location,
                 displayName,
                 photoURL,
@@ -647,9 +657,9 @@ function setNotifications(ids, isSubscribed) {
         const path = `${concatenateDBPath(groupId, questionId, subQuestionId, optionId)}/notifications/${store.user.uid}`;
 
         if (isSubscribed) {
-            DB.doc(path).set({ username: store.user.name, email: store.user.email || null }).catch(e=>{console.error(e)})
+            DB.doc(path).set({ username: store.user.name, email: store.user.email || null }).catch(e => { console.error(e) })
         } else {
-            DB.doc(path).delete().catch(e=>{console.error(e)})
+            DB.doc(path).delete().catch(e => { console.error(e) })
         }
     } catch (e) {
         console.error(e)
