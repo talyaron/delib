@@ -33,6 +33,7 @@ var store = {
     chatFeed:[], //used to show feed of chats
     chat:{}, //used to store chats {chatId:[messages]}
     chatLastRead:{}, //used to store last read of a message
+    chatMessegesNotRead:{}, //used to store how many messages not read yet.
     chatFeedCounter:0,
     showFeed: false,
     numberOfNewMessages: 0,

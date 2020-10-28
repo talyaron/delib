@@ -4,7 +4,7 @@ import store from "../../../data/store";
 
 //functions
 import { orderBy, set } from 'lodash';
-import { concatenateDBPath, setBrowserUniqueId,getEntityId} from '../../general'
+import { concatenateDBPath, setBrowserUniqueId, getEntityId } from '../../general'
 
 var unsubscribe = {};
 
@@ -671,6 +671,8 @@ function listenToChatFeed() {
                     let unreadMessagesCouner = 0;
                     const messages = [];
                     chatDB.forEach(newMessageDB => {
+
+                       
                         messages.push(newMessageDB.data());
 
                         unreadMessagesCouner += newMessageDB.data().msgDifference;
@@ -711,6 +713,10 @@ function listenToChat(ids) {
             lastRead = store.chatLastRead[path]
         }
 
+        if (!(path in store.chatMessegesNotRead)) {
+            store.chatMessegesNotRead[path] = 0;
+        }
+
 
         return DB.collection(chatPath)
             .where('createdTime', '>', lastRead)
@@ -723,6 +729,9 @@ function listenToChat(ids) {
                         if (!(path in store.chat)) { store.chat[path] = [] }
                         store.chat[path].push(change.doc.data());
                         store.chatLastRead = change.doc.data().createdTime;
+                        store.chatMessegesNotRead[path]++;
+
+                        
                     }
 
                 })
@@ -753,10 +762,10 @@ function listenIfGetsMessages(ids) {
         const { groupId, questionId, subQuestionId, optionId } = ids;
 
         let entityId = getEntityId(ids);
-      
+
         //activate listening only once
         if (!{}.hasOwnProperty.call(store.listenToMessages, entityId)) {
-            
+
 
             const browserUniqueId = setBrowserUniqueId()
 
@@ -780,7 +789,7 @@ function listenIfGetsMessages(ids) {
                 m.redraw();
             })
 
-           
+
 
             console.log(store.listenToMessages);
 
