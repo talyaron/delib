@@ -33,11 +33,11 @@ At the "functions" directory run `npm i`
 
 ## Login to firbase 
 `firebase login`
-## running
+## Running
 In the root directory run `npm run dev` and in another terminal run `firebase serve`.
 you will be able to see the app running on localhost:5000
 
-##Deploy to dev site
+##v Deploy to dev site
 
 `firebase use delib-v3-dev` (only at the first time).
 
