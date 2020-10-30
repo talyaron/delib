@@ -16,11 +16,11 @@ import NavTop from '../Commons/NavTop/NavTop';
 import Chat from '../Commons/Chat/Chat';
 
 //functions
-import { getSubQuestion, getGroupDetails,listenToChat } from "../../functions/firebase/get/get";
+import { getSubQuestion, getGroupDetails, listenToChat } from "../../functions/firebase/get/get";
 import { getIsChat, concatenateDBPath } from '../../functions/general';
 import { get } from "lodash";
 
-let unsubscribe = () => { }, unsubscribeChat=()=>{};
+let unsubscribe = () => { }, unsubscribeChat = () => { };
 
 module.exports = {
 
@@ -36,8 +36,8 @@ module.exports = {
             m
                 .route
                 .set('/login');
-            
-        } 
+
+        }
 
         vnode.state = {
             orderBy: "top",
@@ -63,20 +63,20 @@ module.exports = {
     oncreate: vnode => {
         const { groupId, questionId, subQuestionId } = vnode.attrs;
         unsubscribe = getSubQuestion(groupId, questionId, subQuestionId);
-        unsubscribeChat = listenToChat({groupId, questionId, subQuestionId});
+        unsubscribeChat = listenToChat({ groupId, questionId, subQuestionId });
 
 
         vnode.state.subscribed = get(store.subscribe, `[${vnode.state.path}]`, false)
 
         getGroupDetails(groupId);
-        console.log( vnode.state.details)
+        console.log(vnode.state.details)
     },
     onbeforeupdate: vnode => {
         const { groupId, subQuestionId } = vnode.attrs;
 
         if (store.subQuestions.hasOwnProperty(subQuestionId)) {
             vnode.state.details = store.subQuestions[subQuestionId];
-           
+
         }
 
         let groupObj = get(store, `groups[${groupId}]`, {
@@ -99,11 +99,11 @@ module.exports = {
             <div class='page'>
                 {vnode.state.details.title
                     ? (
-                        <div class='page-grid-subQuestion' style= {vnode.state.subPage === 'main' ?'':'grid-template-rows: fit-content(100px) auto;'}>
+                        <div class='page-grid-subQuestion' style={vnode.state.subPage === 'main' ? '' : 'grid-template-rows: fit-content(100px) auto;'}>
                             <div class="subQuestionHeader">
                                 <Header
                                     title={vnode.state.details.title}
-                                    upLevelUrl={vnode.state.details.userHaveNavigation || vnode.state.details.userHaveNavigation == undefined?`/question/${groupId}/${questionId}`:false}
+                                    upLevelUrl={vnode.state.details.userHaveNavigation || vnode.state.details.userHaveNavigation == undefined ? `/question/${groupId}/${questionId}` : false}
                                     groupId={groupId}
                                     questionId={questionId}
                                     showSubscribe={true}
@@ -177,7 +177,7 @@ module.exports = {
                                     </div>
                                 </div> : null
                             }
-                            {(vnode.state.details.userHaveNavigation == true || vnode.state.details.userHaveNavigation == undefined) && vnode.state.subPage === 'main' ?<NavBottom />:null}
+                            {(vnode.state.details.userHaveNavigation == true || vnode.state.details.userHaveNavigation == undefined) && vnode.state.subPage === 'main' ? <NavBottom /> : null}
 
 
 
@@ -186,11 +186,13 @@ module.exports = {
                     : (<Spinner />)
                 }
                 < div
-                    class="fav fav__subQuestion"
+                    class="fav fav__subQuestion fav--blink"
                     onclick={() => {
                         vnode.state.showModal.isShow = true;
                     }}>
-                    <div>+</div>
+                    <div>
+                        <div>+</div>
+                    </div>
 
                 </div >
                 <Modal

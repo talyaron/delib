@@ -37,9 +37,14 @@
 }
 
 .fav__subQuestion{
-    bottom: 115px;
+    bottom: 135px;
     right: calc(50vw - 336px);
 }
+@media screen and (max-width: 750px) {
+    .fav__subQuestion {
+     right: 30px;
+    }
+  }
 
 .emptyNav{
     background-color: var(--white);

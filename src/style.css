@@ -14,28 +14,29 @@
     --maxWidthOnPC: 550px;
 
     --primary: #4269E2;
+    --halfPrimary: #7994E7;
     --secondary: #F0F4FF;
-    --additional:#F2F2F2;
-    --white:white;
-    --black:black;
-    --gray5:#F9F9F9;
-    --gray4:#F2F2F2;
-    --gray2:#D6D6D6;
-    --gray1:#7C7C7C;
+    --additional: #F2F2F2;
+    --white: white;
+    --black: black;
+    --gray5: #F9F9F9;
+    --gray4: #F2F2F2;
+    --gray2: #D6D6D6;
+    --gray1: #7C7C7C;
 
-    --roundBorderSmall:6px;
-    --roundBorder:12px;
-    --roundBorderLarge:16px;
+    --roundBorderSmall: 6px;
+    --roundBorder: 12px;
+    --roundBorderLarge: 16px;
 
     /* font sizes */
-    --size17:1.4rem;
-    --size16:1.3rem;
-    --size15:1.2rem;
-    --size13:1rem;
-    --size11:.8rem;
+    --size17: 1.4rem;
+    --size16: 1.3rem;
+    --size15: 1.2rem;
+    --size13: 1rem;
+    --size11: .8rem;
 
     /* padding */
-    --regPadding:16px;
+    --regPadding: 16px;
 
     /* shadows */
     --mediumShadow: 0px 10px 20px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.04);
@@ -77,19 +78,19 @@ body {
 
 .card {
     background: white;
-   
+
     border-radius: 3px;
     direction: rtl;
     padding: 10px;
     margin: 5px;
 }
 
-.card h2{
+.card h2 {
     color: var(--black);
     font-size: var(--size15);
 }
 
-.card p{
+.card p {
     color: var(--gray1);
     font-size: var(--size13);
 }
@@ -206,7 +207,8 @@ body {
 }
 
 .fav {
-    background: var(--primary);
+    background: var(--halfPrimary);
+
     width: 60px;
     height: 60px;
     display: flex;
@@ -227,9 +229,39 @@ body {
 }
 
 .fav>div {
+    transform: scale(1);
     color: white;
     text-align: center;
     font-size: 3rem;
+    background: var(--primary);
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    position: absolute;
+    left: 50%;
+    /* right: 50%; */
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.fav--blink {
+    /* animation: name duration timing-function delay iteration-count direction fill-mode; */
+    animation: blinkFav 200ms ease-in-out 0s 20 alternate;
+}
+
+@keyframes blinkFav {
+    from {
+
+        transform: scale(1);
+
+    }
+
+    to {
+        transform: scale(.95);
+    }
 }
 
 .footer {
@@ -240,7 +272,7 @@ body {
     background: var(--subBackground);
     color: white;
     display: flex;
-    
+
     justify-content: stretch;
     box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.5);
     z-index: 4;
@@ -259,7 +291,7 @@ body {
 
 }
 
-.footerButton>div{
+.footerButton>div {
     font-size: var(--size11);
     color: var(--gray1);
 }
@@ -303,12 +335,12 @@ body {
 }
 
 
-.feedWrapper{
+.feedWrapper {
     max-width: var(--maxWidthOnPC);
     display: flex;
     flex-direction: column;
 }
 
-.scroll{
+.scroll {
     overflow-y: auto;
 }
