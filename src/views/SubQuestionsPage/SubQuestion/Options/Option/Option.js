@@ -270,29 +270,29 @@ module.exports = {
         {/* options information panel */}
         <hr></hr>
         <div class="optionCard__info">
-          <div class="optionLikes">
-            <img src="img/icons8-user-groups-24.png" />
+          <div class="optionCard__infoItem">
+            <img src="img/group2.svg" />
             {vnode.attrs.totalVoters}
           </div>
           <div
             class={
-              vnode.state.isConNegative ? "optionLikes negative" : "optionLikes"
+              vnode.state.isConNegative ? "optionCard__infoItem negative" : "optionCard__infoItem"
             }
           >
-            <img src="img/icons8-thumbs-up-down-24.png" />
+            <img src="img/voteUpDown.svg" />
             {vnode.state.consensusPrecentage}
           </div>
           <div
-            class="optionChat"
+            class="optionCard__infoItem"
             onclick={() => { m.route.set(`/option-chat/${groupId}/${questionId}/${subQuestionId}/${optionId}`)}}
           >
-            <img src="img/icons8-chat-room-24.png" />
+            <img src="img/chat.svg" />
             {!isNaN(vnode.attrs.messagesCounter)
               ? vnode.attrs.messagesCounter
               : 0}
           </div>
           <div
-            class="optionChat"
+            class="optionCard__infoItem"
             onclick={() => {
               vnode.state.isEdit = !vnode.state.isEdit;
             }}
@@ -300,7 +300,7 @@ module.exports = {
             {vnode.attrs.creatorId == store.user.uid ? (
               <div>
                 {!vnode.state.isEdit ? (
-                  <img src="img/icons8-pencil-24.png" />
+                  <img src="img/edit.svg" />
                 ) : (
                     <div
                       class="buttons editOptionBtn"
@@ -317,7 +317,7 @@ module.exports = {
               )}
           </div>
           {vnode.attrs.creatorId == store.user.uid || vnode.state.admin == store.user.uid ?
-            <div class="optionLikes" onclick={() => handleHide(vnode)}>
+            <div class="optionCard__infoItem" onclick={() => handleHide(vnode)}>
               <img src="img/visibility_off-24px.svg" />
             </div>
             : null

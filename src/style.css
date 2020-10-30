@@ -249,7 +249,7 @@ body {
 
 .fav--blink {
     /* animation: name duration timing-function delay iteration-count direction fill-mode; */
-    animation: blinkFav 200ms ease-in-out 0s 20 alternate;
+    animation: blinkFav 200ms ease-in-out 0s 35 alternate;
 }
 
 @keyframes blinkFav {
@@ -260,7 +260,7 @@ body {
     }
 
     to {
-        transform: scale(.95);
+        transform: scale(.9);
     }
 }
 

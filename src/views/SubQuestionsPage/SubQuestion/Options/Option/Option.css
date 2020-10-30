@@ -38,6 +38,14 @@
     justify-content: center;
 }
 
+.optionCard__infoItem{
+    display: flex;
+    align-items: center;
+}
+.optionCard__infoItem>*{
+    margin:0px 5px;
+}
+
 .optionCard__info>* {
     margin: 10px 20px;
 }
@@ -98,11 +106,11 @@
 }
 
 .optionSelcetUp {
-    background: var(--primary);
+    background: var(--halfPrimary);
 }
 
 .optionSelcetDown {
-    background: var(--primary);
+    background: var(--halfPrimary);
 }
 
 .voteUp {
