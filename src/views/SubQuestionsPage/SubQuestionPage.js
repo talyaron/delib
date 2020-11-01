@@ -99,7 +99,7 @@ module.exports = {
             <div class='page'>
                 {vnode.state.details.title
                     ? (
-                        <div class='page-grid-subQuestion' style={vnode.state.subPage === 'main' ? '' : 'grid-template-rows: fit-content(100px) auto;'}>
+                        <div class='page-grid-subQuestion' style={!(vnode.state.details.userHaveNavigation == true || vnode.state.details.userHaveNavigation !== undefined) && vnode.state.subPage === 'main'? '' : 'grid-template-rows: fit-content(100px) auto;'}>
                             <div class="subQuestionHeader">
                                 <Header
                                     title={vnode.state.details.title}
