@@ -96,8 +96,11 @@ module.exports = {
                         showSubscribe={true}
                     />
                     <NavTop level={'קבוצה'} current={vnode.state.subPage} pvs={vnode.state} mainUrl={`/group/${vnode.attrs.id}`} chatUrl={`/group-chat/${vnode.attrs.id}`} ids={{groupId:vnode.attrs.id}}/>
+                   
+                    
                     {vnode.state.subPage == 'main' ?
                         <div class='questionsWrapper' id='groupWrapper'>
+                           <h1>נושאים שונים של הקבוצה</h1>
                             {
                                 vnode.state.questions.map((question, key) => {
 

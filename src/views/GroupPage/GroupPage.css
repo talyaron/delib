@@ -16,6 +16,11 @@
   display: grid;
   grid-template-rows: 52px 40px auto 61px;
 }
+.questionsWrapper>h1{
+  grid-column-start: 1;
+  grid-column-end: 4;
+  text-align: center;
+}
 
 @media screen and (max-width: 1000px) {
   .questionsWrapper {
@@ -25,8 +30,14 @@
 
 @media screen and (max-width: 480px) {
   .questionsWrapper {
-    grid-template-columns: auto;
-    padding: 100px 10px 100px 10px;
+    grid-template-columns: repeat(1, 1fr);
+   
+  }
+
+  .questionsWrapper>h1{
+    grid-column-start: 1;
+    grid-column-end: 2;
+    text-align: center;
   }
 
   

@@ -147,7 +147,7 @@ module.exports = {
                     <div class='question__main'>
 
                         <div class='wrapperSubQuestions' id='questionWrapperAll'>
-                            <h1>תת שאלות</h1>
+                            <h1>שאלות </h1>
                             <div class='subQuestionsWrapper'>
 
                                 {vnode

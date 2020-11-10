@@ -31,6 +31,10 @@
     padding: 10px;
 }
 
+.wrapperSubQuestions>h1{
+    text-align: center;
+}
+
 .subHeader {
     background: var(--accent);
     color: white;
