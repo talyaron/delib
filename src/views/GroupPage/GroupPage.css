@@ -1,6 +1,7 @@
 .questionsWrapper {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(300,1fr);
   padding: 0px 30px 0px 30px;
   
   background: #e8e8e8;
