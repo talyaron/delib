@@ -333,7 +333,7 @@ function listenToOption(ids) {
                 set(store, `option[${optionId}]`, optionObj);
                 m.redraw()
             })
-        console.log(store.option)
+    
     } catch (e) {
         console.error(e);
     }
@@ -665,7 +665,7 @@ function listenToChatFeed() {
     try {
 
         if (store.listen.chatFeed == false) {
-            DB.collection('users').doc(store.user.uid).collection('chat')
+            DB.collection('users').doc(store.user.uid).collection('messages')
                 .orderBy("date", "asc")
                 .onSnapshot(chatDB => {
                     let unreadMessagesCouner = 0;
@@ -702,7 +702,7 @@ function listenToChat(ids) {
         if (groupId === undefined) throw new Error('No group id in the ids')
         let path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
 
-        const chatPath = path + '/chat';
+        const chatPath = path + '/messages';
         let lastRead = new Date('2020-01-01');
 
         if (!(path in store.chatLastRead)) {
@@ -770,7 +770,7 @@ function listenIfGetsMessages(ids) {
             const browserUniqueId = setBrowserUniqueId()
 
             const dbPath = `${concatenateDBPath(groupId, questionId, subQuestionId, optionId)}/notifications/${store.user.uid}`;
-            console.log(dbPath)
+         
 
             DB.doc(dbPath).onSnapshot(tokensDB => {
                 if (tokensDB.exists) {
@@ -782,16 +782,12 @@ function listenIfGetsMessages(ids) {
                     }
 
                 } else {
-                    console.log('unregisterd');
+                  
                     store.listenToMessages[entityId] = false;
                 }
 
                 m.redraw();
             })
-
-
-
-            console.log(store.listenToMessages);
 
         }
     } catch (e) {

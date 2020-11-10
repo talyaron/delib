@@ -35,11 +35,7 @@ module.exports = {
 
         
         entityId = getEntityId({ groupId, questionId, subQuestionId, optionId });
-        console.log('entityId',entityId)
-       
-        
-
-
+      
         vnode.state = {
             previousCount: 0,
             refArray: [
@@ -72,7 +68,7 @@ module.exports = {
                 await listenToSubscription(vnode.state.path);
 
                 vnode.state.subscribed = get(store.subscribe, `[${vnode.state.path}]`, false);
-                console.log({groupId, questionId, subQuestionId, optionId})
+          
                 listenIfGetsMessages({groupId, questionId, subQuestionId, optionId})
 
             }

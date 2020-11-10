@@ -307,7 +307,7 @@ function sendMessage({ groupId, questionId, subQuestionId, optionId, message, ti
 
         if (message) {
 
-            DB.doc(ref).collection('chat').add({
+            DB.doc(ref).collection('messages').add({
                 entityTitle: vnode.attrs.title,
                 location,
                 displayName,
