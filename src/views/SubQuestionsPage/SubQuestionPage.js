@@ -110,7 +110,7 @@ module.exports = {
                                     subQuestionId={subQuestionId}
                                 />
                                 <NavTop
-                                    level={'תת שאלה'}
+                                    level={'פתרונות'}
                                     current={vnode.state.subPage}
                                     pvs={vnode.state}
                                     mainUrl={`/subquestions/${groupId}/${questionId}/${subQuestionId}`}
