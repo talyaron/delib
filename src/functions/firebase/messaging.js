@@ -60,9 +60,10 @@ function getSubscriptions() {
 }
 
 function subscribeToNotification(ids, subscribe = true) {
-    if ('Notification' in window) {
-        try {
-            // if(Object.prototype.toString().call() !== [Object ])
+    try {
+        if ('Notification' in window) {
+
+           
             MESSAGING.requestPermission()
                 .then(() => {
                     console.log('Notification permission granted.');
@@ -71,15 +72,16 @@ function subscribeToNotification(ids, subscribe = true) {
                 .catch(function (err) {
                     console.log('Unable to get permission to notify.', err);
                 });
-        } catch (err) {
-            console.error(err);
+
         }
+    } catch (e) {
+        console.error(e)
     }
 }
 
 function unsubscribeFromNotification(ids) {
     if ('Notification' in window) {
-     
+
         // delete store.push[entity][entityId]
 
         // MESSAGING.getToken()
@@ -118,16 +120,16 @@ function handleTokenRefresh(ids, subscribe) {
                 const dbPath = `${concatenateDBPath(groupId, questionId, subQuestionId, optionId)}/notifications/${store.user.uid}`;
                 const tokenRef = DB.doc(dbPath);
 
-                if(subscribe === true){
-                let tokenObj = {}
-                tokenObj[deviceUniqueId] = {
-                    token,
-                    uid: store.user.uid
+                if (subscribe === true) {
+                    let tokenObj = {}
+                    tokenObj[deviceUniqueId] = {
+                        token,
+                        uid: store.user.uid
+                    }
+                    tokenRef.set(tokenObj, { merge: true })
+                } else {
+                    tokenRef.update({ [deviceUniqueId]: firebase.firestore.FieldValue.delete() })
                 }
-                tokenRef.set(tokenObj , { merge: true })
-            } else {
-                tokenRef.update({[deviceUniqueId]: firebase.firestore.FieldValue.delete()})
-            }
 
                 // tokenRef
                 //     .get()
