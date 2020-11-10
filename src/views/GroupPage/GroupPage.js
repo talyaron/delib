@@ -85,7 +85,7 @@ module.exports = {
 
         return (
             <div class='page'>
-                <div class='page-grid' style= {vnode.state.subPage == 'main' ?'':`grid-template-rows: 52px 40px auto;`}>
+                <div class='page-grid' style= {vnode.state.subPage == 'main' ?'':`grid-template-rows: 52px 40px;`}>
                     <Header
                         upLevelUrl='/groups'
                         topic='קבוצה'
@@ -155,7 +155,7 @@ module.exports = {
                                 </div>
                             </div>
                             :
-                            <div />
+                            null
                     }
                 </div >
             </div>
