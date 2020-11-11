@@ -1,7 +1,12 @@
 .optionEditBox {
     display: flex;
     width: 100%;
-    cursor: grab;
+   
+    max-width: 600px;
+    margin: auto;
+    transform: translateY(-50%);
+    position: relative;
+    top: 50%;
 }
 
 .optionEditBox:active {
@@ -17,7 +22,7 @@
 
 .optionEditContent {
     width: 100%;
-    background: wheat;
+    background: var(--white);
     margin: 4px;
     padding: 10px;
     border-radius: 5px;

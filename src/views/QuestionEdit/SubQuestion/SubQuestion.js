@@ -14,63 +14,59 @@ import settings from "../../../data/settings";
 
 module.exports = {
   oninit: vnode => {
+    const { subQuestion } = vnode.attrs;
+
+    console.log(subQuestion.new);
+
     vnode.state = {
-      isEdit: true,
-      title: vnode.attrs.title
+      isEdit: !subQuestion.new,
+      title: vnode.attrs.title,
+      showSave: false
     };
   },
   view: vnode => {
     let va = vnode.attrs,
       vs = vnode.state;
-      const {subQuestion} = vnode.attrs;
-    
+    const { subQuestion, pvs } = vnode.attrs;
+
     return (
       <div
         class="optionEditBox draggable"
         key={vnode.attrs.number}
         id={vnode.attrs.id}
       >
-        <div class="optionEditContent">
+
+        <form class="optionEditContent">
+          <h2>פתיחת שאלה חדשה</h2>
           <div>
             <div class="optionEditContentText">
               {vnode.state.isEdit ? (
                 <div>כותרת: {vnode.state.title}</div>
               ) : (
-                <input
-                  type="text"
-                  value={vnode.state.title}
-                  onkeyup={e => {
-                    vnode.state.title = e.target.value;
-                  }}
-                />
-              )}
+                  <input
+                    type="text"
+                    value={vnode.state.title}
+                    placeholder='שם השאלה'
+                    class='inputGeneral'
+                    onkeyup={e => {
+                      vnode.state.title = e.target.value;
+                      if (e.target.value.length > 2) {
+                        vnode.state.showSave = true;
+                      } else {
+                        vnode.state.showSave = false;
+                      }
+                    }}
+                  />
+                )}
             </div>
-            <div class="optionEditContentSettings">
-              <div class="optionEditEdit">
-                <div
-                  class="buttons optionEditButton"
-                  onclick={() => {
-                    vnode.state.isEdit = !vnode.state.isEdit;
-                    if (vnode.state.isEdit) {
-                      updateSubQuestion(
-                        va.groupId,
-                        va.questionId,
-                        va.subQuestionId,
-                        vs.title
-                      );
-                    }
-                  }}
-                >
-                  {vnode.state.isEdit ? "עריכה" : "שמירה"}
-                </div>
-              </div>
-            </div>
+
           </div>
           <div>
             <div class="editselectors">
               <label for={vnode.attrs.id + "select"}>סוג התהליך</label>
               <select
                 id={vnode.attrs.id + "select"}
+                class='inputGeneral'
                 onchange={e => {
                   updateSubQuestionProcess(
                     va.groupId,
@@ -107,6 +103,7 @@ module.exports = {
               <label for={vnode.attrs.id + "orderBy"}>סידור האפשרויות</label>
               <select
                 id={vnode.attrs.id + "orderBy"}
+                class='inputGeneral'
                 onchange={e => {
                   updateSubQuestionOrderBy(
                     va.groupId,
@@ -125,10 +122,11 @@ module.exports = {
               <label for={vnode.attrs.id + "orderBy"}>האם לאפשר למשתמש לנווט מחוץ לשאלה?</label>
               <select
                 id={vnode.attrs.id + "orderBy"}
+                class='inputGeneral'
                 onchange={e => {
 
                   let hasNavigation = false
-                  if(e.target.value === 'true'){hasNavigation = true};
+                  if (e.target.value === 'true') { hasNavigation = true };
 
                   updateDoesUserHaveNavigation(
                     va.groupId,
@@ -138,13 +136,34 @@ module.exports = {
                   );
                 }}
               >
-                <option value={false} selected={subQuestion.userHaveNavigation == false?'selected':false}>הצגה ללא ניווט</option>
-                <option value={true} selected={subQuestion.userHaveNavigation == true || subQuestion.userHaveNavigation == undefined?'selected':false}>הצגה עם ניווט - שליטה של המשתמש</option>
-               
+                <option value={false} selected={subQuestion.userHaveNavigation == false ? 'selected' : false}>הצגה ללא ניווט</option>
+                <option value={true} selected={subQuestion.userHaveNavigation == true || subQuestion.userHaveNavigation == undefined ? 'selected' : false}>הצגה עם ניווט - שליטה של המשתמש</option>
+
               </select>
             </div>
           </div>
-        </div>
+          <div class='buttonsBox'>
+            <div
+              class={vnode.state.showSave ? "buttons optionEditButton" : "buttons buttons--nonactive optionEditButton"}
+              onclick={() => {
+                vnode.state.isEdit = !vnode.state.isEdit;
+                if (vnode.state.showSave) {
+                  updateSubQuestion(
+                    va.groupId,
+                    va.questionId,
+                    va.subQuestionId,
+                    vs.title
+                  );
+                }
+              }}
+            >
+              שמירה
+          </div>
+
+            <div class="buttons buttons--cancel optionEditButton" onclick={() => { pvs.newSubQuestion.isShow = false }}>Cancel</div>
+          </div>
+        </form>
+
       </div>
     );
   }

@@ -7,11 +7,11 @@ import Feed from '../Commons/Feed/Feed';
 import SubQuestionSolution from './SubQuestionsSolution/SubQuestionSolution';
 import Spinner from '../Commons/Spinner/Spinner';
 import Description from './Description/Description';
-// import Modal from '../Commons/Modal/Modal';
 import AlertsSetting from '../Commons/AlertsSetting/AlertsSetting';
 import NavBottom from '../Commons/NavBottom/NavBottom';
 import NavTop from '../Commons/NavTop/NavTop';
 import Chat from '../Commons/Chat/Chat';
+import SubQuestionEdit from '../QuestionEdit/SubQuestion/SubQuestion';
 
 //model
 import store from '../../data/store';
@@ -21,8 +21,8 @@ import { deep_value, getIsChat } from '../../functions/general';
 
 module.exports = {
     oninit: vnode => {
-        
-        const {groupId, questionId} = vnode.attrs;
+
+        const { groupId, questionId } = vnode.attrs;
 
         vnode.state = {
             title: deep_value(store.questions, `${groupId}.${questionId}.title`, 'כותרת השאלה'),
@@ -44,13 +44,14 @@ module.exports = {
             scrollY: false,
             subAnswers: {}, //used to set sub answers to each sub question
             subAnswersUnsb: {}, //used to unsubscribe
+            newSubQuestion: { isShow: false, new: true },
             showModal: {
                 isShow: false,
                 which: 'subQuestion'
             },
             unsbscribe: {
                 subQuestions: {},
-                chat:()=>{}
+                chat: () => { }
             },
             authorized: {
                 anonymous: false,
@@ -82,7 +83,7 @@ module.exports = {
 
         //propare undubscribe function for question details to be used  onremove
         vnode.state.unsubscribeQuestionDetails = getQuestionDetails(groupId, questionId, vnode);
-        vnode.state.unsbscribe.chat = listenToChat({ groupId, questionId})
+        vnode.state.unsbscribe.chat = listenToChat({ groupId, questionId })
 
     },
     oncreate: vnode => {
@@ -123,7 +124,7 @@ module.exports = {
         const { groupId, questionId } = vnode.attrs;
 
         return (
-            <div class='page page-grid-question' style= {vnode.state.subPage == 'main' ?'':`grid-template-rows: fit-content(200px) auto`}>
+            <div class='page page-grid-question' style={vnode.state.subPage == 'main' ? '' : `grid-template-rows: fit-content(200px) auto`}>
                 <div class='question__header'>
                     <Header
                         topic='שאלה'
@@ -188,7 +189,7 @@ module.exports = {
                         url={m.route.get()}
                     />
                 }
-               {vnode.state.subPage == 'main' ?<NavBottom />:null}
+                {vnode.state.subPage == 'main' ? <NavBottom /> : null}
                 <AlertsSetting
                     isAlertsSetting={vnode.state.isAlertsSetting}
                     title={vnode.state.title}
@@ -201,6 +202,22 @@ module.exports = {
                         isOn: true
                     }
                     ]} />
+                < div
+                    class="fav fav__subQuestion fav--blink"
+                    onclick={() => {
+                        vnode.state.newSubQuestion = { isShow: true, new: true };
+                    }}>
+                    <div>
+                        <div>+</div>
+                    </div>
+
+                </div >
+                {vnode.state.newSubQuestion.isShow ?
+                    <div class='background'>
+                        <SubQuestionEdit subQuestion={{ userHaveNavigation: true, new: vnode.state.newSubQuestion.new}} pvs={vnode.state}/>
+                    </div>
+                    : null
+                }
             </div>
         )
     }
