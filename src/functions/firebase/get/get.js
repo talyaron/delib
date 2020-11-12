@@ -175,7 +175,7 @@ function getQuestionDetails(groupId, questionId, vnode) {
     return unsubscribe;
 }
 
-function getSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
+function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
     let subQuestionRef = DB
         .collection("groups")
         .doc(groupId)
@@ -185,8 +185,7 @@ function getSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
 
     return subQuestionRef
         .orderBy("order", "asc")
-        .get()
-        .then(subQuestionsDB => {
+        .onSnapshot(subQuestionsDB => {
             let subQuestionsArray = [];
             let subQuestionsObj = {};
 
@@ -801,7 +800,7 @@ module.exports = {
     getQuestions,
     getGroupDetails,
     getQuestionDetails,
-    getSubQuestions,
+    listenSubQuestions,
     getSubQuestion,
     listenToOptions,
     listenToOption,

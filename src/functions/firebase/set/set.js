@@ -161,7 +161,7 @@ function setSubQuestion(ids, settings) {
             //new subQuestion
             const uid = uniqueId()
             console.log('uid', uid)
-            subQuestionRef.doc(uid).set({ title, processType, orderBy, nav, show, groupId, questionId, subQuestionId: uid })
+            subQuestionRef.doc(uid).set({ title, processType, orderBy, nav, show, groupId, questionId, subQuestionId: uid, order:1000 })
                 .then(() => { `saved subQuestion ${uid} to DB` })
                 .catch(e => {
                     console.error(e)

@@ -16,7 +16,7 @@ import SubQuestionEdit from '../QuestionEdit/SubQuestionEditModal/SubQuestionEdi
 //model
 import store from '../../data/store';
 //functions
-import { getQuestionDetails, getSubQuestion, getSubQuestions, listenToChat } from '../../functions/firebase/get/get';
+import { getQuestionDetails, getSubQuestion, listenSubQuestions, listenToChat } from '../../functions/firebase/get/get';
 import { deep_value, getIsChat } from '../../functions/general';
 
 module.exports = {
@@ -91,7 +91,7 @@ module.exports = {
         // setWrapperFromFooter('questionFooter', 'questionWrapperAll');
         if (vnode.state.callDB) {
             //subscribe to subQuestions
-            vnode.state.unsbscribe.subQuestions = getSubQuestions(vnode.attrs.groupId, vnode.attrs.questionId, vnode, true);
+            vnode.state.unsbscribe.subQuestions = listenSubQuestions(vnode.attrs.groupId, vnode.attrs.questionId, vnode, true);
 
         }
     },
