@@ -24,7 +24,8 @@ module.exports = {
       isEdit: !subQuestion.new,
       title: vnode.attrs.title,
       showSave: false,
-      showSubQuestion: true
+      showSubQuestion: true,
+      hasNavigation:true
     };
   },
   view: vnode => {
@@ -124,15 +125,10 @@ module.exports = {
                 class='inputGeneral'
                 onchange={e => {
 
-                  let hasNavigation = false
-                  if (e.target.value === 'true') { hasNavigation = true };
+                  
+                  if (e.target.value === 'true') { vnode.state.hasNavigation = true } else {vnode.state.hasNavigation = false};
 
-                  updateDoesUserHaveNavigation(
-                    va.groupId,
-                    va.questionId,
-                    va.subQuestionId,
-                    hasNavigation
-                  );
+                
                 }}
               >
                 <option value={false} selected={subQuestion.userHaveNavigation == false ? 'selected' : false}>הצגה ללא ניווט</option>
@@ -177,9 +173,14 @@ function handleSubmit(e, vnode) {
   const title = elms.title.value;
   const processType = elms.processType.value;
   const orderBy = elms.orderBy.value;
-  const nav = elms.nav.value;
+  const nav = vnode.state.hasNavigation;
   let show = vnode.state.showSubQuestion;
- 
+ console.log(vnode.attrs)
 
   console.log(title, processType, orderBy, nav, show)
+
+  const {groupId, questionId, subQuestionId} = vnode.attrs.pva;
+
+  console.log(groupId, questionId, subQuestionId)
+  setSubQuestion({groupId, questionId, subQuestionId}, {title, processType, orderBy, nav, show})
 }

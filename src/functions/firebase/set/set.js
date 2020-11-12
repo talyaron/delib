@@ -24,9 +24,9 @@ function createGroup(creatorId, title, description) {
                     .collection("users")
                     .doc(store.user.uid)
                     .collection("groupsOwned")
-                    .doc(groupId).set({id:groupId, date:new Date().getTime()})
-                    .then(()=>{console.info(`added the group to the groups the user owns`)})
-                    .catch(e=>{console.error(e)})
+                    .doc(groupId).set({ id: groupId, date: new Date().getTime() })
+                    .then(() => { console.info(`added the group to the groups the user owns`) })
+                    .catch(e => { console.error(e) })
                 m.route.set(`/group/${groupId}`);
             })
             .catch(function (error) {
@@ -141,13 +141,41 @@ function updateSubQuestionOrderBy(groupId, questionId, subQuestionId, orderBy) {
         .update({ orderBy });
 }
 
-function setSubQuestion(ids, settings){
+function setSubQuestion(ids, settings) {
+    try {
+        const { title, processType, orderBy, nav, show } = settings;
+        const { groupId, questionId, subQuestionId } = ids;
 
-    const {orderBy, processType,title, description} = settings;
-    const {groupId, questionId, subQuestionId} = ids;
+        console.log(title, processType, orderBy, nav, show);
+        console.log(groupId, questionId, subQuestionId)
 
-    console.log(orderBy, processType,title, description);
-    console.log(groupId, questionId, subQuestionId)
+        const subQuestionRef = DB
+            .collection('groups')
+            .doc(groupId)
+            .collection('questions')
+            .doc(questionId)
+            .collection('subQuestions')
+           
+
+        if (subQuestionId === undefined) {
+            //new subQuestion
+            const uid = uniqueId()
+            console.log('uid', uid)
+            subQuestionRef.doc(uid).set({ title, processType, orderBy, nav, show, groupId, questionId, subQuestionId: uid })
+                .then(() => { `saved subQuestion ${uid} to DB` })
+                .catch(e => {
+                    console.error(e)
+                })
+        } else {
+            subQuestionRef.doc(uid).update({ title, processType, orderBy, nav, show, groupId, questionId, subQuestionId })
+            .then(() => { `updated subQuestion ${subQuestionId} to DB` })
+            .catch(e => {
+                console.error(e)
+            })
+        }
+    } catch (e) {
+        console.error(e)
+    }
 
 }
 

@@ -214,7 +214,7 @@ module.exports = {
                 </div >
                 {vnode.state.newSubQuestion.isShow ?
                     <div class='background'>
-                        <SubQuestionEdit subQuestion={{ userHaveNavigation: true, new: vnode.state.newSubQuestion.new}} pvs={vnode.state}/>
+                        <SubQuestionEdit subQuestion={{ userHaveNavigation: true, new: vnode.state.newSubQuestion.new}} pvs={vnode.state} pva={vnode.attrs}/>
                     </div>
                     : null
                 }
