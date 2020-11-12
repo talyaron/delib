@@ -170,6 +170,7 @@ module.exports = {
                                             info={settings.subItems.options}
                                             processType={subQuestion.processType}
                                             userHaveNavigation={subQuestion.userHaveNavigation}
+                                            showSubQuestion={subQuestion.showSubQuestion}
                                             isAlone={false}
                                             pvs={vnode.state}
                                         />)

@@ -21,11 +21,11 @@ module.exports = {
 
     let { title,showSubQuestion,userHaveNavigation} = modalSubQuestion;
 
-    console.log('geting userHaveNavigation',userHaveNavigation)
+    console.log('geting showSubQuestion',showSubQuestion)
    
     if(userHaveNavigation === undefined){ userHaveNavigation = true};
     if(showSubQuestion == undefined) {showSubQuestion = true};
-    console.log('userHaveNavigation',userHaveNavigation)
+    console.log('showSubQuestion',showSubQuestion)
 
     vnode.state = {
       isEdit: !subQuestion.new,
@@ -38,11 +38,13 @@ module.exports = {
   },
   view: vnode => {
   
-    const { subQuestion, pvs, processType,orderBy } = vnode.attrs;
+    const { subQuestion, pvs } = vnode.attrs;
+   
 
     const { modalSubQuestion } = pvs;
 
-    const { subQuestionId } = modalSubQuestion;
+    const { subQuestionId,orderBy,processType } = modalSubQuestion;
+    console.log('orderBy',orderBy)
 
     console.log('vnode.state.userHaveNavigation',vnode.state.userHaveNavigation)
 
