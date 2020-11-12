@@ -21,12 +21,9 @@ module.exports = {
 
     let { title, showSubQuestion, userHaveNavigation } = modalSubQuestion;
 
-    console.log('title', title)
-
     if (userHaveNavigation === undefined) { userHaveNavigation = true };
     if (showSubQuestion == undefined) { showSubQuestion = true };
     if (title === undefined) { title = '' }
-    console.log('showSubQuestion', showSubQuestion)
 
     vnode.state = {
       isEdit: !subQuestion.new,
@@ -39,15 +36,9 @@ module.exports = {
   },
   view: vnode => {
 
-    const { subQuestion, pvs } = vnode.attrs;
-
-
+    const { pvs } = vnode.attrs;
     const { modalSubQuestion } = pvs;
-
     const { subQuestionId, orderBy, processType } = modalSubQuestion;
-    console.log('orderBy', orderBy)
-
-    console.log('vnode.state.userHaveNavigation', vnode.state.userHaveNavigation)
 
     return (
       <div
@@ -175,11 +166,11 @@ function handleSubmit(e, vnode) {
 
     let elms = e.target.elements;
 
-    console.log('vnode', vnode)
 
-    const { subQuestion, pvs,pva } = vnode.attrs;
 
-    const { modalSubQuestion } = pvs;
+    const { subQuestion, pvs, pva } = vnode.attrs;
+
+
 
     const title = elms.title.value;
     const processType = elms.processType.value;
@@ -192,7 +183,7 @@ function handleSubmit(e, vnode) {
 
 
 
-    
+
     setSubQuestion({ groupId, questionId, subQuestionId }, { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions });
 
     //hide modal
