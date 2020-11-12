@@ -11,7 +11,7 @@ import AlertsSetting from '../Commons/AlertsSetting/AlertsSetting';
 import NavBottom from '../Commons/NavBottom/NavBottom';
 import NavTop from '../Commons/NavTop/NavTop';
 import Chat from '../Commons/Chat/Chat';
-import SubQuestionEdit from '../QuestionEdit/SubQuestion/SubQuestion';
+import SubQuestionEdit from '../QuestionEdit/SubQuestionEditModal/SubQuestionEditModal';
 
 //model
 import store from '../../data/store';

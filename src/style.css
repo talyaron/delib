@@ -357,6 +357,12 @@ body {
     padding: var(--regPadding);
 }
 
+input[type=checkbox] {
+    transform: scale(1.5);
+    -ms-transform: scale(1.5);
+    -webkit-transform: scale(1.5);
+    padding: 10px;
+}
 
 .feedWrapper {
     max-width: var(--maxWidthOnPC);

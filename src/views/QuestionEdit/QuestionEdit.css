@@ -63,3 +63,19 @@
     display: grid;
     grid-template-columns: 100px auto;
 }
+
+@media only screen and (max-width: 600px){
+
+    .editselectors{
+        margin: 5px;
+        display: grid;
+        grid-template-columns: auto;
+    }
+    .editselectors>label{
+        font-weight: 900;
+        font-size: var(--size15);
+        margin-bottom: 5px;
+
+        margin-top: 10px;
+    }
+}

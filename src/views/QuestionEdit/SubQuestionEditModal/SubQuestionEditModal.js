@@ -1,12 +1,13 @@
 import m from "mithril";
-import "./SubQuestion.css";
+import "./SubQuestionEditModal.css";
 
 //functions
 import {
   updateSubQuestion,
   updateSubQuestionProcess,
   updateSubQuestionOrderBy,
-  updateDoesUserHaveNavigation
+  updateDoesUserHaveNavigation,
+  setSubQuestion
 } from "../../../functions/firebase/set/set";
 
 //model
@@ -14,6 +15,7 @@ import settings from "../../../data/settings";
 
 module.exports = {
   oninit: vnode => {
+    console.log(settings)
     const { subQuestion } = vnode.attrs;
 
     console.log(subQuestion.new);
@@ -21,7 +23,8 @@ module.exports = {
     vnode.state = {
       isEdit: !subQuestion.new,
       title: vnode.attrs.title,
-      showSave: false
+      showSave: false,
+      showSubQuestion: true
     };
   },
   view: vnode => {
@@ -36,54 +39,48 @@ module.exports = {
         id={vnode.attrs.id}
       >
 
-        <form class="optionEditContent">
+        <form class="optionEditContent" onsubmit={(e) => { handleSubmit(e, vnode) }}>
           <h2>פתיחת שאלה חדשה</h2>
           <div>
             <div class="optionEditContentText">
-              {vnode.state.isEdit ? (
-                <div>כותרת: {vnode.state.title}</div>
-              ) : (
-                  <input
-                    type="text"
-                    value={vnode.state.title}
-                    placeholder='שם השאלה'
-                    class='inputGeneral'
-                    onkeyup={e => {
-                      vnode.state.title = e.target.value;
-                      if (e.target.value.length > 2) {
-                        vnode.state.showSave = true;
-                      } else {
-                        vnode.state.showSave = false;
-                      }
-                    }}
-                  />
-                )}
+
+
+              <input
+                type="text"
+                name='title'
+                value={vnode.state.title}
+                placeholder='שם השאלה'
+                class='inputGeneral'
+                onkeyup={e => {
+                  vnode.state.title = e.target.value;
+                  if (e.target.value.length > 2) {
+                    vnode.state.showSave = true;
+                  } else {
+                    vnode.state.showSave = false;
+                  }
+                }}
+              />
+
             </div>
 
           </div>
           <div>
             <div class="editselectors">
-              <label for={vnode.attrs.id + "select"}>סוג התהליך</label>
+              <label for='processType'>סוג התהליך</label>
               <select
-                id={vnode.attrs.id + "select"}
+                id='processType'
+                name='processType'
                 class='inputGeneral'
-                onchange={e => {
-                  updateSubQuestionProcess(
-                    va.groupId,
-                    va.questionId,
-                    va.subQuestionId,
-                    e.target.value
-                  );
-                }}
               >
-                <option
+                {/* <option
                   disabled
                   selected={!vnode.attrs.processType ? "true" : "false"}
                   value
                 >
                   please select process
-                </option>
+                </option> */}
                 {settings.processesArr.map((process, index) => {
+
                   return (
                     <option
                       value={process}
@@ -100,9 +97,10 @@ module.exports = {
               </select>
             </div>
             <div class="editselectors">
-              <label for={vnode.attrs.id + "orderBy"}>סידור האפשרויות</label>
+              <label for={"orderBy"}>סידור האפשרויות</label>
               <select
-                id={vnode.attrs.id + "orderBy"}
+                id='orderBy'
+                name='orderBy'
                 class='inputGeneral'
                 onchange={e => {
                   updateSubQuestionOrderBy(
@@ -119,9 +117,10 @@ module.exports = {
               </select>
             </div>
             <div class="editselectors">
-              <label for={vnode.attrs.id + "orderBy"}>האם לאפשר למשתמש לנווט מחוץ לשאלה?</label>
+              <label for="nav">האם לאפשר למשתמש לנווט מחוץ לשאלה?</label>
               <select
-                id={vnode.attrs.id + "orderBy"}
+                id='nav'
+                name='nav'
                 class='inputGeneral'
                 onchange={e => {
 
@@ -141,24 +140,25 @@ module.exports = {
 
               </select>
             </div>
+            <div class='subQuestionEdit__settings'>
+              <div>
+                <input type='checkbox' name='show' checked={vnode.state.showSubQuestion} id='showSubQuestion'
+                  onclick={() => { vnode.state.showSubQuestion = !vnode.state.showSubQuestion }} ></input>
+                <label for='showSubQuestion'>להציג</label>
+              </div>
+              <div>
+                <img src='img/delete.svg' alt='delete question' />
+              </div>
+            </div>
           </div>
           <div class='buttonsBox'>
-            <div
+            <button
+              type='submit'
               class={vnode.state.showSave ? "buttons optionEditButton" : "buttons buttons--nonactive optionEditButton"}
-              onclick={() => {
-                vnode.state.isEdit = !vnode.state.isEdit;
-                if (vnode.state.showSave) {
-                  updateSubQuestion(
-                    va.groupId,
-                    va.questionId,
-                    va.subQuestionId,
-                    vs.title
-                  );
-                }
-              }}
+
             >
               שמירה
-          </div>
+          </button>
 
             <div class="buttons buttons--cancel optionEditButton" onclick={() => { pvs.newSubQuestion.isShow = false }}>Cancel</div>
           </div>
@@ -168,3 +168,18 @@ module.exports = {
     );
   }
 };
+
+function handleSubmit(e, vnode) {
+  e.preventDefault();
+
+  let elms = e.target.elements;
+
+  const title = elms.title.value;
+  const processType = elms.processType.value;
+  const orderBy = elms.orderBy.value;
+  const nav = elms.nav.value;
+  let show = vnode.state.showSubQuestion;
+ 
+
+  console.log(title, processType, orderBy, nav, show)
+}

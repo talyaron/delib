@@ -141,6 +141,16 @@ function updateSubQuestionOrderBy(groupId, questionId, subQuestionId, orderBy) {
         .update({ orderBy });
 }
 
+function setSubQuestion(ids, settings){
+
+    const {orderBy, processType,title, description} = settings;
+    const {groupId, questionId, subQuestionId} = ids;
+
+    console.log(orderBy, processType,title, description);
+    console.log(groupId, questionId, subQuestionId)
+
+}
+
 function updateDoesUserHaveNavigation(groupId, questionId, subQuestionId, userHaveNavigation) {
     try {
         DB
@@ -677,6 +687,7 @@ module.exports = {
     updateQuestion,
     createSubQuestion,
     updateSubQuestion,
+    setSubQuestion,
     setSubQuestionsOrder,
     createOption,
     setOptionActive,

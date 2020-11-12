@@ -58,3 +58,19 @@
 .optionEditType {}
 
 .optionEditShow {}
+
+.subQuestionEdit__settings{
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    min-height: 51px;
+    align-items: center;
+}
+.subQuestionEdit__settings>div{
+    display: flex;
+    justify-content: center;
+}
+.subQuestionEdit__settings>div>*{
+    margin: 5px;
+    font-size: var(--size15);
+}
