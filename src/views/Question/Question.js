@@ -171,6 +171,7 @@ module.exports = {
                                             processType={subQuestion.processType}
                                             userHaveNavigation={subQuestion.userHaveNavigation}
                                             showSubQuestion={subQuestion.showSubQuestion}
+                                            numberOfSubquestions={vnode.state.subQuestions.length}
                                             isAlone={false}
                                             pvs={vnode.state}
                                         />)
@@ -212,7 +213,7 @@ module.exports = {
                 < div
                     class="fav fav__subQuestion fav--blink"
                     onclick={() => {
-                        vnode.state.modalSubQuestion = { isShow: true, new: true, pressedsubQuestionId: undefined };
+                        vnode.state.modalSubQuestion = { isShow: true, new: true, numberOfSubquestions: vnode.state.subQuestions.length};
                     }}>
                     <div>
                         <div>+</div>
