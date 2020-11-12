@@ -44,7 +44,7 @@ module.exports = {
             scrollY: false,
             subAnswers: {}, //used to set sub answers to each sub question
             subAnswersUnsb: {}, //used to unsubscribe
-            newSubQuestion: { isShow: false, new: true },
+            modalSubQuestion: { isShow: false, new: true, pressedsubQuestionId: undefined },
             showModal: {
                 isShow: false,
                 which: 'subQuestion'
@@ -64,7 +64,8 @@ module.exports = {
                 which: 'subQuestion',
                 subQuestionId: ''
             },
-            subPage: getIsChat() ? 'chat' : 'main',
+            subPage: getIsChat() ? 'chat' : 'main'
+
         }
 
         //get user before login to page
@@ -158,6 +159,7 @@ module.exports = {
 
                                         return (<SubQuestionSolution
                                             key={index}
+                                            creator={subQuestion.creator}
                                             groupId={vnode.attrs.groupId}
                                             questionId={vnode.attrs.questionId}
                                             subQuestionId={subQuestion.id}
@@ -167,7 +169,11 @@ module.exports = {
                                             parentVnode={vnode}
                                             info={settings.subItems.options}
                                             processType={subQuestion.processType}
-                                            isAlone={false} />)
+                                            userHaveNavigation={subQuestion.userHaveNavigation}
+                                            isAlone={false}
+                                            pvs={vnode.state}
+                                        />)
+
                                     })
                                 }
                             </div>
@@ -205,16 +211,20 @@ module.exports = {
                 < div
                     class="fav fav__subQuestion fav--blink"
                     onclick={() => {
-                        vnode.state.newSubQuestion = { isShow: true, new: true };
+                        vnode.state.modalSubQuestion = { isShow: true, new: true, pressedsubQuestionId: undefined };
                     }}>
                     <div>
                         <div>+</div>
                     </div>
 
                 </div >
-                {vnode.state.newSubQuestion.isShow ?
+                {vnode.state.modalSubQuestion.isShow ?
                     <div class='background'>
-                        <SubQuestionEdit subQuestion={{ userHaveNavigation: true, new: vnode.state.newSubQuestion.new}} pvs={vnode.state} pva={vnode.attrs}/>
+                        <SubQuestionEdit
+                            subQuestion={vnode.state.modalSubQuestion}
+                            pvs={vnode.state}
+                            pva={vnode.attrs}
+                        />
                     </div>
                     : null
                 }

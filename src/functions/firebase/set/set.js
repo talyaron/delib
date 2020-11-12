@@ -143,11 +143,9 @@ function updateSubQuestionOrderBy(groupId, questionId, subQuestionId, orderBy) {
 
 function setSubQuestion(ids, settings) {
     try {
-        const { title, processType, orderBy, nav, show } = settings;
+        const { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions } = settings;
         const { groupId, questionId, subQuestionId } = ids;
 
-        console.log(title, processType, orderBy, nav, show);
-        console.log(groupId, questionId, subQuestionId)
 
         const subQuestionRef = DB
             .collection('groups')
@@ -155,23 +153,24 @@ function setSubQuestion(ids, settings) {
             .collection('questions')
             .doc(questionId)
             .collection('subQuestions')
-           
+
+            
 
         if (subQuestionId === undefined) {
             //new subQuestion
             const uid = uniqueId()
             console.log('uid', uid)
-            subQuestionRef.doc(uid).set({ title, processType, orderBy, nav, show, groupId, questionId, subQuestionId: uid, order:1000 })
+            subQuestionRef.doc(uid).set({ title, processType, orderBy, groupId, questionId, subQuestionId: uid, userHaveNavigation, showSubQuestion, order: numberOfSubquestions, creator: store.user.uid })
                 .then(() => { `saved subQuestion ${uid} to DB` })
                 .catch(e => {
                     console.error(e)
                 })
         } else {
-            subQuestionRef.doc(uid).update({ title, processType, orderBy, nav, show, groupId, questionId, subQuestionId })
-            .then(() => { `updated subQuestion ${subQuestionId} to DB` })
-            .catch(e => {
-                console.error(e)
-            })
+            subQuestionRef.doc(subQuestionId).update({ title, processType, orderBy, groupId, questionId, subQuestionId, userHaveNavigation, showSubQuestion })
+                .then(() => { `updated subQuestion ${subQuestionId} to DB` })
+                .catch(e => {
+                    console.error(e)
+                })
         }
     } catch (e) {
         console.error(e)

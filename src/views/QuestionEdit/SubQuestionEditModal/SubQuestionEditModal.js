@@ -15,23 +15,36 @@ import settings from "../../../data/settings";
 
 module.exports = {
   oninit: vnode => {
-    console.log(settings)
-    const { subQuestion } = vnode.attrs;
+    const { subQuestion, pvs } = vnode.attrs;
 
-    console.log(subQuestion.new);
+    const { modalSubQuestion } = pvs;
+
+    let { title,showSubQuestion,userHaveNavigation} = modalSubQuestion;
+
+    console.log('geting userHaveNavigation',userHaveNavigation)
+   
+    if(userHaveNavigation === undefined){ userHaveNavigation = true};
+    if(showSubQuestion == undefined) {showSubQuestion = true};
+    console.log('userHaveNavigation',userHaveNavigation)
 
     vnode.state = {
       isEdit: !subQuestion.new,
-      title: vnode.attrs.title,
-      showSave: false,
-      showSubQuestion: true,
-      hasNavigation:true
+      title: title,
+      showSave: title.length>2?true:false,
+      showSubQuestion: showSubQuestion,
+      userHaveNavigation: userHaveNavigation
+      
     };
   },
   view: vnode => {
-    let va = vnode.attrs,
-      vs = vnode.state;
-    const { subQuestion, pvs } = vnode.attrs;
+  
+    const { subQuestion, pvs, processType,orderBy } = vnode.attrs;
+
+    const { modalSubQuestion } = pvs;
+
+    const { subQuestionId } = modalSubQuestion;
+
+    console.log('vnode.state.userHaveNavigation',vnode.state.userHaveNavigation)
 
     return (
       <div
@@ -41,7 +54,7 @@ module.exports = {
       >
 
         <form class="optionEditContent" onsubmit={(e) => { handleSubmit(e, vnode) }}>
-          <h2>פתיחת שאלה חדשה</h2>
+          {subQuestionId === undefined ? <h2>פתיחת שאלה חדשה</h2> : <h2>עריכת שאלה</h2>}
           <div>
             <div class="optionEditContentText">
 
@@ -73,20 +86,14 @@ module.exports = {
                 name='processType'
                 class='inputGeneral'
               >
-                {/* <option
-                  disabled
-                  selected={!vnode.attrs.processType ? "true" : "false"}
-                  value
-                >
-                  please select process
-                </option> */}
+
                 {settings.processesArr.map((process, index) => {
 
                   return (
                     <option
                       value={process}
                       selected={
-                        vnode.attrs.processType === process ? true : false
+                        processType === process ? true : false
                       }
                       key={index}
                       id={vnode.attrs.id + "select"}
@@ -103,18 +110,18 @@ module.exports = {
                 id='orderBy'
                 name='orderBy'
                 class='inputGeneral'
-                onchange={e => {
-                  updateSubQuestionOrderBy(
-                    va.groupId,
-                    va.questionId,
-                    va.subQuestionId,
-                    e.target.value
-                  );
-                }}
+
               >
-                <option value="new">הכי חדשות קודם</option>
-                <option value="top">הכי מוסכמות קודם</option>
-                <option value="message">אלו שדיברו עליהן לאחרונה</option>
+                <option value="new"
+                  selected={
+                    orderBy === 'new' ? true : false
+                  }>הכי חדשות קודם</option>
+                <option value="top" selected={
+                    orderBy === 'top' ? true : false
+                  }>הכי מוסכמות קודם</option>
+                <option value="message" selected={
+                    orderBy === 'message' ? true : false
+                  }>אלו שדיברו עליהן לאחרונה</option>
               </select>
             </div>
             <div class="editselectors">
@@ -123,16 +130,10 @@ module.exports = {
                 id='nav'
                 name='nav'
                 class='inputGeneral'
-                onchange={e => {
-
-                  
-                  if (e.target.value === 'true') { vnode.state.hasNavigation = true } else {vnode.state.hasNavigation = false};
-
-                
-                }}
+                onchange={e => {if (e.target.value === 'true') { vnode.state.userHaveNavigation = true } else { vnode.state.userHaveNavigation = false }}}
               >
-                <option value={false} selected={subQuestion.userHaveNavigation == false ? 'selected' : false}>הצגה ללא ניווט</option>
-                <option value={true} selected={subQuestion.userHaveNavigation == true || subQuestion.userHaveNavigation == undefined ? 'selected' : false}>הצגה עם ניווט - שליטה של המשתמש</option>
+                <option value={false} selected={vnode.state.userHaveNavigation == false ? true : false}>הצגה ללא ניווט</option>
+                <option value={true} selected={vnode.state.userHaveNavigation == true || vnode.state.userHaveNavigation == undefined ? true : false}>הצגה עם ניווט - שליטה של המשתמש</option>
 
               </select>
             </div>
@@ -156,7 +157,7 @@ module.exports = {
               שמירה
           </button>
 
-            <div class="buttons buttons--cancel optionEditButton" onclick={() => { pvs.newSubQuestion.isShow = false }}>Cancel</div>
+            <div class="buttons buttons--cancel optionEditButton" onclick={() => { pvs.modalSubQuestion.isShow = false }}>Cancel</div>
           </div>
         </form>
 
@@ -173,14 +174,16 @@ function handleSubmit(e, vnode) {
   const title = elms.title.value;
   const processType = elms.processType.value;
   const orderBy = elms.orderBy.value;
-  const nav = vnode.state.hasNavigation;
-  let show = vnode.state.showSubQuestion;
- console.log(vnode.attrs)
+  const userHaveNavigation = vnode.state.userHaveNavigation;
+  let showSubQuestion = vnode.state.showSubQuestion;
 
-  console.log(title, processType, orderBy, nav, show)
+  const { groupId, questionId } = vnode.attrs.pva;
+  const { numberOfSubquestions, subQuestionId } = vnode.attrs.subQuestion
 
-  const {groupId, questionId, subQuestionId} = vnode.attrs.pva;
-
+ 
   console.log(groupId, questionId, subQuestionId)
-  setSubQuestion({groupId, questionId, subQuestionId}, {title, processType, orderBy, nav, show})
+  setSubQuestion({ groupId, questionId, subQuestionId }, { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions });
+  
+  //hide modal
+  vnode.attrs.pvs.modalSubQuestion.isShow = false
 }

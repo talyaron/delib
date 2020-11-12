@@ -197,6 +197,7 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
                 subQuestionsObj[subQuestionObj.id] = {};
             });
 
+            console.log(subQuestionsArray)
             vnode.state.subQuestions = subQuestionsArray;
 
             m.redraw();
