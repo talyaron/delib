@@ -19,7 +19,7 @@ import SubQuestionEditModal from './SubQuestionEditModal/SubQuestionEditModal';
 import store from '../../data/store';
 //functions
 import { getQuestionDetails, getSubQuestion, listenSubQuestions, listenToChat } from '../../functions/firebase/get/get';
-import {setSubQuestionsOrder} from '../../functions/firebase/set/set';
+import { setSubQuestionsOrder } from '../../functions/firebase/set/set';
 import { deep_value, getIsChat } from '../../functions/general';
 
 module.exports = {
@@ -50,7 +50,7 @@ module.exports = {
             scrollY: false,
             subAnswers: {}, //used to set sub answers to each sub question
             subAnswersUnsb: {}, //used to unsubscribe
-            modalSubQuestion: { isShow: false, new: true, pressedsubQuestionId: undefined },
+            modalSubQuestion: { isShow: false, new: true },
             showModal: {
                 isShow: false,
                 which: 'subQuestion'
@@ -95,25 +95,43 @@ module.exports = {
 
         const { groupId, questionId } = vnode.attrs;
 
-        let sortOptions = document.getElementById("sortOptions");
+        let waitForUser = setInterval(() => {
+            if ({}.hasOwnProperty.call(store.user, 'uid') && {}.hasOwnProperty.call(vnode.state, 'creatorId')) {
+                console.log('staring')
+                if (store.user.uid == vnode.state.creatorId) {
 
-        let sortOptionsObj = Sortable.create(sortOptions, {
-            animation: 150,
-            onEnd: evt => {
-                //set order to DB
-                let elements = evt.target.children;
-                for (let i = 0; i < elements.length; i++) {
-                    setSubQuestionsOrder(
-                        groupId,
-                        questionId,
-                        elements[i].id,
-                        i
-                    );
+                    let sortOptions = document.getElementById("sortOptions");
+
+                    let sortOptionsObj = Sortable.create(sortOptions, {
+                        animation: 150,
+                        onEnd: evt => {
+                            //set order to DB
+                            let elements = evt.target.children;
+                            for (let i = 0; i < elements.length; i++) {
+                                setSubQuestionsOrder(
+                                    groupId,
+                                    questionId,
+                                    elements[i].id,
+                                    i
+                                );
+                            }
+                        }
+                    });
+                } else {
+                    console.log('user is not admin')
                 }
+
+                clearInterval(waitForUser)
+
+            } else {
+                console.log('waiting for the user')
             }
-        });
+        }, 200)
+
     },
     onbeforeupdate: vnode => {
+
+        console.log(vnode)
 
         const { groupId, questionId } = vnode.attrs;
 
@@ -170,7 +188,7 @@ module.exports = {
 
                         <div class='wrapperSubQuestions' id='questionWrapperAll'>
                             <h1>שאלות </h1>
-                            <div class='subQuestionsWrapper' id='sortOptions'>
+                            <div class='subQuestionsWrapper' id={vnode.state.creatorId === store.user.uid ? 'sortOptions' : ''}>
 
                                 {vnode.state.subQuestions.map((subQuestion, index) => {
 
