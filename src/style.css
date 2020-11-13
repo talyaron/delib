@@ -381,4 +381,5 @@ input[type=checkbox] {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.397);
     backdrop-filter: blur(7px);
+    
 }

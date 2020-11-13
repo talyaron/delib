@@ -25,13 +25,16 @@ module.exports = {
 
         const { groupId, questionId } = vnode.attrs;
 
+        let subQuestions =  get(store.subQuestions,`[${groupId}]`, [])
+        subQuestions = subQuestions.sort((a,b)=>a.order - b.order);
+
         vnode.state = {
             title: deep_value(store.questions, `${groupId}.${questionId}.title`, 'כותרת השאלה'),
             addOption: false,
             callDB: true,
             subItems: {
                 options: [],
-                subQuestions: [],
+                subQuestions,
                 goals: [],
                 values: []
             },
@@ -101,7 +104,8 @@ module.exports = {
 
         vnode.state.title = deep_value(store.questions, `${groupId}.${questionId}.title`, 'כותרת השאלה');
         vnode.state.description = deep_value(store.questions, `${groupId}.${questionId}.description`, '');
-        vnode.state.subQuestions = get(store.subQuestions,`[${groupId}]`, [])
+        let subQuestions =  get(store.subQuestions,`[${groupId}]`, [])
+        vnode.state.subQuestions = subQuestions.sort((a,b)=>a.order - b.order);
         let userRole = deep_value(store.questions, `${groupId}.${questionId}.roles.${store.user.uid}`, false);
         if (!userRole) {
             // the user is not a member in the question, he/she should login, and ask for

@@ -36,13 +36,15 @@ module.exports = {
 
     const { pvs } = vnode.attrs;
     const { modalSubQuestion } = pvs;
-    const { subQuestionId, orderBy, processType } = modalSubQuestion;
+    const { subQuestionId, orderBy, processType,showSubQuestion } = modalSubQuestion;
+  
 
     return (
       <div
         class="optionEditBox draggable"
         key={vnode.attrs.number}
         id={vnode.attrs.id}
+        
       >
 
         <form class="optionEditContent" onsubmit={(e) => { handleSubmit(e, vnode) }}>
@@ -131,8 +133,8 @@ module.exports = {
             </div>
             <div class='subQuestionEdit__settings'>
               <div>
-                <input type='checkbox' name='show' checked={vnode.state.showSubQuestion} id='showSubQuestion'
-                  onclick={() => { vnode.state.showSubQuestion = !vnode.state.showSubQuestion }} ></input>
+                <input type='checkbox' name='show' checked={vnode.state.showSubQuestion == 'userSee'} id='showSubQuestion'
+                  onclick={() =>{handleCheckUserSee(vnode)}} ></input>
                 <label for='showSubQuestion'>להציג</label>
               </div>
               <div onclick={()=>handleDelete(vnode)}>
@@ -172,7 +174,7 @@ function handleSubmit(e, vnode) {
     const orderBy = elms.orderBy.value;
     const userHaveNavigation = vnode.state.userHaveNavigation;
     let showSubQuestion = vnode.state.showSubQuestion;
-    if(showSubQuestion == true){ showSubQuestion = 'userSee'} else {showSubQuestion = 'hidden'}
+    
 
     const { groupId, questionId } = pva;
     const { numberOfSubquestions, subQuestionId } = subQuestion;
@@ -187,6 +189,15 @@ function handleSubmit(e, vnode) {
   } catch (e) {
     console.error(e)
   }
+}
+
+function handleCheckUserSee(vnode){
+  if(vnode.state.showSubQuestion === 'userSee'){
+    vnode.state.showSubQuestion = 'hidden'
+  } else {
+    vnode.state.showSubQuestion = 'userSee'
+  }
+  
 }
 
 function handleDelete(vnode){

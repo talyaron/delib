@@ -221,15 +221,15 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
                     });
 
 
-                    vnode.state.subQuestions = subQuestionsArray;
+                    
                     store.subQuestions[groupId] = subQuestionsArray;
 
                     m.redraw();
-                    console.log(store)
+                    
                 });
         }
     } catch (e) {
-        console.log(store)
+        
         console.error(e)
     }
 }
