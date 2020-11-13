@@ -56,28 +56,12 @@ module.exports = {
       vnode
     );
 
-    getSubQuestions(vnode.attrs.groupId, vnode.attrs.questionId, vnode);
+  
   },
   oncreate: vnode => {
     setWrapperHeight("headerContainer", "questionEditWrapperAll");
 
-    let sortOptions = document.getElementById("sortOptions");
-
-    let sortOptionsObj = Sortable.create(sortOptions, {
-      animation: 150,
-      onEnd: evt => {
-        //set order to DB
-        let elements = evt.target.children;
-        for (let i = 0; i < elements.length; i++) {
-          setSubQuestionsOrder(
-            vnode.attrs.groupId,
-            vnode.attrs.questionId,
-            elements[i].id,
-            i
-          );
-        }
-      }
-    });
+   
   },
   onremove: vnode => {
     vnode.state.unsbscribe.details();
@@ -175,124 +159,7 @@ module.exports = {
                   </div>
                 )}
             </div>
-            <div class="questionAuthorization checkBoxes">
-              <h2>מי רשאי להשתתף</h2>
-              <label>
-                <input
-                  type="checkbox"
-                  name="checkbox"
-                  value="public"
-                  checked={vnode.state.authorized.public}
-                  onclick={e => {
-                    setCheckboxValue(e, vnode);
-                  }}
-                />
-              כולם
-            </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="checkbox"
-                  value="anonymous"
-                  checked={vnode.state.authorized.anonymous}
-                  onclick={e => {
-                    setCheckboxValue(e, vnode);
-                  }}
-                />
-              אנונימיים
-            </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="checkbox"
-                  value="registered"
-                  checked={vnode.state.authorized.registered}
-                  onclick={e => {
-                    setCheckboxValue(e, vnode);
-                  }}
-                />
-              רשומים
-            </label>
-            </div>
 
-            <h2>תת-שאלות ומטרות</h2>
-            <div id="sortOptions">
-              {vnode.state.subQuestions.map((subQuestion, index) => {
-                return (
-                  <SubQuestion
-                    groupId={vnode.attrs.groupId}
-                    questionId={vnode.attrs.questionId}
-                    subQuestion={subQuestion}
-                    subQuestionId={subQuestion.id}
-                    number={index}
-                    title={subQuestion.title}
-                    processType={subQuestion.processType || 'suggestions'}
-                    id={subQuestion.id}
-                  />
-                );
-              })}
-            </div>
-            {vnode.state.addSubQuestin ? (
-              <div>
-                <input
-                  type="text"
-                  placeholder="תת שאלה חדשה או תת מטרה חדשה"
-                  class="inputNewSubQuestion"
-                  value={vnode.state.newSubQuestion}
-                  onkeyup={e => {
-                    vnode.state.newSubQuestion = e.target.value;
-                  }}
-                />
-              </div>
-            ) : (
-                <div />
-              )}
-            {!vnode.state.addSubQuestin ? (
-              <div
-                class="buttons addSubQuestin"
-                onclick={() => {
-                  vnode.state.addSubQuestin = true;
-                }}
-              >
-                הוספת תת-שאלה או מטרה
-              </div>
-            ) : (
-                <div class="buttonsWrapper">
-                  <div
-                    class
-                    class="buttons addSubQuestin"
-                    onclick={e => {
-                      e.stopPropagation();
-                      vnode.state.addSubQuestin = false;
-                      createSubQuestion(
-                        vnode.attrs.groupId,
-                        vnode.attrs.questionId,
-                        vnode.state.newSubQuestion,
-                        vnode.state.subQuestions.length
-                      );
-
-                      getSubQuestions(
-                        vnode.attrs.groupId,
-                        vnode.attrs.questionId,
-                        vnode
-                      );
-                      vnode.state.newSubQuestion = "";
-                    }}
-                  >
-                    הוספה
-              </div>
-                  <div
-                    class="buttons addSubQuestin cancel"
-                    onclick={e => {
-                      e.stopPropagation();
-                      vnode.state.addSubQuestin = false;
-                      vnode.state.newSubQuestion = "";
-                    }}
-                  >
-                    ביטול
-              </div>
-                </div>
-              )}
           </div>
         </div>
       );
