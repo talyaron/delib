@@ -65,7 +65,6 @@ module.exports = {
 	},
 	view: (vnode) => {
 
-
 		return (
 			<div class="subQuestionWrapper" id="optionsWrapper">
 				<div class={vnode.attrs.isAlone ? "questionSection questionSection--alone" : "questionSection"}>

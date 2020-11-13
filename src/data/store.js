@@ -21,6 +21,7 @@ var store = {
     groups: {}, //groups stored as {groupId:{group info}}
     option:{}, //options information, stored in option:{optionId:{}}
     options: [],//options in a given question. stored as subQuestionID:[options] 
+    optionsListen:{}, //used to store if there is a listner in subQuestion of option {subQuestionId:true}
     optionsVotes: {}, //store how the user voted on each option. stored as {optionId: -1 to 1}
     optionsLoc: {}, //options location. used for animations
     optionsDetails: {}, //vote on options by user

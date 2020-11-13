@@ -79,3 +79,12 @@
         margin-top: 10px;
     }
 }
+
+#sortOptions>p{
+    background-color: var(--white);
+    border-radius: var(--roundBorder);
+    padding: 15px;
+    margin: 10px 30px;
+    user-select: none;
+    cursor: grabbing;
+}

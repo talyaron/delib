@@ -163,7 +163,7 @@ function getQuestionDetails(groupId, questionId, vnode) {
                     .authorization;
             }
 
-            listenSubQuestions(groupId,questionId, vnode)
+            listenSubQuestions(groupId, questionId, vnode)
             m.redraw();
         });
 
@@ -171,15 +171,15 @@ function getQuestionDetails(groupId, questionId, vnode) {
 }
 
 function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
-   
+
     try {
 
         //listen only once
-      
+
         if (!{}.hasOwnProperty.call(store.subQuestionsListners, questionId)) {
 
-            store.subQuestionsListners[questionId] = {listen:true}
-           
+            store.subQuestionsListners[questionId] = { listen: true }
+
             if (!{}.hasOwnProperty.call(vnode.state, 'creatorId')) { throw new Error('No creatorId in vnode at listenSubQuestions') }
 
             let term, search;
@@ -206,7 +206,7 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
 
 
 
-            return subQuestionRef 
+            return subQuestionRef
                 .where('showSubQuestion', term, search)
                 .onSnapshot(subQuestionsDB => {
                     let subQuestionsArray = [];
@@ -221,15 +221,15 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
                     });
 
 
-                    
+
                     store.subQuestions[groupId] = subQuestionsArray;
 
                     m.redraw();
-                    
+
                 });
         }
     } catch (e) {
-        
+
         console.error(e)
     }
 }
@@ -262,79 +262,91 @@ function getSubQuestion(groupId, questionId, subQuestionId, isSingle) {
 }
 
 function listenToOptions(groupId, questionId, subQuestionId, order = 'top', isSingle = false) {
+    try {
 
-    let optionsRef = DB
-        .collection("groups")
-        .doc(groupId)
-        .collection("questions")
-        .doc(questionId)
-        .collection("subQuestions")
-        .doc(subQuestionId)
-        .collection("options");
+        if (!{}.hasOwnProperty.call(store.optionsListen, subQuestionId)) {
+            //signal that this questionId options are listend to
+            store.optionsListen[subQuestionId] = true;
 
-    let orderBy = "time";
-    switch (order) {
-        case "new":
-            orderBy = "time";
-            break;
-        case "top":
-            orderBy = "consensusPrecentage";
-            break;
-        default:
-            orderBy = "time";
-    }
+          
+            let optionsRef = DB
+                .collection("groups")
+                .doc(groupId)
+                .collection("questions")
+                .doc(questionId)
+                .collection("subQuestions")
+                .doc(subQuestionId)
+                .collection("options");
 
-    let limit = 100;
-    if (isSingle === true) {
-        limit = 1
-    }
+            let orderBy = "time";
+            switch (order) {
+                case "new":
+                    orderBy = "time";
+                    break;
+                case "top":
+                    orderBy = "consensusPrecentage";
+                    break;
+                default:
+                    orderBy = "time";
+            }
 
-    return optionsRef
-        .orderBy(orderBy, "desc")
-        .limit(limit)
-        .onSnapshot(optionsDB => {
-            let optionsArray = [];
-            optionsDB.forEach(optionDB => {
+            let limit = 100;
+            // if (isSingle === true) {
+            //     limit = 1
+            // }
 
-                //this is a patch TODO: change all data to query of active or not active options
-                if (optionDB.data().isActive == null || optionDB.data().isActive == true) {
+            return optionsRef
+                .orderBy(orderBy, "desc")
+                .limit(limit)
+                .onSnapshot(optionsDB => {
+                    let optionsArray = [];
+                    optionsDB.forEach(optionDB => {
 
-                    let optionObj = optionDB.data();
-                    optionObj.id = optionObj.optionId = optionDB.id; //the preferd syntax is 'optionId' and not id, but we left the old 'id' for backward compatability purpose (Tal Yaron)
-                    optionObj.subQuestionId = subQuestionId;
+                        //this is a patch TODO: change all data to query of active or not active options
+                        if (optionDB.data().isActive == null || optionDB.data().isActive == true) {
 
-                    //get before position Align for animation
-                    let elm = document.getElementById(optionObj.id);
-                    if (elm) {
-                        store.optionsLoc[optionObj.id] = {
-                            offsetTop: elm.offsetTop,
-                            offsetLeft: elm.offsetLeft,
-                            toAnimate: true,
-                            new: false
+                            let optionObj = optionDB.data();
+                            optionObj.id = optionObj.optionId = optionDB.id; //the preferd syntax is 'optionId' and not id, but we left the old 'id' for backward compatability purpose (Tal Yaron)
+                            optionObj.subQuestionId = subQuestionId;
+
+                            //get before position Align for animation
+                            let elm = document.getElementById(optionObj.id);
+                            if (elm) {
+                                store.optionsLoc[optionObj.id] = {
+                                    offsetTop: elm.offsetTop,
+                                    offsetLeft: elm.offsetLeft,
+                                    toAnimate: true,
+                                    new: false
+                                };
+                            } else {
+                                store.optionsLoc[optionObj.id] = {
+                                    offsetTop: 0,
+                                    offsetLeft: 0,
+                                    toAnimate: false,
+                                    new: true
+                                };
+                            }
+
+                            optionsArray.push(optionObj);
+
+                        } else {
+                            console.info(optionDB.data().id, 'is not active')
                         };
-                    } else {
-                        store.optionsLoc[optionObj.id] = {
-                            offsetTop: 0,
-                            offsetLeft: 0,
-                            toAnimate: false,
-                            new: true
-                        };
-                    }
 
-                    optionsArray.push(optionObj);
+                    });
 
-                } else {
-                    console.info(optionDB.data().id, 'is not active')
-                };
+                    set(store, `options[${subQuestionId}]`, optionsArray);
 
-            });
+                    //add or update or delete an option
 
-            set(store, `options[${subQuestionId}]`, optionsArray);
-
-            //add or update or delete an option
-
-            m.redraw();
-        });
+                    m.redraw();
+                });
+        } else{
+            return ()=>{};
+        }
+    } catch (e) {
+        console.error(e)
+    }
 
 }
 

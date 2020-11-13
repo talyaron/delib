@@ -1,6 +1,6 @@
 import m from 'mithril';
 import { get } from 'lodash';
-import Sortable from "sortablejs";
+
 
 //components
 import './Question.css';
@@ -91,47 +91,10 @@ module.exports = {
         vnode.state.unsbscribe.chat = listenToChat({ groupId, questionId })
 
     },
-    oncreate: vnode => {
-
-        const { groupId, questionId } = vnode.attrs;
-
-        let waitForUser = setInterval(() => {
-            if ({}.hasOwnProperty.call(store.user, 'uid') && {}.hasOwnProperty.call(vnode.state, 'creatorId')) {
-                console.log('staring')
-                if (store.user.uid == vnode.state.creatorId) {
-
-                    let sortOptions = document.getElementById("sortOptions");
-
-                    let sortOptionsObj = Sortable.create(sortOptions, {
-                        animation: 150,
-                        onEnd: evt => {
-                            //set order to DB
-                            let elements = evt.target.children;
-                            for (let i = 0; i < elements.length; i++) {
-                                setSubQuestionsOrder(
-                                    groupId,
-                                    questionId,
-                                    elements[i].id,
-                                    i
-                                );
-                            }
-                        }
-                    });
-                } else {
-                    console.log('user is not admin')
-                }
-
-                clearInterval(waitForUser)
-
-            } else {
-                console.log('waiting for the user')
-            }
-        }, 200)
-
-    },
+   
     onbeforeupdate: vnode => {
 
-        console.log(vnode)
+    
 
         const { groupId, questionId } = vnode.attrs;
 
@@ -188,7 +151,7 @@ module.exports = {
 
                         <div class='wrapperSubQuestions' id='questionWrapperAll'>
                             <h1>שאלות </h1>
-                            <div class='subQuestionsWrapper' id={vnode.state.creatorId === store.user.uid ? 'sortOptions' : ''}>
+                            <div class='subQuestionsWrapper'>
 
                                 {vnode.state.subQuestions.map((subQuestion, index) => {
 
