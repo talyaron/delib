@@ -3,15 +3,13 @@ import "./SubQuestionEditModal.css";
 
 //functions
 import {
-  updateSubQuestion,
-  updateSubQuestionProcess,
-  updateSubQuestionOrderBy,
-  updateDoesUserHaveNavigation,
+  deleteSubQuestion,
   setSubQuestion
 } from "../../../functions/firebase/set/set";
 
 //model
 import settings from "../../../data/settings";
+import config from "../../../functions/firebase/configKey";
 
 module.exports = {
   oninit: vnode => {
@@ -137,7 +135,7 @@ module.exports = {
                   onclick={() => { vnode.state.showSubQuestion = !vnode.state.showSubQuestion }} ></input>
                 <label for='showSubQuestion'>להציג</label>
               </div>
-              <div>
+              <div onclick={()=>handleDelete(vnode)}>
                 <img src='img/delete.svg' alt='delete question' />
               </div>
             </div>
@@ -165,9 +163,6 @@ function handleSubmit(e, vnode) {
     e.preventDefault();
 
     let elms = e.target.elements;
-
-
-
     const { subQuestion, pvs, pva } = vnode.attrs;
 
 
@@ -177,6 +172,7 @@ function handleSubmit(e, vnode) {
     const orderBy = elms.orderBy.value;
     const userHaveNavigation = vnode.state.userHaveNavigation;
     let showSubQuestion = vnode.state.showSubQuestion;
+    if(showSubQuestion == true){ showSubQuestion = 'userSee'} else {showSubQuestion = 'hidden'}
 
     const { groupId, questionId } = pva;
     const { numberOfSubquestions, subQuestionId } = subQuestion;
@@ -189,6 +185,24 @@ function handleSubmit(e, vnode) {
     //hide modal
     pvs.modalSubQuestion.isShow = false
   } catch (e) {
+    console.error(e)
+  }
+}
+
+function handleDelete(vnode){
+  try{
+    let toDelete = confirm('האם למחוק את ההודעה?');
+
+    if(toDelete){
+
+      const { subQuestion, pva, pvs } = vnode.attrs;
+      const { groupId, questionId } = pva;
+    const {  subQuestionId } = subQuestion;
+
+      deleteSubQuestion(groupId, questionId, subQuestionId);
+      pvs.modalSubQuestion.isShow = false;
+    }
+  }catch(e){
     console.error(e)
   }
 }

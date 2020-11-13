@@ -176,6 +176,25 @@ function setSubQuestion(ids, settings) {
         console.error(e)
     }
 
+
+   
+}
+
+function deleteSubQuestion(groupId, questionId, subQuestionId){
+    try{
+        DB.collection('groups')
+        .doc(groupId)
+        .collection('questions')
+        .doc(questionId)
+        .collection('subQuestions')
+        .doc(subQuestionId)
+        .update({showSubQuestion:'deleted'})
+        .then(()=>{console.info('SubQuestion was deleted (and styed in db as subQuestion', subQuestionId,')')})
+        .catch(e=>{console.error(e)})
+    }catch(e){
+        console.error(e)
+    }
+        
 }
 
 function updateDoesUserHaveNavigation(groupId, questionId, subQuestionId, userHaveNavigation) {
@@ -715,6 +734,7 @@ module.exports = {
     createSubQuestion,
     updateSubQuestion,
     setSubQuestion,
+    deleteSubQuestion,
     setSubQuestionsOrder,
     createOption,
     setOptionActive,

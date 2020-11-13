@@ -154,21 +154,16 @@ function getQuestionDetails(groupId, questionId, vnode) {
             // set(store.questions, `[${groupId}][${questionId}]`, questionDB.data());
             setStore(store.questions, groupId, questionId, questionDB.data());
 
-            vnode.state.title = questionDB
-                .data()
-                .title;
-            vnode.state.description = questionDB
-                .data()
-                .description;
-            vnode.state.creatorId = questionDB
-                .data()
-                .creatorId;
+            vnode.state.title = questionDB.data().title;
+            vnode.state.description = questionDB.data().description;
+            vnode.state.creatorId = questionDB.data().creatorId;
             if (questionDB.data().authorization) {
                 vnode.state.authorized = questionDB
                     .data()
                     .authorization;
             }
 
+            listenSubQuestions(groupId,questionId, vnode)
             m.redraw();
         });
 
@@ -176,32 +171,67 @@ function getQuestionDetails(groupId, questionId, vnode) {
 }
 
 function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
-    let subQuestionRef = DB
-        .collection("groups")
-        .doc(groupId)
-        .collection("questions")
-        .doc(questionId)
-        .collection("subQuestions");
+   
+    try {
 
-    return subQuestionRef
-        .orderBy("order", "asc")
-        .onSnapshot(subQuestionsDB => {
-            let subQuestionsArray = [];
-            let subQuestionsObj = {};
+        //listen only once
+      
+        if (!{}.hasOwnProperty.call(store.subQuestionsListners, questionId)) {
 
-            subQuestionsDB.forEach(subQuestionDB => {
-                let subQuestionObj = subQuestionDB.data();
-                subQuestionObj.id = subQuestionDB.id;
+            store.subQuestionsListners[questionId] = {listen:true}
+           
+            if (!{}.hasOwnProperty.call(vnode.state, 'creatorId')) { throw new Error('No creatorId in vnode at listenSubQuestions') }
 
-                subQuestionsArray.push(subQuestionObj);
-                subQuestionsObj[subQuestionObj.id] = {};
-            });
+            let term, search;
 
-         
-            vnode.state.subQuestions = subQuestionsArray;
+            //sub question seen by the admin are diffrenet then subquestions seen by yhe simple user
+            if (vnode.state.creatorId != store.user.uid) {
 
-            m.redraw();
-        });
+                //simple user view
+                term = '=='; search = 'userSee'
+            } else {
+
+                //admin view
+                term = '!='; search = 'deleted'
+            }
+
+
+
+            let subQuestionRef = DB
+                .collection("groups")
+                .doc(groupId)
+                .collection("questions")
+                .doc(questionId)
+                .collection("subQuestions");
+
+
+
+            return subQuestionRef 
+                .where('showSubQuestion', term, search)
+                .onSnapshot(subQuestionsDB => {
+                    let subQuestionsArray = [];
+                    let subQuestionsObj = {};
+
+                    subQuestionsDB.forEach(subQuestionDB => {
+                        let subQuestionObj = subQuestionDB.data();
+                        subQuestionObj.id = subQuestionDB.id;
+
+                        subQuestionsArray.push(subQuestionObj);
+                        subQuestionsObj[subQuestionObj.id] = {};
+                    });
+
+
+                    vnode.state.subQuestions = subQuestionsArray;
+                    store.subQuestions[groupId] = subQuestionsArray;
+
+                    m.redraw();
+                    console.log(store)
+                });
+        }
+    } catch (e) {
+        console.log(store)
+        console.error(e)
+    }
 }
 
 function getSubQuestion(groupId, questionId, subQuestionId, isSingle) {
@@ -333,7 +363,7 @@ function listenToOption(ids) {
                 set(store, `option[${optionId}]`, optionObj);
                 m.redraw()
             })
-    
+
     } catch (e) {
         console.error(e);
     }
@@ -672,7 +702,7 @@ function listenToChatFeed() {
                     const messages = [];
                     chatDB.forEach(newMessageDB => {
 
-                       
+
                         messages.push(newMessageDB.data());
 
                         unreadMessagesCouner += newMessageDB.data().msgDifference;
@@ -731,7 +761,7 @@ function listenToChat(ids) {
                         store.chatLastRead = change.doc.data().createdTime;
                         store.chatMessegesNotRead[path]++;
 
-                        
+
                     }
 
                 })
@@ -770,7 +800,7 @@ function listenIfGetsMessages(ids) {
             const browserUniqueId = setBrowserUniqueId()
 
             const dbPath = `${concatenateDBPath(groupId, questionId, subQuestionId, optionId)}/notifications/${store.user.uid}`;
-         
+
 
             DB.doc(dbPath).onSnapshot(tokensDB => {
                 if (tokensDB.exists) {
@@ -782,7 +812,7 @@ function listenIfGetsMessages(ids) {
                     }
 
                 } else {
-                  
+
                     store.listenToMessages[entityId] = false;
                 }
 

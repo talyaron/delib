@@ -1,4 +1,5 @@
 import m from 'mithril';
+import {get} from 'lodash';
 
 //components
 import './Question.css';
@@ -74,16 +75,14 @@ module.exports = {
 
         //check to see if user logged in
         if (store.user.uid == undefined) {
-            m
-                .route
-                .set('/login');
+            m.route.set('/login');
             vnode.state.callDB = false;
         } else {
             vnode.state.callDB = true;
         }
 
         //propare undubscribe function for question details to be used  onremove
-        vnode.state.unsubscribeQuestionDetails = getQuestionDetails(groupId, questionId, vnode);
+        vnode.state.unsubscribeQuestionDetails = getQuestionDetails(groupId, questionId, vnode); //it will then listen to subQuestions
         vnode.state.unsbscribe.chat = listenToChat({ groupId, questionId })
 
     },
@@ -92,16 +91,18 @@ module.exports = {
         // setWrapperFromFooter('questionFooter', 'questionWrapperAll');
         if (vnode.state.callDB) {
             //subscribe to subQuestions
-            vnode.state.unsbscribe.subQuestions = listenSubQuestions(vnode.attrs.groupId, vnode.attrs.questionId, vnode, true);
+            // vnode.state.unsbscribe.subQuestions = listenSubQuestions(vnode.attrs.groupId, vnode.attrs.questionId, vnode, true);
 
         }
     },
     onbeforeupdate: vnode => {
 
-        vnode.state.title = deep_value(store.questions, `${vnode.attrs.groupId}.${vnode.attrs.questionId}.title`, 'כותרת השאלה');
-        vnode.state.description = deep_value(store.questions, `${vnode.attrs.groupId}.${vnode.attrs.questionId}.description`, '');
+        const {groupId, questionId} = vnode.attrs;
 
-        let userRole = deep_value(store.questions, `${vnode.attrs.groupId}.${vnode.attrs.questionId}.roles.${store.user.uid}`, false);
+        vnode.state.title = deep_value(store.questions, `${groupId}.${questionId}.title`, 'כותרת השאלה');
+        vnode.state.description = deep_value(store.questions, `${groupId}.${questionId}.description`, '');
+        vnode.state.subQuestions = get(store.subQuestions,`[${groupId}]`, [])
+        let userRole = deep_value(store.questions, `${groupId}.${questionId}.roles.${store.user.uid}`, false);
         if (!userRole) {
             // the user is not a member in the question, he/she should login, and ask for
             // membership
@@ -152,10 +153,7 @@ module.exports = {
                             <h1>שאלות </h1>
                             <div class='subQuestionsWrapper'>
 
-                                {vnode
-                                    .state
-                                    .subQuestions
-                                    .map((subQuestion, index) => {
+                                {vnode.state.subQuestions.map((subQuestion, index) => {
 
                                         return (<SubQuestionSolution
                                             key={index}
