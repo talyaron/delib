@@ -1,5 +1,6 @@
 import m from 'mithril';
-import {get} from 'lodash';
+import { get } from 'lodash';
+import Sortable from "sortablejs";
 
 //components
 import './Question.css';
@@ -12,12 +13,13 @@ import AlertsSetting from '../Commons/AlertsSetting/AlertsSetting';
 import NavBottom from '../Commons/NavBottom/NavBottom';
 import NavTop from '../Commons/NavTop/NavTop';
 import Chat from '../Commons/Chat/Chat';
-import SubQuestionEdit from '../QuestionEdit/SubQuestionEditModal/SubQuestionEditModal';
+import SubQuestionEditModal from './SubQuestionEditModal/SubQuestionEditModal';
 
 //model
 import store from '../../data/store';
 //functions
 import { getQuestionDetails, getSubQuestion, listenSubQuestions, listenToChat } from '../../functions/firebase/get/get';
+import {setSubQuestionsOrder} from '../../functions/firebase/set/set';
 import { deep_value, getIsChat } from '../../functions/general';
 
 module.exports = {
@@ -25,8 +27,8 @@ module.exports = {
 
         const { groupId, questionId } = vnode.attrs;
 
-        let subQuestions =  get(store.subQuestions,`[${groupId}]`, [])
-        subQuestions = subQuestions.sort((a,b)=>a.order - b.order);
+        let subQuestions = get(store.subQuestions, `[${groupId}]`, [])
+        subQuestions = subQuestions.sort((a, b) => a.order - b.order);
 
         vnode.state = {
             title: deep_value(store.questions, `${groupId}.${questionId}.title`, 'כותרת השאלה'),
@@ -91,21 +93,34 @@ module.exports = {
     },
     oncreate: vnode => {
 
-        // setWrapperFromFooter('questionFooter', 'questionWrapperAll');
-        if (vnode.state.callDB) {
-            //subscribe to subQuestions
-            // vnode.state.unsbscribe.subQuestions = listenSubQuestions(vnode.attrs.groupId, vnode.attrs.questionId, vnode, true);
+        const { groupId, questionId } = vnode.attrs;
 
-        }
+        let sortOptions = document.getElementById("sortOptions");
+
+        let sortOptionsObj = Sortable.create(sortOptions, {
+            animation: 150,
+            onEnd: evt => {
+                //set order to DB
+                let elements = evt.target.children;
+                for (let i = 0; i < elements.length; i++) {
+                    setSubQuestionsOrder(
+                        groupId,
+                        questionId,
+                        elements[i].id,
+                        i
+                    );
+                }
+            }
+        });
     },
     onbeforeupdate: vnode => {
 
-        const {groupId, questionId} = vnode.attrs;
+        const { groupId, questionId } = vnode.attrs;
 
         vnode.state.title = deep_value(store.questions, `${groupId}.${questionId}.title`, 'כותרת השאלה');
         vnode.state.description = deep_value(store.questions, `${groupId}.${questionId}.description`, '');
-        let subQuestions =  get(store.subQuestions,`[${groupId}]`, [])
-        vnode.state.subQuestions = subQuestions.sort((a,b)=>a.order - b.order);
+        let subQuestions = get(store.subQuestions, `[${groupId}]`, [])
+        vnode.state.subQuestions = subQuestions.sort((a, b) => a.order - b.order);
         let userRole = deep_value(store.questions, `${groupId}.${questionId}.roles.${store.user.uid}`, false);
         if (!userRole) {
             // the user is not a member in the question, he/she should login, and ask for
@@ -155,30 +170,30 @@ module.exports = {
 
                         <div class='wrapperSubQuestions' id='questionWrapperAll'>
                             <h1>שאלות </h1>
-                            <div class='subQuestionsWrapper'>
+                            <div class='subQuestionsWrapper' id='sortOptions'>
 
                                 {vnode.state.subQuestions.map((subQuestion, index) => {
 
-                                        return (<SubQuestionSolution
-                                            key={index}
-                                            creator={subQuestion.creator}
-                                            groupId={vnode.attrs.groupId}
-                                            questionId={vnode.attrs.questionId}
-                                            subQuestionId={subQuestion.id}
-                                            orderBy={subQuestion.orderBy}
-                                            title={subQuestion.title}
-                                            subItems={vnode.state.subItems.options}
-                                            parentVnode={vnode}
-                                            info={settings.subItems.options}
-                                            processType={subQuestion.processType}
-                                            userHaveNavigation={subQuestion.userHaveNavigation}
-                                            showSubQuestion={subQuestion.showSubQuestion}
-                                            numberOfSubquestions={vnode.state.subQuestions.length}
-                                            isAlone={false}
-                                            pvs={vnode.state}
-                                        />)
+                                    return (<SubQuestionSolution
+                                        key={subQuestion.id}
+                                        creator={subQuestion.creator}
+                                        groupId={vnode.attrs.groupId}
+                                        questionId={vnode.attrs.questionId}
+                                        subQuestionId={subQuestion.id}
+                                        orderBy={subQuestion.orderBy}
+                                        title={subQuestion.title}
+                                        subItems={vnode.state.subItems.options}
+                                        parentVnode={vnode}
+                                        info={settings.subItems.options}
+                                        processType={subQuestion.processType}
+                                        userHaveNavigation={subQuestion.userHaveNavigation}
+                                        showSubQuestion={subQuestion.showSubQuestion}
+                                        numberOfSubquestions={vnode.state.subQuestions.length}
+                                        isAlone={false}
+                                        pvs={vnode.state}
+                                    />)
 
-                                    })
+                                })
                                 }
                             </div>
 
@@ -215,7 +230,7 @@ module.exports = {
                 < div
                     class="fav fav__subQuestion fav--blink"
                     onclick={() => {
-                        vnode.state.modalSubQuestion = { isShow: true, new: true, numberOfSubquestions: vnode.state.subQuestions.length};
+                        vnode.state.modalSubQuestion = { isShow: true, new: true, numberOfSubquestions: vnode.state.subQuestions.length };
                     }}>
                     <div>
                         <div>+</div>
@@ -224,7 +239,7 @@ module.exports = {
                 </div >
                 {vnode.state.modalSubQuestion.isShow ?
                     <div class='background'>
-                        <SubQuestionEdit
+                        <SubQuestionEditModal
                             subQuestion={vnode.state.modalSubQuestion}
                             pvs={vnode.state}
                             pva={vnode.attrs}

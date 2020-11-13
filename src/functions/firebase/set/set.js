@@ -154,7 +154,7 @@ function setSubQuestion(ids, settings) {
             .doc(questionId)
             .collection('subQuestions')
 
-            
+
 
         if (subQuestionId === undefined) {
             //new subQuestion
@@ -177,24 +177,24 @@ function setSubQuestion(ids, settings) {
     }
 
 
-   
+
 }
 
-function deleteSubQuestion(groupId, questionId, subQuestionId){
-    try{
+function deleteSubQuestion(groupId, questionId, subQuestionId) {
+    try {
         DB.collection('groups')
-        .doc(groupId)
-        .collection('questions')
-        .doc(questionId)
-        .collection('subQuestions')
-        .doc(subQuestionId)
-        .update({showSubQuestion:'deleted'})
-        .then(()=>{console.info('SubQuestion was deleted (and styed in db as subQuestion', subQuestionId,')')})
-        .catch(e=>{console.error(e)})
-    }catch(e){
+            .doc(groupId)
+            .collection('questions')
+            .doc(questionId)
+            .collection('subQuestions')
+            .doc(subQuestionId)
+            .update({ showSubQuestion: 'deleted' })
+            .then(() => { console.info('SubQuestion was deleted (and styed in db as subQuestion', subQuestionId, ')') })
+            .catch(e => { console.error(e) })
+    } catch (e) {
         console.error(e)
     }
-        
+
 }
 
 function updateDoesUserHaveNavigation(groupId, questionId, subQuestionId, userHaveNavigation) {
@@ -236,20 +236,24 @@ function updateSubQuestionsOrder(groupId, questionId, newOrderArray) {
 }
 
 function setSubQuestionsOrder(groupId, questionId, subQuestionId, order) {
-    DB
-        .collection('groups')
-        .doc(groupId)
-        .collection('questions')
-        .doc(questionId)
-        .collection('subQuestions')
-        .doc(subQuestionId)
-        .update({ order })
-        .then((something) => {
-            console.log(`writen to ${subQuestionId} succesufuly`);
-        })
-        .catch(function (error) {
-            console.error('Error adding document: ', error);
-        });
+    try {
+        DB
+            .collection('groups')
+            .doc(groupId)
+            .collection('questions')
+            .doc(questionId)
+            .collection('subQuestions')
+            .doc(subQuestionId)
+            .update({ order })
+            .then((something) => {
+                console.log(`writen to ${subQuestionId} succesufuly`);
+            })
+            .catch(function (error) {
+                console.error('Error adding document: ', error);
+            });
+    } catch(e){
+        console.error(e)
+    }
 }
 
 function createOption(groupId, questionId, subQuestionId, type, creatorId, title, description, creatorName, subQuestionTitle) {

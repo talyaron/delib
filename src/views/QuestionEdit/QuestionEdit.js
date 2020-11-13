@@ -16,7 +16,7 @@ import { setWrapperHeight } from "../../functions/general";
 import "./QuestionEdit.css";
 
 import Header from "../Commons/Header/Header";
-import SubQuestion from "./SubQuestionEditModal/SubQuestionEditModal";
+
 
 module.exports = {
   oninit: vnode => {

@@ -46,7 +46,7 @@ module.exports = {
 
 		if (option !== undefined) {
 			return (
-				<div class='subQuestionSolution' style={showSubQuestion === 'hidden'?'opacity:0.6;':'opacity: 1;'} onclick={() => { m.route.set(concatenateURL(groupId, questionId, subQuestionId)) }}>
+				<div class='subQuestionSolution' id={subQuestionId} style={showSubQuestion === 'hidden'?'opacity:0.6;':'opacity: 1;'} onclick={() => { m.route.set(concatenateURL(groupId, questionId, subQuestionId)) }}>
 					<h1>{title}</h1>
 					<p>{option.title}</p>
 					<hr></hr>
@@ -70,7 +70,7 @@ module.exports = {
 				</div>
 			);
 		} else {
-			return (<div class='subQuestionSolution subQuestionSolution--noAnswer' style={showSubQuestion === 'hidden'?'opacity:0.6;':'opacity: 1;'} onclick={() => { m.route.set(concatenateURL(groupId, questionId, subQuestionId)) }}>
+			return (<div id={subQuestionId} class='subQuestionSolution subQuestionSolution--noAnswer' style={showSubQuestion === 'hidden'?'opacity:0.6;':'opacity: 1;'} onclick={() => { m.route.set(concatenateURL(groupId, questionId, subQuestionId)) }}>
 				<h1>{vnode.attrs.title}</h1>
 				<p>לשאלה זאת עוד לא הוצעו תשובות. מוזמנים להיכנס לשאלה ולהציע תשובות</p>
 				<hr></hr>
