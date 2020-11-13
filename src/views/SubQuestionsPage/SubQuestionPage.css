@@ -36,6 +36,11 @@
     bottom: 64px;
 }
 
+.subQuestion__arrange--bottom{
+    
+    bottom: 0px;
+}
+
 .fav__subQuestion{
     bottom: 135px;
     right: calc(50vw - 336px);

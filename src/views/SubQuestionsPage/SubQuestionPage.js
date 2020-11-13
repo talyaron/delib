@@ -143,7 +143,7 @@ module.exports = {
 
                             {/* ---------------- Footer -------------- */}
                             {vnode.state.subPage === 'main' ?
-                                <div class="subQuestion__arrange" id="questionFooter">
+                                <div class={userCanNevigate(vnode)?"subQuestion__arrange":"subQuestion__arrange subQuestion__arrange--bottom"} id="questionFooter">
                                     <div
                                         class={vnode.state.details.orderBy == "new"
                                             ? "footerButton footerButtonSelected"
@@ -177,7 +177,7 @@ module.exports = {
                                     </div>
                                 </div> : null
                             }
-                            {(vnode.state.details.userHaveNavigation == true || vnode.state.details.userHaveNavigation == undefined) && vnode.state.subPage === 'main' ? <NavBottom /> : null}
+                            {userCanNevigate(vnode) && vnode.state.subPage === 'main' ? <NavBottom /> : null}
 
 
 
@@ -206,3 +206,7 @@ module.exports = {
         );
     }
 };
+
+function userCanNevigate(vnode){
+    return (vnode.state.details.userHaveNavigation == true || vnode.state.details.userHaveNavigation == undefined)
+}
