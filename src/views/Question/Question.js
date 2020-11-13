@@ -209,7 +209,7 @@ module.exports = {
                     }
                     ]} />
                 < div
-                    class="fav fav__subQuestion fav--blink"
+                    class={store.user.uid==vnode.state.creatorId?"fav fav__subQuestion fav--blink":"hidden"}
                     onclick={() => {
                         vnode.state.modalSubQuestion = { isShow: true, new: true, numberOfSubquestions: vnode.state.subQuestions.length };
                     }}>
