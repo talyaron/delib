@@ -13,6 +13,8 @@ import Header from '../Commons/Header/Header';
 import NavTop from '../Commons/NavTop/NavTop';
 import NavBottom from '../Commons/NavBottom/NavBottom';
 import Chat from '../Commons/Chat/Chat';
+import Consequnce from './Consequence/Consequence';
+import Description from './Description/Description'
 
 let unsubscribe = () => { };
 let unsubscribeChat = ()=>{};
@@ -81,7 +83,11 @@ module.exports = {
                     />
                 </div>
                 {subPage === 'main' ?
-                    <div class='optionPage__main'>הסבר: {option.description}</div>
+                    <div class='optionPage__main'>
+                        הסבר: {option.description}
+                        <Description />
+                        <Consequnce />
+                        </div>
                     :
                     <Chat
                         entity='option'
