@@ -292,7 +292,7 @@ function createOption(groupId, questionId, subQuestionId, type, creatorId, title
     });
 }
 
-function createConsequence(groupId, questionId, subQuestionId, optionId, creatorId, title, description, creatorName) {
+function createConsequence(groupId, questionId, subQuestionId, optionId, creatorId, title, description, goodBad, creatorName) {
     try {
 
         const consequnceId = uniqueId();
@@ -306,8 +306,7 @@ function createConsequence(groupId, questionId, subQuestionId, optionId, creator
             .doc(subQuestionId)
             .collection('options')
             .doc(optionId)
-            .collection('options')
-            .collection('quensequnces')
+            .collection('consequences')
             .doc(consequnceId)
             .set({
                 groupId,
@@ -316,7 +315,6 @@ function createConsequence(groupId, questionId, subQuestionId, optionId, creator
                 optionId,
                 consequnceId,
                 creatorId,
-                type,
                 title,
                 description,
                 creatorName,
@@ -324,11 +322,12 @@ function createConsequence(groupId, questionId, subQuestionId, optionId, creator
                     .firestore
                     .FieldValue
                     .serverTimestamp(),
+                goodBad,
                 consensusPrecentage: 0,
                 isActive: true
             })
-            .then(()=>{console.info('consequence',consequnceId,'was saved')})
-            .catch(e=>{console.error(e)})
+            .then(() => { console.info('consequence', consequnceId, 'was saved') })
+            .catch(e => { console.error(e) })
     } catch (e) {
         console.error(e)
     }
