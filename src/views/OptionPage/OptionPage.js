@@ -40,11 +40,7 @@ module.exports = {
             option: get(store, `option[${optionId}]`, {}),
             subPage: 'main',
             subscribed: false,
-            showModal:  {
-                isShow: false,
-                which: "consequences",
-                title: "תארו מה יקרה אם הפתרון יתממש"
-            }
+            showModal: false
         };
 
         //get user before login to page
@@ -97,22 +93,19 @@ module.exports = {
                         < div
                             class="fav fav__subQuestion fav--blink"
                             onclick={() => {
-                                vnode.state.showModal.isShow = true;
-                                console.log('vnode.state.showModal',vnode.state.showModal.isShow)
+                                vnode.state.showModal = true;
+                                console.log('vnode.state.showModal', vnode.state.showModal)
                             }}>
                             <div>
                                 <div>+</div>
                             </div>
 
                         </div >
-                        {vnode.state.showModal.isShow ?
+                        {vnode.state.showModal ?
                             <ModalConsequnce
-                                showModal={vnode.state.showModal.isShow}
-                                whichModal={vnode.state.showModal.which}
-                                title={vnode.state.showModal.title}
-                                placeholderTitle="כותרת"
-                                placeholderDescription="הסבר"
-                                vnode={vnode} />
+                                pvs={vnode.state}
+                                pva={vnode.attrs}
+                            />
                             :
                             null
                         }
