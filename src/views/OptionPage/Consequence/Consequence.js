@@ -1,11 +1,16 @@
 import m from 'mithril';
 import './Consequence.css';
 
+//function
+import { voteConsequence } from '../../../functions/firebase/set/set';
+
 module.exports = {
     oninit: vnode => {
         vnode.state = {
             color: 'white',
-            opacity: 1
+            opacity: 1,
+            truthiness: 1,
+            evaluation: 0,
         }
     },
     view: vnode => {
@@ -29,16 +34,25 @@ module.exports = {
 }
 function handleEval(e, vnode) {
     try {
-        const value = (e.target.valueAsNumber + 100) * 0.005;
+        const value = e.target.valueAsNumber*0.01;
+        const valueForColor = (e.target.valueAsNumber + 100) * 0.005;
+        const { groupId, questionId, subQuestionId, optionId, consequenceId } = vnode.attrs.consequence;
+        console.log(vnode.attrs.consequence)
 
-        if (value > 0.4 && value < 0.6) {
+
+        if (valueForColor > 0.4 && valueForColor < 0.6) {
             vnode.state.color = 'white'
         } else {
 
-            let color = getColorForPercentage(value)
+            let color = getColorForPercentage(valueForColor)
             console.log(color)
             vnode.state.color = color;
+
         }
+
+        vnode.state.evaluation = value;
+       
+        voteConsequence(groupId, questionId, subQuestionId, optionId, consequenceId, vnode.state.truthiness, value)
     } catch (e) {
         console.error(e)
     }
@@ -49,11 +63,15 @@ function handleEval(e, vnode) {
 function handleTruthness(e, vnode) {
     try {
         const value = e.target.valueAsNumber;
-        const levelOpacity = .6
+        const levelOpacity = .6;
+        const { groupId, questionId, subQuestionId, optionId, consequenceId } = vnode.attrs.consequence;
 
         let opacity = ((value * 0.01) * levelOpacity) + (1 - levelOpacity)
         console.log(opacity)
         vnode.state.opacity = opacity;
+        vnode.state.truthiness = value;
+
+        voteConsequence(groupId, questionId, subQuestionId, optionId, consequenceId, value*0.01, vnode.state.evaluation)
     } catch (e) {
         console.error(e)
     }

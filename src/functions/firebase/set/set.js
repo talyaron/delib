@@ -2,6 +2,7 @@ import m from 'mithril';
 import { DB } from '../config';
 import store from '../../../data/store';
 import { Reference, concatenateDBPath, uniqueId, generateChatEntitiyId, createIds } from '../../general';
+import { merge } from 'lodash';
 
 function createGroup(creatorId, title, description) {
     try {
@@ -295,7 +296,7 @@ function createOption(groupId, questionId, subQuestionId, type, creatorId, title
 function createConsequence(groupId, questionId, subQuestionId, optionId, creatorId, title, description, goodBad, creatorName) {
     try {
 
-        const consequnceId = uniqueId();
+        const consequenceId = uniqueId();
 
         DB
             .collection('groups')
@@ -307,13 +308,13 @@ function createConsequence(groupId, questionId, subQuestionId, optionId, creator
             .collection('options')
             .doc(optionId)
             .collection('consequences')
-            .doc(consequnceId)
+            .doc(consequenceId)
             .set({
                 groupId,
                 questionId,
                 subQuestionId,
                 optionId,
-                consequnceId,
+                consequenceId,
                 creatorId,
                 title,
                 description,
@@ -326,12 +327,50 @@ function createConsequence(groupId, questionId, subQuestionId, optionId, creator
                 consensusPrecentage: 0,
                 isActive: true
             })
-            .then(() => { console.info('consequence', consequnceId, 'was saved') })
+            .then(() => { console.info('consequence', consequenceId, 'was saved') })
             .catch(e => { console.error(e) })
     } catch (e) {
         console.error(e)
     }
 
+}
+
+function voteConsequence(groupId, questionId, subQuestionId, optionId, consequenceId, truthiness, evaluation) {
+    try {
+
+        if(truthiness === undefined) throw new Error('No truthiness in voteConsequence', truthiness);
+        if(evaluation === undefined) throw new Error('No evaluation in voteConsequence', evaluation)
+
+        const userId = store.user.uid
+        
+
+        DB
+            .collection('groups')
+            .doc(groupId)
+            .collection('questions')
+            .doc(questionId)
+            .collection('subQuestions')
+            .doc(subQuestionId)
+            .collection('options')
+            .doc(optionId)
+            .collection('consequences')
+            .doc(consequenceId)
+            .collection('voters')
+            .doc(userId)
+            .set({
+                truthiness,
+                evaluation,
+                userId,
+                time: firebase
+                    .firestore
+                    .FieldValue
+                    .serverTimestamp()
+            }, {merge:true})
+            .then(() => { console.info('consequence', consequenceId, 'was voted') })
+            .catch(e => { console.error(e) })
+    } catch (e) {
+        console.error(e)
+    }
 }
 
 function setOptionActive(groupId, questionId, subQuestionId, optionId, isActive) {
@@ -784,6 +823,7 @@ module.exports = {
     setSubQuestionsOrder,
     createOption,
     createConsequence,
+    voteConsequence,
     setOptionActive,
     createSubItem,
     updateSubItem,

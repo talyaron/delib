@@ -760,3 +760,107 @@ function concatenateURL(groupId, questionId, subQuestionId, optionId) {
     return undefined;
   }
 }
+
+//  ============ votes on consequences =======
+
+
+exports.calcValidateEval = functions.firestore
+  .document(
+    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{op" +
+    "tionId}/consequences/{consequenceId}/voters/{userId}"
+  )
+  .onUpdate((change, context) => {
+    var newLike = change.after.data().like;
+    var previousLike = 0;
+    if (change.before.data() !== undefined) {
+      previousLike = change.before.data().like;
+    }
+
+    var like = newLike - previousLike;
+
+    var optionLikesRef = db
+      .collection("groups")
+      .doc(context.params.groupId)
+      .collection("questions")
+      .doc(context.params.questionId)
+      .collection("subQuestions")
+      .doc(context.params.subQuestionId)
+      .collection("options")
+      .doc(context.params.optionId);
+
+    return db.runTransaction((transaction) => {
+      return transaction.get(optionLikesRef).then((optionDoc) => {
+        // Compute new number of ratings
+        var totalVotes = 0;
+        if (optionDoc.data().totalVotes !== undefined) {
+          totalVotes = optionDoc.data().totalVotes + like;
+        } else {
+          totalVotes = newLike;
+        }
+
+        //calaculate consensus precentage:
+        let consensusPrecentage = 1;
+        if (optionDoc.data().totalVoters !== undefined) {
+          let totalVoters = optionDoc.data().totalVoters;
+
+          // old method consensusPrecentage = totalVotes / totalVoters; consensus with
+          // respect to group size
+          consensusPrecentage =
+            (totalVotes / totalVoters) * (Math.log(totalVoters) / Math.log(10));
+        }
+
+        // Compute new average rating var oldRatingTotal = optionDoc.data('avgRating') *
+        // optionDoc.data('numRatings'); var newAvgRating = (oldRatingTotal + newLike) /
+        // newNumRatings; Update restaurant info
+        return transaction.update(optionLikesRef, {
+          totalVotes,
+          consensusPrecentage,
+        });
+      });
+    });
+  });
+
+exports.totalVoters = functions.firestore
+  .document(
+    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{op" +
+    "tionId}/likes/{userId}"
+  )
+  .onCreate((change, context) => {
+    var newLike = change.data().like;
+
+    var optionLikesRef = db
+      .collection("groups")
+      .doc(context.params.groupId)
+      .collection("questions")
+      .doc(context.params.questionId)
+      .collection("subQuestions")
+      .doc(context.params.subQuestionId)
+      .collection("options")
+      .doc(context.params.optionId);
+
+    return db.runTransaction((transaction) => {
+      return transaction.get(optionLikesRef).then((optionDoc) => {
+        // Compute new number of ratings
+        var totalVotes = newLike;
+        if (optionDoc.data().totalVotes !== undefined) {
+          totalVotes = optionDoc.data().totalVotes + newLike;
+        }
+        var totalVoters = 1;
+        if (optionDoc.data().totalVoters !== undefined) {
+          totalVoters = optionDoc.data().totalVoters + 1;
+        }
+
+        // calaculate consensus precentage: simple consensus let consensusPrecentage =
+        // totalVotes / totalVoters; consensus with respect to group size
+        let consensusPrecentage =
+          (totalVotes / totalVoters) * (Math.log(totalVoters) / Math.log(10));
+
+        // Update restaurant info
+        return transaction.update(optionLikesRef, {
+          totalVoters,
+          totalVotes,
+          consensusPrecentage,
+        });
+      });
+    });
+  });
