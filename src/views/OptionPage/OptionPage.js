@@ -6,38 +6,45 @@ import store from '../../data/store';
 
 //function
 import { get } from 'lodash';
-import { listenToOption,listenToChat } from '../../functions/firebase/get/get';
+import { listenToOption, listenToChat } from '../../functions/firebase/get/get';
+import { createConsequence } from '../../functions/firebase/set/set';
 
 // components
 import Header from '../Commons/Header/Header';
 import NavTop from '../Commons/NavTop/NavTop';
 import NavBottom from '../Commons/NavBottom/NavBottom';
 import Chat from '../Commons/Chat/Chat';
+import ModalConsequnce from "./ModalConsequence/ModalConsequence";
 import Consequnce from './Consequence/Consequence';
 import Description from './Description/Description'
 
 let unsubscribe = () => { };
-let unsubscribeChat = ()=>{};
+let unsubscribeChat = () => { };
 
 module.exports = {
     oninit: vnode => {
 
-        const {groupId, questionId, subQuestionId, optionId} = vnode.attrs;
+        const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
 
         store.lastPage = `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`;
-        
+
         if (store.user.uid == undefined) {
             m
                 .route
                 .set('/login');
-            
-        } 
 
-  
+        }
+
+
         vnode.state = {
             option: get(store, `option[${optionId}]`, {}),
             subPage: 'main',
-            subscribed: false
+            subscribed: false,
+            showModal:  {
+                isShow: false,
+                which: "consequences",
+                title: "תארו מה יקרה אם הפתרון יתממש"
+            }
         };
 
         //get user before login to page
@@ -59,10 +66,10 @@ module.exports = {
     view: vnode => {
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
 
-     
+
         const { option, subPage } = vnode.state;
         return (
-            <div class='page page-grid-option' style= {subPage == 'main' ?'':`grid-template-rows: fit-content(100px) auto;`}>
+            <div class='page page-grid-option' style={subPage == 'main' ? '' : `grid-template-rows: fit-content(100px) auto;`}>
                 <div class='optionPage__header'>
                     <Header
                         title={option.title}
@@ -87,7 +94,29 @@ module.exports = {
                         הסבר: {option.description}
                         <Description />
                         <Consequnce />
-                        </div>
+                        < div
+                            class="fav fav__subQuestion fav--blink"
+                            onclick={() => {
+                                vnode.state.showModal.isShow = true;
+                                console.log('vnode.state.showModal',vnode.state.showModal.isShow)
+                            }}>
+                            <div>
+                                <div>+</div>
+                            </div>
+
+                        </div >
+                        {vnode.state.showModal.isShow ?
+                            <ModalConsequnce
+                                showModal={vnode.state.showModal.isShow}
+                                whichModal={vnode.state.showModal.which}
+                                title={vnode.state.showModal.title}
+                                placeholderTitle="כותרת"
+                                placeholderDescription="הסבר"
+                                vnode={vnode} />
+                            :
+                            null
+                        }
+                    </div>
                     :
                     <Chat
                         entity='option'
@@ -97,7 +126,7 @@ module.exports = {
                         url={m.route.get()}
                     />
                 }
-                {subPage === 'main' ?<NavBottom />:null}
+                {subPage === 'main' ? <NavBottom /> : null}
             </div>
         )
     }

@@ -251,7 +251,7 @@ function setSubQuestionsOrder(groupId, questionId, subQuestionId, order) {
             .catch(function (error) {
                 console.error('Error adding document: ', error);
             });
-    } catch(e){
+    } catch (e) {
         console.error(e)
     }
 }
@@ -290,6 +290,49 @@ function createOption(groupId, questionId, subQuestionId, type, creatorId, title
     }).catch(function (error) {
         console.error('Error adding document: ', error);
     });
+}
+
+function createConsequence(groupId, questionId, subQuestionId, optionId, creatorId, title, description, creatorName) {
+    try {
+
+        const consequnceId = uniqueId();
+
+        DB
+            .collection('groups')
+            .doc(groupId)
+            .collection('questions')
+            .doc(questionId)
+            .collection('subQuestions')
+            .doc(subQuestionId)
+            .collection('options')
+            .doc(optionId)
+            .collection('options')
+            .collection('quensequnces')
+            .doc(consequnceId)
+            .set({
+                groupId,
+                questionId,
+                subQuestionId,
+                optionId,
+                consequnceId,
+                creatorId,
+                type,
+                title,
+                description,
+                creatorName,
+                time: firebase
+                    .firestore
+                    .FieldValue
+                    .serverTimestamp(),
+                consensusPrecentage: 0,
+                isActive: true
+            })
+            .then(()=>{console.info('consequence',consequnceId,'was saved')})
+            .catch(e=>{console.error(e)})
+    } catch (e) {
+        console.error(e)
+    }
+
 }
 
 function setOptionActive(groupId, questionId, subQuestionId, optionId, isActive) {
@@ -741,6 +784,7 @@ module.exports = {
     deleteSubQuestion,
     setSubQuestionsOrder,
     createOption,
+    createConsequence,
     setOptionActive,
     createSubItem,
     updateSubItem,
