@@ -1,0 +1,57 @@
+.page-grid-subQuestion{
+    display: grid;
+    grid-template-rows: fit-content(100px) auto 64px;
+    height: 100%;
+}
+
+.subQuestionHeader {
+    background:#1d3e4d;
+    color: white;
+    text-align: center;
+    font-size: 1.5rem;
+   
+}
+
+.questionSection h1{
+    text-align: center;
+    font-size: var(--size17);
+}
+
+.subQuestionHeader .title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.subQuestionHeader img{
+    /* width: 120px; */
+    max-height: 120px;
+}
+
+.subQuestion__arrange{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    position: fixed;
+    bottom: 64px;
+}
+
+.subQuestion__arrange--bottom{
+    
+    bottom: 0px;
+}
+
+.fav__subQuestion{
+    bottom: 135px;
+    right: calc(50vw - 336px);
+}
+@media screen and (max-width: 750px) {
+    .fav__subQuestion {
+     right: 30px;
+    }
+  }
+
+.emptyNav{
+    background-color: var(--white);
+    width:100%;
+}

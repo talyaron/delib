@@ -31,7 +31,7 @@ module.exports = {
     },
     onupdate: vnode => {
         setWrapperHeight('headerContainer', 'groupsWrapper');
-        console.dir(store.userGroups)
+      
     },
     onremove: vnode => {
         getUserGroups('off', store.user.uid);

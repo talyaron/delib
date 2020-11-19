@@ -1,39 +1,42 @@
 import m from 'mithril';
+import { get } from 'lodash';
+
 
 //components
 import './Question.css';
 import Header from '../Commons/Header/Header';
 import Feed from '../Commons/Feed/Feed';
-import SubQuestion from './SubQuestions/SubQuestion';
+import SubQuestionSolution from './SubQuestionsSolution/SubQuestionSolution';
 import Spinner from '../Commons/Spinner/Spinner';
-import Description from './SubSection/Description';
-import Modal from '../Commons/Modal/Modal';
+import Description from './Description/Description';
 import AlertsSetting from '../Commons/AlertsSetting/AlertsSetting';
-
+import NavBottom from '../Commons/NavBottom/NavBottom';
+import NavTop from '../Commons/NavTop/NavTop';
+import Chat from '../Commons/Chat/Chat';
+import SubQuestionEditModal from './SubQuestionEditModal/SubQuestionEditModal';
 
 //model
 import store from '../../data/store';
-// import settings from '../../data/settings';
-
-
 //functions
-import { getQuestionDetails, getSubQuestion, getSubQuestions } from '../../functions/firebase/get/get';
-import { deep_value, setWrapperHeight, setWrapperFromFooter } from '../../functions/general';
-
+import { getQuestionDetails, getSubQuestion, listenSubQuestions, listenToChat } from '../../functions/firebase/get/get';
+import { setSubQuestionsOrder } from '../../functions/firebase/set/set';
+import { deep_value, getIsChat } from '../../functions/general';
 
 module.exports = {
     oninit: vnode => {
 
-        
+        const { groupId, questionId } = vnode.attrs;
 
+        let subQuestions = get(store.subQuestions, `[${groupId}]`, [])
+        subQuestions = subQuestions.sort((a, b) => a.order - b.order);
 
         vnode.state = {
-            title: deep_value(store.questions, `${vnode.attrs.groupId}.${vnode.attrs.questionId}.title`, 'כותרת השאלה'),
+            title: deep_value(store.questions, `${groupId}.${questionId}.title`, 'כותרת השאלה'),
             addOption: false,
             callDB: true,
             subItems: {
                 options: [],
-                subQuestions: [],
+                subQuestions,
                 goals: [],
                 values: []
             },
@@ -47,28 +50,32 @@ module.exports = {
             scrollY: false,
             subAnswers: {}, //used to set sub answers to each sub question
             subAnswersUnsb: {}, //used to unsubscribe
+            modalSubQuestion: { isShow: false, new: true },
             showModal: {
                 isShow: false,
                 which: 'subQuestion'
             },
             unsbscribe: {
-                subQuestions: {}
+                subQuestions: {},
+                chat: () => { }
             },
             authorized: {
                 anonymous: false,
                 public: false,
                 registered: false
             },
-            isAlertsSetting:false,
-            showModal:{
-                isShow:true,
-                which:'subQuestion',
-                subQuestionId:''
-            }
+            isAlertsSetting: false,
+            showModal: {
+                isShow: true,
+                which: 'subQuestion',
+                subQuestionId: ''
+            },
+            subPage: getIsChat() ? 'chat' : 'main'
+
         }
 
         //get user before login to page
-        store.lastPage = '/question/' + vnode.attrs.groupId + '/' + vnode.attrs.questionId;
+        store.lastPage = '/question/' + groupId + '/' + questionId;
         sessionStorage.setItem('lastPage', store.lastPage);
 
         //check to see if user logged in
@@ -80,134 +87,158 @@ module.exports = {
         }
 
         //propare undubscribe function for question details to be used  onremove
-        vnode.state.unsubscribeQuestionDetails = getQuestionDetails(vnode.attrs.groupId, vnode.attrs.questionId, vnode);
-
+        vnode.state.unsubscribeQuestionDetails = getQuestionDetails(groupId, questionId, vnode); //it will then listen to subQuestions
+        vnode.state.unsbscribe.chat = listenToChat({ groupId, questionId })
 
     },
-    oncreate: vnode => {
-        setWrapperHeight('questionHeadr', 'questionWrapperAll')
-        // setWrapperFromFooter('questionFooter', 'questionWrapperAll');
-        if (vnode.state.callDB) {
-            //subscribe to subQuestions
-            vnode.state.unsbscribe.subQuestions = getSubQuestions(vnode.attrs.groupId, vnode.attrs.questionId, vnode, true);
-
-        }
-    },
+   
     onbeforeupdate: vnode => {
 
-        vnode.state.title = deep_value(store.questions, `${vnode.attrs.groupId}.${vnode.attrs.questionId}.title`, 'כותרת השאלה');
-        vnode.state.description = deep_value(store.questions, `${vnode.attrs.groupId}.${vnode.attrs.questionId}.description`, '');
+    
 
-        let userRole = deep_value(store.questions, `${vnode.attrs.groupId}.${vnode.attrs.questionId}.roles.${store.user.uid}`, false);
+        const { groupId, questionId } = vnode.attrs;
+
+        vnode.state.title = deep_value(store.questions, `${groupId}.${questionId}.title`, 'כותרת השאלה');
+        vnode.state.description = deep_value(store.questions, `${groupId}.${questionId}.description`, '');
+        let subQuestions = get(store.subQuestions, `[${groupId}]`, [])
+        vnode.state.subQuestions = subQuestions.sort((a, b) => a.order - b.order);
+        let userRole = deep_value(store.questions, `${groupId}.${questionId}.roles.${store.user.uid}`, false);
         if (!userRole) {
-            // the user is not a member in the question, he/she should login, and ask for membership
+            // the user is not a member in the question, he/she should login, and ask for
+            // membership
         }
 
     },
-    onupdate: vnode => {
 
-        setWrapperHeight('headerContainer', 'questionWrapperAll');
-
-       
-    },
     onremove: vnode => {
         if (typeof vnode.state.unsbscribe.subQuestions === 'function') {
-            vnode.state.unsbscribe.subQuestions();
+            vnode
+                .state
+                .unsbscribe
+                .subQuestions();
         }
-        
+
+        vnode.state.unsbscribe.chat()
+
     },
     view: vnode => {
-        
+
+        const { groupId, questionId } = vnode.attrs;
+
         return (
-            <div>
-                <div class='headerContainer' id='questionHeadr' onclick={() => { m.route.set('/group/' + vnode.attrs.groupId) }}>
+            <div class='page page-grid-question' style={vnode.state.subPage == 'main' ? '' : `grid-template-rows: fit-content(200px) auto`}>
+                <div class='question__header'>
                     <Header
                         topic='שאלה'
                         title={vnode.state.title}
                         upLevelUrl={`/group/${vnode.attrs.groupId}`}
+                        groupId={vnode.attrs.groupId}
+                        showSubscribe={true}
+                        questionId={vnode.attrs.questionId}
+                    />
+                    <NavTop level={'שאלה'} current={vnode.state.subPage} pvs={vnode.state} mainUrl={`/question/${groupId}/${questionId}`} chatUrl={`/question-chat/${groupId}/${questionId}`} ids={{ groupId, questionId }} />
+                    <Description
+                        title='הסבר'
+                        content={vnode.state.description}
+                        groupId={vnode.attrs.groupId}
+                        questionId={vnode.attrs.questionId}
+                        creatorId={vnode.state.creatorId}
                     />
 
                 </div>
-                <div class='wrapperSubQuestions' id='questionWrapperAll'>
+                {vnode.state.subPage === 'main' ?
+                    <div class='question__main'>
 
-                    <div class='wrapper'>
-                        <Description
-                            title='הסבר על השאלה:'
-                            content={vnode.state.description}
-                            groupId={vnode.attrs.groupId}
-                            questionId={vnode.attrs.questionId}
-                            creatorId={vnode.state.creatorId}
-                        />
+                        <div class='wrapperSubQuestions' id='questionWrapperAll'>
+                            <h1>שאלות </h1>
+                            <div class='subQuestionsWrapper'>
+
+                                {vnode.state.subQuestions.map((subQuestion, index) => {
+
+                                    return (<SubQuestionSolution
+                                        key={subQuestion.id}
+                                        creator={subQuestion.creator}
+                                        groupId={vnode.attrs.groupId}
+                                        questionId={vnode.attrs.questionId}
+                                        subQuestionId={subQuestion.id}
+                                        orderBy={subQuestion.orderBy}
+                                        title={subQuestion.title}
+                                        subItems={vnode.state.subItems.options}
+                                        parentVnode={vnode}
+                                        info={settings.subItems.options}
+                                        processType={subQuestion.processType}
+                                        userHaveNavigation={subQuestion.userHaveNavigation}
+                                        showSubQuestion={subQuestion.showSubQuestion}
+                                        numberOfSubquestions={vnode.state.subQuestions.length}
+                                        isAlone={false}
+                                        pvs={vnode.state}
+                                    />)
+
+                                })
+                                }
+                            </div>
+
+                        </div>
+
+                        {vnode.state.title === 'כותרת השאלה'
+                            ? <Spinner />
+                            : <div />
+                        }
+
                     </div>
-                    <div class='subQuestionsWrapper'>
-                    {
-                        vnode.state.subQuestions.map((subQuestion, index) => {
-
-
-                            return (
-                                <SubQuestion
-                                    groupId={vnode.attrs.groupId}
-                                    questionId={vnode.attrs.questionId}
-                                    subQuestionId={subQuestion.id}
-                                    orderBy={subQuestion.orderBy}
-                                    title={subQuestion.title}
-                                    subItems={vnode.state.subItems.options}
-                                    parentVnode={vnode}
-                                    info={settings.subItems.options}
-                                    processType={subQuestion.processType}
-                                    isAlone={false}
-                                />
-                            )
-                        })
-                    }
-                    </div>
-
-                </div>
-
-               
-                {
-                    vnode.state.title === 'כותרת השאלה' ?
-                        <Spinner />
-                        :
-                        <div />
+                    :
+                    <Chat
+                        entity='question'
+                        topic='שאלה'
+                        ids={{ groupId: vnode.attrs.groupId, questionId: vnode.attrs.questionId }}
+                        title={vnode.state.title}
+                        url={m.route.get()}
+                    />
                 }
-                {/* <Modal
-                    showModal={vnode.state.showModal.isShow}
-                    whichModal={vnode.state.showModal.which}
-                    title={vnode.state.showModal.title}
-                    placeholderTitle='כותרת'
-                    placeholderDescription='הסבר'
-                    vnode={vnode}
-                    id={vnode.attrs.questionId}
-                /> */}
-                <Feed />
+                {vnode.state.subPage == 'main' ? <NavBottom /> : null}
                 <AlertsSetting
                     isAlertsSetting={vnode.state.isAlertsSetting}
                     title={vnode.state.title}
-                    alertsSetting={[
-                        {
-                            title: 'הודעות חדשות',
-                            ids: {
-                                groupId: vnode.attrs.groupId,
-                                questionId:vnode.attrs.questionId
-                            },
-                            isOn:true
-                        }
-                    ]}
-                />
+                    alertsSetting={[{
+                        title: 'הודעות חדשות',
+                        ids: {
+                            groupId: vnode.attrs.groupId,
+                            questionId: vnode.attrs.questionId
+                        },
+                        isOn: true
+                    }
+                    ]} />
+                < div
+                    class={store.user.uid==vnode.state.creatorId?"fav fav__subQuestion fav--blink":"hidden"}
+                    onclick={() => {
+                        vnode.state.modalSubQuestion = { isShow: true, new: true, numberOfSubquestions: vnode.state.subQuestions.length };
+                    }}>
+                    <div>
+                        <div>+</div>
+                    </div>
+
+                </div >
+                {vnode.state.modalSubQuestion.isShow ?
+                    <div class='background'>
+                        <SubQuestionEditModal
+                            subQuestion={vnode.state.modalSubQuestion}
+                            pvs={vnode.state}
+                            pva={vnode.attrs}
+                        />
+                    </div>
+                    : null
+                }
             </div>
         )
     }
 }
 
-
-
-
-
 function orderBy(order, vnode) {
     // getSubQuestion('off', vnode.attrs.groupId, vnode.attrs.questionId, order);
 
-    vnode.state.unsubscribeOptions();
+    vnode
+        .state
+        .unsubscribeOptions();
     vnode.state.unsubscribeOptions = getSubQuestion('on', vnode.attrs.groupId, vnode.attrs.questionId, order);
     vnode.state.orderBy = order
 }

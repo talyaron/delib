@@ -1,12 +1,11 @@
 header {
-    position: fixed;
-    top: 0px;
-    left: 0px;
+   
     width: 100%;
-    background: var(--mainBackground);
-    box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.5);
+    
+    background: var(--white);
+    /* box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.5); */
     padding: 10px 0px;
-    color: var(--mainColor);
+    color: var(--black);
     text-align: center;
     font-size: 1.3rem;
     font-weight: 600;
@@ -20,7 +19,12 @@ header {
 
 .headerTitle {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: var(--size17);
 }
+
 
 .headerMessage {
     padding: 0px 0px 0px 8px;
@@ -51,4 +55,50 @@ header {
 
 .headerHamburger {
     padding: 0px 14px;
+}
+
+.setButton{
+    height: 32px;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 0px 16px;
+    color: var(--white);
+    border-radius: 20px;
+}
+
+.setButton--activate{
+    background-color: var(--halfPrimary);
+}
+
+.setButton--cancel{
+    background-color: var(--additional);
+    color: var(--gray1);
+    font-size: 1rem;
+}
+
+.notifications{
+    border-radius: 20px;
+    width: 40px;
+    height: 40px;
+   
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    margin-left: 24px;
+    user-select: none;
+    cursor: pointer;
+}
+
+.notifications--on{
+    background-color: var(--additional);
+}
+
+.notifications--off{
+  
+    background-color: var(--halfPrimary);
+   
 }

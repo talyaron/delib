@@ -1,0 +1,19 @@
+.questionDescription{
+    background-color: var(--gray5);
+    width: 100%;
+    padding: var(--regPadding);
+    box-sizing: border-box;
+}
+
+
+.questionDescription__title{
+    color: var(--black);
+    font-size: var(--size15);
+    margin-bottom: var(--regPadding);
+}
+
+.questionDescription__text{
+    color: var(--gray1);
+    font-size: var(--size13);
+    margin-bottom: var(--regPadding);
+}

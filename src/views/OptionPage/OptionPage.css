@@ -1,0 +1,9 @@
+.page-grid-option{
+    display: grid;
+    grid-template-rows: fit-content(100px) auto 63px;
+}
+
+.optionPage__main{
+    font-size: var(--size17);
+    padding: 20px;
+}

@@ -4,16 +4,17 @@ aside {
     display: flex;
     flex-direction: column;
     position: fixed;
-    top: 56px;
+    top: 72px;
     right: -260px;
     z-index: 3;
     box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.5);
     transition: all 0.5s;
+    color: var(--black);
 }
 
 .topAside {
     height: 200px;
-    background: var(--mainBackground);
+    background: var(--primary);
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -26,7 +27,7 @@ aside {
 
 .menuAside {
     height: 100%;
-    background: wheat;
+    background: var(--white);
 }
 
 .menuAside>div {

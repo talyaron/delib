@@ -1,8 +1,25 @@
 .questionsWrapper {
   display: grid;
-  grid-template-columns: auto auto auto;
-  padding: 100px 30px 100px 30px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(300,1fr);
+  padding: 0px 30px 0px 30px;
+  
   background: #e8e8e8;
+  overflow-y: auto;
+  gap: 16px;
+  box-sizing: border-box;
+}
+
+.page-grid{
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 52px 40px auto 61px;
+}
+.questionsWrapper>h1{
+  grid-column-start: 1;
+  grid-column-end: 4;
+  text-align: center;
 }
 
 @media screen and (max-width: 1000px) {
@@ -13,7 +30,15 @@
 
 @media screen and (max-width: 480px) {
   .questionsWrapper {
-    grid-template-columns: auto;
-    padding: 100px 10px 100px 10px;
+    grid-template-columns: repeat(1, 1fr);
+   
   }
+
+  .questionsWrapper>h1{
+    grid-column-start: 1;
+    grid-column-end: 2;
+    text-align: center;
+  }
+
+  
 }

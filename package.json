@@ -30,7 +30,8 @@
   },
   "dependencies": {
     "lodash": "^4.17.19",
-    "mithril": "^1.1.6",
+    "mithril": "^1.1.7",
+    "regenerator-runtime": "^0.13.7",
     "sortablejs": "^1.8.4"
   }
 }

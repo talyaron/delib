@@ -1,22 +1,19 @@
 import m from "mithril";
 import Sortable from "sortablejs";
+import { get } from 'lodash';
 
 import store from "../../data/store";
-import {
-  getQuestionDetails,
-  getSubQuestions
-} from "../../functions/firebase/get/get";
+import {getQuestionDetails} from "../../functions/firebase/get/get";
 import {
   updateQuestion,
-  setSubQuestionsOrder,
-  createSubQuestion
+  setSubQuestionsOrder
 } from "../../functions/firebase/set/set";
 import { setWrapperHeight } from "../../functions/general";
 
 import "./QuestionEdit.css";
 
 import Header from "../Commons/Header/Header";
-import SubQuestion from "./SubQuestion/SubQuestion";
+
 
 module.exports = {
   oninit: vnode => {
@@ -56,7 +53,7 @@ module.exports = {
       vnode
     );
 
-    getSubQuestions(vnode.attrs.groupId, vnode.attrs.questionId, vnode);
+    // getSubQuestions(vnode.attrs.groupId, vnode.attrs.questionId, vnode);
   },
   oncreate: vnode => {
     setWrapperHeight("headerContainer", "questionEditWrapperAll");
@@ -79,7 +76,12 @@ module.exports = {
       }
     });
   },
-  
+  onbeforeupdate: vnode => {
+    const { groupId } = vnode.attrs;
+    let subQuestions = get(store.subQuestions, `[${groupId}]`, [])
+    vnode.state.subQuestions = subQuestions.sort((a, b) => a.order - b.order)
+
+  },
   onupdate: vnode => {
     setWrapperHeight("headerContainer", "questionEditWrapperAll");
   },
@@ -94,8 +96,7 @@ module.exports = {
           title={vnode.state.title}
           topic="עריכת שאלה"
           description={vnode.state.description}
-          upLevelUrl={`/question/${vnode.attrs.groupId}/${
-            vnode.attrs.questionId
+          upLevelUrl={`/question/${vnode.attrs.groupId}/${vnode.attrs.questionId
             }`}
         />
         <div class="wrapperAll" id="questionEditWrapperAll">
@@ -178,7 +179,7 @@ module.exports = {
                 </div>
               )}
           </div>
-          <div class="questionAuthorization checkBoxes">
+          {/* <div class="questionAuthorization checkBoxes">
             <h2>מי רשאי להשתתף</h2>
             <label>
               <input
@@ -216,21 +217,13 @@ module.exports = {
               />
               רשומים
             </label>
-          </div>
+          </div> */}
 
-          <h2>תת-שאלות ומטרות</h2>
+          <h2>סדר הופעת השאלות</h2>
           <div id="sortOptions">
             {vnode.state.subQuestions.map((subQuestion, index) => {
               return (
-                <SubQuestion
-                  groupId={vnode.attrs.groupId}
-                  questionId={vnode.attrs.questionId}
-                  subQuestionId={subQuestion.id}
-                  number={index}
-                  title={subQuestion.title}
-                  processType={subQuestion.processType || 'suggestions'}
-                  id={subQuestion.id}
-                />
+                <p style={subQuestion.showSubQuestion == 'hidden' ? 'opacity:0.4' : 'opacity:1'} id={subQuestion.id}>{subQuestion.title}</p>
               );
             })}
           </div>
@@ -248,53 +241,9 @@ module.exports = {
             </div>
           ) : (
               <div />
-            )}
-          {!vnode.state.addSubQuestin ? (
-            <div
-              class="buttons addSubQuestin"
-              onclick={() => {
-                vnode.state.addSubQuestin = true;
-              }}
-            >
-              הוספת תת-שאלה או מטרה
-            </div>
-          ) : (
-              <div class="buttonsWrapper">
-                <div
-                  class
-                  class="buttons addSubQuestin"
-                  onclick={e => {
-                    e.stopPropagation();
-                    vnode.state.addSubQuestin = false;
-                    createSubQuestion(
-                      vnode.attrs.groupId,
-                      vnode.attrs.questionId,
-                      vnode.state.newSubQuestion,
-                      vnode.state.subQuestions.length
-                    );
-
-                    getSubQuestions(
-                      vnode.attrs.groupId,
-                      vnode.attrs.questionId,
-                      vnode
-                    );
-                    vnode.state.newSubQuestion = "";
-                  }}
-                >
-                  הוספה
-              </div>
-                <div
-                  class="buttons addSubQuestin cancel"
-                  onclick={e => {
-                    e.stopPropagation();
-                    vnode.state.addSubQuestin = false;
-                    vnode.state.newSubQuestion = "";
-                  }}
-                >
-                  ביטול
-              </div>
-              </div>
-            )}
+            )
+          }
+          
         </div>
       </div>
     );

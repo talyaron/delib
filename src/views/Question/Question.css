@@ -1,3 +1,8 @@
+
+.page-grid-question{
+    display: grid;
+    grid-template-rows: fit-content(200px) auto  64px;
+}
 .questionHeadr {
     background: var(--mainBackground);
     color: white;
@@ -9,18 +14,25 @@
     z-index: 100;
     user-select: none;
     cursor: pointer;
+    height: fit-content;
 }
 
 .mainHeader {
     padding: 10px;
     text-align: center;
 }
-
+.question__main{
+    overflow-y: auto;
+}
 .wrapperSubQuestions {
     position: relative;
     margin: auto;
    
     padding: 10px;
+}
+
+.wrapperSubQuestions>h1{
+    text-align: center;
 }
 
 .subHeader {
@@ -54,10 +66,16 @@
 }
 
 .questionSection {
-    box-shadow: 1px 1px 2px #00000099;
+   
     border-radius: 10px;
     padding-bottom: 9px;
     margin-top: 17px;
+}
+
+
+
+.questionSection>h1{
+    font-size: var(--size15);
 }
 
 
@@ -80,7 +98,26 @@
 
 .subQuestionsWrapper{
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.subQuestionsWrapper >h1{
+    font-size: var(--size15);
+}
+
+@media only screen and (max-width: 1600px){
+    .subQuestionsWrapper{
+     
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media only screen and (max-width: 1200px){
+    .subQuestionsWrapper{
+     
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media only screen and (max-width: 900px){

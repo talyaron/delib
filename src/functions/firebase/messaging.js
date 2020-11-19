@@ -1,5 +1,7 @@
 import m from 'mithril';
 
+
+
 import {
     DB
 } from './config';
@@ -10,6 +12,9 @@ import {
     EntityModel
 } from '../../data/dataTypes';
 
+import { concatenateDBPath, setBrowserUniqueId } from '../general';
+import {usePublicVapidKey} from '../firebase/configKey'
+
 let MESSAGING;
 
 if ('Notification' in window) {
@@ -18,7 +23,7 @@ if ('Notification' in window) {
     MESSAGING = firebase.messaging();
     // Add the public key generated from the console here.
     MESSAGING.usePublicVapidKey(
-        'BOXKnicJW5Cu3xwRG7buXf-JU8tS-AErJX_Ax7CsUwqZQvBvo2E-ECnE-uGvUKcgeL-1nT-cJw8qGo4dH-zrfGA'
+        usePublicVapidKey
     );
 
     // Callback fired if Instance ID token is updated.
@@ -56,89 +61,115 @@ function getSubscriptions() {
     }
 }
 
-function subscribeToNotification(entityId) {
-    if ('Notification' in window) {
-        try {
-            // if(Object.prototype.toString().call() !== [Object ])
+function subscribeToNotification(ids, subscribe = true) {
+    try {
+        if ('Notification' in window) {
+
+           
             MESSAGING.requestPermission()
-                .then(function () {
+                .then(() => {
                     console.log('Notification permission granted.');
-                    handleTokenRefresh(entityId);
+                    handleTokenRefresh(ids, subscribe);
                 })
                 .catch(function (err) {
                     console.log('Unable to get permission to notify.', err);
                 });
-        } catch (err) {
-            console.error(err);
+
         }
+    } catch (e) {
+        console.error(e)
     }
 }
 
-function unsubscribeFromNotification(entityId) {
+function unsubscribeFromNotification(ids) {
     if ('Notification' in window) {
-        console.log('unsubscribeFromNotification', entityId);
+
         // delete store.push[entity][entityId]
 
-        MESSAGING.getToken()
-            .then((token) => {
-                MESSAGING.deleteToken(token);
-            })
-            .then(() => {
-                DB.collection('tokens').doc(store.user.uid).get().then((userTokenDB) => {
-                    if (userTokenDB.exists && userTokenDB.data().pushEntities) {
-                        let entitiesSet = new Set(userTokenDB.data().pushEntities);
-                        entitiesSet.delete(entityId);
-                        console.dir(entitiesSet);
-                        let entitiesArray = new Array(...entitiesSet);
+        // MESSAGING.getToken()
+        //     .then((token) => {
+        //         MESSAGING.deleteToken(token);
+        //     })
+        //     .then(() => {
+        //         DB.collection('tokens').doc(store.user.uid).get().then((userTokenDB) => {
+        //             if (userTokenDB.exists && userTokenDB.data().pushEntities) {
+        //                 let entitiesSet = new Set(userTokenDB.data().pushEntities);
+        //                 entitiesSet.delete(entityId);
+        //                 console.dir(entitiesSet);
+        //                 let entitiesArray = new Array(...entitiesSet);
 
-                        DB.collection('tokens').doc(store.user.uid).update({
-                            pushEntities: entitiesArray
-                        });
-                    }
-                });
-            });
+        //                 DB.collection('tokens').doc(store.user.uid).update({
+        //                     pushEntities: entitiesArray
+        //                 });
+        //             }
+        //         });
+        //     });
     }
 }
 
-function handleTokenRefresh(entityId) {
-    if ('Notification' in window) {
-        return MESSAGING.getToken().then((token) => {
-            const tokenRef = DB.collection('tokens').doc(store.user.uid);
+function handleTokenRefresh(ids, subscribe) {
+    try {
+        if ('Notification' in window) {
+            return MESSAGING.getToken().then((token) => {
+                const { groupId, questionId, subQuestionId, optionId } = ids;
 
-            tokenRef
-                .get()
-                .then((docDB) => {
-                    const tokenObj = {
+                //get device unique id
+                let deviceUniqueId = localStorage.getItem('deviceUniqueId');
+                if (deviceUniqueId === null) {
+                    deviceUniqueId = setBrowserUniqueId();
+                }
+
+                const dbPath = `${concatenateDBPath(groupId, questionId, subQuestionId, optionId)}/notifications/${store.user.uid}`;
+                const tokenRef = DB.doc(dbPath);
+
+                if (subscribe === true) {
+                    let tokenObj = {}
+                    tokenObj[deviceUniqueId] = {
                         token,
-                        userId: store.user.uid
-                    };
-
-                    if (docDB.exists) {
-                        //if token exists
-
-                        if (typeof entityId == 'string') {
-                            //if new entity subscribed, add it to pushentities array under token
-
-                            let tokenSet = new Set(docDB.data().pushEntities);
-                            tokenSet.add(entityId);
-                            tokenObj.pushEntities = new Array(...tokenSet);
-                        }
-
-                        tokenRef.update(tokenObj);
-                    } else {
-                        if (typeof entityId == 'string') {
-                            tokenObj.pushEntities = [entityId];
-                        }
-                        tokenRef.set(tokenObj);
+                        uid: store.user.uid
                     }
-                })
-                .then(() => {
-                    console.log('token saved to DB');
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        });
+                    tokenRef.set(tokenObj, { merge: true })
+                } else {
+                    tokenRef.update({ [deviceUniqueId]: firebase.firestore.FieldValue.delete() })
+                }
+
+                // tokenRef
+                //     .get()
+                //     .then((docDB) => {
+                //         const tokenObj = {
+                //             token,
+                //             userId: store.user.uid
+                //         };
+
+                //         if (docDB.exists) {
+                //             //if token exists
+
+                //             if (typeof entityId == 'string') {
+                //                 //if new entity subscribed, add it to pushentities array under token
+
+                //                 let tokenSet = new Set(docDB.data().pushEntities);
+                //                 tokenSet.add(entityId);
+                //                 tokenObj.pushEntities = new Array(...tokenSet);
+                //             }
+
+                //             tokenRef.update(tokenObj);
+                //         } else {
+                //             if (typeof entityId == 'string') {
+                //                 tokenObj.pushEntities = [entityId];
+                //             }
+                //             tokenRef.set(tokenObj);
+                //         }
+                //     })
+                //     .then(() => {
+                //         console.log('token saved to DB');
+                //     })
+                //     .catch((err) => {
+                //         console.log(err);
+                //     });
+            });
+        }
+    } catch (e) {
+        console.error(e)
     }
 }
 
@@ -146,4 +177,4 @@ module.exports = {
     getSubscriptions,
     subscribeToNotification,
     unsubscribeFromNotification
-};
+}
