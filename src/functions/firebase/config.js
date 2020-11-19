@@ -1,4 +1,4 @@
-import config from './configKey';
+import { config } from './configKey';
 
 
 
@@ -8,4 +8,4 @@ const storage = firebase.storage();
 // window.db = DB;
 DB.settings({});
 
-module.exports = {DB,storage};
+module.exports = { DB, storage };

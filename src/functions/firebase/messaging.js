@@ -1,5 +1,7 @@
 import m from 'mithril';
 
+
+
 import {
     DB
 } from './config';
@@ -11,7 +13,7 @@ import {
 } from '../../data/dataTypes';
 
 import { concatenateDBPath, setBrowserUniqueId } from '../general';
-import { merge } from 'lodash';
+import {usePublicVapidKey} from '../firebase/configKey'
 
 let MESSAGING;
 
@@ -21,7 +23,7 @@ if ('Notification' in window) {
     MESSAGING = firebase.messaging();
     // Add the public key generated from the console here.
     MESSAGING.usePublicVapidKey(
-        'BOXKnicJW5Cu3xwRG7buXf-JU8tS-AErJX_Ax7CsUwqZQvBvo2E-ECnE-uGvUKcgeL-1nT-cJw8qGo4dH-zrfGA'
+        usePublicVapidKey
     );
 
     // Callback fired if Instance ID token is updated.
