@@ -268,7 +268,7 @@ function listenToOptions(groupId, questionId, subQuestionId, order = 'top', isSi
             //signal that this questionId options are listend to
             store.optionsListen[subQuestionId] = true;
 
-          
+
             let optionsRef = DB
                 .collection("groups")
                 .doc(groupId)
@@ -341,8 +341,8 @@ function listenToOptions(groupId, questionId, subQuestionId, order = 'top', isSi
 
                     m.redraw();
                 });
-        } else{
-            return ()=>{};
+        } else {
+            return () => { };
         }
     } catch (e) {
         console.error(e)
@@ -426,6 +426,38 @@ function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId) 
         m.redraw();
     });
     return unsubscribe;
+}
+
+function listenToConsequences(groupId, questionId, subQuestionId, optionId) {
+    try {
+        if (!{}.hasOwnProperty.call(store.consequencesListen, optionId)) {
+            store.consequencesListen[optionId] = true;
+            console.log('listen to consequences on option ', optionId);
+
+            DB
+                .collection('groups')
+                .doc(groupId)
+                .collection('questions')
+                .doc(questionId)
+                .collection('subQuestions')
+                .doc(subQuestionId)
+                .collection('options')
+                .doc(optionId)
+                .collection('consequences')
+                .onSnapshot(consequencesDB => {
+                    const consequences = [];
+                    consequencesDB.forEach(consequenceDB=>{
+                        consequences.push( consequenceDB.data());
+                    })
+                    store.consequences[optionId] = consequences;
+                    m.redraw();
+                })
+        } else {
+            console.info(`Allredy listen to consequnces on option ${optionId}`);
+        }
+    } catch (e) {
+        console.error(e)
+    }
 }
 
 function getSubAnswers(groupId, questionId, subQuestionId, vnode) {
@@ -847,6 +879,7 @@ module.exports = {
     getSubQuestion,
     listenToOptions,
     listenToOption,
+    listenToConsequences,
     getOptionVote,
     getSubItems,
     getSubItemLikes,

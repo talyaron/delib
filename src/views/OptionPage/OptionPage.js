@@ -6,8 +6,8 @@ import store from '../../data/store';
 
 //function
 import { get } from 'lodash';
-import { listenToOption, listenToChat } from '../../functions/firebase/get/get';
-import { createConsequence } from '../../functions/firebase/set/set';
+import { listenToOption, listenToChat, listenToConsequences } from '../../functions/firebase/get/get';
+
 
 // components
 import Header from '../Commons/Header/Header';
@@ -15,7 +15,7 @@ import NavTop from '../Commons/NavTop/NavTop';
 import NavBottom from '../Commons/NavBottom/NavBottom';
 import Chat from '../Commons/Chat/Chat';
 import ModalConsequnce from "./ModalConsequence/ModalConsequence";
-import Consequnce from './Consequence/Consequence';
+import Consequence from './Consequence/Consequence';
 import Description from './Description/Description'
 
 let unsubscribe = () => { };
@@ -40,7 +40,8 @@ module.exports = {
             option: get(store, `option[${optionId}]`, {}),
             subPage: 'main',
             subscribed: false,
-            showModal: false
+            showModal: false,
+            consequences:store.consequences[optionId] || []
         };
 
         //get user before login to page
@@ -49,11 +50,13 @@ module.exports = {
 
         unsubscribe = listenToOption({ groupId, questionId, subQuestionId, optionId });
         unsubscribeChat = listenToChat({ groupId, questionId, subQuestionId, optionId })
+        listenToConsequences(groupId, questionId, subQuestionId, optionId)
 
     },
     onbeforeupdate: vnode => {
         const { optionId } = vnode.attrs;
         vnode.state.option = get(store, `option[${optionId}]`, {})
+        vnode.state.consequences = store.consequences[optionId] || [];
     },
     onremove: vnode => {
         unsubscribe();
@@ -61,9 +64,9 @@ module.exports = {
     },
     view: vnode => {
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
+        const { option, subPage,consequences } = vnode.state;
 
 
-        const { option, subPage } = vnode.state;
         return (
             <div class='page page-grid-option' style={subPage == 'main' ? '' : `grid-template-rows: fit-content(100px) auto;`}>
                 <div class='optionPage__header'>
@@ -89,7 +92,11 @@ module.exports = {
                     <div class='optionPage__main'>
                         הסבר: {option.description}
                         <Description />
-                        <Consequnce />
+                        <h2>אם הפתרון הזה ימצא, כנראה שיתרחשו הארועים הבאים</h2>
+                        {consequences.map(consequence =>{
+                            return <Consequence consequence={consequence} />
+                        })}
+                        
                         < div
                             class="fav fav__subQuestion fav--blink"
                             onclick={() => {

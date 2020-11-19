@@ -20,11 +20,13 @@ var store = {
     questions: {}, //list of questions. stored as {groupId:{questionId:{} }}
     groups: {}, //groups stored as {groupId:{group info}}
     option:{}, //options information, stored in option:{optionId:{}}
-    options: [],//options in a given question. stored as subQuestionID:[options] 
+    options: [],//options in a given question. stored as {subQuestionID:[options]} 
     optionsListen:{}, //used to store if there is a listner in subQuestion of option {subQuestionId:true}
     optionsVotes: {}, //store how the user voted on each option. stored as {optionId: -1 to 1}
     optionsLoc: {}, //options location. used for animations
     optionsDetails: {}, //vote on options by user
+    consequences:{}, //store consequnces in theis format: {optionId:[]}
+    consequencesListen:{}, //use to store if listen to consequences on spesific option
     messagesShow: {}, // history of messages to show
     listenToMessages:{}, //store if user listen to notification {entityId:true}
     feedsUnsubscribe: {}, // used for feed unsubscribes

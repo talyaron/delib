@@ -1,0 +1,25 @@
+.consequence{
+    background-color: var(--white);
+    padding: var(--regPadding);
+    border-radius: var(--roundBorder);
+    margin: 10px 0px;
+}
+
+.consequence>h1{
+    font-size: var(--size15);
+}
+
+.consequence>p{
+    font-size: var(--size13);
+}
+.consequence__scores{
+    display: flex;
+    
+}
+.consequence__score{
+    display: flex;
+    margin: 5px;
+    font-size: var(--size11);
+    color:var(--gray1);
+    
+}
