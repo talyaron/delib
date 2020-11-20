@@ -277,7 +277,7 @@ exports.sendPushForNewOptions = functions.firestore
 
   });
 
-  exports.optionChatNotifications = functions.firestore
+exports.optionChatNotifications = functions.firestore
   .document(
     "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/chat/{messageId}"
 
@@ -564,14 +564,14 @@ exports.listenToGroupChats = functions.firestore
   .onCreate((newMsg, context) => {
     try {
       const { groupId, chatMassageId } = context.params;
-    
+
 
       return db
         .collection(`/groups/${groupId}/subscribers`)
         .get()
         .then(subscribersDB => {
 
-       
+
           return subscribersDB.forEach(subscriberDB => {
             console.log('update user ', subscriberDB.id)
 
@@ -769,98 +769,149 @@ exports.calcValidateEval = functions.firestore
     "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{op" +
     "tionId}/consequences/{consequenceId}/voters/{userId}"
   )
-  .onUpdate((change, context) => {
-    var newLike = change.after.data().like;
-    var previousLike = 0;
-    if (change.before.data() !== undefined) {
-      previousLike = change.before.data().like;
+  .onWrite((change, context) => {
+
+    const { groupId, questionId, subQuestionId, optionId, consequenceId } = context.params;
+
+    const { evaluation, truthiness } = change.after.data();
+
+
+    let userVotes = {
+      evaluation,
+      truthiness
     }
 
-    var like = newLike - previousLike;
 
-    var optionLikesRef = db
+
+    const consequenceRef = db
       .collection("groups")
-      .doc(context.params.groupId)
+      .doc(groupId)
       .collection("questions")
-      .doc(context.params.questionId)
+      .doc(questionId)
       .collection("subQuestions")
-      .doc(context.params.subQuestionId)
+      .doc(subQuestionId)
       .collection("options")
-      .doc(context.params.optionId);
+      .doc(optionId)
+      .collection('consequences')
+      .doc(consequenceId)
 
-    return db.runTransaction((transaction) => {
-      return transaction.get(optionLikesRef).then((optionDoc) => {
-        // Compute new number of ratings
-        var totalVotes = 0;
-        if (optionDoc.data().totalVotes !== undefined) {
-          totalVotes = optionDoc.data().totalVotes + like;
+    return db.runTransaction(transaction => {
+      return transaction.get(consequenceRef).then(consequenceDB => {
+
+
+
+        let totalVotes = 0;
+        let truthinessAvg = 0;
+        let evaluationAvg = 0;
+        let truthinessSum = 0;
+        let evaluationSum = 0;
+
+        // get total votes
+        if (consequenceDB.data().totalVotes === undefined) {
+          totalVotes = 1;
+          if (!change.before.exists) { totalVotes = 0 } //only in case it is a new voter and it is the first voter - zero it, so it will be added later.
         } else {
-          totalVotes = newLike;
+          totalVotes = consequenceDB.data().totalVotes;
         }
 
-        //calaculate consensus precentage:
-        let consensusPrecentage = 1;
-        if (optionDoc.data().totalVoters !== undefined) {
-          let totalVoters = optionDoc.data().totalVoters;
+        //if new voter
+        if (!change.before.exists) {
+          //new voter then add number of votes
+          totalVotes++
 
-          // old method consensusPrecentage = totalVotes / totalVoters; consensus with
-          // respect to group size
-          consensusPrecentage =
-            (totalVotes / totalVoters) * (Math.log(totalVoters) / Math.log(10));
+
+
+          //get sum of all votes in truthiness and evaluation
+          if (consequenceDB.data().truthinessSum === undefined) {
+            truthinessSum = userVotes.truthiness
+          } else {
+            truthinessSum = consequenceDB.data().truthinessSum + userVotes.truthiness;
+          }
+
+          if (consequenceDB.data().evaluationSum === undefined) {
+            evaluationSum = userVotes.evaluation;
+          } else {
+            evaluationSum = consequenceDB.data().evaluationSum + userVotes.evaluation;
+          }
+
+          truthinessAvg = truthinessSum / totalVotes;
+          evaluationAvg = evaluationSum / totalVotes;
+
+
+        } else {
+          //existing voter
+          console.log('existing user')
+
+          //get previous votes
+         
+          let beforeUserVotes = {
+            evaluation: change.before.data().evaluation,
+            truthiness: change.before.data().truthiness
+          }
+
+          console.log('existing user')
+
+          truthinessSum = consequenceDB.data().truthinessSum - beforeUserVotes.truthiness + userVotes.truthiness;
+          evaluationSum = consequenceDB.data().evaluationSum - beforeUserVotes.evaluation + userVotes.evaluation;
+
+          truthinessAvg = truthinessSum / totalVotes;
+          evaluationAvg = evaluationSum / totalVotes;
+         
         }
 
-        // Compute new average rating var oldRatingTotal = optionDoc.data('avgRating') *
-        // optionDoc.data('numRatings'); var newAvgRating = (oldRatingTotal + newLike) /
-        // newNumRatings; Update restaurant info
-        return transaction.update(optionLikesRef, {
+       
+        return transaction.update(consequenceRef, {
           totalVotes,
-          consensusPrecentage,
+          evaluationSum,
+          evaluationAvg,
+          truthinessAvg,
+          truthinessSum
         });
       });
     });
   });
 
-exports.totalVoters = functions.firestore
-  .document(
-    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{op" +
-    "tionId}/likes/{userId}"
-  )
-  .onCreate((change, context) => {
-    var newLike = change.data().like;
+// exports.totalVoters = functions.firestore
+//   .document(
+//     "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{op" +
+//     "tionId}/likes/{userId}"
+//   )
+//   .onCreate((change, context) => {
+//     var newLike = change.data().like;
 
-    var optionLikesRef = db
-      .collection("groups")
-      .doc(context.params.groupId)
-      .collection("questions")
-      .doc(context.params.questionId)
-      .collection("subQuestions")
-      .doc(context.params.subQuestionId)
-      .collection("options")
-      .doc(context.params.optionId);
+//     var optionLikesRef = db
+//       .collection("groups")
+//       .doc(context.params.groupId)
+//       .collection("questions")
+//       .doc(context.params.questionId)
+//       .collection("subQuestions")
+//       .doc(context.params.subQuestionId)
+//       .collection("options")
+//       .doc(context.params.optionId);
 
-    return db.runTransaction((transaction) => {
-      return transaction.get(optionLikesRef).then((optionDoc) => {
-        // Compute new number of ratings
-        var totalVotes = newLike;
-        if (optionDoc.data().totalVotes !== undefined) {
-          totalVotes = optionDoc.data().totalVotes + newLike;
-        }
-        var totalVoters = 1;
-        if (optionDoc.data().totalVoters !== undefined) {
-          totalVoters = optionDoc.data().totalVoters + 1;
-        }
+//     return db.runTransaction((transaction) => {
+//       return transaction.get(optionLikesRef).then((optionDoc) => {
+//         // Compute new number of ratings
+//         var totalVotes = newLike;
+//         if (optionDoc.data().totalVotes !== undefined) {
+//           totalVotes = optionDoc.data().totalVotes + newLike;
+//         }
+//         var totalVoters = 1;
+//         if (optionDoc.data().totalVoters !== undefined) {
+//           totalVoters = optionDoc.data().totalVoters + 1;
+//         }
 
-        // calaculate consensus precentage: simple consensus let consensusPrecentage =
-        // totalVotes / totalVoters; consensus with respect to group size
-        let consensusPrecentage =
-          (totalVotes / totalVoters) * (Math.log(totalVoters) / Math.log(10));
+//         // calaculate consensus precentage: simple consensus let consensusPrecentage =
+//         // totalVotes / totalVoters; consensus with respect to group size
+//         let consensusPrecentage =
+//           (totalVotes / totalVoters) * (Math.log(totalVoters) / Math.log(10));
 
-        // Update restaurant info
-        return transaction.update(optionLikesRef, {
-          totalVoters,
-          totalVotes,
-          consensusPrecentage,
-        });
-      });
-    });
-  });
+//         // Update restaurant info
+//         return transaction.update(optionLikesRef, {
+//           totalVoters,
+//           totalVotes,
+//           consensusPrecentage,
+//         });
+//       });
+//     });
+//   });
