@@ -34,6 +34,7 @@
     grid-template-columns: repeat(3, 1fr);
     position: fixed;
     bottom: 64px;
+    left: 0px;
 }
 
 .subQuestion__arrange--bottom{

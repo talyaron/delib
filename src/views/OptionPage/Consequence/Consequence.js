@@ -25,7 +25,7 @@ module.exports = {
                         <span>רע</span><input type='range' onchange={e => handleEval(e, vnode)} min='-100' max='100' defaultValue='0' /><span>טוב</span>
                     </div>
                     <div class='consequence__score'>
-                        <span>לא נכון</span><input type='range' onchange={e => handleTruthness(e, vnode)} defaultValue='100' /><span> נכון</span>
+                        <span>לא מאמין שיקרה</span><input type='range' onchange={e => handleTruthness(e, vnode)} defaultValue='100' /><span> מאמין שיקרה</span>
                     </div>
                 </div>
             </div>
