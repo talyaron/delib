@@ -1,25 +1,38 @@
-.consequence{
+.consequence {
     background-color: var(--white);
     padding: var(--regPadding);
     border-radius: var(--roundBorder);
-    margin: 10px 0px;
+    margin: 10px;
 }
 
-.consequence>h1{
+.consequence>h1 {
     font-size: var(--size15);
 }
 
-.consequence>p{
+.consequence>p {
     font-size: var(--size13);
 }
-.consequence__scores{
+
+.consequence__scores {
     display: flex;
-    
+    justify-content: space-evenly;
+
 }
-.consequence__score{
+
+.consequence__score {
     display: flex;
+    flex-direction: column;
     margin: 5px;
-    font-size: var(--size11);
-    color:var(--gray1);
-    
+    font-size: var(--size12);
+
+    text-align: center;
+
+}
+
+.consequence__score>p {
+    margin: 5px 0px 0px 0px;
+    align-items: center;
+    display: flex;
+    text-align: center;
+    justify-content: center;
 }

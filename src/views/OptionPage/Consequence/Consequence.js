@@ -22,10 +22,12 @@ module.exports = {
                 <hr></hr>
                 <div class='consequence__scores'>
                     <div class='consequence__score'>
-                        <span>רע</span><input type='range' onchange={e => handleEval(e, vnode)} min='-100' max='100' defaultValue='0' /><span>טוב</span>
+                        <p>האם זה טוב או רע?</p>
+                        <p><span>רע</span><input type='range' onchange={e => handleEval(e, vnode)} min='-100' max='100' defaultValue='0' /><span>טוב</span></p>
                     </div>
                     <div class='consequence__score'>
-                        <span>לא מאמין שיקרה</span><input type='range' onchange={e => handleTruthness(e, vnode)} defaultValue='100' /><span> מאמין שיקרה</span>
+                        <p>האם לדעתך זה יקרה?</p>
+                        <p><span>לא</span><input type='range' onchange={e => handleTruthness(e, vnode)} defaultValue='100' /><span> כן</span></p>
                     </div>
                 </div>
             </div>
@@ -52,7 +54,7 @@ function handleEval(e, vnode) {
 
         vnode.state.evaluation = value;
        
-        voteConsequence(groupId, questionId, subQuestionId, optionId, consequenceId, vnode.state.truthiness, value)
+        voteConsequence(groupId, questionId, subQuestionId, optionId, consequenceId, vnode.state.truthiness*.01, value)
     } catch (e) {
         console.error(e)
     }

@@ -5,5 +5,11 @@
 
 .optionPage__main{
     font-size: var(--size17);
-    padding: 20px;
+    width:100vw;
+    padding-bottom: 200px;
+}
+
+.optionPage__main>h2{
+    font-size: var(--size15);
+    padding: 0px 20px;
 }

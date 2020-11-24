@@ -41,8 +41,8 @@ module.exports = {
             subPage: 'main',
             subscribed: false,
             showModal: false,
-            consequences:store.consequences[optionId] || [],
-            orderBy:'new'
+            consequences: store.consequences[optionId] || [],
+            orderBy: 'new'
         };
 
         //get user before login to page
@@ -65,7 +65,7 @@ module.exports = {
     },
     view: vnode => {
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
-        const { option, subPage,consequences } = vnode.state;
+        const { option, subPage, consequences } = vnode.state;
 
 
         return (
@@ -93,47 +93,50 @@ module.exports = {
                     <div class='optionPage__main'>
                         הסבר: {option.description}
                         <Description />
-                        <h2>אם הפתרון הזה ימצא, כנראה שיתרחשו הארועים הבאים</h2>
-                        
-                        {consequences.map(consequence =>{
+                        <h2>אם הפתרון הזה ייבחר,  אילו דברים יקרו?</h2>
+
+                        {consequences.map(consequence => {
+                            if (consequence.consequenceId === '9e48bfb6c4b465a0da6') {
+                                console.log(consequence)
+                            }
                             return <Consequence consequence={consequence} />
                         })}
                         {vnode.state.subPage === 'main' ?
-                                <div class="subQuestion__arrange" id="questionFooter">
-                                    <div
-                                        class={vnode.state.orderBy == "new"
-                                            ? "footerButton footerButtonSelected"
-                                            : "footerButton"}
-                                        onclick={() => {
-                                            vnode.state.orderBy = "new";
-                                        }}>
-                                        <img src='img/new.svg' alt='order by newest' />
-                                        <div>חדש</div>
-                                    </div>
-                                    <div
-                                        class={vnode.state.orderBy == "top"
-                                            ? "footerButton footerButtonSelected"
-                                            : "footerButton"}
-                                        onclick={() => {
-                                            vnode.state.orderBy = "top";
-                                        }}>
-                                        <img src='img/truth.svg' alt='order by most agreed' />
-                                        <div>אמינות</div>
-                                    </div>
+                            <div class="subQuestion__arrange" id="questionFooter">
+                                <div
+                                    class={vnode.state.orderBy == "new"
+                                        ? "footerButton footerButtonSelected"
+                                        : "footerButton"}
+                                    onclick={() => {
+                                        vnode.state.orderBy = "new";
+                                    }}>
+                                    <img src='img/new.svg' alt='order by newest' />
+                                    <div>חדש</div>
+                                </div>
+                                <div
+                                    class={vnode.state.orderBy == "top"
+                                        ? "footerButton footerButtonSelected"
+                                        : "footerButton"}
+                                    onclick={() => {
+                                        vnode.state.orderBy = "top";
+                                    }}>
+                                    <img src='img/truth.svg' alt='order by most agreed' />
+                                    <div>אמינות</div>
+                                </div>
 
-                                    <div
-                                        class={vnode.state.orderBy == "message"
-                                            ? "footerButton footerButtonSelected"
-                                            : "footerButton"}
-                                        onclick={() => {
-                                            vnode.state.orderBy = "message";
-                                        }}>
-                                        <img src='img/talk.svg' alt='order by last talks' />
-                                        <div>שיחות אחרונות</div>
-                                    </div>
-                                </div> : null
-                            }
-                        
+                                <div
+                                    class={vnode.state.orderBy == "message"
+                                        ? "footerButton footerButtonSelected"
+                                        : "footerButton"}
+                                    onclick={() => {
+                                        vnode.state.orderBy = "message";
+                                    }}>
+                                    <img src='img/talk.svg' alt='order by last talks' />
+                                    <div>שיחות אחרונות</div>
+                                </div>
+                            </div> : null
+                        }
+
                         < div
                             class="fav fav__subQuestion fav--blink"
                             onclick={() => {

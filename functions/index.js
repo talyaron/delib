@@ -773,7 +773,10 @@ exports.calcValidateEval = functions.firestore
 
     const { groupId, questionId, subQuestionId, optionId, consequenceId } = context.params;
 
-    const { evaluation, truthiness } = change.after.data();
+    let { evaluation, truthiness } = change.after.data();
+
+    if (evaluation === undefined) { evaluationAvg = 0 }
+    if (truthiness === undefined) { truthiness = 0 }
 
 
     let userVotes = {
@@ -817,6 +820,7 @@ exports.calcValidateEval = functions.firestore
         //if new voter
         if (!change.before.exists) {
           //new voter then add number of votes
+          console.log('new voter....')
           totalVotes++
 
 
@@ -843,23 +847,23 @@ exports.calcValidateEval = functions.firestore
           console.log('existing user')
 
           //get previous votes
-         
+
           let beforeUserVotes = {
-            evaluation: change.before.data().evaluation,
-            truthiness: change.before.data().truthiness
+            evaluation: change.before.data().evaluation || 0,
+            truthiness: change.before.data().truthiness || 1
           }
 
-          console.log('existing user')
+
 
           truthinessSum = consequenceDB.data().truthinessSum - beforeUserVotes.truthiness + userVotes.truthiness;
           evaluationSum = consequenceDB.data().evaluationSum - beforeUserVotes.evaluation + userVotes.evaluation;
 
           truthinessAvg = truthinessSum / totalVotes;
           evaluationAvg = evaluationSum / totalVotes;
-         
+
         }
 
-       
+
         return transaction.update(consequenceRef, {
           totalVotes,
           evaluationSum,
