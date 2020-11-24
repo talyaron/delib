@@ -12,6 +12,7 @@ import { listenToOption, listenToChat, listenToConsequences } from '../../functi
 // components
 import Header from '../Commons/Header/Header';
 import NavTop from '../Commons/NavTop/NavTop';
+import Spinner from '../Commons/Spinner/Spinner';
 import NavBottom from '../Commons/NavBottom/NavBottom';
 import Chat from '../Commons/Chat/Chat';
 import ModalConsequnce from "./ModalConsequence/ModalConsequence";
@@ -41,7 +42,7 @@ module.exports = {
             subPage: 'main',
             subscribed: false,
             showModal: false,
-            consequences: store.consequences[optionId] || [],
+            consequences: store.consequences[optionId] || [false],
             orderBy: 'new'
         };
 
@@ -94,11 +95,12 @@ module.exports = {
                         הסבר: {option.description}
                         <Description />
                         <h2>אם הפתרון הזה ייבחר,  אילו דברים יקרו?</h2>
+                        {consequences[0] === false ? <Spinner /> :
+                            consequences.map(consequence => {
 
-                        {consequences.map(consequence => {
-                            
-                            return <Consequence consequence={consequence} />
-                        })}
+                                return <Consequence consequence={consequence} />
+                            })
+                        }
                         {vnode.state.subPage === 'main' ?
                             <div class="subQuestion__arrange" id="questionFooter">
                                 <div
