@@ -432,7 +432,7 @@ function listenToConsequences(groupId, questionId, subQuestionId, optionId) {
     try {
         if (!{}.hasOwnProperty.call(store.consequencesListen, optionId)) {
             store.consequencesListen[optionId] = true;
-            console.log('listen to consequences on option ', optionId);
+          
 
             DB
                 .collection('groups')
@@ -458,6 +458,35 @@ function listenToConsequences(groupId, questionId, subQuestionId, optionId) {
     } catch (e) {
         console.error(e)
     }
+}
+
+function getMyVotesOnConsequence(groupId, questionId, subQuestionId, optionId, consequenceId){
+    try{
+
+      return  DB
+        .collection('groups')
+        .doc(groupId)
+        .collection('questions')
+        .doc(questionId)
+        .collection('subQuestions')
+        .doc(subQuestionId)
+        .collection('options')
+        .doc(optionId)
+        .collection('consequences')
+        .doc(consequenceId)
+        .collection('voters')
+        .doc(store.user.uid)
+        .get().then(voteDB => {
+            return voteDB.data();
+        })
+        .catch(e=>{
+            console.error(e)
+        })
+
+    } catch(e){
+        console.error(e)
+    }
+
 }
 
 function getSubAnswers(groupId, questionId, subQuestionId, vnode) {
@@ -880,6 +909,7 @@ module.exports = {
     listenToOptions,
     listenToOption,
     listenToConsequences,
+    getMyVotesOnConsequence,
     getOptionVote,
     getSubItems,
     getSubItemLikes,

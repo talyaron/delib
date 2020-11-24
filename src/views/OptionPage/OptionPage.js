@@ -96,9 +96,7 @@ module.exports = {
                         <h2>אם הפתרון הזה ייבחר,  אילו דברים יקרו?</h2>
 
                         {consequences.map(consequence => {
-                            if (consequence.consequenceId === '9e48bfb6c4b465a0da6') {
-                                console.log(consequence)
-                            }
+                            
                             return <Consequence consequence={consequence} />
                         })}
                         {vnode.state.subPage === 'main' ?

@@ -3,15 +3,28 @@ import './Consequence.css';
 
 //function
 import { voteConsequence } from '../../../functions/firebase/set/set';
+import { getMyVotesOnConsequence } from '../../../functions/firebase/get/get';
 
 module.exports = {
-    oninit: vnode => {
+    oninit: async vnode => {
         vnode.state = {
             color: 'white',
             opacity: 1,
             truthiness: 1,
             evaluation: 0,
         }
+
+        const { groupId, questionId, subQuestionId, optionId, consequenceId, title } = vnode.attrs.consequence
+
+        let { truthiness, evaluation } = await getMyVotesOnConsequence(groupId, questionId, subQuestionId, optionId, consequenceId);
+
+        if (truthiness !== undefined) vnode.state.truthiness = truthiness;
+        if (evaluation !== undefined) vnode.state.evaluation = evaluation;
+        vnode.state.color = getColorForPercentage((evaluation * 100 + 100) * 0.005 || 0);
+        vnode.state.opacity = calcOpacity(truthiness * 100);
+
+        console.log(title, truthiness, evaluation)
+        m.redraw();
     },
     view: vnode => {
         const { title, description, consequenceId } = vnode.attrs.consequence
@@ -23,11 +36,11 @@ module.exports = {
                 <div class='consequence__scores'>
                     <div class='consequence__score'>
                         <p>האם זה טוב או רע?</p>
-                        <p><span>רע</span><input type='range' onchange={e => handleEval(e, vnode)} min='-100' max='100' defaultValue='0' /><span>טוב</span></p>
+                        <p><span>רע</span><input type='range' onchange={e => handleEval(e, vnode)} min='-100' max='100' defaultValue={vnode.state.evaluation * 100} /><span>טוב</span></p>
                     </div>
                     <div class='consequence__score'>
                         <p>האם לדעתך זה יקרה?</p>
-                        <p><span>לא</span><input type='range' onchange={e => handleTruthness(e, vnode)} defaultValue='100' /><span> כן</span></p>
+                        <p><span>לא</span><input type='range' onchange={e => handleTruthness(e, vnode)} defaultValue={vnode.state.truthiness * 100} /><span> כן</span></p>
                     </div>
                 </div>
             </div>
@@ -36,25 +49,16 @@ module.exports = {
 }
 function handleEval(e, vnode) {
     try {
-        const value = e.target.valueAsNumber*0.01;
+        const value = e.target.valueAsNumber * 0.01;
         const valueForColor = (e.target.valueAsNumber + 100) * 0.005;
         const { groupId, questionId, subQuestionId, optionId, consequenceId } = vnode.attrs.consequence;
-        console.log(vnode.attrs.consequence)
 
-
-        if (valueForColor > 0.4 && valueForColor < 0.6) {
-            vnode.state.color = 'white'
-        } else {
-
-            let color = getColorForPercentage(valueForColor)
-            console.log(color)
-            vnode.state.color = color;
-
-        }
+        let color = getColorForPercentage(valueForColor)
+        vnode.state.color = color;
 
         vnode.state.evaluation = value;
-       
-        voteConsequence(groupId, questionId, subQuestionId, optionId, consequenceId, vnode.state.truthiness*.01, value)
+
+        voteConsequence(groupId, questionId, subQuestionId, optionId, consequenceId, vnode.state.truthiness * .01, value)
     } catch (e) {
         console.error(e)
     }
@@ -65,26 +69,32 @@ function handleEval(e, vnode) {
 function handleTruthness(e, vnode) {
     try {
         const value = e.target.valueAsNumber;
-        const levelOpacity = .6;
+
         const { groupId, questionId, subQuestionId, optionId, consequenceId } = vnode.attrs.consequence;
 
-        let opacity = ((value * 0.01) * levelOpacity) + (1 - levelOpacity)
+        let opacity = calcOpacity(value)
         console.log(opacity)
         vnode.state.opacity = opacity;
         vnode.state.truthiness = value;
 
-        voteConsequence(groupId, questionId, subQuestionId, optionId, consequenceId, value*0.01, vnode.state.evaluation)
+        voteConsequence(groupId, questionId, subQuestionId, optionId, consequenceId, value * 0.01, vnode.state.evaluation)
     } catch (e) {
         console.error(e)
     }
 }
 
-var percentColors = [
+function calcOpacity(value) {
+    const levelOpacity = .6;
+    return ((value * 0.01) * levelOpacity) + (1 - levelOpacity)
+}
+
+const percentColors = [
     { pct: 0.0, color: { r: 0xff, g: 0x00, b: 0 } },
     { pct: 0.5, color: { r: 0xff, g: 0xff, b: 0 } },
     { pct: 1.0, color: { r: 0x00, g: 0xff, b: 0 } }];
 
-var getColorForPercentage = function (pct) {
+const getColorForPercentage = function (pct) {
+
     for (var i = 1; i < percentColors.length - 1; i++) {
         if (pct < percentColors[i].pct) {
             break;
@@ -101,6 +111,8 @@ var getColorForPercentage = function (pct) {
         g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
         b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
     };
+    if (pct > 0.4 && pct < 0.6) { return 'white' };
+
     return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
     // or output as hex if preferred
 };
