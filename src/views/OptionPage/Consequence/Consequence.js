@@ -14,8 +14,8 @@ module.exports = {
             evaluation: 0,
         }
 
-        const { groupId, questionId, subQuestionId, optionId, consequenceId, title } = vnode.attrs.consequence
-
+        //get truthness and evaluation from voter preivous votes
+        const { groupId, questionId, subQuestionId, optionId, consequenceId } = vnode.attrs.consequence;
         let { truthiness, evaluation } = await getMyVotesOnConsequence(groupId, questionId, subQuestionId, optionId, consequenceId);
 
         if (truthiness !== undefined) vnode.state.truthiness = truthiness;
@@ -23,7 +23,6 @@ module.exports = {
         vnode.state.color = getColorForPercentage((evaluation * 100 + 100) * 0.005 || 0);
         vnode.state.opacity = calcOpacity(truthiness * 100);
 
-        console.log(title, truthiness, evaluation)
         m.redraw();
     },
     view: vnode => {
