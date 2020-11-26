@@ -537,10 +537,7 @@ function randomizeArray(a) {
         a[i] = a[j];
         a[j] = t;
     }
-    console.log(a)
-    a.forEach(e=>{
-        console.log(e.title)
-    })
+   
     return [...a];
     
   };

@@ -15,20 +15,22 @@ module.exports = {
         }
 
         //get truthness and evaluation from voter preivous votes
-        const { groupId, questionId, subQuestionId, optionId, consequenceId } = vnode.attrs.consequence;
+        const { groupId, questionId, subQuestionId, optionId, consequenceId, evaluationAvg, truthinessAvg } = vnode.attrs.consequence;
         let { truthiness, evaluation } = await getMyVotesOnConsequence(groupId, questionId, subQuestionId, optionId, consequenceId);
 
         if (truthiness !== undefined) vnode.state.truthiness = truthiness;
         if (evaluation !== undefined) vnode.state.evaluation = evaluation;
-        vnode.state.color = getColorForPercentage((evaluation * 100 + 100) * 0.005 || 0);
-        vnode.state.opacity = calcOpacity(truthiness * 100);
+        vnode.state.color = getColorForPercentage((evaluationAvg + 1) * 0.5 || 0);
+        vnode.state.opacity = calcOpacity(truthinessAvg * 100);
 
         m.redraw();
     },
-    onbeforeupdate:vnode=>{
-        const { title, description, consequenceId, evaluationAvg } = vnode.attrs.consequence;
-        vnode.state.color = getColorForPercentage((evaluationAvg+1)/2)
-      
+    onbeforeupdate: vnode => {
+        const { truthinessAvg, evaluationAvg, title } = vnode.attrs.consequence;
+        vnode.state.color = getColorForPercentage((evaluationAvg + 1) / 2);
+        vnode.state.opacity = calcOpacity(truthinessAvg * 100);
+       
+
     },
     view: vnode => {
         const { title, description, consequenceId } = vnode.attrs.consequence
@@ -55,7 +57,7 @@ module.exports = {
 function handleEval(e, vnode) {
     try {
         const value = e.target.valueAsNumber * 0.01;
-      
+
         const { groupId, questionId, subQuestionId, optionId, consequenceId } = vnode.attrs.consequence;
 
         vnode.state.evaluation = value;
@@ -73,11 +75,6 @@ function handleTruthness(e, vnode) {
         const value = e.target.valueAsNumber;
 
         const { groupId, questionId, subQuestionId, optionId, consequenceId } = vnode.attrs.consequence;
-
-        let opacity = calcOpacity(value)
-       
-        vnode.state.opacity = opacity;
-        vnode.state.truthiness = value;
 
         voteConsequence(groupId, questionId, subQuestionId, optionId, consequenceId, value * 0.01, vnode.state.evaluation)
     } catch (e) {

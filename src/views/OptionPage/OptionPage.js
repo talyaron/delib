@@ -63,7 +63,7 @@ module.exports = {
         vnode.state.option = get(store, `option[${optionId}]`, {})
         vnode.state.consequences =  store.consequences[optionId] || [];
 
-        console.log('before update')
+        
         sortBy(vnode)
        
     },
