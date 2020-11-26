@@ -12,12 +12,13 @@ import Header from '../Commons/Header/Header';
 import NavBottom from '../Commons/NavBottom/NavBottom';
 import NavTop from '../Commons/NavTop/NavTop';
 import Chat from '../Commons/Chat/Chat';
+import Spinner from '../Commons/Spinner/Spinner';
 
 
 //functions
 import { createQuestion } from '../../functions/firebase/set/set';
-import { getQuestions, getGroupDetails,listenToChat } from '../../functions/firebase/get/get';
-import { setLastPage,getIsChat } from '../../functions/general';
+import { getQuestions, getGroupDetails, listenToChat } from '../../functions/firebase/get/get';
+import { setLastPage, getIsChat } from '../../functions/general';
 
 module.exports = {
 
@@ -29,32 +30,32 @@ module.exports = {
                 .route
                 .set('/login');
             vnode.state.callDB = false;
-        } 
-        
+        }
+
 
         vnode.state = {
             add: {
                 title: '',
                 description: ''
             },
-            subPage: getIsChat()?'chat':'main',
+            subPage: getIsChat() ? 'chat' : 'main',
             isAdmin: false,
             edit: true,
             addQuestion: false,
-            questions: [],
+            questions: [false],
             unsubscribe: {},
             groupName: get(store, 'groups[' + vnode.attrs.id + '].title', 'שם הקבוצה')
-            
+
         }
-        
+
         getQuestions('on', vnode.attrs.id, vnode);
         vnode.state.undbGroupDetails = getGroupDetails(vnode.attrs.id, vnode);
 
 
-       vnode.state.unsubscribe.chat = listenToChat({groupId:vnode.attrs.id});
+        vnode.state.unsubscribe.chat = listenToChat({ groupId: vnode.attrs.id });
 
-            
-            
+
+
     },
     onbeforeupdate: vnode => {
         //check is admin
@@ -85,7 +86,7 @@ module.exports = {
 
         return (
             <div class='page'>
-                <div class='page-grid' style= {vnode.state.subPage == 'main' ?'':`grid-template-rows: 52px 40px;`}>
+                <div class='page-grid' style={vnode.state.subPage == 'main' ? '' : `grid-template-rows: 52px 40px;`}>
                     <Header
                         upLevelUrl='/groups'
                         topic='קבוצה'
@@ -95,13 +96,15 @@ module.exports = {
                         groupId={vnode.attrs.id}
                         showSubscribe={true}
                     />
-                    <NavTop level={'קבוצה'} current={vnode.state.subPage} pvs={vnode.state} mainUrl={`/group/${vnode.attrs.id}`} chatUrl={`/group-chat/${vnode.attrs.id}`} ids={{groupId:vnode.attrs.id}}/>
-                   
-                    
+                    <NavTop level={'קבוצה'} current={vnode.state.subPage} pvs={vnode.state} mainUrl={`/group/${vnode.attrs.id}`} chatUrl={`/group-chat/${vnode.attrs.id}`} ids={{ groupId: vnode.attrs.id }} />
+
+
                     {vnode.state.subPage == 'main' ?
                         <div class='questionsWrapper' id='groupWrapper'>
-                           <h1>נושאים שונים של הקבוצה</h1>
-                            {
+                            <h1>נושאים שונים של הקבוצה</h1>
+                            {vnode.state.questions[0] === false ?
+                                <Spinner />
+                                :
                                 vnode.state.questions.map((question, key) => {
 
                                     return (
@@ -115,13 +118,13 @@ module.exports = {
                             }
                         </div>
                         :
-                        <Chat 
-                        entity='group'
-                        topic='קבוצה'
-                        ids={{ groupId: vnode.attrs.id }}
-                        title={vnode.state.groupName}
-                        url={m.route.get()}
-                     />
+                        <Chat
+                            entity='group'
+                            topic='קבוצה'
+                            ids={{ groupId: vnode.attrs.id }}
+                            title={vnode.state.groupName}
+                            url={m.route.get()}
+                        />
                     }
                     {vnode.state.subPage == 'main' ?
                         <div class='fav' onclick={() => { toggleAddQuestion(vnode) }} >
@@ -129,7 +132,7 @@ module.exports = {
                         </div>
                         : null
                     }
-                    {vnode.state.subPage == 'main' ?<NavBottom />:null}
+                    {vnode.state.subPage == 'main' ? <NavBottom /> : null}
                     {
                         vnode.state.addQuestion ?
                             <div class='module'>

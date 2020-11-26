@@ -1,7 +1,7 @@
 var store = {
     user: {},
     userTempName: '',
-    userGroups: [],// groups the users is listeneing for
+    userGroups: [false],// groups the users is listeneing for
     current: {
         org: {
             title: 'שם הארגון'
