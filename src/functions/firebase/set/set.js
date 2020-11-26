@@ -298,7 +298,7 @@ function createConsequence(groupId, questionId, subQuestionId, optionId, creator
 
         const consequenceId = uniqueId();
 
-        DB
+      const consequenceRef = DB
             .collection('groups')
             .doc(groupId)
             .collection('questions')
@@ -308,7 +308,9 @@ function createConsequence(groupId, questionId, subQuestionId, optionId, creator
             .collection('options')
             .doc(optionId)
             .collection('consequences')
-            .doc(consequenceId)
+            .doc(consequenceId);
+
+            consequenceRef
             .set({
                 groupId,
                 questionId,
@@ -323,11 +325,14 @@ function createConsequence(groupId, questionId, subQuestionId, optionId, creator
                     .firestore
                     .FieldValue
                     .serverTimestamp(),
-                goodBad,
                 consensusPrecentage: 0,
                 isActive: true
             })
-            .then(() => { console.info('consequence', consequenceId, 'was saved') })
+            .then(() => {
+                
+                voteConsequence(groupId, questionId, subQuestionId, optionId, consequenceId,1,goodBad)
+                
+                console.info('consequence', consequenceId, 'was saved') })
             .catch(e => { console.error(e) })
     } catch (e) {
         console.error(e)

@@ -17,7 +17,7 @@ module.exports = {
                     <input name='title' id='consequence-title' class='inputGeneral' type='text' placeholder='כותרת' />
                     <textarea name='description' placeholder='הסבר' class='inputGeneral inputDescription' />
                     <label for='goodBad' >האם זה טוב או רע?</label>
-                    <p class='modalConsequence__goodBad'><span>רע</span><input id='goodBad' type='range' name='goodBad' min='-100' max='100' step='10' value='0' /><span>טוב</span></p>
+                    <p class='modalConsequence__goodBad'><span>רע</span><input id='goodBad' type='range' name='goodBad' min='-1' max='1' step='.1' value='1' /><span>טוב</span></p>
                     <div class='modalConsequence__buttons'>
                         <input type='submit' class='buttons' value='שמירה' />
                         <button onclick={e => handleCancel(e, vnode)} class='buttons buttons--cancel'>ביטול</button>

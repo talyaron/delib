@@ -25,8 +25,14 @@ module.exports = {
 
         m.redraw();
     },
+    onbeforeupdate:vnode=>{
+        const { title, description, consequenceId, evaluationAvg } = vnode.attrs.consequence;
+        vnode.state.color = getColorForPercentage((evaluationAvg+1)/2)
+      
+    },
     view: vnode => {
         const { title, description, consequenceId } = vnode.attrs.consequence
+
         return (
             <div class='consequence' key={consequenceId} style={`background: ${vnode.state.color}; opacity:${vnode.state.opacity}`}>
                 <h1>{title}</h1>
@@ -49,11 +55,8 @@ module.exports = {
 function handleEval(e, vnode) {
     try {
         const value = e.target.valueAsNumber * 0.01;
-        const valueForColor = (e.target.valueAsNumber + 100) * 0.005;
+      
         const { groupId, questionId, subQuestionId, optionId, consequenceId } = vnode.attrs.consequence;
-
-        let color = getColorForPercentage(valueForColor)
-        vnode.state.color = color;
 
         vnode.state.evaluation = value;
 
@@ -72,7 +75,7 @@ function handleTruthness(e, vnode) {
         const { groupId, questionId, subQuestionId, optionId, consequenceId } = vnode.attrs.consequence;
 
         let opacity = calcOpacity(value)
-        console.log(opacity)
+       
         vnode.state.opacity = opacity;
         vnode.state.truthiness = value;
 

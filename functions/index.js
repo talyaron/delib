@@ -808,6 +808,7 @@ exports.calcValidateEval = functions.firestore
         let evaluationAvg = 0;
         let truthinessSum = 0;
         let evaluationSum = 0;
+        let totalWeight = 0;
 
         // get total votes
         if (consequenceDB.data().totalVotes === undefined) {
@@ -862,60 +863,18 @@ exports.calcValidateEval = functions.firestore
           evaluationAvg = evaluationSum / totalVotes;
 
         }
-
+        totalWeight = truthinessAvg*evaluationAvg;
 
         return transaction.update(consequenceRef, {
           totalVotes,
           evaluationSum,
           evaluationAvg,
           truthinessAvg,
-          truthinessSum
+          truthinessSum,
+          totalWeight
         });
       });
     });
   });
 
-// exports.totalVoters = functions.firestore
-//   .document(
-//     "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{op" +
-//     "tionId}/likes/{userId}"
-//   )
-//   .onCreate((change, context) => {
-//     var newLike = change.data().like;
 
-//     var optionLikesRef = db
-//       .collection("groups")
-//       .doc(context.params.groupId)
-//       .collection("questions")
-//       .doc(context.params.questionId)
-//       .collection("subQuestions")
-//       .doc(context.params.subQuestionId)
-//       .collection("options")
-//       .doc(context.params.optionId);
-
-//     return db.runTransaction((transaction) => {
-//       return transaction.get(optionLikesRef).then((optionDoc) => {
-//         // Compute new number of ratings
-//         var totalVotes = newLike;
-//         if (optionDoc.data().totalVotes !== undefined) {
-//           totalVotes = optionDoc.data().totalVotes + newLike;
-//         }
-//         var totalVoters = 1;
-//         if (optionDoc.data().totalVoters !== undefined) {
-//           totalVoters = optionDoc.data().totalVoters + 1;
-//         }
-
-//         // calaculate consensus precentage: simple consensus let consensusPrecentage =
-//         // totalVotes / totalVoters; consensus with respect to group size
-//         let consensusPrecentage =
-//           (totalVotes / totalVoters) * (Math.log(totalVoters) / Math.log(10));
-
-//         // Update restaurant info
-//         return transaction.update(optionLikesRef, {
-//           totalVoters,
-//           totalVotes,
-//           consensusPrecentage,
-//         });
-//       });
-//     });
-//   });

@@ -7,6 +7,7 @@ import store from '../../data/store';
 //function
 import { get } from 'lodash';
 import { listenToOption, listenToChat, listenToConsequences } from '../../functions/firebase/get/get';
+import { randomizeArray } from '../../functions/general';
 
 
 // components
@@ -54,11 +55,17 @@ module.exports = {
         unsubscribeChat = listenToChat({ groupId, questionId, subQuestionId, optionId })
         listenToConsequences(groupId, questionId, subQuestionId, optionId)
 
+        sortBy(vnode)
+
     },
     onbeforeupdate: vnode => {
         const { optionId } = vnode.attrs;
         vnode.state.option = get(store, `option[${optionId}]`, {})
-        vnode.state.consequences = store.consequences[optionId] || [];
+        vnode.state.consequences =  store.consequences[optionId] || [];
+
+        console.log('before update')
+        sortBy(vnode)
+       
     },
     onremove: vnode => {
         unsubscribe();
@@ -98,41 +105,55 @@ module.exports = {
                         {consequences[0] === false ? <Spinner /> :
                             consequences.map(consequence => {
 
-                                return <Consequence consequence={consequence} />
+                                return <Consequence consequence={consequence} key={consequence.consequenceId} />
                             })
                         }
                         {vnode.state.subPage === 'main' ?
-                            <div class="subQuestion__arrange" id="questionFooter">
+                            <div class="optionPage__menu" id="questionFooter">
                                 <div
                                     class={vnode.state.orderBy == "new"
                                         ? "footerButton footerButtonSelected"
                                         : "footerButton"}
                                     onclick={() => {
                                         vnode.state.orderBy = "new";
+                                        sortBy(vnode)
                                     }}>
-                                    <img src='img/new.svg' alt='order by newest' />
+                                    <img src='img/newGray.svg' alt='order by newest' />
                                     <div>חדש</div>
                                 </div>
                                 <div
-                                    class={vnode.state.orderBy == "top"
+                                    class={vnode.state.orderBy == "for"
                                         ? "footerButton footerButtonSelected"
                                         : "footerButton"}
                                     onclick={() => {
-                                        vnode.state.orderBy = "top";
+                                        vnode.state.orderBy = "for";
+                                        sortBy(vnode)
                                     }}>
-                                    <img src='img/truth.svg' alt='order by most agreed' />
-                                    <div>אמינות</div>
+                                    <img src='img/voteUpGray.svg' alt='order by newest' />
+                                    <div>בעד</div>
+                                </div>
+                                <div
+                                    class={vnode.state.orderBy == "against"
+                                        ? "footerButton footerButtonSelected"
+                                        : "footerButton"}
+                                    onclick={() => {
+                                        vnode.state.orderBy = "against";
+                                        sortBy(vnode)
+                                    }}>
+                                    <img src='img/voteDownGray.svg' alt='order by most agreed' />
+                                    <div>נגד</div>
                                 </div>
 
                                 <div
-                                    class={vnode.state.orderBy == "message"
+                                    class={vnode.state.orderBy == "random"
                                         ? "footerButton footerButtonSelected"
                                         : "footerButton"}
                                     onclick={() => {
-                                        vnode.state.orderBy = "message";
+                                        vnode.state.orderBy = "random";
+                                        sortBy(vnode)
                                     }}>
-                                    <img src='img/talk.svg' alt='order by last talks' />
-                                    <div>שיחות אחרונות</div>
+                                    <img src='img/random.svg' alt='order by last talks' />
+                                    <div>אקראי</div>
                                 </div>
                             </div> : null
                         }
@@ -170,4 +191,32 @@ module.exports = {
             </div>
         )
     }
+}
+
+
+function sortBy(vnode) {
+    const {optionId} = vnode.attrs;
+    const { orderBy, consequences } = vnode.state;
+    let k = [];
+    
+    switch (orderBy) {
+        case 'new':
+            vnode.state.consequences = consequences.sort((a, b) => b.time.seconds - a.time.seconds);
+            break;
+        case 'for':
+            vnode.state.consequences = consequences.sort((a, b) => b.totalWeight - a.totalWeight);
+            break;
+        case 'against':
+            vnode.state.consequences = consequences.sort((a, b) => a.totalWeight - b.totalWeight);
+            break;
+        case 'random':
+            
+            store.consequences[optionId]=randomizeArray(consequences);
+            break;
+        default:
+          
+            vnode.state.consequences = consequences.sort((a, b) => b.time.seconds - a.time.seconds);
+
+    }
+  
 }

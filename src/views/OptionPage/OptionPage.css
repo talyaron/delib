@@ -13,3 +13,12 @@
     font-size: var(--size15);
     padding: 0px 20px;
 }
+
+.optionPage__menu{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    position: fixed;
+    bottom: 64px;
+    left: 0px;
+}
