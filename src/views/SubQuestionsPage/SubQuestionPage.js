@@ -99,10 +99,10 @@ module.exports = {
             <div class='page'>
                 {vnode.state.details.title
                     ? (
-                        <div class='page-grid-subQuestion' style={!(vnode.state.details.userHaveNavigation == true || vnode.state.details.userHaveNavigation !== undefined) && vnode.state.subPage === 'main'? '' : 'grid-template-rows: fit-content(100px) auto;'}>
+                        <div class='page-grid-subQuestion' style={!(vnode.state.details.userHaveNavigation == true || vnode.state.details.userHaveNavigation !== undefined) && vnode.state.subPage === 'main' ? '' : 'grid-template-rows: fit-content(100px) auto;'}>
                             <div class="subQuestionHeader">
                                 <Header
-                                    title={vnode.state.details.title}
+                                    title='שאלה'
                                     upLevelUrl={vnode.state.details.userHaveNavigation || vnode.state.details.userHaveNavigation == undefined ? `/question/${groupId}/${questionId}` : false}
                                     groupId={groupId}
                                     questionId={questionId}
@@ -121,6 +121,8 @@ module.exports = {
                             </div>
                             {vnode.state.subPage === 'main' ?
                                 <SubQuestion
+                                    vsp={vnode.state}
+                                    question={vnode.state.details.title}
                                     groupId={groupId}
                                     questionId={questionId}
                                     subQuestionId={subQuestionId}
@@ -143,7 +145,7 @@ module.exports = {
 
                             {/* ---------------- Footer -------------- */}
                             {vnode.state.subPage === 'main' ?
-                                <div class={userCanNevigate(vnode)?"subQuestion__arrange":"subQuestion__arrange subQuestion__arrange--bottom"} id="questionFooter">
+                                <div class={userCanNevigate(vnode) ? "subQuestion__arrange" : "subQuestion__arrange subQuestion__arrange--bottom"} id="questionFooter">
                                     <div
                                         class={vnode.state.details.orderBy == "new"
                                             ? "footerButton footerButtonSelected"
@@ -207,6 +209,6 @@ module.exports = {
     }
 };
 
-function userCanNevigate(vnode){
+function userCanNevigate(vnode) {
     return (vnode.state.details.userHaveNavigation == true || vnode.state.details.userHaveNavigation == undefined)
 }

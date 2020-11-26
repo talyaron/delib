@@ -11,6 +11,17 @@
     align-items: center;
 }
 
+.subQuestion__question{
+  
+    background: var(--primary);
+    max-width: var(--maxWidthOnPC);
+    color: var(--white);
+    margin: auto;
+    padding: var(--regPadding);
+    border-radius: var(--roundBorder);
+    font-size: var(--size17);
+}
+
 
 .subQuestionWrapper{
     width: 100%;
@@ -19,10 +30,18 @@
  
 }
 
-.addOptionButton{
+.subQuestion__addOptionWrapper{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.subQuestion__addOption{
     border-radius: 5px;
     border: 2px solid white;
     padding: 4px 20px;
     user-select: none;
     cursor: pointer;
+    width: fit-content;
 }

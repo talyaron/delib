@@ -64,11 +64,20 @@ module.exports = {
 		unsubscribeOptions();
 	},
 	view: (vnode) => {
-
+		const { question, vsp } = vnode.attrs
 		return (
 			<div class="subQuestionWrapper" id="optionsWrapper">
 				<div class={vnode.attrs.isAlone ? "questionSection questionSection--alone" : "questionSection"}>
+					<div class='subQuestion__question'>
+						<div></div>{question}
+						<div class='subQuestion__addOptionWrapper'>
+							<div class='subQuestion__addOption' onclick={() => { vsp.showModal.isShow = true }}>
+								הוספת פתרון
+						</div>
+						</div>
+					</div>
 					<h1>פתרונות שונים לשאלה</h1>
+
 					{switchProcess(vnode.state.processType, vnode)}
 
 
