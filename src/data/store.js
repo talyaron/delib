@@ -27,6 +27,8 @@ var store = {
     optionsDetails: {}, //vote on options by user
     consequences:{}, //store consequnces in theis format: {optionId:[]}
     consequencesListen:{}, //use to store if listen to consequences on spesific option
+    consequencesTop:{}, //used to store top consequnces for an option format {optionId:[consequences]}
+    consequencesTopListen:{}, //used to store top consequnces for an option (listner) format: {optionId:true}
     messagesShow: {}, // history of messages to show
     listenToMessages:{}, //store if user listen to notification {entityId:true}
     feedsUnsubscribe: {}, // used for feed unsubscribes

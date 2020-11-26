@@ -1,6 +1,6 @@
 import m from "mithril";
 import { DB } from "../config";
-import store from "../../../data/store";
+import store, { consequencesTop } from "../../../data/store";
 
 //functions
 import { orderBy, set } from 'lodash';
@@ -432,7 +432,7 @@ function listenToConsequences(groupId, questionId, subQuestionId, optionId) {
     try {
         if (!{}.hasOwnProperty.call(store.consequencesListen, optionId)) {
             store.consequencesListen[optionId] = true;
-          
+
 
             DB
                 .collection('groups')
@@ -446,8 +446,8 @@ function listenToConsequences(groupId, questionId, subQuestionId, optionId) {
                 .collection('consequences')
                 .onSnapshot(consequencesDB => {
                     const consequences = [];
-                    consequencesDB.forEach(consequenceDB=>{
-                        consequences.push( consequenceDB.data());
+                    consequencesDB.forEach(consequenceDB => {
+                        consequences.push(consequenceDB.data());
                     })
                     store.consequences[optionId] = consequences;
                     m.redraw();
@@ -460,30 +460,74 @@ function listenToConsequences(groupId, questionId, subQuestionId, optionId) {
     }
 }
 
-function getMyVotesOnConsequence(groupId, questionId, subQuestionId, optionId, consequenceId){
-    try{
+function listenToTopConsequences(ids) {
+    console.log()
+    try {
+        const { groupId, questionId, subQuestionId, optionId } = ids;
 
-      return  DB
-        .collection('groups')
-        .doc(groupId)
-        .collection('questions')
-        .doc(questionId)
-        .collection('subQuestions')
-        .doc(subQuestionId)
-        .collection('options')
-        .doc(optionId)
-        .collection('consequences')
-        .doc(consequenceId)
-        .collection('voters')
-        .doc(store.user.uid)
-        .get().then(voteDB => {
-            return voteDB.data();
-        })
-        .catch(e=>{
-            console.error(e)
-        })
+        if (groupId === undefined) throw new Error('groupId is missing in listenToTopConsequences');
+        if (questionId === undefined) throw new Error('questionId is missing in listenToTopConsequences');
+        if (subQuestionId === undefined) throw new Error('subQuestionId is missing in listenToTopConsequences');
+        if (optionId === undefined) throw new Error('optionId is missing in listenToTopConsequences');
 
-    } catch(e){
+        if (!{}.hasOwnProperty.call(store.consequencesTopListen, optionId)) {
+            store.consequencesTopListen[optionId] = true;
+            store.consequencesTop[optionId] = []
+
+            DB
+                .collection('groups')
+                .doc(groupId)
+                .collection('questions')
+                .doc(questionId)
+                .collection('subQuestions')
+                .doc(subQuestionId)
+                .collection('options')
+                .doc(optionId)
+                .collection('consequences')
+                .orderBy('totalWeightAbs', 'desc')
+                .limit(3)
+                .onSnapshot(consequencesDB => {
+                    let consequences = [];
+                    consequencesDB.forEach(consequenceDB => {
+                        consequences.push(consequenceDB.data())
+                    })
+
+                    store.consequencesTop[optionId] = consequences;
+                    console.log(consequences)
+                    m.redraw();
+                })
+        }
+
+    }
+    catch (e) {
+        console.error
+    }
+}
+
+function getMyVotesOnConsequence(groupId, questionId, subQuestionId, optionId, consequenceId) {
+    try {
+
+        return DB
+            .collection('groups')
+            .doc(groupId)
+            .collection('questions')
+            .doc(questionId)
+            .collection('subQuestions')
+            .doc(subQuestionId)
+            .collection('options')
+            .doc(optionId)
+            .collection('consequences')
+            .doc(consequenceId)
+            .collection('voters')
+            .doc(store.user.uid)
+            .get().then(voteDB => {
+                return voteDB.data();
+            })
+            .catch(e => {
+                console.error(e)
+            })
+
+    } catch (e) {
         console.error(e)
     }
 
@@ -909,6 +953,7 @@ module.exports = {
     listenToOptions,
     listenToOption,
     listenToConsequences,
+    listenToTopConsequences,
     getMyVotesOnConsequence,
     getOptionVote,
     getSubItems,

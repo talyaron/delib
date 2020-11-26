@@ -179,3 +179,9 @@
     font-size: var(--size13);
 
 }
+
+.option__consequnces{
+    padding: var(--regPadding);
+    cursor: pointer;
+    user-select: none;
+}

@@ -864,6 +864,7 @@ exports.calcValidateEval = functions.firestore
 
         }
         totalWeight = truthinessAvg*evaluationAvg;
+        let totalWeightAbs = Math.abs(totalWeight)
 
         return transaction.update(consequenceRef, {
           totalVotes,
@@ -871,7 +872,8 @@ exports.calcValidateEval = functions.firestore
           evaluationAvg,
           truthinessAvg,
           truthinessSum,
-          totalWeight
+          totalWeight,
+          totalWeightAbs
         });
       });
     });
