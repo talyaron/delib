@@ -8,6 +8,7 @@ import {getColorForPercentage, calcOpacity} from '../../../functions/general'
 
 module.exports = {
     oninit: async vnode => {
+        try{
         vnode.state = {
             color: 'white',
             opacity: 1,
@@ -19,12 +20,15 @@ module.exports = {
         const { groupId, questionId, subQuestionId, optionId, consequenceId, evaluationAvg, truthinessAvg } = vnode.attrs.consequence;
         let { truthiness, evaluation } = await getMyVotesOnConsequence(groupId, questionId, subQuestionId, optionId, consequenceId);
 
-        if (truthiness !== undefined) vnode.state.truthiness = truthiness;
-        if (evaluation !== undefined) vnode.state.evaluation = evaluation;
+        if (truthiness !== undefined) {vnode.state.truthiness = truthiness} else {truthiness = 1};
+        if (evaluation !== undefined) {vnode.state.evaluation = evaluation } else {evaluation = 0};
         vnode.state.color = getColorForPercentage((evaluationAvg + 1) * 0.5 || 0);
         vnode.state.opacity = calcOpacity(truthinessAvg * 100);
 
         m.redraw();
+        } catch(e){
+            console.error(e)
+        }
     },
     onbeforeupdate: vnode => {
         const { truthinessAvg, evaluationAvg, title } = vnode.attrs.consequence;

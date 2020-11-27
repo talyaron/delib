@@ -19,3 +19,29 @@
     width: calc(100% - 2*var(--regPadding));
     height: 16vh;
 }
+
+.addVideo{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    padding: 50px;
+    background: white;
+    border-radius: var(--roundBorder);
+    width: var(--maxWidthOnPC);
+    box-sizing: border-box;
+}
+
+.addVideo__background{
+    position: fixed;
+    background-color: #00000099;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100;
+}
+.addVideo input{
+    width: 95%;
+    margin-bottom: 20px;
+}
