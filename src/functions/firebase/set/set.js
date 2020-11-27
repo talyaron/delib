@@ -398,6 +398,33 @@ function setOptionActive(groupId, questionId, subQuestionId, optionId, isActive)
     }
 
 }
+
+function updateOptionDescription(ids, description){
+    try{
+        const {groupId, questionId, subQuestionId, optionId} = ids;
+
+        DB
+        .collection('groups')
+        .doc(groupId)
+        .collection('questions')
+        .doc(questionId)
+        .collection('subQuestions')
+        .doc(subQuestionId)
+        .collection('options')
+        .doc(optionId)
+        .update({description})
+        .then(()=>{
+            console.info(`a description was updated on option ${optionId}`)
+        })
+        .catch(e=>{
+            console.error(e)
+        })
+
+    }catch(e){
+        console.error(e)
+    }
+}
+
 function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like) {
     DB
         .collection('groups')
@@ -827,6 +854,7 @@ module.exports = {
     deleteSubQuestion,
     setSubQuestionsOrder,
     createOption,
+    updateOptionDescription,
     createConsequence,
     voteConsequence,
     setOptionActive,

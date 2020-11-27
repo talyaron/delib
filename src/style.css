@@ -210,6 +210,16 @@ body {
     background: rgba(255, 255, 255, 0.191);
 }
 
+.buttonOutlineGray {
+    background: rgba(255, 255, 255, 0);
+    border: 1px solid rgb(63, 63, 63);
+    color: rgb(63, 63, 63) ;
+}
+
+.buttonOutlineGray:hover {
+    background: rgb(126 122 122 / 21%);
+}
+
 .confirm {
     background: #51d051;
 }

@@ -80,6 +80,9 @@
     cursor: pointer;
     user-select: none;
 }
+.option__card__description>p{
+    margin: 4px 0px;
+}
 
 .option__card__description>textarea {
     width: 95%;

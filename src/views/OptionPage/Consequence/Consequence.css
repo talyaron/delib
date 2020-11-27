@@ -2,7 +2,6 @@
     background-color: var(--white);
     padding: var(--regPadding);
     border-radius: var(--roundBorder);
-    margin: 10px;
 }
 
 .consequence>h1 {

@@ -577,6 +577,23 @@ function getColorForPercentage(pct) {
     // or output as hex if preferred
 };
 
+function changeTextToArray(text) {
+    try {
+        if (text === undefined) {
+            return [];
+
+        } else if (typeof text !== 'string') {
+            throw `text is not a string. text = ${text} `;
+
+        } else {
+            return text.split("\n");
+        }
+    } catch (e) {
+        console.error(e);
+        return []
+    }
+}
+
 module.exports = {
     Reference,
     createRefString,
@@ -601,5 +618,6 @@ module.exports = {
     getEntityId,
     randomizeArray,
     calcOpacity,
-    getColorForPercentage
+    getColorForPercentage,
+    changeTextToArray
 }

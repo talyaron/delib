@@ -1,0 +1,21 @@
+.description{
+    max-width: var(--maxWidthOnPC);
+    margin: var(--regPadding) auto;
+    padding: var(--regPadding);
+    background: var(--white);
+    border-radius: var(--roundBorder);
+    box-sizing: border-box;
+}
+.description h1{
+    font-size: var(--size17);
+   
+}
+.description p{
+    font-size: var(--size15);
+    color: var(--gray1);
+}
+
+.description textarea{
+    width: calc(100% - 2*var(--regPadding));
+    height: 16vh;
+}

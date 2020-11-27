@@ -61,11 +61,11 @@ module.exports = {
     onbeforeupdate: vnode => {
         const { optionId } = vnode.attrs;
         vnode.state.option = get(store, `option[${optionId}]`, {})
-        vnode.state.consequences =  store.consequences[optionId] || [];
+        vnode.state.consequences = store.consequences[optionId] || [];
 
-        
+
         sortBy(vnode)
-       
+
     },
     onremove: vnode => {
         unsubscribe();
@@ -74,7 +74,6 @@ module.exports = {
     view: vnode => {
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
         const { option, subPage, consequences } = vnode.state;
-
 
         return (
             <div class='page page-grid-option' style={subPage == 'main' ? '' : `grid-template-rows: fit-content(100px) auto;`}>
@@ -99,15 +98,17 @@ module.exports = {
                 </div>
                 {subPage === 'main' ?
                     <div class='optionPage__main'>
-                        הסבר: {option.description}
-                        <Description />
-                        <h2>אם הפתרון הזה ייבחר,  אילו דברים יקרו?</h2>
-                        {consequences[0] === false ? <Spinner /> :
-                            consequences.map(consequence => {
 
-                                return <Consequence consequence={consequence} key={consequence.consequenceId} />
-                            })
-                        }
+                        <Description option={option} />
+                        <div class='optionPage__consequences'>
+                            <h1>אם הפתרון הזה ייבחר,  אילו דברים יקרו?</h1>
+                            {consequences[0] === false ? <Spinner /> :
+                                consequences.map(consequence => {
+
+                                    return <Consequence consequence={consequence} key={consequence.consequenceId} />
+                                })
+                            }
+                        </div>
                         {vnode.state.subPage === 'main' ?
                             <div class="optionPage__menu" id="questionFooter">
                                 <div
@@ -195,10 +196,10 @@ module.exports = {
 
 
 function sortBy(vnode) {
-    const {optionId} = vnode.attrs;
+    const { optionId } = vnode.attrs;
     const { orderBy, consequences } = vnode.state;
     let k = [];
-    
+
     switch (orderBy) {
         case 'new':
             vnode.state.consequences = consequences.sort((a, b) => b.time.seconds - a.time.seconds);
@@ -210,13 +211,13 @@ function sortBy(vnode) {
             vnode.state.consequences = consequences.sort((a, b) => a.totalWeight - b.totalWeight);
             break;
         case 'random':
-            
-            store.consequences[optionId]=randomizeArray(consequences);
+
+            store.consequences[optionId] = randomizeArray(consequences);
             break;
         default:
-          
+
             vnode.state.consequences = consequences.sort((a, b) => b.time.seconds - a.time.seconds);
 
     }
-  
+
 }

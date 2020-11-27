@@ -9,9 +9,9 @@
     padding-bottom: 200px;
 }
 
-.optionPage__main>h2{
+.optionPage__main h1{
     font-size: var(--size15);
-    padding: 0px 20px;
+    
 }
 
 .optionPage__menu{
@@ -21,4 +21,9 @@
     position: fixed;
     bottom: 64px;
     left: 0px;
+}
+
+.optionPage__consequences{
+    max-width: var(--maxWidthOnPC);
+    margin: var(--regPadding) auto;
 }

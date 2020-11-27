@@ -5,7 +5,7 @@ import "./Option.css";
 import store, { consequencesTop } from "../../../../../data/store";
 
 //functions
-import { calcOpacity, getColorForPercentage } from '../../../../../functions/general';
+import { calcOpacity, getColorForPercentage, changeTextToArray } from '../../../../../functions/general';
 import {
   setLike,
   updateOption,
@@ -138,10 +138,12 @@ module.exports = {
   },
   view: (vnode) => {
     try {
-      const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
+      const { groupId, questionId, subQuestionId, optionId,description } = vnode.attrs;
 
-      let consequencesTop = get(store.consequencesTop, `[${optionId}]`, [])
-      console.log(consequencesTop)
+      let consequencesTop = get(store.consequencesTop, `[${optionId}]`, []);
+
+      const descriptionParagraphs = changeTextToArray(description)
+     
       return (
         <div
           class="optionCard"
@@ -197,7 +199,9 @@ module.exports = {
 
               <div class="option__card__description" onclick={() => { if (!vnode.state.isEdit) { m.route.set(`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) } }}>
                 {!vnode.state.isEdit ? (
-                  <span>{vnode.attrs.description}</span>
+                  descriptionParagraphs.map((paragraph, index)=>{
+                    return (<p key={index}>{paragraph}</p>)
+                  })
                 ) : (
                     <textarea
                       value={vnode.state.description}
