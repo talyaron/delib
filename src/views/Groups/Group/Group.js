@@ -8,19 +8,24 @@ import store from '../../../data/store';
 import {getRandomColor} from '../../../functions/general'
 
 module.exports = {
+    oncreate:vnode=>{
+        m.redraw()
+    },
 
     view: (vnode) => {
 
+        const {groupColor, logo, id, description,title, route} = vnode.attrs;
+
         return (
-            <div class='card groupCard' onclick={() => { m.route.set(vnode.attrs.route + vnode.attrs.id) }}>
-                <div class='groupCard__img' style={vnode.attrs.logo? 
-                    `background-image: url(${vnode.attrs.logo})`
-                    :`background:${getRandomColor()}`}>
+            <div class='card groupCard' onclick={() => { m.route.set(route + id) }}>
+                <div class='groupCard__img' style={logo? 
+                    `background-image: url(${logo})`
+                    :`background:${groupColor}`}>
                    
                 </div>
                 <div class='groupCard__info'>
-                    <h1 class='cardTitle'>{vnode.attrs.title}</h1>
-                    <p class='cardDescription'>{vnode.attrs.description}</p>
+                    <h1 class='cardTitle'>{title}</h1>
+                    <p class='cardDescription'>{description}</p>
                 </div>
                 
             </div>

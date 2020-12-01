@@ -1,7 +1,7 @@
 import m from 'mithril';
 import { DB } from '../config';
 import store from '../../../data/store';
-import { Reference, concatenateDBPath, uniqueId, generateChatEntitiyId, createIds } from '../../general';
+import { Reference, concatenateDBPath, uniqueId, generateChatEntitiyId, createIds,getRandomColor } from '../../general';
 import { merge } from 'lodash';
 
 function createGroup(creatorId, title, description) {
@@ -17,7 +17,8 @@ function createGroup(creatorId, title, description) {
                 creatorId: creatorId,
                 time: new Date().getTime(),
                 groupId,
-                id: groupId
+                id: groupId,
+                groupColor:getRandomColor()
             })
             .then(() => {
                 console.log(groupId)

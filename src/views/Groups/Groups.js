@@ -14,7 +14,7 @@ import Spinner from '../Commons/Spinner/Spinner'
 //functions
 import { getUserGroups } from '../../functions/firebase/get/get';
 import { restrictedPage } from '../../functions/logins';
-import { setWrapperHeight } from '../../functions/general';
+import { setWrapperHeight,getRandomColor } from '../../functions/general';
 
 import store from '../../data/store';
 
@@ -53,6 +53,7 @@ module.exports = {
                         route='/group/'
                         title={group.title}
                         description={group.description}
+                        groupColor={group.groupColor || getRandomColor()}
                         id={group.id}
                         key={key}
                         logo={group.logo}
