@@ -331,7 +331,7 @@ function createConsequence(groupId, questionId, subQuestionId, optionId, creator
             })
             .then(() => {
                 
-                voteConsequence(groupId, questionId, subQuestionId, optionId, consequenceId,1,goodBad)
+                voteConsequence({groupId, questionId, subQuestionId, optionId, consequenceId},1,goodBad)
                 
                 console.info('consequence', consequenceId, 'was saved') })
             .catch(e => { console.error(e) })
@@ -341,11 +341,20 @@ function createConsequence(groupId, questionId, subQuestionId, optionId, creator
 
 }
 
-function voteConsequence(groupId, questionId, subQuestionId, optionId, consequenceId, truthiness, evaluation) {
+function voteConsequence(ids, truthiness, evaluation) {
     try {
 
+        const {groupId, questionId, subQuestionId, optionId, consequenceId} = ids;
+
         if(truthiness === undefined) throw new Error('No truthiness in voteConsequence', truthiness);
-        if(evaluation === undefined) throw new Error('No evaluation in voteConsequence', evaluation)
+        if(evaluation === undefined) throw new Error('No evaluation in voteConsequence', evaluation);
+
+        if (isNaN(truthiness)) throw new Error('truthiness is not a number', value);
+        if (truthiness < 0 || truthiness > 1) throw new Error('truthiness is out of range (0 -->1):', truthiness);
+
+        if (isNaN(evaluation)) throw new Error('evaluation is not a number', value);
+        if (evaluation < -1 || evaluation > 1) throw new Error('evaluation is out of range (-1 --> 1):', evaluation);
+
 
         const userId = store.user.uid
         

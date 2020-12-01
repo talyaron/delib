@@ -4,56 +4,66 @@ import './Consequence.css';
 //function
 import { voteConsequence } from '../../../functions/firebase/set/set';
 import { getMyVotesOnConsequence } from '../../../functions/firebase/get/get';
-import {getColorForPercentage, calcOpacity} from '../../../functions/general'
+import { getColorForPercentage, calcOpacity } from '../../../functions/general'
 
 module.exports = {
     oninit: async vnode => {
-        try{
-        vnode.state = {
-            color: 'white',
-            opacity: 1,
-            truthiness: 1,
-            evaluation: 0,
-        }
+        try {
 
-        //get truthness and evaluation from voter preivous votes
-        const { groupId, questionId, subQuestionId, optionId, consequenceId, evaluationAvg, truthinessAvg } = vnode.attrs.consequence;
-        let { truthiness, evaluation } = await getMyVotesOnConsequence(groupId, questionId, subQuestionId, optionId, consequenceId);
+            const { groupId, questionId, subQuestionId, optionId, consequenceId, evaluationAvg, truthinessAvg } = vnode.attrs.consequence;
 
-        if (truthiness !== undefined) {vnode.state.truthiness = truthiness} else {truthiness = 1};
-        if (evaluation !== undefined) {vnode.state.evaluation = evaluation } else {evaluation = 0};
-        vnode.state.color = getColorForPercentage((evaluationAvg + 1) * 0.5 || 0);
-        vnode.state.opacity = calcOpacity(truthinessAvg * 100);
+            vnode.state = {
+                color: getColorForPercentage((evaluationAvg + 1) * 0.5 || 0),
+                opacity: calcOpacity(truthinessAvg * 100) || 1,
+                truthiness: 1,
+                evaluation: 0,
+            }
 
-        m.redraw();
-        } catch(e){
+            //get truthness and evaluation from voter preivous votes
+            
+            let { truthiness, evaluation } = await getMyVotesOnConsequence(groupId, questionId, subQuestionId, optionId, consequenceId);
+
+            console.log('1)',truthiness, evaluation)
+
+            
+           
+            if (typeof truthiness === 'number' && !isNaN(truthiness)) { vnode.state.truthiness = truthiness } else { vnode.state.truthiness = 1 };
+            if (typeof evaluation === 'number' && !isNaN(evaluation)) { vnode.state.evaluation = evaluation } else { vnode.state.evaluation = 0 };
+
+           
+            console.log('2)', vnode.state.truthiness, vnode.state.evaluation)
+
+            m.redraw();
+        } catch (e) {
             console.error(e)
         }
     },
     onbeforeupdate: vnode => {
-        const { truthinessAvg, evaluationAvg, title } = vnode.attrs.consequence;
+        const { truthinessAvg, evaluationAvg } = vnode.attrs.consequence;
         vnode.state.color = getColorForPercentage((evaluationAvg + 1) / 2);
         vnode.state.opacity = calcOpacity(truthinessAvg * 100);
 
 
     },
     view: vnode => {
+      
         try {
-            const { title, description, consequenceId } = vnode.attrs.consequence
+            const { title, description, consequenceId } = vnode.attrs.consequence;
+            const { showColor } = vnode.attrs;
 
             return (
-                <div class='consequence' key={consequenceId} style={`background: ${vnode.state.color}; opacity:${vnode.state.opacity}`}>
+                <div class='consequence' key={consequenceId} style={`background: ${showColor ? vnode.state.color : 'white'}; opacity:${showColor ? vnode.state.opacity : 1}`}>
                     <h1>{title}</h1>
                     <p>{description}</p>
                     <hr></hr>
                     <div class='consequence__scores'>
                         <div class='consequence__score'>
                             <p>האם זה טוב או רע?</p>
-                            <p><span>רע</span><input type='range' onchange={e => handleEval(e, vnode)} min='-100' max='100' defaultValue={vnode.state.evaluation * 100} /><span>טוב</span></p>
+                            <p><span>רע</span><input type='range' onchange={e => handleEval(e, vnode)} min='-1' max='1' step='0.01' defaultValue={vnode.state.evaluation} /><span>טוב</span></p>
                         </div>
                         <div class='consequence__score'>
                             <p>האם לדעתך זה יקרה?</p>
-                            <p><span>לא</span><input type='range' onchange={e => handleTruthness(e, vnode)} defaultValue={vnode.state.truthiness * 100} /><span> כן</span></p>
+                            <p><span>לא</span><input type='range' onchange={e => handleTruthness(e, vnode)} defaultValue={vnode.state.truthiness} min='0' max='1' step='0.005' /><span> כן</span></p>
                         </div>
                     </div>
                 </div>
@@ -66,13 +76,17 @@ module.exports = {
 }
 function handleEval(e, vnode) {
     try {
-        const value = e.target.valueAsNumber * 0.01;
+        const value = e.target.valueAsNumber;
+        if (isNaN(value)) throw new Error('value is not a number', value);
+        if (value < -1 || value > 1) throw new Error('value is out of range (-1 -->1):', value);
 
         const { groupId, questionId, subQuestionId, optionId, consequenceId } = vnode.attrs.consequence;
 
         vnode.state.evaluation = value;
 
-        voteConsequence(groupId, questionId, subQuestionId, optionId, consequenceId, vnode.state.truthiness * .01, value)
+      
+
+        voteConsequence({ groupId, questionId, subQuestionId, optionId, consequenceId }, vnode.state.truthiness, value)
     } catch (e) {
         console.error(e)
     }
@@ -84,9 +98,15 @@ function handleTruthness(e, vnode) {
     try {
         const value = e.target.valueAsNumber;
 
+        if (isNaN(value)) throw new Error('value is not a number', value);
+        if (value < 0 || value > 1) throw new Error('value is out of range (0 -->1):', value);
+
+
         const { groupId, questionId, subQuestionId, optionId, consequenceId } = vnode.attrs.consequence;
 
-        voteConsequence(groupId, questionId, subQuestionId, optionId, consequenceId, value * 0.01, vnode.state.evaluation)
+      
+
+        voteConsequence({ groupId, questionId, subQuestionId, optionId, consequenceId }, value, vnode.state.evaluation)
     } catch (e) {
         console.error(e)
     }

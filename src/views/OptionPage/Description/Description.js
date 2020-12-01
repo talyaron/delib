@@ -39,7 +39,7 @@ module.exports = {
         const { description, creatorId, optionId } = vnode.attrs.option;
 
         const descriptionParagraphs = changeTextToArray(vnode.state.description);
-        console.log(descriptionParagraphs)
+
 
         return (
             <div class='description'>
@@ -50,7 +50,7 @@ module.exports = {
                     <div class='description__text'  >
                         {
                             descriptionParagraphs.map((paragaph, index) => {
-                                console.log(paragaph)
+
                                 return (convertParagraphsToVisual(paragaph, index))
                             })
                         }
@@ -124,7 +124,7 @@ function handleAddVideo(e, vnode) {
     if (vnode.state.videoUrl !== false) {
 
         const descriptionTextarea = document.getElementById(`optionDescription${optionId}`);
-        console.log(descriptionTextarea)
+
         vnode.state.description += `\n--video:${vnode.state.videoUrl}***\n`
         descriptionTextarea.value += `\n--video:${vnode.state.videoUrl}***\n`
         vnode.state.addVideo = false;
@@ -138,30 +138,28 @@ function convertParagraphsToVisual(paragraph, index) {
     try {
         if (typeof paragraph !== 'string') { throw new Error(`Paragraph ${index + 1} is not a string: ${paragraph}`) }
 
-        console.log(paragraph)
-
         const videoRexExp = new RegExp('--video:');
         const endUrl = paragraph.indexOf('***');
         const videoInit = paragraph.indexOf('--video')
-        
-        if (endUrl > -1) {
-            paragraph = paragraph.slice(0,endUrl)
-            paragraph = paragraph.slice(videoInit+8)
-            console.log(videoInit,endUrl, paragraph)
 
-            //convert to embed string: https://www.youtube.com/embed/_4kHxtiuML0
+        if (endUrl > -1) {
+            paragraph = paragraph.slice(0, endUrl)
+            paragraph = paragraph.slice(videoInit + 8)
+        
+
+            //TODO: convert to embed string: https://www.youtube.com/embed/_4kHxtiuML0
             // https://www.youtube.com/watch?v=_4kHxtiuML0&t=7827s
             //https://youtu.be/_4kHxtiuML0
 
-           return (
-            <iframe width="100%" height='300' src={paragraph} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-           )
+            return (
+                <iframe width="100%" height='300' src={paragraph} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            )
         } else {
             return (<p key={index}>{paragraph}</p>)
         }
 
 
-       
+
         // const url = 
         // if(videoRexExp.test(pargraph)){
         //     return(

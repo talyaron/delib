@@ -63,8 +63,9 @@ module.exports = {
         vnode.state.option = get(store, `option[${optionId}]`, {})
         vnode.state.consequences = store.consequences[optionId] || [];
 
+        
 
-        sortBy(vnode)
+        if(vnode.state.orderBy !=='random'){ sortBy(vnode)}
 
     },
     onremove: vnode => {
@@ -102,12 +103,15 @@ module.exports = {
                         <Description option={option} />
                         <div class='optionPage__consequences'>
                             <h1>אם הפתרון הזה ייבחר,  אילו דברים יקרו?</h1>
-                            {consequences[0] === false ? <Spinner /> :
-                                consequences.map(consequence => {
+                            <h3>{consequencesExplanation(vnode)}</h3>
+                            <div class='consequencesWrapper'>
+                                {consequences[0] === false ? <Spinner /> :
+                                    consequences.map(consequence => {
 
-                                    return <Consequence consequence={consequence} key={consequence.consequenceId} />
-                                })
-                            }
+                                        return <Consequence consequence={consequence} key={consequence.consequenceId} showColor={showColor(vnode)} />
+                                    })
+                                }
+                            </div>
                         </div>
                         {vnode.state.subPage === 'main' ?
                             <div class="optionPage__menu" id="questionFooter">
@@ -197,8 +201,10 @@ module.exports = {
 
 function sortBy(vnode) {
     const { optionId } = vnode.attrs;
-    const { orderBy, consequences } = vnode.state;
+    const { orderBy } = vnode.state;
     let k = [];
+
+    let consequences = store.consequences[optionId] || [];
 
     switch (orderBy) {
         case 'new':
@@ -220,4 +226,50 @@ function sortBy(vnode) {
 
     }
 
+}
+
+function consequencesExplanation(vnode) {
+    switch (vnode.state.orderBy) {
+        case 'new':
+
+            return "מסודר על פי סדר הכתיבה"
+
+        case 'for':
+            return "הסברים בעד"
+
+        case 'against':
+            return "הסברים נגד"
+
+        case 'random':
+
+            return "מסודר אקראי"
+            break;
+        default:
+            return ""
+
+
+    }
+}
+
+function showColor(vnode) {
+    switch (vnode.state.orderBy) {
+        case 'new':
+
+            return false
+
+        case 'for':
+            return true
+
+        case 'against':
+            return true
+
+        case 'random':
+
+            return false
+
+        default:
+            return true
+
+
+    }
 }
