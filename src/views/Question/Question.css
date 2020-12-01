@@ -94,6 +94,7 @@
     box-sizing: 2px 2px;
     box-shadow: 2px 2px 4px #0000006e;
     color: #4c4a4a;
+    font-size: var(--size13);
 }
 
 .subQuestionsWrapper{

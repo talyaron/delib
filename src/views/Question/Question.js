@@ -27,7 +27,7 @@ module.exports = {
 
         const { groupId, questionId } = vnode.attrs;
 
-        let subQuestions = get(store.subQuestions, `[${groupId}]`, [])
+        let subQuestions = get(store.subQuestions, `[${groupId}]`, [    ])
         subQuestions = subQuestions.sort((a, b) => a.order - b.order);
 
         vnode.state = {
@@ -129,16 +129,16 @@ module.exports = {
             <div class='page page-grid-question' style={vnode.state.subPage == 'main' ? '' : `grid-template-rows: fit-content(200px) auto`}>
                 <div class='question__header'>
                     <Header
-                        topic='שאלה'
-                        title={vnode.state.title}
+                        topic='נושא'
+                        title='נושא'
                         upLevelUrl={`/group/${vnode.attrs.groupId}`}
                         groupId={vnode.attrs.groupId}
                         showSubscribe={true}
                         questionId={vnode.attrs.questionId}
                     />
-                    <NavTop level={'שאלה'} current={vnode.state.subPage} pvs={vnode.state} mainUrl={`/question/${groupId}/${questionId}`} chatUrl={`/question-chat/${groupId}/${questionId}`} ids={{ groupId, questionId }} />
+                    <NavTop level={'שאלות'} current={vnode.state.subPage} pvs={vnode.state} mainUrl={`/question/${groupId}/${questionId}`} chatUrl={`/question-chat/${groupId}/${questionId}`} ids={{ groupId, questionId }} />
                     <Description
-                        title='הסבר'
+                        title={vnode.state.title}
                         content={vnode.state.description}
                         groupId={vnode.attrs.groupId}
                         questionId={vnode.attrs.questionId}

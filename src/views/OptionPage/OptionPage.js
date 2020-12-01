@@ -205,10 +205,10 @@ function sortBy(vnode) {
             vnode.state.consequences = consequences.sort((a, b) => b.time.seconds - a.time.seconds);
             break;
         case 'for':
-            vnode.state.consequences = consequences.sort((a, b) => b.totalWeight - a.totalWeight);
+            vnode.state.consequences = consequences.filter(el => el.totalWeight > 0).sort((a, b) => b.totalWeight - a.totalWeight);
             break;
         case 'against':
-            vnode.state.consequences = consequences.sort((a, b) => a.totalWeight - b.totalWeight);
+            vnode.state.consequences = consequences.filter(el => el.totalWeight < 0).sort((a, b) => a.totalWeight - b.totalWeight);
             break;
         case 'random':
 

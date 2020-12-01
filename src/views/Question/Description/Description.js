@@ -10,7 +10,7 @@ module.exports = {
     view: (vnode) => {
 
         return (
-            <div class='questionDescription '>
+            <div class='questionDescription title'>
                 <div class='questionDescription__title'>{vnode.attrs.title}</div>
                 <div class='questionDescription__text'>
                     {vnode.attrs.content}

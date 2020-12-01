@@ -16,7 +16,7 @@ module.exports = {
     oninit: async vnode => {
 
         vnode.state = {
-            edit: true,
+            edit: false,
             description: '',
             addVideo: false,
             videoUrl: false,
