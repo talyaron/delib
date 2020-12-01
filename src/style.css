@@ -2,7 +2,7 @@
     --mainBackground: #32527b;
     --subBackground: #ee7171;
     --mainColor: white;
-    --accent: blue;
+    
     --textHeader: rgba(0, 0, 0, 0.78);
     --textHeaderSize: 1.3rem;
     --textHeaderWeight: 600;
@@ -13,7 +13,8 @@
     --textRegularSize: 1rem;
     --maxWidthOnPC: 550px;
 
-    --primary: #4269E2;
+    --accent: #4269E2;
+    --primary: #2196f3;
     --halfPrimary: #7994E7;
     --secondary: #F0F4FF;
     --additional: #F2F2F2;
@@ -29,6 +30,7 @@
     --roundBorderLarge: 16px;
 
     /* font sizes */
+    --size21: 2.2rem;
     --size17: 1.4rem;
     --size16: 1.3rem;
     --size15: 1.2rem;
@@ -91,6 +93,24 @@ body {
     color: var(--black);
     font-size: var(--size15);
 }
+
+.title{
+    font-size: var(--size21);
+    background-color: var(--primary);
+    color: white;
+    padding: 20px;
+    border-radius: 0px 0px var(--roundBorder) var(--roundBorder);
+    margin: 0px auto;
+    box-sizing: border-box;
+    width: 50vw;
+    word-wrap: break-word;
+}
+
+@media (max-width: 600px) {
+    .title{
+        width: 80vw;
+    }
+  }
 
 .card p {
     color: var(--gray1);
@@ -179,7 +199,7 @@ body {
     width: max-content;
     padding: 12px 25px;
     margin: 5px 10px;
-    background: var(--primary);
+    background: var(--accent);
     color: white;
     border: none;
     border-radius: 5px;
@@ -260,7 +280,7 @@ body {
     color: white;
     text-align: center;
     font-size: 3rem;
-    background: var(--primary);
+    background: var(--accent);
     width: 50px;
     height: 50px;
     border-radius: 25px;

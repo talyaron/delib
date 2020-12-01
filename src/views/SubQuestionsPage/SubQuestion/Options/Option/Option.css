@@ -178,7 +178,7 @@
 }
 
 .optionCard__creator {
-    color: var(--primary);
+    color: var(--accent);
     font-size: var(--size13);
 
 }

@@ -37,7 +37,7 @@
 }
 
 .subQuestionSolution--noAnswer>p{
-    color: var(--primary);
+    color: var(--accent);
 }
 
 .subQuestionSolution__info {

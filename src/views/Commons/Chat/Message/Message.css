@@ -55,7 +55,7 @@
 }
 
 .message--me .message__text{
-    background-color: var(--primary);
+    background-color: var(--accent);
     color:var(--white);
     border-radius: 24px 0px 24px 24px;
 }

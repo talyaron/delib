@@ -38,7 +38,7 @@
 }
 
 .chatFeedMessage__unRead {
-    background-color: var(--primary);
+    background-color: var(--accent);
     color: var(--white);
     font-size: 10px;
     width: 15px;

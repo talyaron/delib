@@ -84,39 +84,46 @@ module.exports = {
     },
     view: vnode => {
 
+
+
         return (
             <div class='page'>
                 <div class='page-grid' style={vnode.state.subPage == 'main' ? '' : `grid-template-rows: 52px 40px;`}>
                     <Header
                         upLevelUrl='/groups'
                         topic='קבוצה'
-                        title={vnode.state.groupName}
+                        title='קבוצה'
                         isAdmin={vnode.state.isAdmin}
                         editPageLink={`/editgroup/${vnode.attrs.id}`}
                         groupId={vnode.attrs.id}
                         showSubscribe={true}
                     />
-                    <NavTop level={'קבוצה'} current={vnode.state.subPage} pvs={vnode.state} mainUrl={`/group/${vnode.attrs.id}`} chatUrl={`/group-chat/${vnode.attrs.id}`} ids={{ groupId: vnode.attrs.id }} />
+                    <NavTop level={'נושאים שונים של הקבוצה'} current={vnode.state.subPage} pvs={vnode.state} mainUrl={`/group/${vnode.attrs.id}`} chatUrl={`/group-chat/${vnode.attrs.id}`} ids={{ groupId: vnode.attrs.id }} />
 
 
                     {vnode.state.subPage == 'main' ?
+
                         <div class='questionsWrapper' id='groupWrapper'>
+                            <div class='title'>קבוצה: {vnode.state.groupName}</div>
                             <h1>נושאים שונים של הקבוצה</h1>
                             {vnode.state.questions[0] === false ?
                                 <Spinner />
                                 :
-                                vnode.state.questions.map((question, key) => {
+                                <div class='questionsWrapper__inear'>
+                                    {vnode.state.questions.map((question, key) => {
 
-                                    return (
-                                        <QuestionCard
-                                            route={'/question/' + vnode.attrs.id + '/'}
-                                            question={question}
-                                            key={key}
-                                        />
-                                    )
-                                })
+                                        return (
+                                            <QuestionCard
+                                                route={'/question/' + vnode.attrs.id + '/'}
+                                                question={question}
+                                                key={key}
+                                            />
+                                        )
+                                    })}
+                                </div>
                             }
                         </div>
+
                         :
                         <Chat
                             entity='group'

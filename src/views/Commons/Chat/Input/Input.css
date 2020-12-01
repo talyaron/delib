@@ -13,7 +13,7 @@
 .input textarea{
     background-color: var(--gray5);
     border-radius: 6px;
-    border:2px solid var(--primary);
+    border:2px solid var(--accent);
     min-height: 4rem;
     resize: none;
     height: 80%;

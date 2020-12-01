@@ -13,7 +13,7 @@
 
 .subQuestion__question{
   
-    background: var(--primary);
+    background: var(--accent);
     max-width: var(--maxWidthOnPC);
     color: var(--white);
     margin: auto;

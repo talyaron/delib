@@ -24,6 +24,6 @@
 }
 
 .navTop__btn--selected{
-    border-bottom: 2px solid var(--primary);
+    border-bottom: 2px solid var(--accent);
     color: var(--black);
 }

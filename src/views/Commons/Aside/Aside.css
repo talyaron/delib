@@ -14,7 +14,7 @@ aside {
 
 .topAside {
     height: 200px;
-    background: var(--primary);
+    background: var(--accent);
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
