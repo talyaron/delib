@@ -262,7 +262,7 @@ function listenToOption(ids) {
 
       _mithril["default"].redraw();
     });
-    console.log(_store["default"].option);
+   
   } catch (e) {
     console.error(e);
   }

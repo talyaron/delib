@@ -16,7 +16,7 @@ import NavTop from '../Commons/NavTop/NavTop';
 import Chat from '../Commons/Chat/Chat';
 
 //functions
-import { getSubQuestion, getGroupDetails, listenToChat } from "../../functions/firebase/get/get";
+import { getSubQuestion, getGroupDetails, listenToChat ,listenToOptions} from "../../functions/firebase/get/get";
 import { getIsChat, concatenateDBPath } from '../../functions/general';
 import { get } from "lodash";
 
@@ -59,6 +59,9 @@ module.exports = {
             subscribed: false,
             path: concatenateDBPath(groupId, questionId, subQuestionId)
         }
+       
+
+        listenToOptions(groupId, questionId, subQuestionId, 'top');
     },
     oncreate: vnode => {
         const { groupId, questionId, subQuestionId } = vnode.attrs;
@@ -69,7 +72,7 @@ module.exports = {
         vnode.state.subscribed = get(store.subscribe, `[${vnode.state.path}]`, false)
 
         getGroupDetails(groupId);
-        console.log(vnode.state.details)
+      
     },
     onbeforeupdate: vnode => {
         const { groupId, subQuestionId } = vnode.attrs;

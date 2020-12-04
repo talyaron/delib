@@ -1,7 +1,7 @@
 import m from 'mithril';
 import { DB } from '../config';
 import store from '../../../data/store';
-import { Reference, concatenateDBPath, uniqueId, generateChatEntitiyId, createIds,getRandomColor } from '../../general';
+import { Reference, concatenateDBPath, uniqueId, generateChatEntitiyId, createIds, getRandomColor } from '../../general';
 import { merge } from 'lodash';
 
 function createGroup(creatorId, title, description) {
@@ -18,10 +18,10 @@ function createGroup(creatorId, title, description) {
                 time: new Date().getTime(),
                 groupId,
                 id: groupId,
-                groupColor:getRandomColor()
+                groupColor: getRandomColor()
             })
             .then(() => {
-                console.log(groupId)
+
                 DB
                     .collection("users")
                     .doc(store.user.uid)
@@ -83,7 +83,7 @@ function updateQuestion(groupId, questionId, title, description, authorizationOb
             .doc(questionId)
             .update({ title, description, authorization: authorizationObj })
             .then((something) => {
-                console.log('writen succesufuly');
+                console.info('writen succesufuly');
             })
             .catch(function (error) {
                 console.error('Error adding document: ', error);
@@ -161,7 +161,7 @@ function setSubQuestion(ids, settings) {
         if (subQuestionId === undefined) {
             //new subQuestion
             const uid = uniqueId()
-            console.log('uid', uid)
+
             subQuestionRef.doc(uid).set({ title, processType, orderBy, groupId, questionId, subQuestionId: uid, userHaveNavigation, showSubQuestion, order: numberOfSubquestions, creator: store.user.uid })
                 .then(() => { `saved subQuestion ${uid} to DB` })
                 .catch(e => {
@@ -230,7 +230,7 @@ function updateSubQuestionsOrder(groupId, questionId, newOrderArray) {
             }
         })
         .then((something) => {
-            console.log('writen succesufuly');
+            console.info('writen succesufuly');
         })
         .catch(function (error) {
             console.error('Error adding document: ', error);
@@ -248,7 +248,7 @@ function setSubQuestionsOrder(groupId, questionId, subQuestionId, order) {
             .doc(subQuestionId)
             .update({ order })
             .then((something) => {
-                console.log(`writen to ${subQuestionId} succesufuly`);
+                console.info(`writen to ${subQuestionId} succesufuly`);
             })
             .catch(function (error) {
                 console.error('Error adding document: ', error);
@@ -299,7 +299,7 @@ function createConsequence(groupId, questionId, subQuestionId, optionId, creator
 
         const consequenceId = uniqueId();
 
-      const consequenceRef = DB
+        const consequenceRef = DB
             .collection('groups')
             .doc(groupId)
             .collection('questions')
@@ -311,7 +311,7 @@ function createConsequence(groupId, questionId, subQuestionId, optionId, creator
             .collection('consequences')
             .doc(consequenceId);
 
-            consequenceRef
+        consequenceRef
             .set({
                 groupId,
                 questionId,
@@ -330,10 +330,11 @@ function createConsequence(groupId, questionId, subQuestionId, optionId, creator
                 isActive: true
             })
             .then(() => {
-                
-                voteConsequence({groupId, questionId, subQuestionId, optionId, consequenceId},1,goodBad)
-                
-                console.info('consequence', consequenceId, 'was saved') })
+
+                voteConsequence({ groupId, questionId, subQuestionId, optionId, consequenceId }, 1, goodBad)
+
+                console.info('consequence', consequenceId, 'was saved')
+            })
             .catch(e => { console.error(e) })
     } catch (e) {
         console.error(e)
@@ -344,10 +345,10 @@ function createConsequence(groupId, questionId, subQuestionId, optionId, creator
 function voteConsequence(ids, truthiness, evaluation) {
     try {
 
-        const {groupId, questionId, subQuestionId, optionId, consequenceId} = ids;
+        const { groupId, questionId, subQuestionId, optionId, consequenceId } = ids;
 
-        if(truthiness === undefined) throw new Error('No truthiness in voteConsequence', truthiness);
-        if(evaluation === undefined) throw new Error('No evaluation in voteConsequence', evaluation);
+        if (truthiness === undefined) throw new Error('No truthiness in voteConsequence', truthiness);
+        if (evaluation === undefined) throw new Error('No evaluation in voteConsequence', evaluation);
 
         if (isNaN(truthiness)) throw new Error('truthiness is not a number', value);
         if (truthiness < 0 || truthiness > 1) throw new Error('truthiness is out of range (0 -->1):', truthiness);
@@ -357,7 +358,7 @@ function voteConsequence(ids, truthiness, evaluation) {
 
 
         const userId = store.user.uid
-        
+
 
         DB
             .collection('groups')
@@ -380,7 +381,7 @@ function voteConsequence(ids, truthiness, evaluation) {
                     .firestore
                     .FieldValue
                     .serverTimestamp()
-            }, {merge:true})
+            }, { merge: true })
             .then(() => { console.info('consequence', consequenceId, 'was voted') })
             .catch(e => { console.error(e) })
     } catch (e) {
@@ -390,7 +391,7 @@ function voteConsequence(ids, truthiness, evaluation) {
 
 function setOptionActive(groupId, questionId, subQuestionId, optionId, isActive) {
 
-    console.log(groupId, questionId, subQuestionId, optionId, isActive)
+
 
     try {
         DB
@@ -409,28 +410,28 @@ function setOptionActive(groupId, questionId, subQuestionId, optionId, isActive)
 
 }
 
-function updateOptionDescription(ids, description){
-    try{
-        const {groupId, questionId, subQuestionId, optionId} = ids;
+function updateOptionDescription(ids, description) {
+    try {
+        const { groupId, questionId, subQuestionId, optionId } = ids;
 
         DB
-        .collection('groups')
-        .doc(groupId)
-        .collection('questions')
-        .doc(questionId)
-        .collection('subQuestions')
-        .doc(subQuestionId)
-        .collection('options')
-        .doc(optionId)
-        .update({description})
-        .then(()=>{
-            console.info(`a description was updated on option ${optionId}`)
-        })
-        .catch(e=>{
-            console.error(e)
-        })
+            .collection('groups')
+            .doc(groupId)
+            .collection('questions')
+            .doc(questionId)
+            .collection('subQuestions')
+            .doc(subQuestionId)
+            .collection('options')
+            .doc(optionId)
+            .update({ description })
+            .then(() => {
+                console.info(`a description was updated on option ${optionId}`)
+            })
+            .catch(e => {
+                console.error(e)
+            })
 
-    }catch(e){
+    } catch (e) {
         console.error(e)
     }
 }
@@ -509,7 +510,7 @@ function sendMessage({ groupId, questionId, subQuestionId, optionId, message, ti
                     .FieldValue
                     .serverTimestamp()
             })
-                .then(() => { console.log('saved correctly') })
+                .then(() => { console.info('message saved correctly') })
                 .catch(err => {
                     console.error(err)
                 })
@@ -563,12 +564,12 @@ function setMessage(groupId, questionId, subQuestionId, optionId, creatorId, cre
                         .FieldValue
                         .serverTimestamp()
                 })
-                .then((doc) => {
-                    console.log('updated last message');
-                });
+                .catch(e => {
+                    console.error(e)
+                })
         })
         .catch((error) => {
-            console.log('Error:', error);
+            console.error('Error:', error);
         });
 }
 
@@ -644,10 +645,10 @@ function setLikeToSubItem(subItemsType, groupId, questionId, subQuestionId, crea
 
     if (isUp) {
         subQuestionRef.set({ like: 1 });
-        console.log('set like to ', subQuestionId);
+
     } else {
         subQuestionRef.set({ like: 0 });
-        console.log('unset like to ', subQuestionId);
+
     }
 }
 
@@ -694,7 +695,7 @@ function addToFeed(addRemove, pathArray, refString, collectionOrDoc) {
                 refString
             })
             .then(() => {
-                console.log('added entety to DB', refString);
+
                 store.subscribed[refString] = true;
                 console.dir(store.subscribed);
             })
@@ -757,18 +758,11 @@ function subscribeUser(settings) {
         const { groupId, questionId, subQuestionId, optionId, title, entityType } = settings.vnode.attrs;
         const { subscribe } = settings;
 
-        // console.log(groupId, questionId, subQuestionId, optionId, subscribe);
 
-
-
-        // DB.doc(`groups/${groupId}`).get().then(groupDB=>{console.log(groupDB.data())}
-        // ) build path for the enenties subscription collection
+        //build path for the enenties subscription collection
         const subscriptionPath = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
         let chatEntityId = generateChatEntitiyId({ groupId, questionId, subQuestionId, optionId });
 
-        console.log(subscriptionPath)
-        console.log(chatEntityId)
-        console.log('is subscribed:', subscribe)
 
         const { uid, displayName, email, photoURL } = store.user
 

@@ -30,11 +30,10 @@ module.exports = {
 		const va = vnode.attrs;
 
 	
-		unsubscribeOptions = listenToOptions(va.groupId, va.questionId, va.subQuestionId, 'top', true);
+		listenToOptions(va.groupId, va.questionId, va.subQuestionId, 'top', true);
 	},
 	onremove: (vnode) => {
-		// unsubscribe();
-		unsubscribeOptions();
+	
 	},
 	view: vnode => {
 

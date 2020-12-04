@@ -23,15 +23,11 @@ module.exports = {
             
             let { truthiness, evaluation } = await getMyVotesOnConsequence(groupId, questionId, subQuestionId, optionId, consequenceId);
 
-            console.log('1)',truthiness, evaluation)
-
-            
+         
            
             if (typeof truthiness === 'number' && !isNaN(truthiness)) { vnode.state.truthiness = truthiness } else { vnode.state.truthiness = 1 };
             if (typeof evaluation === 'number' && !isNaN(evaluation)) { vnode.state.evaluation = evaluation } else { vnode.state.evaluation = 0 };
 
-           
-            console.log('2)', vnode.state.truthiness, vnode.state.evaluation)
 
             m.redraw();
         } catch (e) {

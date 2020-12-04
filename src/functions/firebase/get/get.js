@@ -263,11 +263,10 @@ function getSubQuestion(groupId, questionId, subQuestionId, isSingle) {
 
 function listenToOptions(groupId, questionId, subQuestionId, order = 'top', isSingle = false) {
     try {
-
+     
         if (!{}.hasOwnProperty.call(store.optionsListen, subQuestionId)) {
             //signal that this questionId options are listend to
             store.optionsListen[subQuestionId] = true;
-
 
             let optionsRef = DB
                 .collection("groups")
@@ -301,6 +300,7 @@ function listenToOptions(groupId, questionId, subQuestionId, order = 'top', isSi
                 .onSnapshot(optionsDB => {
                     let optionsArray = [];
                     optionsDB.forEach(optionDB => {
+
 
                         //this is a patch TODO: change all data to query of active or not active options
                         if (optionDB.data().isActive == null || optionDB.data().isActive == true) {
@@ -461,7 +461,7 @@ function listenToConsequences(groupId, questionId, subQuestionId, optionId) {
 }
 
 function listenToTopConsequences(ids) {
-    console.log()
+
     try {
         const { groupId, questionId, subQuestionId, optionId } = ids;
 
@@ -493,7 +493,7 @@ function listenToTopConsequences(ids) {
                     })
 
                     store.consequencesTop[optionId] = consequences;
-                    console.log(consequences)
+                   
                     m.redraw();
                 })
         }

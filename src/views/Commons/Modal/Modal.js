@@ -140,7 +140,6 @@ function setNewInfo(vnp, vnode) {
 
   let userName = vnode.state.isNamed ? store.user.name : 'אונוימי/ת';
   
-  console.log(vnp.state)
 	
   createOption(
 		vnp.attrs.groupId,
@@ -180,12 +179,5 @@ function toggleShowModal(onOff, vnode) {
 
 function isAnonymous(e, vnode) {
 	vnode.state.isNamed = e.target.checked;
-	console.log(e.target.checked);
-	// if (e.target.checked) {
-	//   vnode.state.isNamed = false;
-	// } else {
-	//   vnode.state.isNamed = true;
-	// }
-	console.log(vnode.state.isNamed);
-	// e.target.checked = e.target.checked;
+	
 }

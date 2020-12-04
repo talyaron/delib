@@ -32,8 +32,7 @@ if ('Notification' in window) {
     });
 
     MESSAGING.onMessage(function (payload) {
-        console.log('Message received. ', payload);
-        // ...
+
     });
 }
 
@@ -68,11 +67,11 @@ function subscribeToNotification(ids, subscribe = true) {
            
             MESSAGING.requestPermission()
                 .then(() => {
-                    console.log('Notification permission granted.');
+                    console.info('Notification permission granted.');
                     handleTokenRefresh(ids, subscribe);
                 })
                 .catch(function (err) {
-                    console.log('Unable to get permission to notify.', err);
+                    console.info('Unable to get permission to notify.', err);
                 });
 
         }
@@ -133,39 +132,7 @@ function handleTokenRefresh(ids, subscribe) {
                     tokenRef.update({ [deviceUniqueId]: firebase.firestore.FieldValue.delete() })
                 }
 
-                // tokenRef
-                //     .get()
-                //     .then((docDB) => {
-                //         const tokenObj = {
-                //             token,
-                //             userId: store.user.uid
-                //         };
-
-                //         if (docDB.exists) {
-                //             //if token exists
-
-                //             if (typeof entityId == 'string') {
-                //                 //if new entity subscribed, add it to pushentities array under token
-
-                //                 let tokenSet = new Set(docDB.data().pushEntities);
-                //                 tokenSet.add(entityId);
-                //                 tokenObj.pushEntities = new Array(...tokenSet);
-                //             }
-
-                //             tokenRef.update(tokenObj);
-                //         } else {
-                //             if (typeof entityId == 'string') {
-                //                 tokenObj.pushEntities = [entityId];
-                //             }
-                //             tokenRef.set(tokenObj);
-                //         }
-                //     })
-                //     .then(() => {
-                //         console.log('token saved to DB');
-                //     })
-                //     .catch((err) => {
-                //         console.log(err);
-                //     });
+               
             });
         }
     } catch (e) {

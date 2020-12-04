@@ -19,7 +19,7 @@ import SubQuestionEditModal from './SubQuestionEditModal/SubQuestionEditModal';
 import store from '../../data/store';
 //functions
 import { getQuestionDetails, getSubQuestion, listenSubQuestions, listenToChat } from '../../functions/firebase/get/get';
-import { setSubQuestionsOrder } from '../../functions/firebase/set/set';
+import {  } from '../../functions/firebase/set/set';
 import { deep_value, getIsChat } from '../../functions/general';
 
 module.exports = {

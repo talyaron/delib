@@ -13,7 +13,6 @@ module.exports = {
         try{
         const { message } = vnode.attrs;
         const { msg } = message;
-        console.log(msg)
 
         return (
             <div class='chatFeedMessage' onclick={() => { zeroChatFeedMessages(msg.ids); m.route.set(msg.url) }}>

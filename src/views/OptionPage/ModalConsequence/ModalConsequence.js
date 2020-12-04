@@ -50,7 +50,7 @@ function handleSubmit(e, vnode) {
         const { pvs } = vnode.attrs;
         const { option } = pvs;
         const { groupId, questionId, subQuestionId, optionId } = option;
-        console.log(store.user)
+        
         createConsequence(groupId, questionId, subQuestionId, optionId, store.user.uid, title, description, goodBad, store.user.name)
         pvs.showModal = false;
     } catch (e) {

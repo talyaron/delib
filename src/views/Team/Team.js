@@ -15,7 +15,7 @@ module.exports = {
                 m('div', { style: { display: 'flex', 'overflow': 'hidden' } },
                     m(FLIP, {
                         move: (vnodeChild, flip) => {
-                            console.log('move()', vnodeChild, flip)
+                          
                             let flipBounding = flip.boundingClients[vnodeChild.key]
                             let diff = flipBounding.deltaX
                             let anim = [
@@ -27,7 +27,7 @@ module.exports = {
                                 duration: 1000,
                             })
                             waapi.onfinish = (e) => {
-                                console.log('finished')
+                             
                             }
 
                         }

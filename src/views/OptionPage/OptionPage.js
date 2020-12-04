@@ -167,7 +167,7 @@ module.exports = {
                             class="fav fav__subQuestion fav--blink"
                             onclick={() => {
                                 vnode.state.showModal = true;
-                                console.log('vnode.state.showModal', vnode.state.showModal)
+                           
                             }}>
                             <div>
                                 <div>+</div>

@@ -10,16 +10,15 @@ import Modal from '../../Commons/Modal/Modal';
 //model
 import settings from '../../../data/settings';
 import store from '../../../data/store';
-import { EntityModel } from '../../../data/dataTypes';
+
 
 //functions
-import { getSubQuestion, listenToOptions, getGroupDetails } from '../../../functions/firebase/get/get';
-import { subscribeToNotification, unsubscribeFromNotification } from '../../../functions/firebase/messaging';
+import { getSubQuestion, getGroupDetails } from '../../../functions/firebase/get/get';
 import { get } from 'lodash';
 
 let unsubscribe = () => { };
 let unsubscribeOptions = () => { };
-let subQuestionObj;
+
 
 module.exports = {
 	oninit: (vnode) => {
@@ -51,7 +50,8 @@ module.exports = {
 		let va = vnode.attrs;
 
 		unsubscribe = getSubQuestion(va.groupId, va.questionId, va.subQuestionId);
-		unsubscribeOptions = listenToOptions(va.groupId, va.questionId, va.subQuestionId, 'top');
+
+
 	},
 
 	onbeforeupdate: (vnode) => {
@@ -138,28 +138,33 @@ function switchProcess(type, vnode) {
 }
 
 function orderOptionsBy(options, orderBy) {
-	switch (orderBy) {
-		case 'new':
-			return options.sort((a, b) => {
-				return b.time.seconds - a.time.seconds;
-			});
-		case 'top':
-			return options.sort((a, b) => {
-				return b.consensusPrecentage - a.consensusPrecentage;
-			});
-		case 'message':
-			for (let i in options) {
-				if (!options[i].hasOwnProperty('lastMessage')) {
-					options[i]['lastMessage'] = { seconds: 0 };
+	try {
+		switch (orderBy) {
+			case 'new':
+				return options.sort((a, b) => {
+					return b.time.seconds - a.time.seconds;
+				});
+			case 'top':
+				return options.sort((a, b) => {
+					return b.consensusPrecentage - a.consensusPrecentage;
+				});
+			case 'message':
+				for (let i in options) {
+					if (!options[i].hasOwnProperty('lastMessage')) {
+						options[i]['lastMessage'] = { seconds: 0 };
+					}
 				}
-			}
 
-			return options.sort((a, b) => {
-				return b.lastMessage.seconds - a.lastMessage.seconds;
-			});
-		default:
-			return options.sort((a, b) => {
-				return b.consensusPrecentage - a.consensusPrecentage;
-			});
+				return options.sort((a, b) => {
+					return b.lastMessage.seconds - a.lastMessage.seconds;
+				});
+			default:
+				return options.sort((a, b) => {
+					return b.consensusPrecentage - a.consensusPrecentage;
+				});
+		}
+	} catch(e){
+		console.error(e);
+	
 	}
 }
