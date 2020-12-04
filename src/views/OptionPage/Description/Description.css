@@ -32,6 +32,23 @@
     box-sizing: border-box;
 }
 
+.addVideo b{
+    color:black;
+   
+    animation: emphasize 0.4s ease-in-out 0s infinite alternate;
+}
+
+@keyframes emphasize {
+    from {
+        
+        color: black;
+    }
+    to {
+       
+        color: rgb(220 220 220);
+    }
+  }
+
 .addVideo__background{
     position: fixed;
     background-color: #00000099;

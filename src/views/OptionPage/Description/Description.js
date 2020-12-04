@@ -19,7 +19,7 @@ module.exports = {
             edit: false,
             description: '',
             addVideo: false,
-            videoUrl: false,
+            youtubeVideoId: false,
             addPicture: true
         }
 
@@ -73,7 +73,9 @@ module.exports = {
                 {vnode.state.addVideo ?
                     <div class='addVideo__background'>
                         <div class='addVideo'>
-                            <input class='inputGeneral' type='text' oninput={e => { handleInputVideo(e, vnode) }} placeholder='Enter youtube video url' />
+                            <p>יש לרשום רק את ה-id של הוידאו</p>
+                            <p>https://www.youtube.com/watch?v=<b>PHhOoVVqOzI</b></p>
+                            <input class='inputGeneral' type='text' oninput={e => { handleInputVideo(e, vnode) }} placeholder='Enter youtube video id' />
                             <div class='buttonsBox'>
                                 <div class='buttons buttonOutlineGray' onclick={e => { handleAddVideo(e, vnode) }}>הוספה</div>
                                 <div class='buttons buttonOutlineGray' onclick={() => { vnode.state.addVideo = false; vnode.state.edit = false }}>ביטול</div>
@@ -102,15 +104,16 @@ function handleEditSave(vnode) {
 
 function handleInputVideo(e, vnode) {
     let videoUrl = e.target.value;
-    const urlRegExp = new RegExp('https://youtu.be/');
-    const urlLongRegExp = new RegExp('https://www.youtube.com/');
-    if (urlRegExp.test(videoUrl) || urlLongRegExp.test(videoUrl)) {
 
-        vnode.state.videoUrl = videoUrl;
+    let videIdRegExp = /^[A-Za-z0-9_-]{11}$/
+
+    if (videIdRegExp.test(videoUrl)) {
+
+        vnode.state.youtubeVideoId = videoUrl;
         e.target.style.background = '#64ff64'
     } else {
 
-        vnode.state.videoUrl = false;
+        vnode.state.youtubeVideoId = false;
         e.target.style.background = '#ff9d9d'
     }
 
@@ -121,12 +124,12 @@ function handleAddVideo(e, vnode) {
 
     const { optionId } = vnode.attrs.option;
 
-    if (vnode.state.videoUrl !== false) {
+    if (vnode.state.youtubeVideoId !== false) {
 
         const descriptionTextarea = document.getElementById(`optionDescription${optionId}`);
 
-        vnode.state.description += `\n--video:${vnode.state.videoUrl}***\n`
-        descriptionTextarea.value += `\n--video:${vnode.state.videoUrl}***\n`
+        vnode.state.description += `\n--video:${vnode.state.youtubeVideoId}***\n`
+        descriptionTextarea.value += `\n--video:${vnode.state.youtubeVideoId}***\n`
         vnode.state.addVideo = false;
 
         // m.redraw();
@@ -138,21 +141,26 @@ function convertParagraphsToVisual(paragraph, index) {
     try {
         if (typeof paragraph !== 'string') { throw new Error(`Paragraph ${index + 1} is not a string: ${paragraph}`) }
 
+
+
         const videoRexExp = new RegExp('--video:');
         const endUrl = paragraph.indexOf('***');
-        const videoInit = paragraph.indexOf('--video')
+        const videoInit = paragraph.indexOf('--video');
+
+        console.log(paragraph)
 
         if (endUrl > -1) {
             paragraph = paragraph.slice(0, endUrl)
             paragraph = paragraph.slice(videoInit + 8)
-        
 
-            //TODO: convert to embed string: https://www.youtube.com/embed/_4kHxtiuML0
-            // https://www.youtube.com/watch?v=_4kHxtiuML0&t=7827s
-            //https://youtu.be/_4kHxtiuML0
+
+            // //TODO: convert to embed string: https://www.youtube.com/embed/_4kHxtiuML0
+            // // https://www.youtube.com/watch?v=_4kHxtiuML0&t=7827s
+            // //https://youtu.be/_4kHxtiuML0
 
             return (
-                <iframe width="100%" height='300' src={paragraph} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                //     <iframe width="100%" height='300' src={paragraph} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="100%" height='300' src={'https://www.youtube.com/embed/' + paragraph} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen ></iframe >
             )
         } else {
             return (<p key={index}>{paragraph}</p>)
