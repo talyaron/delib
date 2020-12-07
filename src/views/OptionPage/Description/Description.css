@@ -20,6 +20,10 @@
     height: 16vh;
 }
 
+.description__text img{
+    width: 100%;
+}
+
 .addVideo{
     position: fixed;
     top: 50%;

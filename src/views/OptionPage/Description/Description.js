@@ -4,6 +4,7 @@ import './Description.css';
 //functions
 import { changeTextToArray } from '../../../functions/general';
 import { updateOptionDescription } from '../../../functions/firebase/set/set';
+import { storage } from '../../../functions/firebase/config'
 
 
 //data
@@ -20,7 +21,7 @@ module.exports = {
             description: '',
             addVideo: false,
             youtubeVideoId: false,
-            addPicture: true
+            addPicture: false
         }
 
 
@@ -79,6 +80,19 @@ module.exports = {
                             <div class='buttonsBox'>
                                 <div class='buttons buttonOutlineGray' onclick={e => { handleAddVideo(e, vnode) }}>הוספה</div>
                                 <div class='buttons buttonOutlineGray' onclick={() => { vnode.state.addVideo = false; vnode.state.edit = false }}>ביטול</div>
+                            </div>
+                        </div>
+                    </div>
+                    : null
+                }
+                {vnode.state.addPicture ?
+                    <div class='addVideo__background'>
+                        <div class='addVideo'>
+                            <h2>הוסיפו תמונה</h2>
+                            <input class='inputGeneral' type='file' onchange={e => { handleUploadImage(e, vnode) }} />
+                            <div class='buttonsBox'>
+                                <div class='buttons buttonOutlineGray' onclick={e => { handleAddPicture(e, vnode) }}>הוספה</div>
+                                <div class='buttons buttonOutlineGray' onclick={() => { vnode.state.addPicture = false; vnode.state.edit = false }}>ביטול</div>
                             </div>
                         </div>
                     </div>
@@ -146,36 +160,62 @@ function convertParagraphsToVisual(paragraph, index) {
         const videoRexExp = new RegExp('--video:');
         const endUrl = paragraph.indexOf('***');
         const videoInit = paragraph.indexOf('--video');
+        const pictureInit = paragraph.indexOf('--imgSrc');
 
         console.log(paragraph)
 
         if (endUrl > -1) {
-            paragraph = paragraph.slice(0, endUrl)
-            paragraph = paragraph.slice(videoInit + 8)
+            if (videoInit > -1) {
+                paragraph = paragraph.slice(0, endUrl)
+                paragraph = paragraph.slice(videoInit + 8)
 
+                return (
+                    //     <iframe width="100%" height='300' src={paragraph} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <iframe width="100%" height='300' src={'https://www.youtube.com/embed/' + paragraph} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen ></iframe >
+                )
+            } else if (pictureInit > -1) {
+                paragraph = paragraph.slice(0, endUrl)
+                paragraph = paragraph.slice(videoInit + 10);
 
-            // //TODO: convert to embed string: https://www.youtube.com/embed/_4kHxtiuML0
-            // // https://www.youtube.com/watch?v=_4kHxtiuML0&t=7827s
-            // //https://youtu.be/_4kHxtiuML0
+                console.log(paragraph)
 
-            return (
-                //     <iframe width="100%" height='300' src={paragraph} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                <iframe width="100%" height='300' src={'https://www.youtube.com/embed/' + paragraph} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen ></iframe >
-            )
-        } else {
+                return (
+                   
+                    <img src={paragraph} alt='image of option' />
+                )
+            }
+        }
+        else {
             return (<p key={index}>{paragraph}</p>)
         }
 
 
 
-        // const url = 
-        // if(videoRexExp.test(pargraph)){
-        //     return(
-        //         <iframe width="90%"  src="https://www.youtube.com/embed/_4kHxtiuML0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        //     )
-        // }
 
     } catch (e) {
         console.error(e)
     }
+}
+
+
+async function handleUploadImage(e, vnode) {
+    let firstFile = e.target.files[0] // upload the first file only
+    console.log(firstFile)
+    await storage.ref(`photos/test/${firstFile.name}`).put(firstFile).then(doc => {
+        console.dir(doc);
+        console.log(doc.metadata.fullPath)
+
+
+    })
+    const imageHref = await storage.ref(`photos/test/${firstFile.name}`).getDownloadURL();
+
+    console.log(imageHref)
+
+    //add to text
+    const { optionId } = vnode.attrs.option;
+    const descriptionTextarea = document.getElementById(`optionDescription${optionId}`);
+    vnode.state.description += `\n--imgSrc:${imageHref}***\n`
+    descriptionTextarea.value += `\n--imgSrc:${imageHref}***\n`
+    vnode.state.addPicture = false;
+    m.redraw();
 }
