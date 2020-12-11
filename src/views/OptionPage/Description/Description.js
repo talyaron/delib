@@ -66,7 +66,7 @@ module.exports = {
                         <div class='buttons buttonOutlineGray' onclick={() => { handleEditSave(vnode) }}>
                             {vnode.state.edit ? 'שמירה' : 'עריכה'}
                         </div>
-                        {vnode.state.edit ? <div class='buttons buttonOutlineGray'>הוספת תמונה</div> : null}
+                        {vnode.state.edit ? <div class='buttons buttonOutlineGray' onclick={()=>{vnode.state.addPicture = true}}>הוספת תמונה</div> : null}
                     </div>
                     : null
 
