@@ -144,7 +144,7 @@ module.exports = {
 
       const descriptionParagraphs = changeTextToArray(description)
 
-      const isImgRegExp  = new RegExp('--imgSrc')
+      const isImgRegExp  = new RegExp('--imgSrc|--video')
 
       return (
         <div
