@@ -594,6 +594,52 @@ function changeTextToArray(text) {
     }
 }
 
+function convertParagraphsToVisual(paragraph, index) {
+    try {
+        if (typeof paragraph !== 'string') { throw new Error(`Paragraph ${index + 1} is not a string: ${paragraph}`) }
+
+
+
+        const videoRexExp = new RegExp('--video:');
+        const endUrl = paragraph.indexOf('***');
+        const videoInit = paragraph.indexOf('--video');
+        const pictureInit = paragraph.indexOf('--imgSrc');
+
+        console.log(paragraph)
+
+        if (endUrl > -1) {
+            if (videoInit > -1) {
+                paragraph = paragraph.slice(0, endUrl)
+                paragraph = paragraph.slice(videoInit + 8)
+
+                return (
+                    //     <iframe width="100%" height='300' src={paragraph} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <iframe key={index} width="100%" height='300' src={'https://www.youtube.com/embed/' + paragraph} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen ></iframe >
+                )
+            } else if (pictureInit > -1) {
+                paragraph = paragraph.slice(0, endUrl)
+                paragraph = paragraph.slice(videoInit + 10);
+
+                console.log(paragraph)
+
+                return (
+                   
+                    <img key={index} src={paragraph} alt='image of option' />
+                )
+            }
+        }
+        else {
+            return (<p key={index}>{paragraph}</p>)
+        }
+
+
+
+
+    } catch (e) {
+        console.error(e)
+    }
+}
+
 module.exports = {
     Reference,
     createRefString,
@@ -619,5 +665,6 @@ module.exports = {
     randomizeArray,
     calcOpacity,
     getColorForPercentage,
-    changeTextToArray
+    changeTextToArray,
+    convertParagraphsToVisual
 }

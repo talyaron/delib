@@ -5,7 +5,7 @@ import "./Option.css";
 import store, { consequencesTop } from "../../../../../data/store";
 
 //functions
-import { calcOpacity, getColorForPercentage, changeTextToArray } from '../../../../../functions/general';
+import { calcOpacity, getColorForPercentage, changeTextToArray, convertParagraphsToVisual } from '../../../../../functions/general';
 import {
   setLike,
   updateOption,
@@ -138,12 +138,14 @@ module.exports = {
   },
   view: (vnode) => {
     try {
-      const { groupId, questionId, subQuestionId, optionId,description } = vnode.attrs;
+      const { groupId, questionId, subQuestionId, optionId, description } = vnode.attrs;
 
       let consequencesTop = get(store.consequencesTop, `[${optionId}]`, []);
 
       const descriptionParagraphs = changeTextToArray(description)
-     
+
+      const isImgRegExp  = new RegExp('--imgSrc')
+
       return (
         <div
           class="optionCard"
@@ -197,10 +199,10 @@ module.exports = {
                   </div>
                 )}
 
-              <div class="option__card__description" onclick={() => { if (!vnode.state.isEdit) { m.route.set(`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) } }}>
+              <div class={isImgRegExp.test(description)?"option__card__description--image":"option__card__description"} onclick={() => { if (!vnode.state.isEdit) { m.route.set(`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) } }}>
                 {!vnode.state.isEdit ? (
-                  descriptionParagraphs.map((paragraph, index)=>{
-                    return (<p key={index}>{paragraph}</p>)
+                  descriptionParagraphs.map((paragraph, index) => {
+                    return (convertParagraphsToVisual(paragraph, index))
                   })
                 ) : (
                     <textarea
@@ -288,7 +290,7 @@ module.exports = {
           {
             consequencesTop.map(consequence => {
               let color = getColorForPercentage((consequence.evaluationAvg + 1) / 2);
-              let opacity = calcOpacity(consequence.truthinessAvg*100)
+              let opacity = calcOpacity(consequence.truthinessAvg * 100)
               return (
                 <div
                   onclick={() => { m.route.set(`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) }}
@@ -296,7 +298,7 @@ module.exports = {
                   style={`background:${color}; opacity:${opacity}`}
                 >
                   {consequence.title}
-              </div>)
+                </div>)
             })
           }
           <hr></hr>
