@@ -624,7 +624,7 @@ function convertParagraphsToVisual(paragraph, index) {
 
                 return (
                    
-                    <img key={index} src={paragraph} alt='image of option' />
+                    <img key={index} src={paragraph} alt='image of option' class='enlarge'/>
                 )
             }
         }

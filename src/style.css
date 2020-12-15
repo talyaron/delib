@@ -415,3 +415,12 @@ input[type=checkbox] {
     backdrop-filter: blur(7px);
     
 }
+
+.enlarge{
+    transition: all 300ms;
+}
+
+.enlarge:hover{
+   
+    transform: scale(1.4);
+}

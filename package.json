@@ -29,6 +29,7 @@
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
+    "firebase": "^8.2.0",
     "lodash": "^4.17.19",
     "mithril": "^1.1.7",
     "regenerator-runtime": "^0.13.7",

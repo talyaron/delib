@@ -1,5 +1,6 @@
 import m from 'mithril';
-
+import firebase from "firebase/app";
+import 'firebase/messaging';
 
 
 import {

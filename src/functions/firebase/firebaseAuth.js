@@ -1,5 +1,9 @@
 import store from '../../data/store';
 import m from 'mithril';
+
+import firebase from "firebase/app";
+import "firebase/auth";
+
 import {
 	DB
 } from '../firebase/config';
