@@ -10,7 +10,12 @@
 }
 
 .optionPage__main h1{
-    font-size: var(--size15);
+    font-size: var(--size17);
+    
+}
+
+.optionPage__main h3{
+    font-size: var(--size13);
     
 }
 
