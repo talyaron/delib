@@ -55,11 +55,11 @@ module.exports = {
                     <div class='consequence__scores'>
                         <div class='consequence__score'>
                             <p>האם זה טוב או רע?</p>
-                            <p><span>רע</span><input type='range' onchange={e => handleEval(e, vnode)} min='-1' max='1' step='0.01' defaultValue={vnode.state.evaluation} /><span>טוב</span></p>
+                            <p><span>רע</span><input type='range' class='sliderRange' onchange={e => handleEval(e, vnode)} min='-1' max='1' step='0.01' defaultValue={vnode.state.evaluation} /><span>טוב</span></p>
                         </div>
                         <div class='consequence__score'>
                             <p>האם לדעתך זה יקרה?</p>
-                            <p><span>לא</span><input type='range' onchange={e => handleTruthness(e, vnode)} defaultValue={vnode.state.truthiness} min='0' max='1' step='0.005' /><span> כן</span></p>
+                            <p><span>לא</span><input type='range' class='sliderRange' onchange={e => handleTruthness(e, vnode)} defaultValue={vnode.state.truthiness} min='0' max='1' step='0.005' /><span> כן</span></p>
                         </div>
                     </div>
                 </div>
