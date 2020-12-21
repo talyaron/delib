@@ -605,7 +605,7 @@ function convertParagraphsToVisual(paragraph, index) {
         const videoInit = paragraph.indexOf('--video');
         const pictureInit = paragraph.indexOf('--imgSrc');
 
-        console.log(paragraph)
+      
 
         if (endUrl > -1) {
             if (videoInit > -1) {
@@ -620,7 +620,7 @@ function convertParagraphsToVisual(paragraph, index) {
                 paragraph = paragraph.slice(0, endUrl)
                 paragraph = paragraph.slice(videoInit + 10);
 
-                console.log(paragraph)
+                
 
                 return (
                    

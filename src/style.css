@@ -450,7 +450,7 @@ input[type=checkbox] {
     height: 26px;
     width: 26px;
     border-radius: 15px;
-    background: var(--accent);
+    background: gray;
     cursor: pointer;
     -webkit-appearance: none;
     margin-top: -8px;
@@ -474,7 +474,7 @@ input[type=checkbox] {
     height: 26px;
     width: 26px;
     border-radius: 15px;
-    background: var(--accent);
+    background: gray;
     cursor: pointer;
   }
   .sliderRange::-ms-track {
@@ -505,7 +505,7 @@ input[type=checkbox] {
     height: 26px;
     width: 26px;
     border-radius: 15px;
-    background: var(--accent);
+    background: gray;
     cursor: pointer;
   }
   .sliderRange:focus::-ms-fill-lower {

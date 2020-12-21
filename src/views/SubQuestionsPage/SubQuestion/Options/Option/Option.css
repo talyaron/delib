@@ -197,3 +197,9 @@
     cursor: pointer;
     user-select: none;
 }
+
+
+.consequences__tip{
+    color: var(--gray1);
+    padding: 0px var(--regPadding);
+}

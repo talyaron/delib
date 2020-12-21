@@ -10,17 +10,15 @@ module.exports = {
 
     },
     view: vnode => {
-
+        const{groupId, questionId, subQuestionId} = vnode.attrs;
+      
         return (
             <div class={vnode.attrs.isAlone ? 'optionsWrapper optionsWrapper--alone' : 'optionsWrapper'}>
                 <div class='optionsWrapperInner'>
                     {vnode.attrs.options.map((option, index) => {
 
                         return <Option
-                            groupId={vnode.attrs.groupId}
-                            questionId={vnode.attrs.questionId}
-                            subQuestionId={vnode.attrs.subQuestionId}
-                            optionId={option.id}
+                            ids={{groupId, questionId, subQuestionId, optionId: option.id}}
                             creatorName={option.creatorName}
                             creatorId={option.creatorId}
                             title={option.title}

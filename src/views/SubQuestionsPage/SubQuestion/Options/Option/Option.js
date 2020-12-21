@@ -2,10 +2,12 @@ import m from "mithril";
 import { get } from 'lodash';
 
 import "./Option.css";
+
+//data
 import store, { consequencesTop } from "../../../../../data/store";
 
 //functions
-import { calcOpacity, getColorForPercentage, changeTextToArray, convertParagraphsToVisual } from '../../../../../functions/general';
+import { changeTextToArray, convertParagraphsToVisual } from '../../../../../functions/general';
 import {
   setLike,
   updateOption,
@@ -13,10 +15,14 @@ import {
 } from "../../../../../functions/firebase/set/set";
 import { getOptionVote, listenToTopConsequences } from "../../../../../functions/firebase/get/get";
 
+//components
+import ConsequenceTop from './ConsequenceTop/ConsequenceTop';
+
 module.exports = {
   oninit: (vnode) => {
 
-    const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
+    const { groupId, questionId, subQuestionId, optionId } = vnode.attrs.ids;
+    
 
 
     vnode.state = {
@@ -138,7 +144,9 @@ module.exports = {
   },
   view: (vnode) => {
     try {
-      const { groupId, questionId, subQuestionId, optionId, description } = vnode.attrs;
+      const { description } = vnode.attrs;
+      const {groupId, questionId, subQuestionId, optionId} = vnode.attrs.ids;
+    
 
       let consequencesTop = get(store.consequencesTop, `[${optionId}]`, []);
 
@@ -287,19 +295,13 @@ module.exports = {
           </div>
           {/* options information panel */}
           <hr></hr>
-          {
+          {consequencesTop.length>0?
             consequencesTop.map(consequence => {
-              let color = getColorForPercentage((consequence.evaluationAvg + 1) / 2);
-              let opacity = calcOpacity(consequence.truthinessAvg * 100)
-              return (
-                <div
-                  onclick={() => { m.route.set(`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) }}
-                  class='option__consequnces'
-                  style={`background:${color}; opacity:${opacity}`}
-                >
-                  {consequence.title}
-                </div>)
+              
+              return(<ConsequenceTop consequence={consequence} ids={{groupId, questionId, subQuestionId, optionId}} key={consequence.consequenceId} />)
             })
+            :
+            <div class='consequences__tip'  onclick={() => { m.route.set(`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) }}>יש לכם הצעות בעד ונגד?</div>
           }
           <hr></hr>
           <div class="optionCard__info">
