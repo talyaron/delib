@@ -63,9 +63,9 @@ module.exports = {
         vnode.state.option = get(store, `option[${optionId}]`, {})
         vnode.state.consequences = store.consequences[optionId] || [];
 
-        
 
-        if(vnode.state.orderBy !=='random'){ sortBy(vnode)}
+
+        if (vnode.state.orderBy !== 'random') { sortBy(vnode) }
 
     },
     onremove: vnode => {
@@ -80,7 +80,7 @@ module.exports = {
             <div class='page page-grid-option' style={subPage == 'main' ? '' : `grid-template-rows: fit-content(100px) auto;`}>
                 <div class='optionPage__header'>
                     <Header
-                        title={option.title}
+                        title="פתרון"
                         upLevelUrl={`/subquestions/${groupId}/${questionId}/${subQuestionId}`}
                         groupId={groupId}
                         questionId={questionId}
@@ -88,7 +88,7 @@ module.exports = {
                         subQuestionId={subQuestionId}
                     />
                     <NavTop
-                        level={'אפשרות'}
+                        level={'בעד ונגד'}
                         current={vnode.state.subPage}
                         pvs={vnode.state}
                         mainUrl={`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`}
@@ -102,7 +102,16 @@ module.exports = {
 
                         <Description option={option} />
                         <div class='optionPage__consequences'>
-                            <h1>אם הפתרון הזה ייבחר,  אילו דברים יקרו?</h1>
+                            <h1 class='optionPage__question'>אם פתרון זה יקרה, אילו דברים רעים או טובים יקרו?
+                            <div
+                                    class='buttons buttonOutlineWhite buttons--small'
+                                    onclick={() => {
+                                        vnode.state.showModal = true;
+
+                                    }}
+                                >הוספת תשובה</div>
+                            </h1>
+
                             <h3>{consequencesExplanation(vnode)}</h3>
                             <div class='consequencesWrapper'>
                                 {consequences[0] === false ? <Spinner /> :
@@ -167,7 +176,7 @@ module.exports = {
                             class="fav fav__subQuestion fav--blink"
                             onclick={() => {
                                 vnode.state.showModal = true;
-                           
+
                             }}>
                             <div>
                                 <div>+</div>

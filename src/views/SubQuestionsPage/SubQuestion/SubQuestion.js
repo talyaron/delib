@@ -68,8 +68,8 @@ module.exports = {
 		return (
 			<div class="subQuestionWrapper" id="optionsWrapper">
 				<div class={vnode.attrs.isAlone ? "questionSection questionSection--alone" : "questionSection"}>
-					<div class='subQuestion__question'>
-						<div></div>{question}
+					<div class='title'>
+						שאלה: {question}
 						<div class='subQuestion__addOptionWrapper'>
 							<div class='subQuestion__addOption' onclick={() => { vsp.showModal.isShow = true }}>
 								הוספת פתרון

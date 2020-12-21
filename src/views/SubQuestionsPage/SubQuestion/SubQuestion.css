@@ -44,4 +44,5 @@
     user-select: none;
     cursor: pointer;
     width: fit-content;
+    font-size: var(--size13);
 }

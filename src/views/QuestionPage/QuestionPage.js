@@ -1,9 +1,10 @@
 import m from 'mithril';
 import { get } from 'lodash';
+import './QuestionPage.css';
 
 
 //components
-import './Question.css';
+
 import Header from '../Commons/Header/Header';
 import Feed from '../Commons/Feed/Feed';
 import SubQuestionSolution from './SubQuestionsSolution/SubQuestionSolution';

@@ -43,8 +43,8 @@ module.exports = {
 
 
         return (
-            <div class='description'>
-                <h1>{title}</h1>
+            <div class='description title'>
+                <h1>פתרון אפשרי: {title}</h1>
                 {vnode.state.edit ?
                     <textarea class='inputGeneral' defaultValue={description} onkeyup={e => handleEditDescription(e, vnode)} id={`optionDescription${optionId}`} />
                     :
@@ -62,11 +62,11 @@ module.exports = {
                 }
                 {creatorId === store.user.uid ?
                     <div class='buttonsBox'>
-                        {vnode.state.edit ? <div class='buttons buttonOutlineGray' onclick={() => { vnode.state.addVideo = true }}>הוספת וידאו</div> : null}
-                        <div class='buttons buttonOutlineGray' onclick={() => { handleEditSave(vnode) }}>
+                        {vnode.state.edit ? <div class='buttons buttonOutlineWhite' onclick={() => { vnode.state.addVideo = true }}>הוספת וידאו</div> : null}
+                        <div class='buttons buttonOutlineWhite' onclick={() => { handleEditSave(vnode) }}>
                             {vnode.state.edit ? 'שמירה' : 'עריכה'}
                         </div>
-                        {vnode.state.edit ? <div class='buttons buttonOutlineGray' onclick={()=>{vnode.state.addPicture = true}}>הוספת תמונה</div> : null}
+                        {vnode.state.edit ? <div class='buttons buttonOutlineWhite' onclick={()=>{vnode.state.addPicture = true}}>הוספת תמונה</div> : null}
                     </div>
                     : null
 

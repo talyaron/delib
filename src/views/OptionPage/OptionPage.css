@@ -32,6 +32,13 @@
     max-width: var(--maxWidthOnPC);
     margin: var(--regPadding) auto;
 }
+.optionPage__question{
+    background: var(--accent);
+    color: white;
+    margin: 10px;
+    border-radius: var(--roundBorderSmall);
+    padding: var(--regPadding);
+}
 
 .consequencesWrapper{
     display: grid;

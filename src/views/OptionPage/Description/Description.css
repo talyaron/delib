@@ -2,7 +2,8 @@
     max-width: var(--maxWidthOnPC);
     margin: var(--regPadding) auto;
     padding: var(--regPadding);
-    background: var(--white);
+  
+    font-size: var(--size15);
     border-radius: var(--roundBorder);
     box-sizing: border-box;
 }
@@ -12,7 +13,7 @@
 }
 .description p{
     font-size: var(--size15);
-    color: var(--gray1);
+    
 }
 
 .description textarea{

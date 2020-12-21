@@ -44,7 +44,7 @@ import LoginGoogle from "./views/Login/LoginGoogle";
 import Logout from './views/Logout/Logout';
 import Groups from "./views/Groups/Groups";
 import GroupPage from './views/GroupPage/GroupPage';
-import Question from './views/Question/Question';
+import Question from './views/QuestionPage/QuestionPage';
 import QuestionEdit from './views/QuestionEdit/QuestionEdit';
 
 import SubQuestionsPage from './views/SubQuestionsPage/SubQuestionPage';
