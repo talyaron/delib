@@ -8,24 +8,37 @@ import { createConsequence } from '../../../functions/firebase/set/set';
 import store from '../../../data/store';
 
 module.exports = {
+    oninit:vnode=>{
+        vnode.state={
+            canSave:false
+        }
+    },
     view: vnode => {
         return (
             <div class='modalConsequence__background'>
 
                 <form class='modalConsequence__box' onsubmit={e => handleSubmit(e, vnode)}>
                     <label for='consequence-title'>מה יקרה אם הפתרון יתרחש?</label>
-                    <input name='title' id='consequence-title' class='inputGeneral' type='text' placeholder='כותרת' />
+                    <input name='title' id='consequence-title' class='inputGeneral' type='text' placeholder='כותרת' onkeyup={e=>{handleTitle(e, vnode)}} />
                     <textarea name='description' placeholder='הסבר' class='inputGeneral inputDescription' />
                     <label for='goodBad' >האם זה טוב או רע?</label>
                     <p class='modalConsequence__goodBad'><span>רע</span><input id='goodBad' type='range' name='goodBad' min='-1' max='1' step='.1' value='1' /><span>טוב</span></p>
                     <div class='modalConsequence__buttons'>
-                        <input type='submit' class='buttons' value='שמירה' />
+                        {vnode.state.canSave?<input type='submit' class='buttons' value='שמירה' />:<div class='buttons buttons--nonactive'>שמירה</div>}
                         <button onclick={e => handleCancel(e, vnode)} class='buttons buttons--cancel'>ביטול</button>
                     </div>
                 </form>
 
             </div>
         )
+    }
+}
+
+function handleTitle(e, vnode){
+    if(e.target.value.length>3){
+        vnode.state.canSave = true;
+    } else{
+        vnode.state.canSave = false;
     }
 }
 

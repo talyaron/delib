@@ -8,7 +8,7 @@ module.exports = {
     view: vnode => {
         const {consequence} = vnode.attrs;
         const {groupId, questionId, subQuestionId, optionId} = vnode.attrs.ids;
-        console.log(groupId, questionId, subQuestionId, optionId)
+       
 
         let color = getColorForPercentage((consequence.evaluationAvg + 1) / 2);
         let opacity = calcOpacity(consequence.truthinessAvg * 100)
