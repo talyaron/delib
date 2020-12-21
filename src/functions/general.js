@@ -640,6 +640,13 @@ function convertParagraphsToVisual(paragraph, index) {
     }
 }
 
+function getFirstUrl(){
+    let url = m.route.get();
+    url = url.split('/')
+    
+    return url[1];
+}
+
 module.exports = {
     Reference,
     createRefString,
@@ -666,5 +673,6 @@ module.exports = {
     calcOpacity,
     getColorForPercentage,
     changeTextToArray,
-    convertParagraphsToVisual
+    convertParagraphsToVisual,
+    getFirstUrl
 }

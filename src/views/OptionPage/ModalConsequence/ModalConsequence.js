@@ -24,7 +24,7 @@ module.exports = {
                     <label for='goodBad' >האם זה טוב או רע?</label>
                     <p class='modalConsequence__goodBad'><span>רע</span><input id='goodBad' type='range' name='goodBad' min='-1' max='1' step='.1' value='1' /><span>טוב</span></p>
                     <div class='modalConsequence__buttons'>
-                        {vnode.state.canSave?<input type='submit' class='buttons' value='שמירה' />:<div class='buttons buttons--nonactive'>שמירה</div>}
+                        {vnode.state.canSave?<button type='submit' class='buttons'>שמירה</button>:<button class='buttons buttons--nonactive'>שמירה</button>}
                         <button onclick={e => handleCancel(e, vnode)} class='buttons buttons--cancel'>ביטול</button>
                     </div>
                 </form>

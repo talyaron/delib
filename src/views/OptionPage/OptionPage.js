@@ -7,7 +7,7 @@ import store from '../../data/store';
 //function
 import { get } from 'lodash';
 import { listenToOption, listenToChat, listenToConsequences } from '../../functions/firebase/get/get';
-import { randomizeArray } from '../../functions/general';
+import { randomizeArray,  getFirstUrl} from '../../functions/general';
 
 
 // components
@@ -26,15 +26,19 @@ let unsubscribeChat = () => { };
 module.exports = {
     oninit: vnode => {
 
+
+        let firstUrl = getFirstUrl();
+
+       
+
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
 
-        store.lastPage = `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`;
+        store.lastPage = `/${firstUrl}/${groupId}/${questionId}/${subQuestionId}/${optionId}`;
+        sessionStorage.setItem('lastPage', store.lastPage)
+       
 
         if (store.user.uid == undefined) {
-            m
-                .route
-                .set('/login');
-
+            m.route.set('/login');
         }
 
 
@@ -46,6 +50,12 @@ module.exports = {
             consequences: store.consequences[optionId] || [false],
             orderBy: 'new'
         };
+
+        if(firstUrl === 'option'){
+            vnode.state.subPage = 'main';
+        } else{
+            vnode.state.subPage = 'chat';
+        }
 
         //get user before login to page
         store.lastPage = `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`;
@@ -75,7 +85,7 @@ module.exports = {
     view: vnode => {
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
         const { option, subPage, consequences } = vnode.state;
-
+   
         return (
             <div class='page page-grid-option' style={subPage == 'main' ? '' : `grid-template-rows: fit-content(100px) auto;`}>
                 <div class='optionPage__header'>
