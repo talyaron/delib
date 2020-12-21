@@ -2,7 +2,7 @@
     /* position: fixed;
     top:60px; */
 
-    background-color: var(--white);
+    background-color: #fbfbfb;
     width: 100%;
     /* height: 24px; */
 
@@ -24,6 +24,7 @@
 }
 
 .navTop__btn--selected{
-    border-bottom: 2px solid var(--accent);
+    border-bottom: 1px solid black;
     color: var(--black);
+    background-color: #e6e6e6;
 }
