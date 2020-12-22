@@ -16,9 +16,12 @@ import Spinner from '../Commons/Spinner/Spinner';
 
 
 //functions
-import { createQuestion } from '../../functions/firebase/set/set';
-import { getQuestions, getGroupDetails, listenToChat } from '../../functions/firebase/get/get';
-import { setLastPage, getIsChat } from '../../functions/general';
+import { createQuestion, setChatLastEntrance } from '../../functions/firebase/set/set';
+import { getQuestions, getGroupDetails, listenToChat, getLastTimeEntered } from '../../functions/firebase/get/get';
+import { setLastPage, getIsChat, concatenateDBPath} from '../../functions/general';
+
+
+let lastTimeEntered = 0;
 
 module.exports = {
 
@@ -44,8 +47,8 @@ module.exports = {
             addQuestion: false,
             questions: [false],
             unsubscribe: {},
-            groupName: get(store, 'groups[' + vnode.attrs.id + '].title', 'שם הקבוצה')
-
+            groupName: get(store, 'groups[' + vnode.attrs.id + '].title', 'שם הקבוצה'),
+            unreadMessages: 0
         }
 
         getQuestions('on', vnode.attrs.id, vnode);
@@ -57,7 +60,18 @@ module.exports = {
 
 
     },
+    oncreate: vnode => {
+        const { id } = vnode.attrs;
+        let groupId = id;
+        getLastTimeEntered({ groupId }, vnode);
+    },
     onbeforeupdate: vnode => {
+
+        const { id } = vnode.attrs;
+        let groupId = id;
+
+
+
         //check is admin
         vnode.state.isAdmin = (store.user.uid == get(store, 'groups[' + vnode.attrs.id + '].creatorId', 'aaaaa'));
 
@@ -73,14 +87,25 @@ module.exports = {
         vnode.state.questions = questionsArray;
 
 
+        //get number of unread massages
+        if (vnode.state.subPage === 'chat') {
+            lastTimeEntered = new Date().getTime() / 1000
+        }
+        const path = concatenateDBPath(groupId);
+        vnode.state.unreadMessages = store.chat[path].filter(m => m.createdTime.seconds > lastTimeEntered).length;
     },
     onupdate: vnode => {
 
     },
     onremove: vnode => {
+        const { id } = vnode.attrs;
+        let groupId = id;
+
         getQuestions('off', vnode.attrs.id, vnode);
         vnode.state.undbGroupDetails();
         vnode.state.unsubscribe.chat();
+
+        setChatLastEntrance({ groupId })
     },
     view: vnode => {
 
@@ -98,7 +123,15 @@ module.exports = {
                         groupId={vnode.attrs.id}
                         showSubscribe={true}
                     />
-                    <NavTop level={'נושאים שונים של הקבוצה'} current={vnode.state.subPage} pvs={vnode.state} mainUrl={`/group/${vnode.attrs.id}`} chatUrl={`/group-chat/${vnode.attrs.id}`} ids={{ groupId: vnode.attrs.id }} />
+                    <NavTop
+                        level={'נושאים שונים של הקבוצה'}
+                        current={vnode.state.subPage}
+                        pvs={vnode.state}
+                        mainUrl={`/group/${vnode.attrs.id}`}
+                        chatUrl={`/group-chat/${vnode.attrs.id}`}
+                        ids={{ groupId: vnode.attrs.id }}
+                        unreadMessages={vnode.state.unreadMessages}
+                    />
 
 
                     {vnode.state.subPage == 'main' ?

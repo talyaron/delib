@@ -11,9 +11,10 @@
 }
 
 .navTop__btn{
+    position: relative;
     flex:1;
     display: flex;
-    flex-direction: column;
+    
     justify-content: center;
     text-align: center;
     font-size: var(--size15);
@@ -21,6 +22,22 @@
     color: var(--gray1);
     user-select: none;
     cursor: pointer;
+}
+
+.navTop__btn .counter{
+    position: absolute;
+    top: 0px; 
+    left: 50%;
+    background: var(--primary);
+    color: white;
+    border-radius: 10px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    font-size: .75rem;
+    transform: translate(-46px, 0px);
 }
 
 .navTop__btn--selected{

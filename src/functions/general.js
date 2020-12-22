@@ -376,7 +376,7 @@ function setLastPage() {
     sessionStorage.setItem('lastPage', store.lastPage)
 }
 
-function concatenateDBPath(groupId, questionId, subQuestionId, optionId) {
+function concatenateDBPath(groupId, questionId, subQuestionId, optionId, consequenceId) {
     try {
         let subscriptionPath = 'groups/'
         if (groupId !== undefined) {
@@ -386,7 +386,10 @@ function concatenateDBPath(groupId, questionId, subQuestionId, optionId) {
                 if (subQuestionId !== undefined) {
                     subscriptionPath += `/subQuestions/${subQuestionId}`;
                     if (optionId !== undefined) {
-                        subscriptionPath += `/options/${optionId}`
+                        subscriptionPath += `/options/${optionId}`;
+                        if(consequenceId != undefined){
+                            subscriptionPath += `/consequences/${consequenceId}`;
+                        }
                     }
                 }
             }

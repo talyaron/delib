@@ -263,7 +263,7 @@ function getSubQuestion(groupId, questionId, subQuestionId, isSingle) {
 
 function listenToOptions(groupId, questionId, subQuestionId, order = 'top', isSingle = false) {
     try {
-     
+
         if (!{}.hasOwnProperty.call(store.optionsListen, subQuestionId)) {
             //signal that this questionId options are listend to
             store.optionsListen[subQuestionId] = true;
@@ -493,7 +493,7 @@ function listenToTopConsequences(ids) {
                     })
 
                     store.consequencesTop[optionId] = consequences;
-                   
+
                     m.redraw();
                 })
         }
@@ -943,6 +943,42 @@ function listenIfGetsMessages(ids) {
 
 }
 
+function getLastTimeEntered(ids, vnode) {
+    try {
+
+
+        const { groupId, questionId, subQuestionId, optionId, consequenceId } = ids;
+        console.log(groupId, questionId, subQuestionId, optionId, consequenceId)
+
+        let path = concatenateDBPath(groupId, questionId, subQuestionId, optionId, consequenceId);
+        const regex = new RegExp('/', 'gi')
+        path = path.replace(regex, '-')
+        console.log(path)
+
+        if (path !== '-groups') {
+            DB.collection(`users`).doc(store.user.uid).collection('chatLastEnterence').doc(path)
+                .get()
+                .then(time => {
+                    if (time.data() !== undefined) {
+                        vnode.state.unreadMessages = time.data().lastTime.seconds;
+                        m.redraw();
+                    } else {
+                        vnode.state.unreadMessages = 0;
+                    }
+                })
+        } else {
+
+            vnode.state.unreadMessages = 0;
+            throw new Error('couldnt find path to spesific chat (groupId, questionId, subQuestionId, optionId, consequenceId)', groupId, questionId, subQuestionId, optionId, consequenceId);
+        }
+   }
+
+
+    catch (e) {
+        console.error(e)
+    }
+}
+
 module.exports = {
     getUserGroups,
     getQuestions,
@@ -967,5 +1003,6 @@ module.exports = {
     listenToChatFeed,
     listenToFeedLastEntrance,
     listenToSubscription,
-    listenIfGetsMessages
+    listenIfGetsMessages,
+    getLastTimeEntered
 };

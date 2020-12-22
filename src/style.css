@@ -2,7 +2,7 @@
     --mainBackground: #32527b;
     --subBackground: #ee7171;
     --mainColor: white;
-    
+
     --textHeader: rgba(0, 0, 0, 0.78);
     --textHeaderSize: 1.3rem;
     --textHeaderWeight: 600;
@@ -94,7 +94,7 @@ body {
     font-size: var(--size15);
 }
 
-.title{
+.title {
     font-size: var(--size21);
     background-color: var(--primary);
     color: white;
@@ -108,10 +108,10 @@ body {
 }
 
 @media (max-width: 600px) {
-    .title{
+    .title {
         width: 80vw;
     }
-  }
+}
 
 .card p {
     color: var(--gray1);
@@ -190,7 +190,7 @@ body {
 }
 
 /*  Buttons */
-.buttonsBox{
+.buttonsBox {
     display: flex;
     justify-content: center;
     width: 100%;
@@ -209,18 +209,18 @@ body {
     cursor: pointer;
 }
 
-.buttons--small{
+.buttons--small {
     font-size: var(--size11);
     padding: 5px 7px;
 }
 
 .buttons--cancel {
-    
+
     background: orange;
-  
+
 }
 
-.buttons--nonactive{
+.buttons--nonactive {
     opacity: .3;
 }
 
@@ -240,7 +240,7 @@ body {
 .buttonOutlineGray {
     background: rgba(255, 255, 255, 0);
     border: 1px solid rgb(63, 63, 63);
-    color: rgb(63, 63, 63) ;
+    color: rgb(63, 63, 63);
 }
 
 .buttonOutlineGray:hover {
@@ -387,11 +387,11 @@ body {
     height: 4rem;
 }
 
-.inputGeneral{
+.inputGeneral {
     border-radius: var(--roundBorderSmall);
     background-color: var(--gray5);
     font-size: var(--size15);
-    border:none;
+    border: none;
     padding: var(--regPadding);
 }
 
@@ -412,29 +412,31 @@ input[type=checkbox] {
     overflow-y: auto;
 }
 
-.background{
+.background {
     position: fixed;
     z-index: 100;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.397);
     backdrop-filter: blur(7px);
-    
+
 }
 
 /* Slider */
 .sliderRange {
-   
+
 
     -webkit-appearance: none;
     margin: 10px 0;
     width: 100%;
     margin: 0px 5px;
-  }
-  .sliderRange:focus {
+}
+
+.sliderRange:focus {
     outline: none;
-  }
-  .sliderRange::-webkit-slider-runnable-track {
+}
+
+.sliderRange::-webkit-slider-runnable-track {
     width: 100%;
     height: 6px;
     cursor: pointer;
@@ -443,8 +445,9 @@ input[type=checkbox] {
     background: #afafaf;
     border-radius: 1px;
     /* border: 0px solid #010101; */
-  }
-  .sliderRange::-webkit-slider-thumb {
+}
+
+.sliderRange::-webkit-slider-thumb {
     /* box-shadow: 1px 1px 1px #000031; */
     /* border: 1px solid #00001E; */
     height: 26px;
@@ -454,11 +457,13 @@ input[type=checkbox] {
     cursor: pointer;
     -webkit-appearance: none;
     margin-top: -8px;
-  }
-  .sliderRange:focus::-webkit-slider-runnable-track {
+}
+
+.sliderRange:focus::-webkit-slider-runnable-track {
     background: #afafaf;
-  }
-  .sliderRange::-moz-range-track {
+}
+
+.sliderRange::-moz-range-track {
     width: 100%;
     height: 6px;
     cursor: pointer;
@@ -467,8 +472,9 @@ input[type=checkbox] {
     background: #74A9D8;
     border-radius: 1px;
     /* border: 0px solid #010101; */
-  }
-  .sliderRange::-moz-range-thumb {
+}
+
+.sliderRange::-moz-range-thumb {
     /* box-shadow: 1px 1px 1px #000031; */
     /* border: 1px solid #00001E; */
     height: 26px;
@@ -476,8 +482,9 @@ input[type=checkbox] {
     border-radius: 15px;
     background: gray;
     cursor: pointer;
-  }
-  .sliderRange::-ms-track {
+}
+
+.sliderRange::-ms-track {
     width: 100%;
     height: 6px;
     cursor: pointer;
@@ -485,20 +492,23 @@ input[type=checkbox] {
     background: transparent;
     border-color: transparent;
     color: transparent;
-  }
-  .sliderRange::-ms-fill-lower {
+}
+
+.sliderRange::-ms-fill-lower {
     background: #afafaf;
     /* border: 0px solid #010101; */
     border-radius: 2px;
     /* box-shadow: 1px 1px 1px #000000; */
-  }
-  .sliderRange::-ms-fill-upper {
+}
+
+.sliderRange::-ms-fill-upper {
     background: #afafaf;
     /* border: 0px solid #010101; */
     border-radius: 2px;
     /* box-shadow: 1px 1px 1px #000000; */
-  }
-  .sliderRange::-ms-thumb {
+}
+
+.sliderRange::-ms-thumb {
     margin-top: 1px;
     /* box-shadow: 1px 1px 1px #000031; */
     /* border: 1px solid #00001E; */
@@ -507,10 +517,30 @@ input[type=checkbox] {
     border-radius: 15px;
     background: gray;
     cursor: pointer;
-  }
-  .sliderRange:focus::-ms-fill-lower {
+}
+
+.sliderRange:focus::-ms-fill-lower {
     background: #afafaf;
-  }
-  .sliderRange:focus::-ms-fill-upper {
+}
+
+.sliderRange:focus::-ms-fill-upper {
     background: #afafaf;
-  }
+}
+
+
+/* COUNTERS */
+
+.counter {
+    position: absolute;
+    top: -6px;
+    left: 42px;
+    background: #ff0000db;
+    color: white;
+    border-radius: 10px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    font-size: .75rem;
+}   

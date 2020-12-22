@@ -16,11 +16,13 @@ import NavTop from '../Commons/NavTop/NavTop';
 import Chat from '../Commons/Chat/Chat';
 
 //functions
-import { getSubQuestion, getGroupDetails, listenToChat ,listenToOptions} from "../../functions/firebase/get/get";
+import { getSubQuestion, getGroupDetails, listenToChat, listenToOptions, getLastTimeEntered } from "../../functions/firebase/get/get";
+import { setChatLastEntrance } from '../../functions/firebase/set/set';
 import { getIsChat, concatenateDBPath } from '../../functions/general';
 import { get } from "lodash";
 
 let unsubscribe = () => { }, unsubscribeChat = () => { };
+let lastTimeEntered = 0;
 
 module.exports = {
 
@@ -57,9 +59,10 @@ module.exports = {
                 title: ""
             },
             subscribed: false,
-            path: concatenateDBPath(groupId, questionId, subQuestionId)
+            path: concatenateDBPath(groupId, questionId, subQuestionId),
+            unreadMessages: 0
         }
-       
+
 
         listenToOptions(groupId, questionId, subQuestionId, 'top');
     },
@@ -72,10 +75,13 @@ module.exports = {
         vnode.state.subscribed = get(store.subscribe, `[${vnode.state.path}]`, false)
 
         getGroupDetails(groupId);
-      
+
+        getLastTimeEntered({ groupId, questionId, subQuestionId }, vnode);
+
+
     },
     onbeforeupdate: vnode => {
-        const { groupId, subQuestionId } = vnode.attrs;
+        const { groupId, questionId, subQuestionId } = vnode.attrs;
 
         if (store.subQuestions.hasOwnProperty(subQuestionId)) {
             vnode.state.details = store.subQuestions[subQuestionId];
@@ -87,13 +93,29 @@ module.exports = {
             title: ""
         });
         vnode.state.group = groupObj;
+
+        //get number of unread massages
+        if (vnode.state.subPage === 'chat') {
+            lastTimeEntered = new Date().getTime() / 1000
+        }
+        const path = concatenateDBPath(groupId, questionId, subQuestionId);
+        vnode.state.unreadMessages = store.chat[path].filter(m => m.createdTime.seconds > lastTimeEntered).length;
+
+
     },
     onupdate: vnode => {
-        vnode.state.subscribed = get(store.subscribe, `[${vnode.state.path}]`, false)
+
+
+        vnode.state.subscribed = get(store.subscribe, `[${vnode.state.path}]`, false);
+
+
+
     },
     onremove: vnode => {
+        const { groupId, questionId, subQuestionId } = vnode.attrs;
         unsubscribe();
         unsubscribeChat();
+        setChatLastEntrance({ groupId, questionId, subQuestionId })
     },
     view: vnode => {
 
@@ -119,7 +141,9 @@ module.exports = {
                                     mainUrl={`/subquestions/${groupId}/${questionId}/${subQuestionId}`}
                                     chatUrl={`/subquestions-chat/${groupId}/${questionId}/${subQuestionId}`}
                                     ids={{ groupId, questionId, subQuestionId }}
-                                    isSubscribed={vnode.state.subscribed} />
+                                    isSubscribed={vnode.state.subscribed}
+                                    unreadMessages={vnode.state.unreadMessages}
+                                />
 
                             </div>
                             {vnode.state.subPage === 'main' ?
@@ -140,7 +164,7 @@ module.exports = {
                                 <Chat
                                     entity='subQuestion'
                                     topic='תת שאלה'
-                                    ids={{ groupId: groupId, questionId: questionId, subQuestionId }}
+                                    ids={{ groupId, questionId, subQuestionId }}
                                     title={vnode.state.details.title}
                                     url={m.route.get()}
                                 />

@@ -19,16 +19,18 @@ import SubQuestionEditModal from './SubQuestionEditModal/SubQuestionEditModal';
 //model
 import store from '../../data/store';
 //functions
-import { getQuestionDetails, getSubQuestion, listenSubQuestions, listenToChat } from '../../functions/firebase/get/get';
-import {  } from '../../functions/firebase/set/set';
-import { deep_value, getIsChat } from '../../functions/general';
+import { getQuestionDetails, getSubQuestion, getLastTimeEntered, listenToChat } from '../../functions/firebase/get/get';
+import { setChatLastEntrance } from '../../functions/firebase/set/set';
+import { deep_value, getIsChat, concatenateDBPath } from '../../functions/general';
+
+let lastTimeEntered = 0;
 
 module.exports = {
     oninit: vnode => {
 
         const { groupId, questionId } = vnode.attrs;
 
-        let subQuestions = get(store.subQuestions, `[${groupId}]`, [    ])
+        let subQuestions = get(store.subQuestions, `[${groupId}]`, [])
         subQuestions = subQuestions.sort((a, b) => a.order - b.order);
 
         vnode.state = {
@@ -71,7 +73,8 @@ module.exports = {
                 which: 'subQuestion',
                 subQuestionId: ''
             },
-            subPage: getIsChat() ? 'chat' : 'main'
+            subPage: getIsChat() ? 'chat' : 'main',
+            unreadMessages: 0
 
         }
 
@@ -92,10 +95,14 @@ module.exports = {
         vnode.state.unsbscribe.chat = listenToChat({ groupId, questionId })
 
     },
-   
+    oncreate: vnode => {
+
+        const { groupId, questionId } = vnode.attrs;
+        getLastTimeEntered({ groupId, questionId }, vnode);
+    },
     onbeforeupdate: vnode => {
 
-    
+
 
         const { groupId, questionId } = vnode.attrs;
 
@@ -109,9 +116,19 @@ module.exports = {
             // membership
         }
 
+        //get number of unread massages
+        if (vnode.state.subPage === 'chat') {
+            lastTimeEntered = new Date().getTime() / 1000
+        }
+        const path = concatenateDBPath(groupId, questionId);
+        vnode.state.unreadMessages = store.chat[path].filter(m => m.createdTime.seconds > lastTimeEntered).length;
+
     },
 
     onremove: vnode => {
+
+        const { groupId, questionId } = vnode.attrs;
+
         if (typeof vnode.state.unsbscribe.subQuestions === 'function') {
             vnode
                 .state
@@ -119,7 +136,9 @@ module.exports = {
                 .subQuestions();
         }
 
-        vnode.state.unsbscribe.chat()
+        vnode.state.unsbscribe.chat();
+
+        setChatLastEntrance({ groupId, questionId, })
 
     },
     view: vnode => {
@@ -137,7 +156,12 @@ module.exports = {
                         showSubscribe={true}
                         questionId={vnode.attrs.questionId}
                     />
-                    <NavTop level={'שאלות'} current={vnode.state.subPage} pvs={vnode.state} mainUrl={`/question/${groupId}/${questionId}`} chatUrl={`/question-chat/${groupId}/${questionId}`} ids={{ groupId, questionId }} />
+                    <NavTop level={'שאלות'} current={vnode.state.subPage}
+                        pvs={vnode.state}
+                        mainUrl={`/question/${groupId}/${questionId}`}
+                        chatUrl={`/question-chat/${groupId}/${questionId}`}
+                        ids={{ groupId, questionId }}
+                        unreadMessages={vnode.state.unreadMessages} />
                     <Description
                         title={vnode.state.title}
                         content={vnode.state.description}
@@ -210,7 +234,7 @@ module.exports = {
                     }
                     ]} />
                 < div
-                    class={store.user.uid==vnode.state.creatorId?"fav fav__subQuestion fav--blink":"hidden"}
+                    class={store.user.uid == vnode.state.creatorId ? "fav fav__subQuestion fav--blink" : "hidden"}
                     onclick={() => {
                         vnode.state.modalSubQuestion = { isShow: true, new: true, numberOfSubquestions: vnode.state.subQuestions.length };
                     }}>
