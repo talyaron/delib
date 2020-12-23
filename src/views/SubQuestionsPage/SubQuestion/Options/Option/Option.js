@@ -90,7 +90,7 @@ module.exports = {
       vnode.state.up = false;
       vnode.state.down = false;
     }
-    console.log(store.optionNumberOfMessagesRead)
+   
     if ({}.hasOwnProperty.call(store.optionNumberOfMessagesRead, optionId)){
 
      
@@ -378,7 +378,7 @@ function setSelection(upDown, vnode) {
 
   const { groupId, questionId, subQuestionId, optionId } = vnode.attrs.ids;
 
-  console.log('voted', upDown)
+
   if (upDown == "up") {
     vnode.state.up = !vnode.state.up;
     vnode.state.down = false;

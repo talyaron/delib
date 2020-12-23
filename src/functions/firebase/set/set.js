@@ -454,7 +454,6 @@ function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like) 
             .collection('likes')
             .doc(creatorId)
             .set({ like })
-            .then((newLike) => { console.log('voted like:', like) })
             .catch(function (error) {
                 console.error('Error adding document: ', error);
             });
@@ -823,19 +822,14 @@ function setChatLastEntrance(ids) {
     try {
         const { groupId, questionId, subQuestionId, optionId, consequenceId } = ids;
 
-        console.log('clocked out')
 
         let path = concatenateDBPath(groupId, questionId, subQuestionId, optionId, consequenceId);
         const regex = new RegExp('/', 'gi')
         path = path.replace(regex, '-')
-        console.log(path)
+       
         if (path !== '-groups') {
             DB.collection(`users`).doc(store.user.uid).collection('chatLastEnterence').doc(path)
                 .set({ lastTime: firebase.firestore.FieldValue.serverTimestamp() })
-                .then(() => {
-                    console.log('save last time entered')
-
-                })
                 .catch(e => { console.error(e) })
         } else {
             throw new Error('couldnt find path to spesific chat (groupId, questionId, subQuestionId, optionId, consequenceId)', groupId, questionId, subQuestionId, optionId, consequenceId)
@@ -887,14 +881,11 @@ function setNumberOfMessagesMark(ids, numberOfMessages = 0) {
         const { optionId } = ids;
         if (optionId === undefined) throw new Error("option doesnt have optionId")
 
-        console.log(optionId, numberOfMessages)
-
         DB.collection('users')
             .doc(store.user.uid)
             .collection('optionsRead')
             .doc(optionId)
             .set({ numberOfMessages })
-            .then(() => { console.log('numberOfMessages:', numberOfMessages) })
             .catch(e => { console.error(e) })
 
     } catch (e) {

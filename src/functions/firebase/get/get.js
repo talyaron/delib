@@ -301,7 +301,7 @@ function listenToOptions(groupId, questionId, subQuestionId, order = 'top', isSi
                     let optionsArray = [];
                     optionsDB.forEach(optionDB => {
 
-                      
+
                         //see how many message the user read (from total mesaages of option). use this to calculate hoem namy messages the user didn't read.
                         listenToUserLastReadOfOptionChat(optionDB.data().optionId);
 
@@ -359,19 +359,20 @@ function listenToUserLastReadOfOptionChat(optionId) {
 
         if (!{}.hasOwnProperty.call(store.optionNumberOfMessagesRead, optionId)) {
 
-            console.log(optionId)
+
             DB.collection('users')
                 .doc(store.user.uid)
                 .collection('optionsRead')
                 .doc(optionId)
                 .onSnapshot(optionListenDB => {
-                    console.log(optionListenDB.data())
-                    const numberOfMessages = optionListenDB.data().numberOfMessages || 0;
-                    store.optionNumberOfMessagesRead[optionId] = numberOfMessages;
-                    m.redraw()
-                },e => { console.error(e)})
-                
-                
+                    if (optionListenDB.exists) {
+                        const numberOfMessages = optionListenDB.data().numberOfMessages || 0;
+                        store.optionNumberOfMessagesRead[optionId] = numberOfMessages;
+                        m.redraw()
+                    }
+                }, e => { console.error(e) })
+
+
         }
 
     } catch (e) {
@@ -435,7 +436,7 @@ function getOptionDetails(groupId, questionId, subQuestionId, optionId, vnode) {
 function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId) {
     try {
 
-       
+
 
         if (groupId === undefined || questionId === undefined || subQuestionId === undefined || optionId === undefined || creatorId === undefined) throw new Error("One of the Ids groupId, questionId, subQuestionId, optionId, creatorId is missing", groupId, questionId, subQuestionId, optionId, creatorId)
         let voteRef = DB
@@ -972,7 +973,7 @@ function listenIfGetsMessages(ids) {
                 }
 
                 m.redraw();
-            },e=>{console.error(e)})
+            }, e => { console.error(e) })
 
         }
     } catch (e) {
