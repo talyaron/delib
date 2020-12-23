@@ -437,22 +437,30 @@ function updateOptionDescription(ids, description) {
 }
 
 function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like) {
-    DB
-        .collection('groups')
-        .doc(groupId)
-        .collection('questions')
-        .doc(questionId)
-        .collection('subQuestions')
-        .doc(subQuestionId)
-        .collection('options')
-        .doc(optionId)
-        .collection('likes')
-        .doc(creatorId)
-        .set({ like })
-        .then((newLike) => { })
-        .catch(function (error) {
-            console.error('Error adding document: ', error);
-        });
+    try {
+
+
+        if (groupId === undefined || questionId === undefined || subQuestionId === undefined || optionId === undefined || creatorId === undefined) throw new Error("One of the Ids groupId, questionId, subQuestionId, optionId, creatorId is missing", groupId, questionId, subQuestionId, optionId, creatorId)
+
+        DB
+            .collection('groups')
+            .doc(groupId)
+            .collection('questions')
+            .doc(questionId)
+            .collection('subQuestions')
+            .doc(subQuestionId)
+            .collection('options')
+            .doc(optionId)
+            .collection('likes')
+            .doc(creatorId)
+            .set({ like })
+            .then((newLike) => { console.log('voted like:', like) })
+            .catch(function (error) {
+                console.error('Error adding document: ', error);
+            });
+    } catch (e) {
+        console.error(e)
+    }
 }
 
 function sendMessage({ groupId, questionId, subQuestionId, optionId, message, title, entity, topic, url, vnode }) {
@@ -823,7 +831,7 @@ function setChatLastEntrance(ids) {
         console.log(path)
         if (path !== '-groups') {
             DB.collection(`users`).doc(store.user.uid).collection('chatLastEnterence').doc(path)
-                .set({ lastTime: firebase.firestore.FieldValue.serverTimestamp()})
+                .set({ lastTime: firebase.firestore.FieldValue.serverTimestamp() })
                 .then(() => {
                     console.log('save last time entered')
 

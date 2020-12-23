@@ -16,7 +16,7 @@ import Spinner from '../Commons/Spinner/Spinner';
 
 
 //functions
-import { createQuestion, setChatLastEntrance } from '../../functions/firebase/set/set';
+import { createQuestion } from '../../functions/firebase/set/set';
 import { getQuestions, getGroupDetails, listenToChat, getLastTimeEntered } from '../../functions/firebase/get/get';
 import { setLastPage, getIsChat, concatenateDBPath} from '../../functions/general';
 
@@ -110,7 +110,7 @@ module.exports = {
         vnode.state.undbGroupDetails();
         vnode.state.unsubscribe.chat();
 
-        setChatLastEntrance({ groupId })
+      
         
     },
     view: vnode => {

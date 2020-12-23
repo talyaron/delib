@@ -6,7 +6,7 @@ import store from '../../data/store';
 
 //function
 import { get } from 'lodash';
-import {setChatLastEntrance} from '../../functions/firebase/set/set';
+import {} from '../../functions/firebase/set/set';
 import { listenToOption, listenToChat, listenToConsequences,getLastTimeEntered } from '../../functions/firebase/get/get';
 import { randomizeArray,  getFirstUrl,concatenateDBPath} from '../../functions/general';
 
@@ -101,7 +101,7 @@ module.exports = {
         unsubscribe();
         unsubscribeChat();
 
-        setChatLastEntrance({ groupId, questionId, subQuestionId, optionId })
+        
     },
     view: vnode => {
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;

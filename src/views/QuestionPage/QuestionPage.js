@@ -20,7 +20,7 @@ import SubQuestionEditModal from './SubQuestionEditModal/SubQuestionEditModal';
 import store from '../../data/store';
 //functions
 import { getQuestionDetails, getSubQuestion, getLastTimeEntered, listenToChat } from '../../functions/firebase/get/get';
-import { setChatLastEntrance } from '../../functions/firebase/set/set';
+import {  } from '../../functions/firebase/set/set';
 import { deep_value, getIsChat, concatenateDBPath } from '../../functions/general';
 
 
@@ -139,7 +139,7 @@ module.exports = {
 
         vnode.state.unsbscribe.chat();
 
-        setChatLastEntrance({ groupId, questionId, })
+     
 
     },
     view: vnode => {

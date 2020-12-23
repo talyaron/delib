@@ -97,6 +97,7 @@
 .option__card__description--image{
     height: fit-content;
     max-height: 40vh;
+    overflow-y: auto;
 }
 
 .option__card__description--image img{

@@ -13,6 +13,10 @@ import { getOptionVote } from "../../../../../functions/firebase/get/get";
 
 module.exports = {
   oninit: (vnode) => {
+
+
+    console.log('option')
+
     vnode.state = {
       creatorName: vnode.attrs.creatorName || "אנונימי",
       title: vnode.attrs.title,

@@ -138,7 +138,7 @@ exports.totalLikesForSubQuestion = functions.firestore
     return db.runTransaction((transaction) => {
       return transaction.get(subQuestionLikesRef).then((subQuestionDoc) => {
         // Compute new number of ratings
-        var totalVotes = 0;
+        let totalVotes = 0;
         if (subQuestionDoc.data().totalVotes !== undefined) {
           totalVotes = subQuestionDoc.data().totalVotes + like;
         } else {

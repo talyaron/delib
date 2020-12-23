@@ -65,7 +65,7 @@ function onAuth() {
 					//if user anonymous
 
 					console.info('user is anonymous');
-					console.info(store.user);
+				
 				
 					if (store.userTempName) {
 
@@ -116,8 +116,7 @@ function getAnonymousName(userId) {
 	DB.collection('users').doc(userId).get().then((userDB) => {
 		store.user.name = userDB.data().name;
 		store.user.userColor = userDB.data().userColor || 'teal'
-		console.info('uid:', userDB.data().uid);
-		console.info('store.user.name', store.user.name);
+	
 		m.redraw();
 	}).catch(err=>{
 		console.error(err)

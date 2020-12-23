@@ -17,7 +17,7 @@ import Chat from '../Commons/Chat/Chat';
 
 //functions
 import { getSubQuestion, getGroupDetails, listenToChat, listenToOptions, getLastTimeEntered } from "../../functions/firebase/get/get";
-import { setChatLastEntrance } from '../../functions/firebase/set/set';
+import {  } from '../../functions/firebase/set/set';
 import { getIsChat, concatenateDBPath } from '../../functions/general';
 import { get } from "lodash";
 
@@ -113,10 +113,10 @@ module.exports = {
 
     },
     onremove: vnode => {
-        const { groupId, questionId, subQuestionId } = vnode.attrs;
+       
         unsubscribe();
         unsubscribeChat();
-        setChatLastEntrance({ groupId, questionId, subQuestionId })
+      
     },
     view: vnode => {
 

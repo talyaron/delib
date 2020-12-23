@@ -22,7 +22,7 @@ module.exports = {
   oninit: (vnode) => {
 
     const { groupId, questionId, subQuestionId, optionId } = vnode.attrs.ids;
-    
+
 
 
     vnode.state = {
@@ -45,13 +45,7 @@ module.exports = {
       more: vnode.attrs.more || { text: "", URL: "" },
     };
 
-    vnode.state.likeUnsubscribe = getOptionVote(
-      vnode.attrs.groupId,
-      vnode.attrs.questionId,
-      vnode.attrs.subQuestionId,
-      vnode.attrs.optionId,
-      store.user.uid
-    );
+    vnode.state.likeUnsubscribe = getOptionVote(groupId, questionId, subQuestionId, optionId, store.user.uid);
 
     store.optionsDetails[vnode.attrs.optionId] = {
       title: vnode.attrs.title,
@@ -62,11 +56,13 @@ module.exports = {
   },
   onbeforeupdate: (vnode) => {
 
+    const { groupId, optionId } = vnode.attrs.ids;
+
     //get admin
-    vnode.state.admin = get(store.groups, `[${vnode.attrs.groupId}].creatorId`, '')
+    vnode.state.admin = get(store.groups, `[${groupId}].creatorId`, '')
 
 
-    let optionVote = store.optionsVotes[vnode.attrs.optionId];
+    let optionVote = store.optionsVotes[optionId];
 
     //set conesnsus level to string
     if (vnode.attrs.consensusPrecentage !== undefined) {
@@ -96,6 +92,8 @@ module.exports = {
   },
   onupdate: (vnode) => {
 
+    const { optionId } = vnode.attrs.ids;
+
     //animation
     let element = vnode.dom;
     let elementY = element.offsetTop;
@@ -103,19 +101,19 @@ module.exports = {
     let oldElement = { offsetTop: 0, offsetLeft: 0 };
     let toAnimate = false;
 
-    if (store.optionsLoc.hasOwnProperty(vnode.attrs.optionId)) {
-      oldElement = store.optionsLoc[vnode.attrs.optionId];
-      toAnimate = store.optionsLoc[vnode.attrs.optionId].toAnimate;
+    if (store.optionsLoc.hasOwnProperty(optionId)) {
+      oldElement = store.optionsLoc[optionId];
+      toAnimate = store.optionsLoc[optionId].toAnimate;
     }
 
     let topMove = elementY - oldElement.offsetTop;
     let leftMove = elementX - oldElement.offsetLeft;
 
     if ((Math.abs(topMove) > 30 || Math.abs(leftMove) > 30) && toAnimate) {
-      let elementDOM = document.getElementById(vnode.attrs.optionId);
+      let elementDOM = document.getElementById(optionId);
 
       //animate
-      store.optionsLoc[vnode.attrs.optionId] = {
+      store.optionsLoc[optionId] = {
         offsetTop: 0,
         offsetLeft: 0,
         toAnimate: false,
@@ -145,14 +143,14 @@ module.exports = {
   view: (vnode) => {
     try {
       const { description } = vnode.attrs;
-      const {groupId, questionId, subQuestionId, optionId} = vnode.attrs.ids;
-    
+      const { groupId, questionId, subQuestionId, optionId } = vnode.attrs.ids;
+
 
       let consequencesTop = get(store.consequencesTop, `[${optionId}]`, []);
 
       const descriptionParagraphs = changeTextToArray(description)
 
-      const isImgRegExp  = new RegExp('--imgSrc|--video')
+      const isImgRegExp = new RegExp('--imgSrc|--video')
 
       return (
         <div
@@ -207,7 +205,7 @@ module.exports = {
                   </div>
                 )}
 
-              <div class={isImgRegExp.test(description)?"option__card__description--image":"option__card__description"} onclick={() => { if (!vnode.state.isEdit) { m.route.set(`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) } }}>
+              <div class={isImgRegExp.test(description) ? "option__card__description--image" : "option__card__description"} onclick={() => { if (!vnode.state.isEdit) { m.route.set(`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) } }}>
                 {!vnode.state.isEdit ? (
                   descriptionParagraphs.map((paragraph, index) => {
                     return (convertParagraphsToVisual(paragraph, index))
@@ -295,13 +293,13 @@ module.exports = {
           </div>
           {/* options information panel */}
           <hr></hr>
-          {consequencesTop.length>0?
+          {consequencesTop.length > 0 ?
             consequencesTop.map(consequence => {
-              
-              return(<ConsequenceTop consequence={consequence} ids={{groupId, questionId, subQuestionId, optionId}} key={consequence.consequenceId} />)
+
+              return (<ConsequenceTop consequence={consequence} ids={{ groupId, questionId, subQuestionId, optionId }} key={consequence.consequenceId} />)
             })
             :
-            <div class='consequences__tip'  onclick={() => { m.route.set(`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) }}>יש לכם הצעות בעד ונגד?</div>
+            <div class='consequences__tip' onclick={() => { m.route.set(`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) }}>יש לכם הצעות בעד ונגד?</div>
           }
           <hr></hr>
           <div class="optionCard__info">
@@ -367,25 +365,29 @@ module.exports = {
 };
 
 function setSelection(upDown, vnode) {
+
+  const { groupId, questionId, subQuestionId, optionId } = vnode.attrs.ids;
+
+  console.log('voted', upDown)
   if (upDown == "up") {
     vnode.state.up = !vnode.state.up;
     vnode.state.down = false;
 
     if (vnode.state.up) {
       setLike(
-        vnode.attrs.groupId,
-        vnode.attrs.questionId,
-        vnode.attrs.subQuestionId,
-        vnode.attrs.optionId,
+        groupId,
+        questionId,
+        subQuestionId,
+        optionId,
         store.user.uid,
         1
       );
     } else {
       setLike(
-        vnode.attrs.groupId,
-        vnode.attrs.questionId,
-        vnode.attrs.subQuestionId,
-        vnode.attrs.optionId,
+        groupId,
+        questionId,
+        subQuestionId,
+        optionId,
         store.user.uid,
         0
       );
@@ -395,19 +397,19 @@ function setSelection(upDown, vnode) {
     vnode.state.up = false;
     if (vnode.state.down) {
       setLike(
-        vnode.attrs.groupId,
-        vnode.attrs.questionId,
-        vnode.attrs.subQuestionId,
-        vnode.attrs.optionId,
+        groupId,
+        questionId,
+        subQuestionId,
+        optionId,
         store.user.uid,
         -1
       );
     } else {
       setLike(
-        vnode.attrs.groupId,
-        vnode.attrs.questionId,
-        vnode.attrs.subQuestionId,
-        vnode.attrs.optionId,
+        groupId,
+        questionId,
+        subQuestionId,
+        optionId,
         store.user.uid,
         0
       );
@@ -421,10 +423,13 @@ function isAnonymous(e, vnode) {
 
 function handleHide(vnode) {
   try {
+
+    const { groupId, questionId, subQuestionId, optionId } = vnode.attrs.ids;
+
     let isDeactivate = confirm("האם אתם בטוחים שיש להחביא אופציה זאת?");
 
     if (isDeactivate) {
-      setOptionActive(vnode.attrs.groupId, vnode.attrs.questionId, vnode.attrs.subQuestionId, vnode.attrs.optionId, false)
+      setOptionActive(groupId, questionId, subQuestionId, optionId, false)
     }
   }
   catch (err) {

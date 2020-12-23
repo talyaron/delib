@@ -403,29 +403,37 @@ function getOptionDetails(groupId, questionId, subQuestionId, optionId, vnode) {
 }
 
 function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId) {
-    let voteRef = DB
-        .collection("groups")
-        .doc(groupId)
-        .collection("questions")
-        .doc(questionId)
-        .collection("subQuestions")
-        .doc(subQuestionId)
-        .collection("options")
-        .doc(optionId)
-        .collection("likes")
-        .doc(creatorId);
+    try {
 
-    let unsubscribe = voteRef.onSnapshot(voteDB => {
-        if (voteDB.exists) {
-            store.optionsVotes[optionId] = voteDB
-                .data()
-                .like;
-        } else {
-            store.optionsVotes[optionId] = 0;
-        }
-        m.redraw();
-    });
-    return unsubscribe;
+        console.log('getOptionVote',groupId, questionId, subQuestionId, optionId, creatorId)
+
+        if (groupId === undefined || questionId === undefined || subQuestionId === undefined || optionId === undefined || creatorId === undefined) throw new Error("One of the Ids groupId, questionId, subQuestionId, optionId, creatorId is missing", groupId, questionId, subQuestionId, optionId, creatorId)
+        let voteRef = DB
+            .collection("groups")
+            .doc(groupId)
+            .collection("questions")
+            .doc(questionId)
+            .collection("subQuestions")
+            .doc(subQuestionId)
+            .collection("options")
+            .doc(optionId)
+            .collection("likes")
+            .doc(creatorId);
+
+        let unsubscribe = voteRef.onSnapshot(voteDB => {
+
+         
+            if (voteDB.exists) {
+                store.optionsVotes[optionId] = voteDB.data().like;
+            } else {
+                store.optionsVotes[optionId] = 0;
+            }
+            m.redraw();
+        });
+        return unsubscribe;
+    } catch (e) {
+        console.error(e)
+    }
 }
 
 function listenToConsequences(groupId, questionId, subQuestionId, optionId) {
@@ -948,12 +956,12 @@ function getLastTimeEntered(ids, vnode) {
 
 
         const { groupId, questionId, subQuestionId, optionId, consequenceId } = ids;
-       
+
 
         let path = concatenateDBPath(groupId, questionId, subQuestionId, optionId, consequenceId);
         const regex = new RegExp('/', 'gi')
         path = path.replace(regex, '-')
-        console.log(path)
+
 
         if (path !== '-groups') {
             DB.collection(`users`).doc(store.user.uid).collection('chatLastEnterence').doc(path)
@@ -961,7 +969,7 @@ function getLastTimeEntered(ids, vnode) {
                 .then(time => {
                     if (time.data() !== undefined) {
                         vnode.state.lastTimeEntered = time.data().lastTime.seconds;
-                        console.log(new Date(time.data().lastTime.seconds*1000))
+
                         m.redraw();
                     } else {
                         vnode.state.lastTimeEntered = 0;
@@ -972,7 +980,7 @@ function getLastTimeEntered(ids, vnode) {
             vnode.state.unreadMessages = 0;
             throw new Error('couldnt find path to spesific chat (groupId, questionId, subQuestionId, optionId, consequenceId)', groupId, questionId, subQuestionId, optionId, consequenceId);
         }
-   }
+    }
 
 
     catch (e) {
