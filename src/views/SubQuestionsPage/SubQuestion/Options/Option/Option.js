@@ -43,6 +43,7 @@ module.exports = {
       isEdit: false,
       isNamed: true,
       more: vnode.attrs.more || { text: "", URL: "" },
+      messagesRead: 0
     };
 
     vnode.state.likeUnsubscribe = getOptionVote(groupId, questionId, subQuestionId, optionId, store.user.uid);
@@ -89,10 +90,19 @@ module.exports = {
       vnode.state.up = false;
       vnode.state.down = false;
     }
+    console.log(store.optionNumberOfMessagesRead)
+    if ({}.hasOwnProperty.call(store.optionNumberOfMessagesRead, optionId)){
+
+     
+      vnode.state.messagesRead = store.optionNumberOfMessagesRead[optionId]
+
+    } 
   },
   onupdate: (vnode) => {
 
     const { optionId } = vnode.attrs.ids;
+
+    
 
     //animation
     let element = vnode.dom;
@@ -321,7 +331,7 @@ module.exports = {
             >
               <img src="img/chat.svg" />
               {!isNaN(vnode.attrs.messagesCounter)
-                ? vnode.attrs.messagesCounter
+                ? vnode.attrs.messagesCounter - vnode.state.messagesRead
                 : 0}
             </div>
             <div

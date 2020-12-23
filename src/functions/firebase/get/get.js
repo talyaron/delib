@@ -301,6 +301,9 @@ function listenToOptions(groupId, questionId, subQuestionId, order = 'top', isSi
                     let optionsArray = [];
                     optionsDB.forEach(optionDB => {
 
+                      
+                        //see how many message the user read (from total mesaages of option). use this to calculate hoem namy messages the user didn't read.
+                        listenToUserLastReadOfOptionChat(optionDB.data().optionId);
 
                         //this is a patch TODO: change all data to query of active or not active options
                         if (optionDB.data().isActive == null || optionDB.data().isActive == true) {
@@ -349,6 +352,33 @@ function listenToOptions(groupId, questionId, subQuestionId, order = 'top', isSi
     }
 
 }
+
+function listenToUserLastReadOfOptionChat(optionId) {
+    try {
+
+
+        if (!{}.hasOwnProperty.call(store.optionNumberOfMessagesRead, optionId)) {
+
+            console.log(optionId)
+            DB.collection('users')
+                .doc(store.user.uid)
+                .collection('optionsRead')
+                .doc(optionId)
+                .onSnapshot(optionListenDB => {
+                    console.log(optionListenDB.data())
+                    const numberOfMessages = optionListenDB.data().numberOfMessages || 0;
+                    store.optionNumberOfMessagesRead[optionId] = numberOfMessages;
+                    m.redraw()
+                },e => { console.error(e)})
+                
+                
+        }
+
+    } catch (e) {
+        console.error(e)
+    }
+}
+
 
 function listenToOption(ids) {
     try {
@@ -405,7 +435,7 @@ function getOptionDetails(groupId, questionId, subQuestionId, optionId, vnode) {
 function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId) {
     try {
 
-        console.log('getOptionVote',groupId, questionId, subQuestionId, optionId, creatorId)
+       
 
         if (groupId === undefined || questionId === undefined || subQuestionId === undefined || optionId === undefined || creatorId === undefined) throw new Error("One of the Ids groupId, questionId, subQuestionId, optionId, creatorId is missing", groupId, questionId, subQuestionId, optionId, creatorId)
         let voteRef = DB
@@ -422,7 +452,7 @@ function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId) 
 
         let unsubscribe = voteRef.onSnapshot(voteDB => {
 
-         
+
             if (voteDB.exists) {
                 store.optionsVotes[optionId] = voteDB.data().like;
             } else {
@@ -942,7 +972,7 @@ function listenIfGetsMessages(ids) {
                 }
 
                 m.redraw();
-            })
+            },e=>{console.error(e)})
 
         }
     } catch (e) {

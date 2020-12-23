@@ -6,9 +6,9 @@ import store from '../../data/store';
 
 //function
 import { get } from 'lodash';
-import {} from '../../functions/firebase/set/set';
-import { listenToOption, listenToChat, listenToConsequences,getLastTimeEntered } from '../../functions/firebase/get/get';
-import { randomizeArray,  getFirstUrl,concatenateDBPath} from '../../functions/general';
+import { setNumberOfMessagesMark } from '../../functions/firebase/set/set';
+import { listenToOption, listenToChat, listenToConsequences, getLastTimeEntered } from '../../functions/firebase/get/get';
+import { randomizeArray, getFirstUrl, concatenateDBPath } from '../../functions/general';
 
 
 // components
@@ -28,16 +28,13 @@ let unsubscribeChat = () => { };
 module.exports = {
     oninit: vnode => {
 
+        const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
 
         let firstUrl = getFirstUrl();
 
-       
-
-        const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
-
         store.lastPage = `/${firstUrl}/${groupId}/${questionId}/${subQuestionId}/${optionId}`;
         sessionStorage.setItem('lastPage', store.lastPage)
-       
+
 
         if (store.user.uid == undefined) {
             m.route.set('/login');
@@ -47,17 +44,18 @@ module.exports = {
         vnode.state = {
             option: get(store, `option[${optionId}]`, {}),
             subPage: 'main',
+            previousSubPage: 'main',
             subscribed: false,
             showModal: false,
             consequences: store.consequences[optionId] || [false],
             orderBy: 'new',
             unreadMessages: 0,
-            lastTimeEntered:0
+            lastTimeEntered: 0
         };
 
-        if(firstUrl === 'option'){
+        if (firstUrl === 'option') {
             vnode.state.subPage = 'main';
-        } else{
+        } else {
             vnode.state.subPage = 'chat';
         }
 
@@ -72,13 +70,20 @@ module.exports = {
         sortBy(vnode)
 
     },
-    oncreate:vnode=>{
+    oncreate: vnode => {
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
-        
+
         getLastTimeEntered({ groupId, questionId, subQuestionId, optionId }, vnode);
     },
     onbeforeupdate: vnode => {
+
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
+
+       
+
+        let hasChangedToChat = checkIfChangedToChatPage(vnode);
+        if (hasChangedToChat === true) setNumberOfMessagesMark({ optionId }, vnode.state.option.numberOfMessages)
+    
 
         vnode.state.option = get(store, `option[${optionId}]`, {})
         vnode.state.consequences = store.consequences[optionId] || [];
@@ -101,12 +106,12 @@ module.exports = {
         unsubscribe();
         unsubscribeChat();
 
-        
+
     },
     view: vnode => {
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
         const { option, subPage, consequences } = vnode.state;
-   
+
         return (
             <div class='page page-grid-option' style={subPage == 'main' ? '' : `grid-template-rows: fit-content(100px) auto;`}>
                 <div class='optionPage__header'>
@@ -313,4 +318,18 @@ function showColor(vnode) {
 
 
     }
+}
+
+function checkIfChangedToChatPage(vnode) {
+    let { subPage, previousSubPage } = vnode.state;
+
+    if (subPage !== previousSubPage && subPage === 'chat') {
+        vnode.state.previousSubPage = subPage;
+        return true;
+    }
+
+    vnode.state.previousSubPage = subPage;
+    return false
+
+
 }

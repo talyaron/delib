@@ -880,6 +880,28 @@ function setNotifications(ids, isSubscribed) {
 
 }
 
+
+function setNumberOfMessagesMark(ids, numberOfMessages = 0) {
+
+    try {
+        const { optionId } = ids;
+        if (optionId === undefined) throw new Error("option doesnt have optionId")
+
+        console.log(optionId, numberOfMessages)
+
+        DB.collection('users')
+            .doc(store.user.uid)
+            .collection('optionsRead')
+            .doc(optionId)
+            .set({ numberOfMessages })
+            .then(() => { console.log('numberOfMessages:', numberOfMessages) })
+            .catch(e => { console.error(e) })
+
+    } catch (e) {
+        console.error(e)
+    }
+}
+
 module.exports = {
     updateOption,
     addToFeed,
@@ -911,5 +933,6 @@ module.exports = {
     setChatLastEntrance,
     setToFeedLastEntrance,
     zeroChatFeedMessages,
-    setNotifications
+    setNotifications,
+    setNumberOfMessagesMark
 };

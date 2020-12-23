@@ -25,6 +25,7 @@ var store = {
     optionsVotes: {}, //store how the user voted on each option. stored as {optionId: -1 to 1}
     optionsLoc: {}, //options location. used for animations
     optionsDetails: {}, //vote on options by user
+    optionNumberOfMessagesRead:{}, //store how many messages in option chat, the user has read.
     consequences:{}, //store consequnces in theis format: {optionId:[]}
     consequencesListen:{}, //use to store if listen to consequences on spesific option
     consequencesTop:{}, //used to store top consequnces for an option format {optionId:[consequences]}
