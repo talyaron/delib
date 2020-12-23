@@ -23,7 +23,7 @@ import { getQuestionDetails, getSubQuestion, getLastTimeEntered, listenToChat } 
 import { setChatLastEntrance } from '../../functions/firebase/set/set';
 import { deep_value, getIsChat, concatenateDBPath } from '../../functions/general';
 
-let lastTimeEntered = 0;
+
 
 module.exports = {
     oninit: vnode => {
@@ -74,7 +74,8 @@ module.exports = {
                 subQuestionId: ''
             },
             subPage: getIsChat() ? 'chat' : 'main',
-            unreadMessages: 0
+            unreadMessages: 0,
+            lastTimeEntered:0
 
         }
 
@@ -118,10 +119,10 @@ module.exports = {
 
         //get number of unread massages
         if (vnode.state.subPage === 'chat') {
-            lastTimeEntered = new Date().getTime() / 1000
+            vnode.state.lastTimeEntered = new Date().getTime() / 1000
         }
         const path = concatenateDBPath(groupId, questionId);
-        vnode.state.unreadMessages = store.chat[path].filter(m => m.createdTime.seconds > lastTimeEntered).length;
+        vnode.state.unreadMessages = store.chat[path].filter(m => m.createdTime.seconds > vnode.state.lastTimeEntered).length;
 
     },
 

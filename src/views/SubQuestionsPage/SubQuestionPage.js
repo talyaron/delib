@@ -22,7 +22,7 @@ import { getIsChat, concatenateDBPath } from '../../functions/general';
 import { get } from "lodash";
 
 let unsubscribe = () => { }, unsubscribeChat = () => { };
-let lastTimeEntered = 0;
+
 
 module.exports = {
 
@@ -60,7 +60,8 @@ module.exports = {
             },
             subscribed: false,
             path: concatenateDBPath(groupId, questionId, subQuestionId),
-            unreadMessages: 0
+            unreadMessages: 0,
+            lastTimeEntered:0
         }
 
 
@@ -96,10 +97,10 @@ module.exports = {
 
         //get number of unread massages
         if (vnode.state.subPage === 'chat') {
-            lastTimeEntered = new Date().getTime() / 1000
+            vnode.state.lastTimeEntered = new Date().getTime() / 1000
         }
         const path = concatenateDBPath(groupId, questionId, subQuestionId);
-        vnode.state.unreadMessages = store.chat[path].filter(m => m.createdTime.seconds > lastTimeEntered).length;
+        vnode.state.unreadMessages = store.chat[path].filter(m => m.createdTime.seconds > vnode.state.lastTimeEntered).length;
 
 
     },

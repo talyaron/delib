@@ -6,8 +6,9 @@ import store from '../../data/store';
 
 //function
 import { get } from 'lodash';
-import { listenToOption, listenToChat, listenToConsequences } from '../../functions/firebase/get/get';
-import { randomizeArray,  getFirstUrl} from '../../functions/general';
+import {setChatLastEntrance} from '../../functions/firebase/set/set';
+import { listenToOption, listenToChat, listenToConsequences,getLastTimeEntered } from '../../functions/firebase/get/get';
+import { randomizeArray,  getFirstUrl,concatenateDBPath} from '../../functions/general';
 
 
 // components
@@ -22,6 +23,7 @@ import Description from './Description/Description'
 
 let unsubscribe = () => { };
 let unsubscribeChat = () => { };
+
 
 module.exports = {
     oninit: vnode => {
@@ -48,7 +50,9 @@ module.exports = {
             subscribed: false,
             showModal: false,
             consequences: store.consequences[optionId] || [false],
-            orderBy: 'new'
+            orderBy: 'new',
+            unreadMessages: 0,
+            lastTimeEntered:0
         };
 
         if(firstUrl === 'option'){
@@ -68,8 +72,14 @@ module.exports = {
         sortBy(vnode)
 
     },
+    oncreate:vnode=>{
+        const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
+        
+        getLastTimeEntered({ groupId, questionId, subQuestionId, optionId }, vnode);
+    },
     onbeforeupdate: vnode => {
-        const { optionId } = vnode.attrs;
+        const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
+
         vnode.state.option = get(store, `option[${optionId}]`, {})
         vnode.state.consequences = store.consequences[optionId] || [];
 
@@ -77,10 +87,21 @@ module.exports = {
 
         if (vnode.state.orderBy !== 'random') { sortBy(vnode) }
 
+        //get number of unread massages
+        if (vnode.state.subPage === 'chat') {
+            vnode.state.lastTimeEntered = new Date().getTime() / 1000
+        }
+        const path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
+        vnode.state.unreadMessages = store.chat[path].filter(m => m.createdTime.seconds > vnode.state.lastTimeEntered).length;
+
     },
     onremove: vnode => {
+        const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
+
         unsubscribe();
         unsubscribeChat();
+
+        setChatLastEntrance({ groupId, questionId, subQuestionId, optionId })
     },
     view: vnode => {
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
@@ -105,6 +126,7 @@ module.exports = {
                         chatUrl={`/option-chat/${groupId}/${questionId}/${subQuestionId}/${optionId}`}
                         ids={{ groupId, questionId, subQuestionId, optionId }}
                         isSubscribed={vnode.state.subscribed}
+                        unreadMessages={vnode.state.unreadMessages}
                     />
                 </div>
                 {subPage === 'main' ?

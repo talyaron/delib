@@ -815,6 +815,8 @@ function setChatLastEntrance(ids) {
     try {
         const { groupId, questionId, subQuestionId, optionId, consequenceId } = ids;
 
+        console.log('clocked out')
+
         let path = concatenateDBPath(groupId, questionId, subQuestionId, optionId, consequenceId);
         const regex = new RegExp('/', 'gi')
         path = path.replace(regex, '-')

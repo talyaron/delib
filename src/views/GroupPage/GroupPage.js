@@ -21,7 +21,7 @@ import { getQuestions, getGroupDetails, listenToChat, getLastTimeEntered } from 
 import { setLastPage, getIsChat, concatenateDBPath} from '../../functions/general';
 
 
-let lastTimeEntered = 0;
+
 
 module.exports = {
 
@@ -48,7 +48,8 @@ module.exports = {
             questions: [false],
             unsubscribe: {},
             groupName: get(store, 'groups[' + vnode.attrs.id + '].title', 'שם הקבוצה'),
-            unreadMessages: 0
+            unreadMessages: 0,
+            lastTimeEntered:0
         }
 
         getQuestions('on', vnode.attrs.id, vnode);
@@ -89,10 +90,14 @@ module.exports = {
 
         //get number of unread massages
         if (vnode.state.subPage === 'chat') {
-            lastTimeEntered = new Date().getTime() / 1000
+            vnode.state.lastTimeEntered = new Date().getTime() / 1000
         }
+
+        
         const path = concatenateDBPath(groupId);
-        vnode.state.unreadMessages = store.chat[path].filter(m => m.createdTime.seconds > lastTimeEntered).length;
+        vnode.state.unreadMessages = store.chat[path].filter(m => {
+            console.log( m.createdTime.seconds , vnode.state.lastTimeEntered,  m.createdTime.seconds > vnode.state.lastTimeEntered)
+            return m.createdTime.seconds > vnode.state.lastTimeEntered}).length;
     },
     onupdate: vnode => {
 
@@ -106,6 +111,7 @@ module.exports = {
         vnode.state.unsubscribe.chat();
 
         setChatLastEntrance({ groupId })
+        
     },
     view: vnode => {
 

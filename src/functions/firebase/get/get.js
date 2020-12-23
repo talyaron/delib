@@ -948,7 +948,7 @@ function getLastTimeEntered(ids, vnode) {
 
 
         const { groupId, questionId, subQuestionId, optionId, consequenceId } = ids;
-        console.log(groupId, questionId, subQuestionId, optionId, consequenceId)
+       
 
         let path = concatenateDBPath(groupId, questionId, subQuestionId, optionId, consequenceId);
         const regex = new RegExp('/', 'gi')
@@ -960,10 +960,11 @@ function getLastTimeEntered(ids, vnode) {
                 .get()
                 .then(time => {
                     if (time.data() !== undefined) {
-                        vnode.state.unreadMessages = time.data().lastTime.seconds;
+                        vnode.state.lastTimeEntered = time.data().lastTime.seconds;
+                        console.log(new Date(time.data().lastTime.seconds*1000))
                         m.redraw();
                     } else {
-                        vnode.state.unreadMessages = 0;
+                        vnode.state.lastTimeEntered = 0;
                     }
                 })
         } else {
