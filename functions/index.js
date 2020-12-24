@@ -558,9 +558,9 @@ function sendToSubscribers(info) {
 }
 
 
-// listen to chats
+// ---------- listen to chats ------ ///
 exports.listenToGroupChats = functions.firestore
-  .document("groups/{groupId}/chat/{chatMassageId}")
+  .document("groups/{groupId}/messages/{chatMassageId}")
   .onCreate((newMsg, context) => {
     try {
       const { groupId, chatMassageId } = context.params;
@@ -570,13 +570,10 @@ exports.listenToGroupChats = functions.firestore
         .collection(`/groups/${groupId}/subscribers`)
         .get()
         .then(subscribersDB => {
-
-
           return subscribersDB.forEach(subscriberDB => {
             console.log('update user ', subscriberDB.id)
 
-
-            const userChatRef = db.collection('users').doc(subscriberDB.id).collection('chat').doc(`${generateChatEntitiyId({ groupId })}`);
+            const userChatRef = db.collection('users').doc(subscriberDB.id).collection('messages').doc(`${generateChatEntitiyId({ groupId })}`);
 
             return userChatRef.update({
               msgNumber: FieldValue.increment(1),
@@ -584,26 +581,36 @@ exports.listenToGroupChats = functions.firestore
               msg: newMsg.data(),
               date: new Date()
             })
+          })
 
-            // return db.runTransaction(async t => {
+        })
+    } catch (err) {
+      console.log(err)
+    }
+  })
 
-            //   const msg = await t.get(userChatRef)
-
-            //   console.log('msg:', newMsg.data())
-
-            //   const newMsgNumber = msg.data().msgNumber + 1;
-            //   const msgsNotSeen = newMsgNumber - msg.data().msgLastSeen;
-            //   console.log('msg number is 22:', newMsgNumber, msgsNotSeen)
-
-            //   return t.update(userChatRef, {
-            //     msg: newMsg.data(),
-            //     msgNumber: newMsgNumber,
-            //     msgsNotSeen
-
-            //   })
-            // })
+  exports.listenToQuestionChats = functions.firestore
+  .document("groups/{groupId}/questions/{questionId}/messages/{chatMassageId}")
+  .onCreate((newMsg, context) => {
+    try {
+      const { groupId, questionId } = context.params;
 
 
+      return db
+        .collection(`/groups/${groupId}/questions/${questionId}/subscribers`)
+        .get()
+        .then(subscribersDB => {
+          return subscribersDB.forEach(subscriberDB => {
+            console.log('update user ', subscriberDB.id)
+
+            const userChatRef = db.collection('users').doc(subscriberDB.id).collection('messages').doc(`${generateChatEntitiyId({ groupId, questionId})}`);
+
+            return userChatRef.update({
+              msgNumber: FieldValue.increment(1),
+              msgDifference: FieldValue.increment(1),
+              msg: newMsg.data(),
+              date: new Date()
+            })
           })
 
         })
@@ -863,7 +870,7 @@ exports.calcValidateEval = functions.firestore
           evaluationAvg = evaluationSum / totalVotes;
 
         }
-        totalWeight = truthinessAvg*evaluationAvg;
+        totalWeight = truthinessAvg * evaluationAvg;
         let totalWeightAbs = Math.abs(totalWeight)
 
         return transaction.update(consequenceRef, {

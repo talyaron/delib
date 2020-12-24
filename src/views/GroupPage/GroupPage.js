@@ -96,7 +96,7 @@ module.exports = {
         
         const path = concatenateDBPath(groupId);
         vnode.state.unreadMessages = store.chat[path].filter(m => {
-            console.log( m.createdTime.seconds , vnode.state.lastTimeEntered,  m.createdTime.seconds > vnode.state.lastTimeEntered)
+         
             return m.createdTime.seconds > vnode.state.lastTimeEntered}).length;
     },
     onupdate: vnode => {

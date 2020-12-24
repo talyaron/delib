@@ -765,14 +765,13 @@ function subscribeUser(settings) {
         const { groupId, questionId, subQuestionId, optionId, title, entityType } = settings.vnode.attrs;
         const { subscribe } = settings;
 
-
         //build path for the enenties subscription collection
         const subscriptionPath = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
         let chatEntityId = generateChatEntitiyId({ groupId, questionId, subQuestionId, optionId });
 
 
         const { uid, displayName, email, photoURL } = store.user
-
+        console.log('subscribeUser', uid, subscriptionPath)
 
         if (subscribe === false) {
             //if user is not subscribed then subscribe the user
@@ -785,11 +784,13 @@ function subscribeUser(settings) {
                 .then(() => {
                     console.info('User subscribed succsefuly to entity');
                     DB.collection('users').doc(uid)
-                        .collection('chat').doc(chatEntityId).set({  //add initial counter
+                        .collection('messages').doc(chatEntityId).set({  //add initial counter
                             msgNumber: 0,
                             msgLastSeen: 0,
                             msgDifference: 0
-                        }).catch(e => {
+                        })
+                        .then(()=>{console.log('user subscribed in messages')})
+                        .catch(e => {
                             console.error('Error in saving new chat following on the user', e)
                         })
                 })
@@ -802,9 +803,11 @@ function subscribeUser(settings) {
                 .delete()
                 .then(() => {
                     DB.collection('users').doc(uid)
-                        .collection('chat').doc(chatEntityId).delete().then(() => {
+                        .collection('messages').doc(chatEntityId).delete().then(() => {
                             console.info('User unsubscribed succsefuly from entity')
-                        }).catch(e => {
+                        })
+                        .then(()=>{console.log('user unsubscribed in messages')})
+                        .catch(e => {
                             console.error(e)
                         })
 
@@ -847,7 +850,7 @@ function zeroChatFeedMessages(ids, isSubscribed = true) {
 
             const path = generateChatEntitiyId(ids)
 
-            DB.collection('users').doc(store.user.uid).collection('chat').doc(path).update({ msgDifference: 0 }).catch(e => console.error(e))
+            DB.collection('users').doc(store.user.uid).collection('messages').doc(path).update({ msgDifference: 0 }).catch(e => console.error(e))
         }
     } catch (e) {
         console.error(e)

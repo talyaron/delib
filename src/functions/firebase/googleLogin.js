@@ -25,10 +25,11 @@ function googleLogin() {
         var email = error.email;
         // The firebase.auth.AuthCredential type that was used.
         var credential = error.credential;
+        console.error(errorCode, errorMessage, email, credential)
         // ...
     });
 
-    provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+    // provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
 }
 
 function anonymousLogin() {
