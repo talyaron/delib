@@ -770,9 +770,8 @@ function subscribeUser(settings) {
         let chatEntityId = generateChatEntitiyId({ groupId, questionId, subQuestionId, optionId });
 
 
-        const { uid, displayName, email, photoURL } = store.user
-        console.log('subscribeUser', uid, subscriptionPath)
-
+        const { uid, displayName, email, photoURL } = store.user;
+      
         if (subscribe === false) {
             //if user is not subscribed then subscribe the user
 
