@@ -120,6 +120,8 @@ module.exports = {
                         upLevelUrl={`/subquestions/${groupId}/${questionId}/${subQuestionId}`}
                         groupId={groupId}
                         questionId={questionId}
+                        subQuestionId={subQuestionId}
+                        optionId={optionId}
                         showSubscribe={true}
                         subQuestionId={subQuestionId}
                     />

@@ -438,17 +438,17 @@ exports.updateQuestionSubscribers = functions.firestore
   });
 
 //update subscribers on CUD of options under a subQuestion
-exports.updateSubQuestionSubscribers = functions.firestore
-  .document(
-    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}"
-  )
-  .onWrite((change, context) => {
-    // try {
-    //   return sendToSubscribers({ change, context });
-    // } catch (err) {
-    //   console.log('err')
-    // }
-  });
+// exports.updateSubQuestionSubscribers = functions.firestore
+//   .document(
+//     "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}"
+//   )
+//   .onWrite((change, context) => {
+//     // try {
+//     //   return sendToSubscribers({ change, context });
+//     // } catch (err) {
+//     //   console.log('err')
+//     // }
+//   });
 
 function sendToSubscribers(info) {
   try {
@@ -618,6 +618,67 @@ exports.listenToGroupChats = functions.firestore
       console.log(err)
     }
   })
+
+  exports.listenToSubQuestionChats = functions.firestore
+  .document("groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/messages/{chatMassageId}")
+  .onCreate((newMsg, context) => {
+    try {
+      const { groupId, questionId,subQuestionId } = context.params;
+
+
+      return db
+        .collection(`/groups/${groupId}/questions/${questionId}/subQuestions/${subQuestionId}/subscribers`)
+        .get()
+        .then(subscribersDB => {
+          return subscribersDB.forEach(subscriberDB => {
+            console.log('update user ', subscriberDB.id)
+
+            const userChatRef = db.collection('users').doc(subscriberDB.id).collection('messages').doc(`${generateChatEntitiyId({ groupId, questionId,subQuestionId})}`);
+
+            return userChatRef.update({
+              msgNumber: FieldValue.increment(1),
+              msgDifference: FieldValue.increment(1),
+              msg: newMsg.data(),
+              date: new Date()
+            })
+          })
+
+        })
+    } catch (err) {
+      console.log(err)
+    }
+  })
+
+  exports.listenToOptionChats = functions.firestore
+  .document("groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}/messages/{chatMassageId}")
+  .onCreate((newMsg, context) => {
+    try {
+      const { groupId, questionId,subQuestionId, optionId } = context.params;
+
+
+      return db
+        .collection(`/groups/${groupId}/questions/${questionId}/subQuestions/${subQuestionId}/options/${optionId}/subscribers`)
+        .get()
+        .then(subscribersDB => {
+          return subscribersDB.forEach(subscriberDB => {
+            console.log('update user on option', subscriberDB.id)
+
+            const userChatRef = db.collection('users').doc(subscriberDB.id).collection('messages').doc(`${generateChatEntitiyId({ groupId, questionId,subQuestionId, optionId})}`);
+
+            return userChatRef.update({
+              msgNumber: FieldValue.increment(1),
+              msgDifference: FieldValue.increment(1),
+              msg: newMsg.data(),
+              date: new Date()
+            })
+          })
+
+        })
+    } catch (err) {
+      console.log(err)
+    }
+  })
+//  ---------- End Listen to Chats -----------
 
 
 function generateChatEntitiyId(ids) {
