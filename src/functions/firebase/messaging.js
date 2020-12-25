@@ -13,28 +13,39 @@ import {
 } from '../../data/dataTypes';
 
 import { concatenateDBPath, setBrowserUniqueId } from '../general';
-import {usePublicVapidKey} from '../firebase/configKey'
+import { usePublicVapidKey } from '../firebase/configKey'
 
 let MESSAGING;
 
-if ('Notification' in window) {
+(() => {
+    try {
+       
+       
 
-    // Retrieve Firebase Messaging object.
-    MESSAGING = firebase.messaging();
-    // Add the public key generated from the console here.
-    MESSAGING.usePublicVapidKey(
-        usePublicVapidKey
-    );
+        if ('Notification' in window) {
 
-    // Callback fired if Instance ID token is updated.
-    MESSAGING.onTokenRefresh(function () {
-        handleTokenRefresh();
-    });
+            // Retrieve Firebase Messaging object.
+            MESSAGING = firebase.messaging();
+           
+            // Add the public key generated from the console here.
+            MESSAGING.usePublicVapidKey(
+                usePublicVapidKey
+            );
 
-    MESSAGING.onMessage(function (payload) {
+            // Callback fired if Instance ID token is updated.
+            MESSAGING.onTokenRefresh(function () {
+                handleTokenRefresh();
+            });
 
-    });
-}
+            MESSAGING.onMessage(function (payload) {
+
+            });
+        }
+    } catch (e) {
+        console.error(e)
+        alert(e.message)
+    }
+})()
 
 // update which enteties are subscribed
 function getSubscriptions() {
@@ -64,7 +75,7 @@ function subscribeToNotification(ids, subscribe = true) {
     try {
         if ('Notification' in window) {
 
-           
+
             MESSAGING.requestPermission()
                 .then(() => {
                     console.info('Notification permission granted.');
@@ -132,7 +143,7 @@ function handleTokenRefresh(ids, subscribe) {
                     tokenRef.update({ [deviceUniqueId]: firebase.firestore.FieldValue.delete() })
                 }
 
-               
+
             });
         }
     } catch (e) {

@@ -279,7 +279,7 @@ exports.sendPushForNewOptions = functions.firestore
 
 exports.optionChatNotifications = functions.firestore
   .document(
-    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/chat/{messageId}"
+    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/messages/{messageId}"
 
   )
   .onCreate((snap, context) => {
@@ -313,7 +313,7 @@ exports.optionChatNotifications = functions.firestore
 
 exports.subQuestionChatNotifications = functions.firestore
   .document(
-    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/chat/{messageId}"
+    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/messages/{messageId}"
 
   )
   .onCreate((snap, context) => {
@@ -346,7 +346,7 @@ exports.subQuestionChatNotifications = functions.firestore
 
 exports.questionChatNotifications = functions.firestore
   .document(
-    "groups/{groupId}/questions/{questionId}/chat/{messageId}"
+    "groups/{groupId}/questions/{questionId}/messages/{messageId}"
 
   )
   .onCreate((snap, context) => {
@@ -379,7 +379,7 @@ exports.questionChatNotifications = functions.firestore
 
 exports.groupChatNotifications = functions.firestore
   .document(
-    "groups/{groupId}/chat/{messageId}"
+    "groups/{groupId}/messages/{messageId}"
 
   )
   .onCreate((snap, context) => {
