@@ -84,11 +84,7 @@ module.exports = {
     },
     onbeforeupdate: vnode => {
 
-        console.log(store.subQuestions)
-
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
-
-
 
         let hasChangedToChat = checkIfChangedToChatPage(vnode);
         if (hasChangedToChat === true) setNumberOfMessagesMark({ optionId }, vnode.state.option.numberOfMessages)
