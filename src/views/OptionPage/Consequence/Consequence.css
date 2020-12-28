@@ -35,3 +35,40 @@
     text-align: center;
     justify-content: center;
 }
+.consequence__header{
+
+}
+.consequence__header--simple{
+    display: grid;
+    grid-template-columns: 30px auto 30px;
+    column-gap: 10px;
+}
+
+.consequence__vote{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 20px;
+    
+}
+
+.consequence__vote--pro{
+    background-color: rgba(0, 128, 0, 0.15);
+}
+.consequence__vote--proSelected{
+    background-color: rgba(0, 128, 0, 0.60);
+}
+
+.consequence__vote--against{
+    background-color: rgba(255, 0, 0, 0.15);
+}
+.consequence__vote--againstSelected{
+    background-color: rgba(255, 0, 0, 0.6);
+}
+
+.consequence__vote img{
+    width: 20px;
+   margin: 5px;
+}

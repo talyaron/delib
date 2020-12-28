@@ -17,14 +17,17 @@ module.exports = {
                 opacity: calcOpacity(truthinessAvg * 100) || 1,
                 truthiness: 1,
                 evaluation: 0,
+                isAgainst: false,
+                isPro: false
+
             }
 
             //get truthness and evaluation from voter preivous votes
-            
+
             let { truthiness, evaluation } = await getMyVotesOnConsequence(groupId, questionId, subQuestionId, optionId, consequenceId);
 
-         
-           
+
+
             if (typeof truthiness === 'number' && !isNaN(truthiness)) { vnode.state.truthiness = truthiness } else { vnode.state.truthiness = 1 };
             if (typeof evaluation === 'number' && !isNaN(evaluation)) { vnode.state.evaluation = evaluation } else { vnode.state.evaluation = 0 };
 
@@ -42,26 +45,52 @@ module.exports = {
 
     },
     view: vnode => {
-      
+
         try {
             const { title, description, consequenceId } = vnode.attrs.consequence;
-            const { showColor } = vnode.attrs;
+
+            const { showColor, proAgainstType } = vnode.attrs;
 
             return (
                 <div class='consequence' key={consequenceId} style={`background: ${showColor ? vnode.state.color : 'white'}; opacity:${showColor ? vnode.state.opacity : 1}`}>
-                    <h1>{title}</h1>
-                    <p>{description}</p>
+                    {proAgainstType === 'superSimple' ?
+                        <div class='consequence__header--simple'>
+                            <div
+                                class={vnode.state.isPro ? 'consequence__vote consequence__vote--pro consequence__vote--proSelected' : 'consequence__vote consequence__vote--pro'}
+                                onclick={() => handleVote('pro', vnode)}>
+                                <img src='img/good.png' alt='for' />
+                            </div>
+                            <div>
+                                <h1>{title}</h1>
+                                <p>{description}</p>
+                            </div>
+                            <div
+                                class={vnode.state.isAgainst?'consequence__vote consequence__vote--againstSelected':'consequence__vote consequence__vote--against'}
+                                onclick={() => handleVote('against', vnode)}>
+                                <img src='img/bad.png' alt='bad' />
+                            </div>
+                        </div>
+                        :
+                        <div class='consequence__header'>
+                            <h1>{title}</h1>
+                            <p>{description}</p>
+                        </div>
+                    }
                     <hr></hr>
-                    <div class='consequence__scores'>
-                        <div class='consequence__score'>
-                            <p>האם זה טוב או רע?</p>
-                            <p><span>רע</span><input type='range' class='sliderRange' onchange={e => handleEval(e, vnode)} min='-1' max='1' step='0.01' defaultValue={vnode.state.evaluation} /><span>טוב</span></p>
+                    {proAgainstType === 'advance' || proAgainstType === 'simple' ?
+                        <div class='consequence__scores'>
+                            <div class='consequence__score'>
+                                <p>האם זה טוב או רע?</p>
+                                <p><span>רע</span><input type='range' class='sliderRange' onchange={e => handleEval(e, vnode)} min='-1' max='1' step='0.01' defaultValue={vnode.state.evaluation} /><span>טוב</span></p>
+                            </div>
+                            <div class='consequence__score'>
+                                <p>האם לדעתך זה יקרה?</p>
+                                <p><span>לא</span><input type='range' class='sliderRange' onchange={e => handleTruthness(e, vnode)} defaultValue={vnode.state.truthiness} min='0' max='1' step='0.005' /><span> כן</span></p>
+                            </div>
                         </div>
-                        <div class='consequence__score'>
-                            <p>האם לדעתך זה יקרה?</p>
-                            <p><span>לא</span><input type='range' class='sliderRange' onchange={e => handleTruthness(e, vnode)} defaultValue={vnode.state.truthiness} min='0' max='1' step='0.005' /><span> כן</span></p>
-                        </div>
-                    </div>
+                        :
+                        null
+                    }
                 </div>
             )
         }
@@ -80,7 +109,7 @@ function handleEval(e, vnode) {
 
         vnode.state.evaluation = value;
 
-      
+
 
         voteConsequence({ groupId, questionId, subQuestionId, optionId, consequenceId }, vnode.state.truthiness, value)
     } catch (e) {
@@ -100,11 +129,57 @@ function handleTruthness(e, vnode) {
 
         const { groupId, questionId, subQuestionId, optionId, consequenceId } = vnode.attrs.consequence;
 
-      
+
 
         voteConsequence({ groupId, questionId, subQuestionId, optionId, consequenceId }, value, vnode.state.evaluation)
     } catch (e) {
         console.error(e)
     }
+}
+
+function handleVote(vote, vnode) {
+    try {
+        let voteAsNumber = 0;
+        if (vote == 'pro') {
+
+            if (vnode.state.isPro) {
+                voteAsNumber = 0;
+                
+            } else {
+                voteAsNumber = 1
+                
+            }
+
+            vnode.state.isPro = !vnode.state.isPro;
+            vnode.state.isAgainst = false;
+
+            console.log(vote)
+          
+
+        } else if (vote == 'against') {
+
+            if (vnode.state.isAgainst) {
+                voteAsNumber = 0;
+            } else {
+                voteAsNumber = -1
+                
+            }
+
+            vnode.state.isAgainst = !vnode.state.isAgainst;
+            vnode.state.isPro = false;
+
+           
+        } else {
+            throw new Error(`vote is either pro or agsainst: ${vote}`)
+        }
+
+        m.redraw()
+        const { groupId, questionId, subQuestionId, optionId, consequenceId } = vnode.attrs.consequence;
+        console.log('voteAsNumber', voteAsNumber)
+        voteConsequence({ groupId, questionId, subQuestionId, optionId, consequenceId }, 1, voteAsNumber)
+    } catch (e) {
+        console.error(e)
+    }
+
 }
 

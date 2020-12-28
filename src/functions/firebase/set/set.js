@@ -145,9 +145,10 @@ function updateSubQuestionOrderBy(groupId, questionId, subQuestionId, orderBy) {
 
 function setSubQuestion(ids, settings) {
     try {
-        const { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions } = settings;
+        const { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions, proAgainstType } = settings;
         const { groupId, questionId, subQuestionId } = ids;
 
+        console.log('setSubQuestion',subQuestionId, proAgainstType)
 
         const subQuestionRef = DB
             .collection('groups')
@@ -162,14 +163,14 @@ function setSubQuestion(ids, settings) {
             //new subQuestion
             const uid = uniqueId()
 
-            subQuestionRef.doc(uid).set({ title, processType, orderBy, groupId, questionId, subQuestionId: uid, userHaveNavigation, showSubQuestion, order: numberOfSubquestions, creator: store.user.uid })
-                .then(() => { `saved subQuestion ${uid} to DB` })
+            subQuestionRef.doc(uid).set({ title, processType, orderBy, groupId, questionId, subQuestionId: uid, userHaveNavigation, showSubQuestion, order: numberOfSubquestions,proAgainstType, creator: store.user.uid })
+                .then(() => { console.info(`saved subQuestion ${uid} to DB`) })
                 .catch(e => {
                     console.error(e)
                 })
         } else {
-            subQuestionRef.doc(subQuestionId).update({ title, processType, orderBy, groupId, questionId, subQuestionId, userHaveNavigation, showSubQuestion })
-                .then(() => { `updated subQuestion ${subQuestionId} to DB` })
+            subQuestionRef.doc(subQuestionId).update({ title, processType, orderBy, groupId, questionId, subQuestionId, userHaveNavigation, showSubQuestion,proAgainstType })
+                .then(() => { console.info(`updated subQuestion ${subQuestionId} to DB`) })
                 .catch(e => {
                     console.error(e)
                 })

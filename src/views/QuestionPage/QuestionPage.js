@@ -110,6 +110,7 @@ module.exports = {
         vnode.state.title = deep_value(store.questions, `${groupId}.${questionId}.title`, 'כותרת השאלה');
         vnode.state.description = deep_value(store.questions, `${groupId}.${questionId}.description`, '');
         let subQuestions = get(store.subQuestions, `[${groupId}]`, [])
+       
         vnode.state.subQuestions = subQuestions.sort((a, b) => a.order - b.order);
         let userRole = deep_value(store.questions, `${groupId}.${questionId}.roles.${store.user.uid}`, false);
         if (!userRole) {
@@ -194,6 +195,7 @@ module.exports = {
                                         info={settings.subItems.options}
                                         processType={subQuestion.processType}
                                         userHaveNavigation={subQuestion.userHaveNavigation}
+                                        proAgainstType={subQuestion.proAgainstType}
                                         showSubQuestion={subQuestion.showSubQuestion}
                                         numberOfSubquestions={vnode.state.subQuestions.length}
                                         isAlone={false}
@@ -260,7 +262,7 @@ module.exports = {
 }
 
 function orderBy(order, vnode) {
-    // getSubQuestion('off', vnode.attrs.groupId, vnode.attrs.questionId, order);
+    
 
     vnode
         .state

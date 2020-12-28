@@ -9,15 +9,16 @@ import {
 
 //model
 import settings from "../../../data/settings";
-import config from "../../../functions/firebase/configKey";
+
 
 module.exports = {
   oninit: vnode => {
     const { subQuestion, pvs } = vnode.attrs;
-
+ 
     const { modalSubQuestion } = pvs;
 
-    let { title, showSubQuestion, userHaveNavigation } = modalSubQuestion;
+    let { title, showSubQuestion, userHaveNavigation, proAgainstType } = modalSubQuestion;
+   
 
     if (userHaveNavigation === undefined) { userHaveNavigation = true };
     if (showSubQuestion == undefined) { showSubQuestion = true };
@@ -28,7 +29,8 @@ module.exports = {
       title: title,
       showSave: title.length > 2 ? true : false,
       showSubQuestion: showSubQuestion,
-      userHaveNavigation: userHaveNavigation
+      userHaveNavigation: userHaveNavigation,
+      proAgainstType: proAgainstType || 'superSimple'
 
     };
   },
@@ -36,15 +38,17 @@ module.exports = {
 
     const { pvs } = vnode.attrs;
     const { modalSubQuestion } = pvs;
-    const { subQuestionId, orderBy, processType,showSubQuestion } = modalSubQuestion;
-  
+    const { subQuestionId, orderBy, processType, showSubQuestion } = modalSubQuestion;
+    const { proAgainstType } = vnode.state;
+
+
 
     return (
       <div
         class="optionEditBox draggable"
         key={vnode.attrs.number}
         id={vnode.attrs.id}
-        
+
       >
 
         <form class="optionEditContent" onsubmit={(e) => { handleSubmit(e, vnode) }}>
@@ -119,6 +123,26 @@ module.exports = {
               </select>
             </div>
             <div class="editselectors">
+              <label for={"orderBy"}>סוג הבעד ונגד</label>
+              <select
+                id='orderBy'
+                name='orderBy'
+                class='inputGeneral'
+                onchange={e=>{vnode.state.proAgainstType = e.target.value}}
+              >
+                <option value="superSimple"
+                  selected={
+                    proAgainstType === 'superSimple' ? true : false
+                  }>בעד ונגד פשוט</option>
+                <option value="simple" selected={
+                  proAgainstType === 'simple' ? true : false
+                }>טווח של בעד ונגד</option>
+                <option value="advance" selected={
+                  proAgainstType === 'advance' ? true : false
+                }>טווח של בעד ונגד וייתכנות</option>
+              </select>
+            </div>
+            <div class="editselectors">
               <label for="nav">האם לאפשר למשתמש לנווט מחוץ לשאלה?</label>
               <select
                 id='nav'
@@ -134,10 +158,10 @@ module.exports = {
             <div class='subQuestionEdit__settings'>
               <div>
                 <input type='checkbox' name='show' checked={vnode.state.showSubQuestion == 'userSee'} id='showSubQuestion'
-                  onclick={() =>{handleCheckUserSee(vnode)}} ></input>
+                  onclick={() => { handleCheckUserSee(vnode) }} ></input>
                 <label for='showSubQuestion'>להציג</label>
               </div>
-              <div onclick={()=>handleDelete(vnode)}>
+              <div onclick={() => handleDelete(vnode)}>
                 <img src='img/delete.svg' alt='delete question' />
               </div>
             </div>
@@ -173,16 +197,14 @@ function handleSubmit(e, vnode) {
     const processType = elms.processType.value;
     const orderBy = elms.orderBy.value;
     const userHaveNavigation = vnode.state.userHaveNavigation;
+    const proAgainstType = vnode.state.proAgainstType;
     let showSubQuestion = vnode.state.showSubQuestion;
-    
+
 
     const { groupId, questionId } = pva;
     const { numberOfSubquestions, subQuestionId } = subQuestion;
 
-
-
-
-    setSubQuestion({ groupId, questionId, subQuestionId }, { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions });
+    setSubQuestion({ groupId, questionId, subQuestionId }, { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions, proAgainstType });
 
     //hide modal
     pvs.modalSubQuestion.isShow = false
@@ -191,29 +213,29 @@ function handleSubmit(e, vnode) {
   }
 }
 
-function handleCheckUserSee(vnode){
-  if(vnode.state.showSubQuestion === 'userSee'){
+function handleCheckUserSee(vnode) {
+  if (vnode.state.showSubQuestion === 'userSee') {
     vnode.state.showSubQuestion = 'hidden'
   } else {
     vnode.state.showSubQuestion = 'userSee'
   }
-  
+
 }
 
-function handleDelete(vnode){
-  try{
+function handleDelete(vnode) {
+  try {
     let toDelete = confirm('האם למחוק את ההודעה?');
 
-    if(toDelete){
+    if (toDelete) {
 
       const { subQuestion, pva, pvs } = vnode.attrs;
       const { groupId, questionId } = pva;
-    const {  subQuestionId } = subQuestion;
+      const { subQuestionId } = subQuestion;
 
       deleteSubQuestion(groupId, questionId, subQuestionId);
       pvs.modalSubQuestion.isShow = false;
     }
-  }catch(e){
+  } catch (e) {
     console.error(e)
   }
 }

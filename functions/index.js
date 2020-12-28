@@ -834,8 +834,7 @@ function concatenateURL(groupId, questionId, subQuestionId, optionId) {
 
 exports.calcValidateEval = functions.firestore
   .document(
-    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{op" +
-    "tionId}/consequences/{consequenceId}/voters/{userId}"
+    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}/consequences/{consequenceId}/voters/{userId}"
   )
   .onWrite((change, context) => {
 
@@ -933,6 +932,8 @@ exports.calcValidateEval = functions.firestore
         }
         totalWeight = truthinessAvg * evaluationAvg;
         let totalWeightAbs = Math.abs(totalWeight)
+
+        console.log(' totalVotes, evaluationSum,evaluationAvg,truthinessAvg,truthinessSum,totalWeight,totalWeightAbs', totalVotes, evaluationSum,evaluationAvg,truthinessAvg,truthinessSum,totalWeight,totalWeightAbs )
 
         return transaction.update(consequenceRef, {
           totalVotes,

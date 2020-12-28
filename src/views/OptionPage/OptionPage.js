@@ -7,7 +7,7 @@ import store from '../../data/store';
 //function
 import { get } from 'lodash';
 import { setNumberOfMessagesMark } from '../../functions/firebase/set/set';
-import { listenToOption, listenToChat, listenToConsequences, getLastTimeEntered } from '../../functions/firebase/get/get';
+import { listenToOption, listenToChat, listenToConsequences, getLastTimeEntered, getSubQuestion } from '../../functions/firebase/get/get';
 import { randomizeArray, getFirstUrl, concatenateDBPath } from '../../functions/general';
 
 
@@ -40,7 +40,6 @@ module.exports = {
             m.route.set('/login');
         }
 
-
         vnode.state = {
             option: get(store, `option[${optionId}]`, {}),
             subPage: 'main',
@@ -50,7 +49,8 @@ module.exports = {
             consequences: store.consequences[optionId] || [false],
             orderBy: 'new',
             unreadMessages: 0,
-            lastTimeEntered: 0
+            lastTimeEntered: 0,
+            subQuestion: {}
         };
 
         if (firstUrl === 'option') {
@@ -65,7 +65,14 @@ module.exports = {
 
         unsubscribe = listenToOption({ groupId, questionId, subQuestionId, optionId });
         unsubscribeChat = listenToChat({ groupId, questionId, subQuestionId, optionId })
-        listenToConsequences(groupId, questionId, subQuestionId, optionId)
+        listenToConsequences(groupId, questionId, subQuestionId, optionId);
+
+        //if not listening to the subGroup, listen
+        if (!{}.hasOwnProperty.call(store.subQuestions, subQuestionId)) {
+            getSubQuestion(groupId, questionId, subQuestionId);
+        } else {
+            vnode.state.subQuestion = get(store.subQuestions, `[${subQuestionId}]`, {})
+        }
 
         sortBy(vnode)
 
@@ -77,13 +84,15 @@ module.exports = {
     },
     onbeforeupdate: vnode => {
 
+        console.log(store.subQuestions)
+
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
 
-       
+
 
         let hasChangedToChat = checkIfChangedToChatPage(vnode);
         if (hasChangedToChat === true) setNumberOfMessagesMark({ optionId }, vnode.state.option.numberOfMessages)
-    
+
 
         vnode.state.option = get(store, `option[${optionId}]`, {})
         vnode.state.consequences = store.consequences[optionId] || [];
@@ -98,6 +107,10 @@ module.exports = {
         }
         const path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
         vnode.state.unreadMessages = store.chat[path].filter(m => m.createdTime.seconds > vnode.state.lastTimeEntered).length;
+
+        if ({}.hasOwnProperty.call(store.subQuestions, subQuestionId)) {
+            vnode.state.subQuestion = get(store.subQuestions, `[${subQuestionId}]`, {})
+        }
 
     },
     onremove: vnode => {
@@ -156,7 +169,13 @@ module.exports = {
                                 {consequences[0] === false ? <Spinner /> :
                                     consequences.map(consequence => {
 
-                                        return <Consequence consequence={consequence} key={consequence.consequenceId} showColor={showColor(vnode)} />
+                                        return <Consequence
+                                            consequence={consequence}
+                                            key={consequence.consequenceId}
+                                            showColor={showColor(vnode)}
+                                            proAgainstType={vnode.state.subQuestion.proAgainstType || 'superSimple'}
+                                        />
+
                                     })
                                 }
                             </div>

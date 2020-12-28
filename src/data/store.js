@@ -45,7 +45,7 @@ var store = {
     numberOfNewMessages: 0,
     subscribed: {}, //subscribed entityes
     subscribe:{}, //subscribed entities - second trial (orderd as path eg: 'groups/groupId/questions/...':true)
-    subQuestions: {}, //sotred {questionId:[]}
+    subQuestions: {}, //sotred {subQuestionId:{data}}
     subQuestionsListners:{}, //check to see if listner was allready activates
     editEntity: false,
 
