@@ -43,7 +43,7 @@ function updateGroup(vnode) {
     DB
         .collection('groups')
         .doc(vnode.attrs.id)
-        .update({ title: vnode.state.title, description: vnode.state.description })
+        .update({ title: vnode.state.title, description: vnode.state.description,callForAction:vnode.state.callForAction })
         .then(doc => {
             m
                 .route

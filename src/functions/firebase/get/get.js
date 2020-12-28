@@ -123,19 +123,23 @@ function setStore(obj, groupId, questionId, data) {
 
 function getGroupDetails(groupId, vnode) {
     try {
+
+        if(typeof groupId !== 'string') {
+            console.info(groupId)
+            throw new Error(' groupId is not a string')
+        }
+
         return DB
             .collection("groups")
             .doc(groupId)
             .onSnapshot(groupDB => {
                 store.groups[groupId] = groupDB.data();
-
+                
                 m.redraw();
             }, err => {
                 console.error(`At getGroupDetails: ${err.name}, ${err.message}`);
                 if (err.message === 'Missing or insufficient permissions.') {
-                    m
-                        .route
-                        .set('/unauthorized');
+                    m.route.set('/unauthorized');
                 }
 
             });
