@@ -25,7 +25,14 @@ module.exports = {
             //get truthness and evaluation from voter preivous votes
 
             let { truthiness, evaluation } = await getMyVotesOnConsequence(groupId, questionId, subQuestionId, optionId, consequenceId);
+            
 
+            if(evaluation>0){
+                vnode.state.isPro = true;
+            } else if(evaluation<0){
+                vnode.state.isAgainst = true
+            }
+    
 
 
             if (typeof truthiness === 'number' && !isNaN(truthiness)) { vnode.state.truthiness = truthiness } else { vnode.state.truthiness = 1 };
@@ -42,6 +49,7 @@ module.exports = {
         vnode.state.color = getColorForPercentage((evaluationAvg + 1) / 2);
         vnode.state.opacity = calcOpacity(truthinessAvg * 100);
 
+     
 
     },
     view: vnode => {
@@ -153,8 +161,6 @@ function handleVote(vote, vnode) {
             vnode.state.isPro = !vnode.state.isPro;
             vnode.state.isAgainst = false;
 
-            console.log(vote)
-          
 
         } else if (vote == 'against') {
 
@@ -175,7 +181,7 @@ function handleVote(vote, vnode) {
 
         m.redraw()
         const { groupId, questionId, subQuestionId, optionId, consequenceId } = vnode.attrs.consequence;
-        console.log('voteAsNumber', voteAsNumber)
+   
         voteConsequence({ groupId, questionId, subQuestionId, optionId, consequenceId }, 1, voteAsNumber)
     } catch (e) {
         console.error(e)

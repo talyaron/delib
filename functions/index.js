@@ -888,7 +888,7 @@ exports.calcValidateEval = functions.firestore
         //if new voter
         if (!change.before.exists) {
           //new voter then add number of votes
-          console.log('new voter....')
+        
           totalVotes++
 
 
@@ -912,7 +912,7 @@ exports.calcValidateEval = functions.firestore
 
         } else {
           //existing voter
-          console.log('existing user')
+        
 
           //get previous votes
 
@@ -933,7 +933,7 @@ exports.calcValidateEval = functions.firestore
         totalWeight = truthinessAvg * evaluationAvg;
         let totalWeightAbs = Math.abs(totalWeight)
 
-        console.log(' totalVotes, evaluationSum,evaluationAvg,truthinessAvg,truthinessSum,totalWeight,totalWeightAbs', totalVotes, evaluationSum,evaluationAvg,truthinessAvg,truthinessSum,totalWeight,totalWeightAbs )
+      
 
         return transaction.update(consequenceRef, {
           totalVotes,
