@@ -1,17 +1,21 @@
 .splashPage {
     background: var(--mainBackground);
-    color: var(--mainColor)
+    color: var(--mainColor);
+    transition: all .3s;
 }
 
 #login__splashName {
     font-size: 3rem;
     margin-bottom: 1rem;
-    opacity: 0.7;
+    
 }
 
 #login__splashSubName {
     font-size: 1.6rem;
     margin-bottom: 2rem;
+}
+
+.opacity07{
     opacity: 0.7;
 }
 

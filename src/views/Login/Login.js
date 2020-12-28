@@ -40,10 +40,10 @@ module.exports = {
                 oncreate={m.route.link}
             >
                 <div class='centerElement'>
-                    <div id='login__splashName'>
+                    <div id='login__splashName' class={vnode.state.callForAction.length>1?'opacity07':''}>
                         Delib
                     </div>
-                    <div id='login__splashSubName'>
+                    <div id='login__splashSubName' class={vnode.state.callForAction.length>1?'opacity07':''}>
                         מחליטים ביחד
                     </div>
                     <h1 class='login__callForAction'>{vnode.state.callForAction}</h1>
