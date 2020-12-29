@@ -4,7 +4,7 @@ import store from '../../../data/store';
 import { Reference, concatenateDBPath, uniqueId, generateChatEntitiyId, createIds, getRandomColor } from '../../general';
 import { merge } from 'lodash';
 
-function createGroup(creatorId, title, description) {
+function createGroup(creatorId, title, description, callForAction) {
     try {
         const groupId = uniqueId()
 
@@ -18,7 +18,8 @@ function createGroup(creatorId, title, description) {
                 time: new Date().getTime(),
                 groupId,
                 id: groupId,
-                groupColor: getRandomColor()
+                groupColor: getRandomColor(),
+                callForAction
             })
             .then(() => {
 

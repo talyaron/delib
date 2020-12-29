@@ -183,16 +183,16 @@ module.exports = {
                         vnode.state.addQuestion ?
                             <div class='module'>
                                 <div class='moduleBox'>
-                                    <div class='moduleTitle'>הוספת שאלה</div>
+                                    <h2 class='moduleTitle'>הוספת שאלה</h2>
                                     <div class='moduleInputs'>
                                         <textarea
-                                            class='moduleQuestionTitle'
+                                            class='inputGeneral'
                                             autofocus='true'
                                             placeholder='כותרת השאלה'
                                             onkeyup={(e) => { vnode.state.add.title = e.target.value }}
                                         ></textarea>
                                         <textarea
-                                            class='moduleQuestionTitle moduleDescription'
+                                            class='inputGeneral'
                                             placeholder='הסבר על השאלה'
                                             onkeyup={(e) => { vnode.state.add.description = e.target.value }}
                                         ></textarea>

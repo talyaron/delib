@@ -51,7 +51,7 @@ module.exports = {
 							<div class="moduleTitle">{vnode.attrs.title}</div>
 							<div class="inputs">
 								<textarea
-									class="input"
+									class="inputGeneral"
 									autofocus="true"
 									placeholder={vnode.attrs.placeholderTitle}
 									onkeyup={(e) => {
@@ -59,7 +59,7 @@ module.exports = {
 									}}
 								/>
 								<textarea
-									class="input inputDescription"
+									class="inputGeneral inputDescription"
 									placeholder={vnode.attrs.placeholderDescription}
 									onkeyup={(e) => {
 										vnode.state.add.description = e.target.value;
@@ -69,7 +69,7 @@ module.exports = {
 									<div class="modalMoreInfo">
 										<div class="moduleTitle">קישור לקובץ חיצוני</div>
 										<input
-											class="input"
+											class="inputGeneral"
 											value={vnode.state.add.moreText}
 											type="text"
 											placeholder="טקסט"
@@ -78,7 +78,7 @@ module.exports = {
 											}}
 										/>
 										<input
-											class="input"
+											class="inputGeneral"
 											value={vnode.state.add.moreURL}
 											type="url"
 											placeholder="URL"

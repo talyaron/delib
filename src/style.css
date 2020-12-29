@@ -393,6 +393,7 @@ body {
     font-size: var(--size15);
     border: none;
     padding: var(--regPadding);
+    font-size: var(--size17);
 }
 
 input[type=checkbox] {
