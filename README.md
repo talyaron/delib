@@ -2,6 +2,10 @@
 
 **Delib is a deliberation PWA**
 
+**Our Mission:**
+
+Development of culture, technologies and methods of deliberation and democratic decision making
+
 Version-3 is built using [Mithril JS](https://mithril.js.org/) and [Firebase](https://firebase.google.com/). For more information go to [delib.org](http://delib.org)
 
 ## Installing
