@@ -387,7 +387,7 @@ function concatenateDBPath(groupId, questionId, subQuestionId, optionId, consequ
                     subscriptionPath += `/subQuestions/${subQuestionId}`;
                     if (optionId !== undefined) {
                         subscriptionPath += `/options/${optionId}`;
-                        if(consequenceId != undefined){
+                        if (consequenceId != undefined) {
                             subscriptionPath += `/consequences/${consequenceId}`;
                         }
                     }
@@ -547,7 +547,7 @@ function randomizeArray(a) {
 
 function calcOpacity(value) {
     const levelOpacity = .6;
-    
+
     return ((value * 0.01) * levelOpacity) + (1 - levelOpacity)
 }
 
@@ -604,11 +604,14 @@ function convertParagraphsToVisual(paragraph, index) {
 
 
         const videoRexExp = new RegExp('--video:');
+        const httpRegExp = new RegExp('http://');
+        const httpsRegExp = new RegExp('https://');
+
         const endUrl = paragraph.indexOf('***');
         const videoInit = paragraph.indexOf('--video');
         const pictureInit = paragraph.indexOf('--imgSrc');
 
-      
+
 
         if (endUrl > -1) {
             if (videoInit > -1) {
@@ -622,16 +625,29 @@ function convertParagraphsToVisual(paragraph, index) {
             } else if (pictureInit > -1) {
                 paragraph = paragraph.slice(0, endUrl)
                 paragraph = paragraph.slice(videoInit + 10);
+              
 
-                
 
                 return (
-                   
+
                     <img key={index} src={paragraph} alt='image of option' />
                 )
             }
         }
-        else {
+        else if (httpRegExp.test(paragraph) || httpsRegExp.test(paragraph)) {
+
+            const arr = paragraph.split(' ')
+            
+            return arr.map((word,i)=>{
+                if (httpRegExp.test(word) || httpsRegExp.test(word)) {
+                    return(<a key={i} href={word} target='_blank'>{word} </a>)
+                } else {
+                    return(<span key={i}>{word} </span>)
+                }
+            })
+           
+
+        } else {
             return (<p key={index}>{paragraph}</p>)
         }
 
@@ -643,10 +659,10 @@ function convertParagraphsToVisual(paragraph, index) {
     }
 }
 
-function getFirstUrl(){
+function getFirstUrl() {
     let url = m.route.get();
     url = url.split('/')
-    
+
     return url[1];
 }
 
