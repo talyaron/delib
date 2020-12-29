@@ -1,15 +1,39 @@
 .groupCard {
     user-select: none;
     cursor: pointer;
-    display: grid;
-    grid-template-columns: auto 120px;
+    display: flex;
+    
+    border-radius: var(--roundBorder);
+    
+    box-shadow: var(--mediumShadow);
 }
 
-.groupImg{
-    width: 120px;
-    max-height: 120px;
+.groupCard__img{
+    height: 100%;
+    width:120px;
+    border-radius: var(--roundBorder);
+    background-repeat: no-repeat;
+    background-size: contain;
+    margin: 1px;
+}
+.groupCard__info{
+    width: auto;
+    margin-right: 10px;
+}
+.groupCard__info h2{
+    font-size: var(--size15);
+    color: var(--black);
 }
 
-.questionOwned{
+.groupCard__info p{
+    font-size: var(--size13);
+    color:var(--gray1)
+}
+
+
+/* .questionOwned{
     background: #ef4a497d;
-}
+} */
+
+
+

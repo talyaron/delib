@@ -1,0 +1,16 @@
+.chat{
+    display: grid;
+    height: 100%;
+    grid-template-rows: auto 70px;
+    overflow-y: auto;
+}
+
+.chatWrapper{
+    
+    margin: 0px;
+    padding: 12px;
+    box-sizing: border-box;
+    overflow-y: auto;
+   
+    
+}

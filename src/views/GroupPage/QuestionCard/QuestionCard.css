@@ -1,0 +1,11 @@
+.questionCard {
+    user-select: none;
+    cursor: pointer;
+    border-radius: var(--roundBorder);
+    box-shadow: var(--mediumShadow);
+}
+
+
+.questionOwned{
+    border-left: 9px solid var(--gray2);
+}

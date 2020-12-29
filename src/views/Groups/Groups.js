@@ -8,12 +8,13 @@ import './Groups.css';
 import Group from './Group/Group';
 import Header from '../Commons/Header/Header';
 import Feed from '../Commons/Feed/Feed';
+import Spinner from '../Commons/Spinner/Spinner'
 
 
 //functions
 import { getUserGroups } from '../../functions/firebase/get/get';
 import { restrictedPage } from '../../functions/logins';
-import { setWrapperHeight } from '../../functions/general';
+import { setWrapperHeight,getRandomColor } from '../../functions/general';
 
 import store from '../../data/store';
 
@@ -25,13 +26,14 @@ module.exports = {
         if (restrictedPage('/groups')) {
             getUserGroups('on', store.user.uid);
         }
+
     },
     oncreate: vnode => {
         setWrapperHeight('headerContainer', 'groupsWrapper');
     },
     onupdate: vnode => {
         setWrapperHeight('headerContainer', 'groupsWrapper');
-        console.dir(store.userGroups)
+
     },
     onremove: vnode => {
         getUserGroups('off', store.user.uid);
@@ -42,17 +44,20 @@ module.exports = {
                 <Header title='הקבוצות שלי' topic='דליב' upLevelUrl={false} />
 
                 <div class='groupsWrapper' id='groupsWrapper'>
-                    {
+                    {store.userGroups[0] === false ?
+                        <Spinner />
+                        :
                         store.userGroups.map((group, key) => {
 
                             return <Group
-                                route='/group/'
-                                title={group.title}
-                                description={group.description}
-                                id={group.id}
-                                key={key}
-                                logo={group.logo}
-                                />
+                        route='/group/'
+                        title={group.title}
+                        description={group.description}
+                        groupColor={group.groupColor || getRandomColor()}
+                        id={group.id}
+                        key={key}
+                        logo={group.logo}
+                    />
                         })
                     }
                 </div>

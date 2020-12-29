@@ -18,7 +18,8 @@ module.exports = {
     vnode.state = {
       title: "",
       description: "",
-      logo: ""
+      logo: "",
+      callForAction:''
     };
   },
   oncreate: vnode => {
@@ -35,17 +36,23 @@ module.exports = {
         <Header topic="קבוצה" title="עדכון קבוצה" upLevelUrl="/groups" />
         <div class="wrapper wrapper_newGroup inputs">
           <input
-            class="input"
+            class="inputGeneral"
             type="text"
             placeholder="שם הקבוצה"
             value={vnode.state.title}
             onkeyup={e => (vnode.state.title = e.target.value)}
           />
           <textarea
-            class="input"
+            class="inputGeneral"
             placeholder="תאור הקבוצה"
             value={vnode.state.description}
             onkeyup={e => (vnode.state.description = e.target.value)}
+          />
+           <textarea
+            class="inputGeneral"
+            placeholder="משפט קריאה לפעולה - יופיע בדף הלוגאין"
+            value={vnode.state.callForAction}
+            onkeyup={e => (vnode.state.callForAction = e.target.value)}
           />
           <Picture logo={vnode.state.logo} id={vnode.attrs.id}/>
           <input

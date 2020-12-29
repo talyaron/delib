@@ -1,0 +1,23 @@
+.optionsWrapper{
+    overflow-y: auto;
+     position: relative;
+     max-height: 70vh;
+    
+     margin-top:20px;
+     margin-bottom: 200px;
+}
+
+.optionsWrapper--alone{
+    max-height: none;
+}
+
+.subQuestionFav{
+    position: absolute;
+    top: 223px;
+     right: -26px;
+     opacity: 0.4;
+}
+
+.subQuestionFav:active, .subQuestionFav:hover{
+    opacity: 1;
+}

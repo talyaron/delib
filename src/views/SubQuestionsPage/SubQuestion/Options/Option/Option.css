@@ -1,0 +1,206 @@
+.optionCard {
+    border-radius: var(--roundBorderLarge);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+
+    animation-name: show;
+    animation-duration: 0.3s;
+    background-color: var(--white);
+    width: 100%;
+    margin: 10px 0px;
+
+
+}
+
+.optionCard__main {
+    display: grid;
+    grid-template-columns: 60px auto 60px;
+    padding: 12px 0px;
+}
+
+
+.optionCard__vote {
+    background: var(--secondary);
+    border-radius: 20px;
+    padding: 6px;
+    display: flex;
+    width: 30px;
+    margin: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.optionCard__info {
+
+    display: flex;
+    justify-content: center;
+}
+
+.optionCard__infoItem{
+    display: flex;
+    align-items: center;
+}
+.optionCard__infoItem>*{
+    margin:0px 5px;
+}
+
+.optionCard__info>* {
+    margin: 10px 14px;
+}
+
+@keyframes show {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.optionCard hr {
+    border: 1px solid #0000000d;
+    width: 100%;
+}
+
+.cardTitle>input {
+    width: 95%;
+    box-shadow: inset -2px 2px 4px #00000077;
+    border-radius: 5px;
+    padding: 2px;
+    border: none;
+}
+
+.option__card__description {
+    width: 100%;
+    height: 75px;
+    overflow-y: auto;
+    cursor: pointer;
+    user-select: none;
+}
+.option__card__description>p{
+    margin: 4px 0px;
+}
+
+.option__card__description>textarea {
+    width: 95%;
+    height: 5rem;
+    resize: none;
+    box-shadow: inset -2px 2px 4px #00000077;
+    border-radius: 5px;
+    padding: 2px;
+    border: none;
+}
+
+.option__card__description--image{
+    height: fit-content;
+    max-height: 40vh;
+    overflow-y: auto;
+}
+
+.option__card__description--image img{
+    max-width: 100%;
+}
+
+
+
+.optionContent {
+
+    padding: 5px;
+    min-height: 140px;
+}
+
+
+
+.optionVote:active {
+    background: rgba(128, 128, 128, 0.3);
+}
+
+.optionSelcetUp {
+    background: var(--halfPrimary);
+}
+
+.optionSelcetDown {
+    background: var(--halfPrimary);
+}
+
+.voteUp {
+    animation-name: voteUp;
+    animation-duration: 0.3s;
+    animation-direction: alternate-reverse;
+    animation-iteration-count: 3;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes voteUp {
+    from {
+        transform: rotate(0deg)
+    }
+
+    to {
+        transform: rotate(-35deg)
+    }
+}
+
+.voteDown {
+    animation-name: voteDown;
+    animation-duration: 0.3s;
+    animation-direction: alternate-reverse;
+    animation-iteration-count: 3;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes voteDown {
+    from {
+        transform: rotate(0deg)
+    }
+
+    to {
+        transform: rotate(35deg)
+    }
+}
+
+.optionInfo {
+    display: flex;
+    justify-content: space-around;
+    color: var(--textRegular);
+    margin-top: 8px;
+    border-top: 0.5px solid #d2d2d2;
+}
+
+.optionInfo>div {
+    display: flex;
+    align-items: center;
+    padding: 2px 20px;
+}
+
+.optionChat {
+    cursor: pointer;
+    user-select: none;
+}
+
+.editOptionBtn {
+    margin: 0px !important;
+    padding: 5px 7px !important;
+    color: white !important;
+}
+
+.optionCard__creator {
+    color: var(--accent);
+    font-size: var(--size13);
+
+}
+
+.option__consequnces{
+    padding: var(--regPadding);
+    cursor: pointer;
+    user-select: none;
+}
+
+
+.consequences__tip{
+    color: var(--gray1);
+    padding: 0px var(--regPadding);
+}

@@ -1,0 +1,29 @@
+.optionsWrapper{
+    overflow-y: auto;
+     position: relative;
+     max-height: 70vh;
+     margin-bottom: 200px;
+}
+
+.optionsWrapper--alone{
+    max-height: none;
+}
+
+.optionsWrapperInner{
+    max-width: 600px;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    margin: auto;
+}
+
+.subQuestionFav{
+    position: absolute;
+    top: 223px;
+     right: -26px;
+     opacity: 0.4;
+}
+
+.subQuestionFav:active, .subQuestionFav:hover{
+    opacity: 1;
+}

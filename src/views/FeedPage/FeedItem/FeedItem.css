@@ -1,0 +1,43 @@
+.feedItem{
+    background: var(--white);
+    border-radius: var(--roundBorder);
+    
+    padding: var(--regPadding);
+    box-shadow: var(--mediumShadow);
+    margin-bottom: var(--regPadding);
+
+    cursor: pointer;
+    user-select: none;
+    
+}
+
+.feedItem h1, .feedItem p{
+    margin: 3px 0px;
+   
+}
+
+.feedItem h1{
+    font-size: var(--size15);
+    color: var(--black);
+}
+
+.feedItem p{
+    font-size: var(--size13);
+    color: var(--gray1);
+}
+
+
+/* TODO: better scroll up */
+.feedItem--new{
+ 
+    animation: newFeedItem 300ms;
+}
+@keyframes newFeedItem{
+    from{
+        transform: scaleY(.2) translateY(-50%);
+        height: 0px;
+    } to{
+        transform: scaleY(1) translateY(0%);
+        height: 40px;
+    }
+}

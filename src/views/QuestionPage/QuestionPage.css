@@ -1,0 +1,129 @@
+
+.page-grid-question{
+    display: grid;
+    grid-template-rows: fit-content(200px) auto  64px;
+}
+.questionHeadr {
+    background: var(--mainBackground);
+    color: white;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+    position: fixed;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+    z-index: 100;
+    user-select: none;
+    cursor: pointer;
+    height: fit-content;
+}
+
+.mainHeader {
+    padding: 10px;
+    text-align: center;
+}
+.question__main{
+    overflow-y: auto;
+}
+.wrapperSubQuestions {
+    position: relative;
+    margin: auto;
+   
+    padding: 10px;
+}
+
+.wrapperSubQuestions>h1{
+    text-align: center;
+}
+
+.subHeader {
+    background: var(--accent);
+    color: white;
+    padding: 40px;
+    border-radius: 10px;
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    width: 90%;
+    max-width: var(--maxWidthOnPC);
+    z-index: 5;
+    transform: translate(-50%, 0vh);
+    box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.582);
+}
+
+.hideOnScroll {
+    animation-name: hideOnScroll;
+    animation-duration: 3s;
+    animation-fill-mode: forwards
+}
+
+@keyframes hideOnScroll {
+    from {
+        transform: scaleY(1) translate(-50%, 0vh);
+    }
+    to {
+        transform: scaleY(0) translate(-50%, -50vh);
+    }
+}
+
+.questionSection {
+   
+    border-radius: 10px;
+    padding-bottom: 9px;
+    margin-top: 17px;
+}
+
+
+
+.questionSection>h1{
+    font-size: var(--size15);
+}
+
+
+
+.subQuestions {}
+
+.questionSectionMain {
+    padding: 20px;
+}
+
+.questionSectionAddButton {
+    width: max-content;
+    background: white;
+    border: 1px solid #bfbff9;
+    padding: 2px 9px;
+    box-sizing: 2px 2px;
+    box-shadow: 2px 2px 4px #0000006e;
+    color: #4c4a4a;
+    font-size: var(--size13);
+}
+
+.subQuestionsWrapper{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.subQuestionsWrapper >h1{
+    font-size: var(--size15);
+}
+
+@media only screen and (max-width: 1600px){
+    .subQuestionsWrapper{
+     
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media only screen and (max-width: 1200px){
+    .subQuestionsWrapper{
+     
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media only screen and (max-width: 900px){
+    .subQuestionsWrapper{
+     
+        grid-template-columns: repeat(1, 1fr);
+    }
+}

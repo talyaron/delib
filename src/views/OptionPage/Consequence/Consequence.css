@@ -1,0 +1,74 @@
+.consequence {
+    background-color: var(--white);
+    padding: var(--regPadding);
+    border-radius: var(--roundBorder);
+}
+
+.consequence>h1 {
+    font-size: var(--size15);
+}
+
+.consequence>p {
+    font-size: var(--size13);
+}
+
+.consequence__scores {
+    display: flex;
+    justify-content: space-evenly;
+
+}
+
+.consequence__score {
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+    font-size: var(--size12);
+
+    text-align: center;
+
+}
+
+.consequence__score>p {
+    margin: 5px 0px 0px 0px;
+    align-items: center;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}
+.consequence__header{
+
+}
+.consequence__header--simple{
+    display: grid;
+    grid-template-columns: 30px auto 30px;
+    column-gap: 10px;
+}
+
+.consequence__vote{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 20px;
+    
+}
+
+.consequence__vote--pro{
+    background-color: rgba(0, 128, 0, 0.15);
+}
+.consequence__vote--proSelected{
+    background-color: rgba(0, 128, 0, 0.60);
+}
+
+.consequence__vote--against{
+    background-color: rgba(255, 0, 0, 0.15);
+}
+.consequence__vote--againstSelected{
+    background-color: rgba(255, 0, 0, 0.6);
+}
+
+.consequence__vote img{
+    width: 20px;
+   margin: 5px;
+}

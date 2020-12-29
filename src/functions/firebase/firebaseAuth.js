@@ -6,10 +6,12 @@ import {
 
 //functions
 import {
-	listenToFeeds
+	listenToFeed,
+	listenToFeedLastEntrance,
+	listenToChatFeed
 } from '../firebase/get/get';
 import {
-	getRandomName
+	getRandomColorDark
 } from '../general';
 import {
 	getSubscriptions
@@ -23,7 +25,7 @@ function AnonymousLogin() {
 		// Handle Errors here.
 		var errorCode = error.code;
 		var errorMessage = error.message;
-		console.log(errorCode, errorMessage);
+		console.error(errorCode, errorMessage);
 	});
 }
 
@@ -34,19 +36,22 @@ function onAuth() {
 
 			if (user) {
 				getSubscriptions();
-				console.dir(user);
-				console.log('User', store.user.uid, 'is signed in.');
+				
+				console.info('User', store.user.uid, 'is signed in.');
 				if (!user.isAnonymous) {
-					console.log('user', user.displayName, 'is logged in');
+					console.info('user', user.displayName, 'is logged in');
 					user.name = user.displayName;
 					let userSimpleObj = {
 						uid: store.user.uid,
 						name: store.user.name,
 						email: store.user.email,
-						isAnonymous: false
+						isAnonymous: false,
+						userColor:getRandomColorDark()
 					};
 
-					listenToFeeds();
+					listenToFeed();
+					listenToFeedLastEntrance();
+					listenToChatFeed();
 
 					DB.collection('users').doc(user.uid).set(userSimpleObj).then(function () {}).catch(function (error) {
 						console.error('On login, set user to DB;',error.name, error.message)
@@ -59,41 +64,44 @@ function onAuth() {
 				} else {
 					//if user anonymous
 
-					console.log('user is anonymous');
-					console.log(store.user);
-					// let lastPage = sessionStorage.getItem('lastPage') || '/login'
+					console.info('user is anonymous');
+				
+				
 					if (store.userTempName) {
-						console.log('store.userTempName', store.userTempName);
-						store.user.name = store.userTempName;
-						console.log(store.user.name);
 
+						store.user.name = store.userTempName;
+						store.user.userColor = getRandomColorDark()
+				
 						let userSimpleObj = {
 							uid: store.user.uid,
 							name: store.user.name,
-							isAnonymous: true
+							isAnonymous: true,
+							userColor:store.user.userColor
 						};
 						DB.collection('users').doc(user.uid).set(userSimpleObj)
 							.then(function () {})
 							.catch(function (error) {
-								console.log(error)
+							
 								console.error('Error writing User: ', error);
 							});
 					} else {
+
+				
 						getAnonymousName(store.user.uid);
 					}
 
 					let lastPage = sessionStorage.getItem('lastPage') || '/groups';
-					console.log(lastPage);
+				
 					m.route.set(lastPage);
 				}
 			} else {
-				console.log('User is signed out.');
+				console.info('User is signed out.');
 				store.user = {};
 				store.push = [false];
 				m.redraw();
 			}
 		} catch (err) {
-			console.log(err)
+		
 			console.error(err)
 		}
 	});
@@ -107,8 +115,8 @@ module.exports = {
 function getAnonymousName(userId) {
 	DB.collection('users').doc(userId).get().then((userDB) => {
 		store.user.name = userDB.data().name;
-		console.log('uid:', userDB.data().uid);
-		console.log('store.user.name', store.user.name);
+		store.user.userColor = userDB.data().userColor || 'teal'
+	
 		m.redraw();
 	}).catch(err=>{
 		console.error(err)

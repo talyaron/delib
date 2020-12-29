@@ -1,0 +1,39 @@
+.navBottom{
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    display: flex
+}
+
+.navBottom .counter{
+    position: absolute;
+    top: -6px;
+    left: 42px;
+    background: #ff0000db;
+    color: white;
+    border-radius: 10px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    font-size: .75rem;
+}
+
+.navBottom__btn{
+
+    flex:1;
+    background-color: var(--white);
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.navBottom__btn:hover, .navBottom__btn:active{
+    background-color: var(--gray5);
+}
+.navBottom__btnInfo{
+    text-align: center;
+    position: relative;
+}

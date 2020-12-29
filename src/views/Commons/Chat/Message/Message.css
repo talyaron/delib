@@ -1,0 +1,76 @@
+.message{
+    display: flex;
+    flex-direction: row-reverse;
+    margin: 0px auto 16px auto;
+    max-width: 600px;
+    
+}
+
+.message--me{
+    flex-direction: row;
+}
+
+.message__user{
+    margin-right: 12px;
+    min-width: 40px;
+}
+
+.message__user img{
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+}
+
+.message__texts{
+    display: flex;
+    flex-direction: column;
+    margin-right: 12px;
+}
+
+.message__username{
+    font-size: var(--size16);
+    color:var(--black);
+    text-align: left;
+}
+
+.message__user>div{
+    background-color: teal;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.message__text{
+    background-color: var(--gray4);
+    border-radius: 0px 24px 24px 24px;
+    color: var(--black);
+    padding: 12px;
+    font-size: var(--size15);
+    line-height: 1.9rem;
+}
+
+.message--me .message__text{
+    background-color: var(--accent);
+    color:var(--white);
+    border-radius: 24px 0px 24px 24px;
+}
+
+.message__time{
+    color: var(--gray1);
+    font-size: var(--size11);
+    text-align: left;
+}
+
+
+.message--me .message__time{
+    text-align: right;
+}
+
+.message--me .message__username{
+    text-align: right;
+}

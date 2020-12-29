@@ -1,0 +1,47 @@
+.page-grid-option{
+    display: grid;
+    grid-template-rows: fit-content(100px) auto 63px;
+}
+
+.optionPage__main{
+    font-size: var(--size17);
+    width:100vw;
+    padding-bottom: 200px;
+}
+
+.optionPage__main h1{
+    font-size: var(--size17);
+    
+}
+
+.optionPage__main h3{
+    font-size: var(--size13);
+    
+}
+
+.optionPage__menu{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    position: fixed;
+    bottom: 64px;
+    left: 0px;
+}
+
+.optionPage__consequences{
+    max-width: var(--maxWidthOnPC);
+    margin: var(--regPadding) auto;
+}
+.optionPage__question{
+    background: var(--accent);
+    color: white;
+    margin: 10px;
+    border-radius: var(--roundBorderSmall);
+    padding: var(--regPadding);
+}
+
+.consequencesWrapper{
+    display: grid;
+    grid-auto-rows: auto;
+    row-gap: 10px;
+}

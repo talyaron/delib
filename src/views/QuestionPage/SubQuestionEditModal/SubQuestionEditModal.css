@@ -1,0 +1,76 @@
+.optionEditBox {
+    display: flex;
+    width: 100%;
+   
+    max-width: 600px;
+    margin: auto;
+    transform: translateY(-50%);
+    position: relative;
+    top: 50%;
+}
+
+.optionEditBox:active {
+    cursor: grabbing;
+}
+
+.optionEditDragable {
+    width: 30px;
+    height: 100%;
+    margin: 10px;
+    background: wheat;
+}
+
+.optionEditContent {
+    width: 100%;
+    background: var(--white);
+    margin: 4px;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 1px 1px 2px black;
+}
+
+.optionEditContent>div {
+    margin-bottom: 18px;
+}
+
+.optionEditContentText {
+    margin-bottom: 6px;
+    font-size: var(--size17);
+    font-weight: bolder;
+}
+
+.optionEditContentText>div {
+    padding: 3px 0px;
+}
+
+.optionEditContentText>input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.optionEditContentSettings {}
+
+.optionEditButton {
+    color: white;
+    padding: 5px 20px;
+}
+
+.optionEditType {}
+
+.optionEditShow {}
+
+.subQuestionEdit__settings{
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    min-height: 51px;
+    align-items: center;
+}
+.subQuestionEdit__settings>div{
+    display: flex;
+    justify-content: center;
+}
+.subQuestionEdit__settings>div>*{
+    margin: 5px;
+    font-size: var(--size15);
+}
