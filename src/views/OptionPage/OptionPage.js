@@ -9,6 +9,7 @@ import { get } from 'lodash';
 import { setNumberOfMessagesMark } from '../../functions/firebase/set/set';
 import { listenToOption, listenToChat, listenToConsequences, getLastTimeEntered, getSubQuestion } from '../../functions/firebase/get/get';
 import { randomizeArray, getFirstUrl, concatenateDBPath } from '../../functions/general';
+import {enterIn2ndPage} from '../../functions/animations'
 
 
 // components
@@ -81,6 +82,7 @@ module.exports = {
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
 
         getLastTimeEntered({ groupId, questionId, subQuestionId, optionId }, vnode);
+        enterIn2ndPage(vnode.dom)
     },
     onbeforeupdate: vnode => {
 
@@ -109,6 +111,7 @@ module.exports = {
         }
 
     },
+    
     onremove: vnode => {
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
 
@@ -118,11 +121,12 @@ module.exports = {
 
     },
     view: vnode => {
+     
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
         const { option, subPage, consequences } = vnode.state;
 
         return (
-            <div class='page page-grid-option' style={subPage == 'main' ? '' : `grid-template-rows: fit-content(100px) auto;`}>
+            <div id="page" class='page page-grid-option' style={subPage == 'main' ? '' : `grid-template-rows: fit-content(100px) auto;`}>
                 <div class='optionPage__header'>
                     <Header
                         title="פתרון"
@@ -133,6 +137,7 @@ module.exports = {
                         optionId={optionId}
                         showSubscribe={true}
                         subQuestionId={subQuestionId}
+                        page={vnode}
                     />
                     <NavTop
                         level={'בעד ונגד'}

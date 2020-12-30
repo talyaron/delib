@@ -19,6 +19,7 @@ import Chat from '../Commons/Chat/Chat';
 import { getSubQuestion, getGroupDetails, listenToChat, listenToOptions, getLastTimeEntered } from "../../functions/firebase/get/get";
 import {  } from '../../functions/firebase/set/set';
 import { getIsChat, concatenateDBPath } from '../../functions/general';
+
 import { get } from "lodash";
 
 let unsubscribe = () => { }, unsubscribeChat = () => { };
@@ -68,6 +69,21 @@ module.exports = {
         listenToOptions(groupId, questionId, subQuestionId, 'top');
     },
     oncreate: vnode => {
+        const page = document.getElementById('page')
+        console.log('created')
+        page.addEventListener('animationend',e=>{
+            
+            if(e.animationName === 'zoomOutEnter'){
+                console.log('remove',e.animationName);
+                vnode.dom.classList.remove("zoomOutEnter");
+               
+            }
+            
+        })
+
+        
+       
+
         const { groupId, questionId, subQuestionId } = vnode.attrs;
         unsubscribe = getSubQuestion(groupId, questionId, subQuestionId);
         unsubscribeChat = listenToChat({ groupId, questionId, subQuestionId });
@@ -122,7 +138,7 @@ module.exports = {
 
         const { groupId, questionId, subQuestionId } = vnode.attrs;
         return (
-            <div class='page'>
+            <div class='page zoomOutEnter' id='page'>
                 {vnode.state.details.title
                     ? (
                         <div class='page-grid-subQuestion' style={!(vnode.state.details.userHaveNavigation == true || vnode.state.details.userHaveNavigation !== undefined) && vnode.state.subPage === 'main' ? '' : 'grid-template-rows: fit-content(100px) auto;'}>

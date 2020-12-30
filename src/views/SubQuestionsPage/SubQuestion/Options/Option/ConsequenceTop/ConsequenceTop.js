@@ -15,7 +15,6 @@ module.exports = {
         
         return (
             <div
-                onclick={() => { m.route.set(`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) }}
                 class='option__consequnces'
                 style={`background:${color}; opacity:${opacity}`}
             >

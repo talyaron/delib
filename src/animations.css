@@ -1,0 +1,100 @@
+.zoomOutEnter {
+
+    transform: scale(1.2);
+    opacity: 0;
+    
+
+    animation-name: zoomOutEnter;
+    animation-duration: 200ms;
+    animation-fill-mode: forwards;
+    animation-timing-function: linear;
+
+}
+
+@keyframes zoomOutEnter {
+    form {
+        transform: scale(1.2);
+        opacity: 0;
+        
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.zoomOutExit {
+
+    transform: scale(1);
+    opacity: 1;
+
+    animation-name: zoomOutExit;
+    animation-duration: 200ms;
+    animation-fill-mode: forwards;
+    animation-timing-function: linear;
+}
+
+
+@keyframes zoomOutExit {
+    form {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    to {
+        transform: scale(.8);
+        opacity: 0;
+    }
+}
+
+.zoomJumpInStart {
+
+    transform: scale(1);
+    opacity: 1;
+
+    animation-name: zoomJumpInStart;
+    animation-duration: 200ms;
+    animation-direction: normal;
+    animation-fill-mode: forwards;
+    animation-timing-function: linear;
+}
+
+@keyframes zoomJumpInStart {
+    form {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    to {
+        transform: scale(1.2);
+        opacity: 0;
+    }
+}
+
+.zoomJumpInEnd {
+
+    transform: scale(0.8);
+    opacity: 0;
+
+    animation-name: zoomJumpInEnd;
+    animation-duration: 200ms;
+    animation-direction: normal;
+    animation-fill-mode: forwards;
+    animation-timing-function: linear;
+}
+
+@keyframes zoomJumpInEnd {
+    form {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+
+

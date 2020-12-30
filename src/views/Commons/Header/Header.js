@@ -4,12 +4,13 @@ import './Header.css';
 import { get, set } from 'lodash';
 
 //functions
-import { subscribeUser,setNotifications} from '../../../functions/firebase/set/set';
-import { listenToSubscription ,listenIfGetsMessages } from '../../../functions/firebase/get/get';
-import {subscribeToNotification} from '../../../functions/firebase/messaging';
+import { subscribeUser, setNotifications } from '../../../functions/firebase/set/set';
+import { listenToSubscription, listenIfGetsMessages } from '../../../functions/firebase/get/get';
+import { subscribeToNotification } from '../../../functions/firebase/messaging';
+import { exitOut } from '../../../functions/animations';
 
 import store from '../../../data/store';
-import { Reference, concatenateDBPath,getEntityId } from '../../../functions/general';
+import { Reference, concatenateDBPath, getEntityId } from '../../../functions/general';
 
 //components
 import Aside from '../Aside/Aside';
@@ -33,9 +34,9 @@ module.exports = {
 
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
 
-        
+
         entityId = getEntityId({ groupId, questionId, subQuestionId, optionId });
-      
+
         vnode.state = {
             previousCount: 0,
             refArray: [
@@ -52,7 +53,7 @@ module.exports = {
             refString: '',
             isMenuOpen: false,
             subscribed: false,
-            notifications: get(store.listenToMessages,`[${entityId}]`,false),
+            notifications: get(store.listenToMessages, `[${entityId}]`, false),
             path: concatenateDBPath(groupId, questionId, subQuestionId, optionId)
         }
         //set refernce string
@@ -68,13 +69,13 @@ module.exports = {
                 await listenToSubscription(vnode.state.path);
 
                 vnode.state.subscribed = get(store.subscribe, `[${vnode.state.path}]`, false);
-          
-                listenIfGetsMessages({groupId, questionId, subQuestionId, optionId})
+
+                listenIfGetsMessages({ groupId, questionId, subQuestionId, optionId })
 
             }
         })();
 
-       
+
 
     },
     onbeforeupdate: vnode => {
@@ -83,7 +84,7 @@ module.exports = {
             vnode.state.subscribed = store.subscribe[vnode.state.path];
         }
 
-        vnode.state.notifications = get(store.listenToMessages,`[${entityId}]`,false);
+        vnode.state.notifications = get(store.listenToMessages, `[${entityId}]`, false);
     },
     onupdate: vnode => {
 
@@ -93,6 +94,8 @@ module.exports = {
 
     },
     view: (vnode) => {
+
+        vnode.state.isMenuOpen
 
         return (
             <div>
@@ -137,9 +140,15 @@ module.exports = {
                                 class='headerBack'
                                 onclick={(e) => {
                                     e.stopPropagation();
-                                    m
-                                        .route
-                                        .set(vnode.attrs.upLevelUrl)
+                                    if (vnode.attrs.page) {
+                                        const page = vnode.attrs.page.dom;
+                                        console.log(page)
+
+                                        exitOut(page, vnode.attrs.upLevelUrl)
+                                    } else {
+                                        m.route.set(vnode.attrs.upLevelUrl)
+                                    }
+
                                 }}>
                                 <img src='img/back.svg' />
                             </div>
@@ -154,7 +163,9 @@ module.exports = {
                     }
 
                 </header>
-                <Aside isAdmin={vnode.attrs.isAdmin} editPageLink={vnode.attrs.editPageLink} />
+
+                <Aside isAdmin={vnode.attrs.isAdmin} editPageLink={vnode.attrs.editPageLink} isOpen={vnode.state.isMenuOpen} />
+
             </div>
         )
     }
@@ -171,10 +182,10 @@ function handleNotifications(setNotificationTo, vnode) {
     if (optionId !== undefined) { ids.optionId = optionId };
 
 
-    
-        subscribeToNotification(ids,setNotificationTo)
-   
-   
+
+    subscribeToNotification(ids, setNotificationTo)
+
+
 }
 
 function onNewMessageJumpCounter(vnode) {
@@ -199,7 +210,7 @@ function handleSubscription(vnode) {
     //path for subscription object
     const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
     const path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
-   
+
     subscribeUser({
         vnode,
         subscribe: vnode.state.subscribed
@@ -217,15 +228,6 @@ function handleSubscription(vnode) {
 }
 
 function toggleMenu(vnode) {
-    const aside = document.getElementById('aside');
-
-    if (vnode.state.isMenuOpen) {
-        //close menu
-        aside.style.right = '-260px';
-    } else {
-        //open menu
-        aside.style.right = '0px';
-    }
 
     vnode.state.isMenuOpen = !vnode.state.isMenuOpen
 }
