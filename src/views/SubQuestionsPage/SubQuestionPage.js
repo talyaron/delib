@@ -69,21 +69,7 @@ module.exports = {
         listenToOptions(groupId, questionId, subQuestionId, 'top');
     },
     oncreate: vnode => {
-        const page = document.getElementById('page')
-        console.log('created')
-        page.addEventListener('animationend',e=>{
-            
-            if(e.animationName === 'zoomOutEnter'){
-                console.log('remove',e.animationName);
-                vnode.dom.classList.remove("zoomOutEnter");
-               
-            }
-            
-        })
-
-        
-       
-
+     
         const { groupId, questionId, subQuestionId } = vnode.attrs;
         unsubscribe = getSubQuestion(groupId, questionId, subQuestionId);
         unsubscribeChat = listenToChat({ groupId, questionId, subQuestionId });

@@ -598,6 +598,7 @@ function changeTextToArray(text) {
 }
 
 function convertParagraphsToVisual(paragraph, index) {
+  
     try {
         if (typeof paragraph !== 'string') { throw new Error(`Paragraph ${index + 1} is not a string: ${paragraph}`) }
 

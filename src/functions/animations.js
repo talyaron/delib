@@ -13,13 +13,11 @@ module.exports.exitOut = (page, nextUrl) => {
 }
 module.exports.enterIn = (page, nextUrl) => {
 
-    console.dir(page)
-    console.log(nextUrl)
-
+   
     page.addEventListener('animationend', e => {
         console.log(e.animationName)
         if (e.animationName === 'zoomJumpInStart') {
-            console.log('remove', e.animationName)
+          
             page.classList.remove("zoomJumpInStart");
             m.route.set(nextUrl)
         }
@@ -31,13 +29,13 @@ module.exports.enterIn = (page, nextUrl) => {
 
 module.exports.enterIn2ndPage = page => {
 
-    console.dir(page)
+   
    
 
     page.addEventListener('animationend', e => {
-        console.log(e.animationName)
+       
         if (e.animationName === 'zoomJumpInEnd') {
-            console.log('remove', e.animationName)
+      
             page.classList.remove("zoomJumpInEnd");
 
         }

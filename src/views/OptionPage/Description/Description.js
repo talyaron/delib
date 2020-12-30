@@ -26,12 +26,12 @@ module.exports = {
 
 
     },
-    onupdate: vnode => {
+    onbeforeupdate: vnode => {
         const { description } = vnode.attrs.option;
-
-        if (description !== undefined && firstDescription === false) {
+     
+        if (description !== undefined ) {
             vnode.state.description = description;
-            firstDescription = description
+            // firstDescription = description
         }
 
     },
@@ -40,8 +40,7 @@ module.exports = {
         const {title, description, creatorId, optionId } = vnode.attrs.option;
 
         const descriptionParagraphs = changeTextToArray(vnode.state.description);
-
-
+    
         return (
             <div class='description title'>
                 <h1>פתרון אפשרי: {title}</h1>
@@ -156,16 +155,14 @@ function handleAddVideo(e, vnode) {
 
 async function handleUploadImage(e, vnode) {
     let firstFile = e.target.files[0] // upload the first file only
-    console.log(firstFile)
-    await storage.ref(`photos/test/${firstFile.name}`).put(firstFile).then(doc => {
-        console.dir(doc);
-        console.log(doc.metadata.fullPath)
 
+    await storage.ref(`photos/test/${firstFile.name}`).put(firstFile).then(() => {
+      
 
     })
     const imageHref = await storage.ref(`photos/test/${firstFile.name}`).getDownloadURL();
 
-    console.log(imageHref)
+    
 
     //add to text
     const { optionId } = vnode.attrs.option;

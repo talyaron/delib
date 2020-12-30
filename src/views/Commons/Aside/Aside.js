@@ -9,7 +9,7 @@ import { logout } from '../../../functions/firebase/googleLogin';
 
 module.exports = {
     oncreate: vnode => {
-        console.dir(vnode.dom)
+       
         
         vnode.dom.style.transform = 'scale(0)';
         vnode.dom.style.right = '0px';
@@ -19,7 +19,7 @@ module.exports = {
                 vnode.dom.style.transform = 'scale(0)';
                 vnode.dom.style.right = '0px';
             }
-            console.log(e)
+          
         })
 
         vnode.dom.addEventListener('animationstart', e => {
@@ -27,7 +27,7 @@ module.exports = {
                 vnode.dom.style.transform = 'scale(1)';
             }
 
-            console.log(e)
+          
         })
     },
     view: (vnode) => {

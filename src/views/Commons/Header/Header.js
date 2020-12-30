@@ -142,8 +142,7 @@ module.exports = {
                                     e.stopPropagation();
                                     if (vnode.attrs.page) {
                                         const page = vnode.attrs.page.dom;
-                                        console.log(page)
-
+                                        
                                         exitOut(page, vnode.attrs.upLevelUrl)
                                     } else {
                                         m.route.set(vnode.attrs.upLevelUrl)
