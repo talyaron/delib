@@ -30,6 +30,18 @@ function createGroup(creatorId, title, description, callForAction) {
                     .doc(groupId).set({ id: groupId, date: new Date().getTime() })
                     .then(() => { console.info(`added the group to the groups the user owns`) })
                     .catch(e => { console.error(e) })
+
+                   let active={}
+                   active[groupId]= true;
+
+                    DB.collection("users")
+                    .doc(store.user.uid)
+                    .collection('groups')
+                    .doc('groupsOwned')
+                    .set(active, {merge:true})
+                    .then(() => { console.info(`added the group to the groups the user owns 2`) })
+                    .catch(e => { console.error(e) })
+
                 m.route.set(`/group/${groupId}`);
             })
             .catch(function (error) {

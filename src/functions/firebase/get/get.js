@@ -32,22 +32,14 @@ function getUserGroups(onOff, userId) {
 
                         groupsOwnedDB.forEach(groupOwnedDB => {
                             //listen a group and update...
-                            unsubscribe[
-                                groupOwnedDB
-                                    .data()
-                                    .id
-                            ] = DB
+                            unsubscribe[groupOwnedDB.data().id] = DB
                                 .collection("groups")
                                 .doc(groupOwnedDB.data().id)
                                 .onSnapshot(groupDB => {
                                     let tempObj = groupDB.data();
                                     tempObj.id = groupOwnedDB.id;
 
-                                    groupsObj[
-                                        groupOwnedDB
-                                            .data()
-                                            .id
-                                    ] = tempObj;
+                                    groupsObj[groupOwnedDB.data().id] = tempObj;
                                     count++;
 
                                     if (count == groupsNumber) {
