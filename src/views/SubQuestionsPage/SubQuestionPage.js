@@ -17,7 +17,7 @@ import Chat from '../Commons/Chat/Chat';
 
 //functions
 import { getSubQuestion, getGroupDetails, listenToChat, listenToOptions, getLastTimeEntered } from "../../functions/firebase/get/get";
-import {  } from '../../functions/firebase/set/set';
+import { } from '../../functions/firebase/set/set';
 import { getIsChat, concatenateDBPath } from '../../functions/general';
 
 import { get } from "lodash";
@@ -62,14 +62,14 @@ module.exports = {
             subscribed: false,
             path: concatenateDBPath(groupId, questionId, subQuestionId),
             unreadMessages: 0,
-            lastTimeEntered:0
+            lastTimeEntered: 0
         }
 
 
         listenToOptions(groupId, questionId, subQuestionId, 'top');
     },
     oncreate: vnode => {
-     
+
         const { groupId, questionId, subQuestionId } = vnode.attrs;
         unsubscribe = getSubQuestion(groupId, questionId, subQuestionId);
         unsubscribeChat = listenToChat({ groupId, questionId, subQuestionId });
@@ -115,14 +115,15 @@ module.exports = {
 
     },
     onremove: vnode => {
-       
+
         unsubscribe();
         unsubscribeChat();
-      
+
     },
     view: vnode => {
 
         const { groupId, questionId, subQuestionId } = vnode.attrs;
+        console.log(vnode.state)
         return (
             <div class='page zoomOutEnter' id='page'>
                 {vnode.state.details.title
@@ -131,7 +132,7 @@ module.exports = {
                             <div class="subQuestionHeader">
                                 <Header
                                     title='שאלה'
-                                    upLevelUrl={vnode.state.details.userHaveNavigation || vnode.state.details.userHaveNavigation == undefined ? `/question/${groupId}/${questionId}` : false}
+                                    upLevelUrl={hasNevigation(vnode)}
                                     groupId={groupId}
                                     questionId={questionId}
                                     showSubscribe={true}
@@ -175,7 +176,7 @@ module.exports = {
 
                             {/* ---------------- Footer -------------- */}
                             {vnode.state.subPage === 'main' ?
-                                <div class={userCanNevigate(vnode) ? "subQuestion__arrange" : "subQuestion__arrange subQuestion__arrange--bottom"} id="questionFooter">
+                                <div class={hasNevigation(vnode) ? "subQuestion__arrange" : "subQuestion__arrange subQuestion__arrange--bottom"} id="questionFooter">
                                     <div
                                         class={vnode.state.details.orderBy == "new"
                                             ? "footerButton footerButtonSelected"
@@ -209,7 +210,7 @@ module.exports = {
                                     </div>
                                 </div> : null
                             }
-                            {userCanNevigate(vnode) && vnode.state.subPage === 'main' ? <NavBottom /> : null}
+                            {hasNevigation(vnode) && vnode.state.subPage === 'main' ? <NavBottom /> : null}
 
 
 
@@ -239,6 +240,17 @@ module.exports = {
     }
 };
 
-function userCanNevigate(vnode) {
-    return (vnode.state.details.userHaveNavigation == true || vnode.state.details.userHaveNavigation == undefined)
+
+function hasNevigation(vnode) {
+    try {
+
+        const { groupId, questionId, subQuestionId } = vnode.attrs;
+
+        const userHasNevigation = vnode.state.details.userHaveNavigation || vnode.state.details.userHaveNavigation == undefined;
+        const isUserCreator = (vnode.state.details.creator === store.user.uid || vnode.state.group.creatorId === store.user.uid)
+        return !userHasNevigation && !isUserCreator ? false : `/question/${groupId}/${questionId}`;
+    } catch (e) {
+        console.error(e)
+        return false;
+    }
 }
