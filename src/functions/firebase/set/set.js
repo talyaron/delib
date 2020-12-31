@@ -31,14 +31,14 @@ function createGroup(creatorId, title, description, callForAction) {
                     .then(() => { console.info(`added the group to the groups the user owns`) })
                     .catch(e => { console.error(e) })
 
-                   let active={}
-                   active[groupId]= true;
+                const active = {}
+                active[groupId] = { dateCreated: new Date().getTime() };
 
-                    DB.collection("users")
+                DB.collection("users")
                     .doc(store.user.uid)
                     .collection('groups')
                     .doc('groupsOwned')
-                    .set(active, {merge:true})
+                    .set(active, { merge: true })
                     .then(() => { console.info(`added the group to the groups the user owns 2`) })
                     .catch(e => { console.error(e) })
 
@@ -56,7 +56,7 @@ function updateGroup(vnode) {
     DB
         .collection('groups')
         .doc(vnode.attrs.id)
-        .update({ title: vnode.state.title, description: vnode.state.description,callForAction:vnode.state.callForAction })
+        .update({ title: vnode.state.title, description: vnode.state.description, callForAction: vnode.state.callForAction })
         .then(doc => {
             m
                 .route
@@ -161,7 +161,7 @@ function setSubQuestion(ids, settings) {
         const { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions, proAgainstType } = settings;
         const { groupId, questionId, subQuestionId } = ids;
 
-        console.log('setSubQuestion',subQuestionId, proAgainstType)
+        console.log('setSubQuestion', subQuestionId, proAgainstType)
 
         const subQuestionRef = DB
             .collection('groups')
@@ -176,13 +176,13 @@ function setSubQuestion(ids, settings) {
             //new subQuestion
             const uid = uniqueId()
 
-            subQuestionRef.doc(uid).set({ title, processType, orderBy, groupId, questionId, subQuestionId: uid, userHaveNavigation, showSubQuestion, order: numberOfSubquestions,proAgainstType, creator: store.user.uid })
+            subQuestionRef.doc(uid).set({ title, processType, orderBy, groupId, questionId, subQuestionId: uid, userHaveNavigation, showSubQuestion, order: numberOfSubquestions, proAgainstType, creator: store.user.uid })
                 .then(() => { console.info(`saved subQuestion ${uid} to DB`) })
                 .catch(e => {
                     console.error(e)
                 })
         } else {
-            subQuestionRef.doc(subQuestionId).update({ title, processType, orderBy, groupId, questionId, subQuestionId, userHaveNavigation, showSubQuestion,proAgainstType })
+            subQuestionRef.doc(subQuestionId).update({ title, processType, orderBy, groupId, questionId, subQuestionId, userHaveNavigation, showSubQuestion, proAgainstType })
                 .then(() => { console.info(`updated subQuestion ${subQuestionId} to DB`) })
                 .catch(e => {
                     console.error(e)
@@ -785,7 +785,7 @@ function subscribeUser(settings) {
 
 
         const { uid, displayName, email, photoURL } = store.user;
-      
+
         if (subscribe === false) {
             //if user is not subscribed then subscribe the user
 
@@ -802,7 +802,7 @@ function subscribeUser(settings) {
                             msgLastSeen: 0,
                             msgDifference: 0
                         })
-                        .then(()=>{console.log('user subscribed in messages')})
+                        .then(() => { console.log('user subscribed in messages') })
                         .catch(e => {
                             console.error('Error in saving new chat following on the user', e)
                         })
@@ -819,7 +819,7 @@ function subscribeUser(settings) {
                         .collection('messages').doc(chatEntityId).delete().then(() => {
                             console.info('User unsubscribed succsefuly from entity')
                         })
-                        .then(()=>{console.log('user unsubscribed in messages')})
+                        .then(() => { console.log('user unsubscribed in messages') })
                         .catch(e => {
                             console.error(e)
                         })
@@ -842,7 +842,7 @@ function setChatLastEntrance(ids) {
         let path = concatenateDBPath(groupId, questionId, subQuestionId, optionId, consequenceId);
         const regex = new RegExp('/', 'gi')
         path = path.replace(regex, '-')
-       
+
         if (path !== '-groups') {
             DB.collection(`users`).doc(store.user.uid).collection('chatLastEnterence').doc(path)
                 .set({ lastTime: firebase.firestore.FieldValue.serverTimestamp() })

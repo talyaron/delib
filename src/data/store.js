@@ -1,7 +1,9 @@
 var store = {
     user: {},
     userTempName: '',
+    listenToGroups:false,
     userGroups: [false],// groups the users is listeneing for
+    userGroupsIndex:{}, //all user's groups indexes(including unowned)
     current: {
         org: {
             title: 'שם הארגון'
