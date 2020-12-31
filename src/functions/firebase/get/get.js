@@ -19,57 +19,32 @@ function getUserGroups(userId) {
             DB
                 .collection("users")
                 .doc(userId)
-                .collection("groups")
-                .onSnapshot(groupsDB => {
+                .collection("groupsOwned")
+                .onSnapshot(groupsOwnedDB => {
 
-                    groupsDB.forEach(groupsTypeDB => {
-                        const groupsType = groupsTypeDB.data();
-                        console.log(groupsTypeDB.id)
-
-                        for (let groupId in groupsType) {
-                            console.log(groupId)
-
-                            // listen
-
-                            //if exist - dont listen
-                            if (!{}.hasOwnProperty.call(store.userGroupsIndex, groupId)) {
-                                DB.collection('groups').doc(groupId).onSnapshot(groupDB => {
-
-                                    console.log(groupDB.id);
-                                    let groupObj = groupDB.data();
-
-                                    groupObj.type = groupsTypeDB.id
-                                    console.log(JSON.stringify(store.userGroups))
-                                    //look for the group in the array and update it
-                                    const index = store.userGroups.findIndex(group => group.groupId === groupDB.id);
-
-                                    if (store.userGroups[0] === false) store.userGroups = [];
-                                    if (index === -1) {
-                                        console.log('couldnt find')
-                                        store.userGroups.push(groupObj)
-                                    } else {
-                                       
-                                        
-                                        store.userGroups[index] = groupObj
-                                    }
-                                    console.log(store.userGroups)
-                                    m.redraw()
-                                })
-                            }
-                            // if new - listen
-
+                    groupsOwnedDB.docChanges().forEach(function(change) {
+                        if (change.type === "added") {
+                            console.log("New city: ", change.doc.data());
                         }
+                        if (change.type === "modified") {
+                            console.log("Modified city: ", change.doc.data());
+                        }
+                        if (change.type === "removed") {
+                            console.log("Removed city: ", change.doc.data());
+                        }
+                    });
 
-                        //if not exist in listened, cleand from dom, and unsubscribe
 
-                    })
 
-                }, e => { console.error(e) });
 
-        }
-    } catch (err) {
-        console.error(err)
+                })
+
+        }, e => { console.error(e) });
+
     }
+    } catch (err) {
+    console.error(err)
+}
 }
 
 function getQuestions(onOff, groupId, vnode) {
