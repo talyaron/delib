@@ -20,8 +20,9 @@ module.exports = {
             groupId: ''
         };
 
+        //get call for action
         vnode.state.groupId = lastPage.split('/')[2];
-        if (vnode.state.groupId.length > 5) {
+        if (vnode.state.groupId !== undefined && vnode.state.groupId.length > 5) {
             getGroupDetails(vnode.state.groupId);
         }
 
