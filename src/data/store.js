@@ -3,6 +3,7 @@ var store = {
     userTempName: '',
     userGroups: [false],// groups the users is listeneing for
     userGroupsListen:false,
+    userGroupsListners:{}, //these listners for the groups are used to unsubscribe if use do not listen to a group
     current: {
         org: {
             title: 'שם הארגון'

@@ -16,62 +16,36 @@ function getUserGroups(userId) {
 
         if (store.userGroupsListen === false) {
             store.userGroupsListen = true;
+
             
+
             DB
                 .collection("users")
                 .doc(userId)
                 .collection("groupsOwned")
                 .onSnapshot(groupsOwnedDB => {
-                    //unsubsribe from previous listeners
-                    for (let i in unsubscribe) {
-                        unsubscribe[i]();
-                    }
-                    unsubscribe = {};
 
-                    const groupsNumber = groupsOwnedDB.size;
-                    let count = 0;
-                    var groupsObj = {},
-                        groupsArray = [];
 
-                    groupsOwnedDB.forEach(groupOwnedDB => {
-                        //listen a group and update...
-                        unsubscribe[
-                            groupOwnedDB
-                                .data()
-                                .id
-                        ] = DB
-                            .collection("groups")
-                            .doc(groupOwnedDB.data().id)
-                            .onSnapshot(groupDB => {
-                                let tempObj = groupDB.data();
-                                tempObj.id = groupOwnedDB.id;
+                    groupsOwnedDB.docChanges().forEach(change => {
+                        if (change.type === "added") {
 
-                                groupsObj[
-                                    groupOwnedDB
-                                        .data()
-                                        .id
-                                ] = tempObj;
-                                count++;
+                            store.userGroupsListners[change.doc.id] = listenToGroup(change.doc.id);
 
-                                if (count == groupsNumber) {
-                                    //first update
-                                    for (let i in groupsObj) {
-                                        groupsArray.push(groupsObj[i]);
-                                    }
+                        }
 
-                                    store.userGroups = groupsArray;
-                                    m.redraw();
-                                } else if (count > groupsNumber) {
-                                    //net updates after initial update search in array and replace
-                                    let indexOfGroup = store
-                                        .userGroups
-                                        .findIndex(group => {
-                                            return group.id === tempObj.id;
-                                        });
-                                    store.userGroups[indexOfGroup] = tempObj;
-                                    m.redraw();
-                                }
-                            });
+                        if (change.type === "removed") {
+
+
+                            //remove from dom
+                            let groupIndex = store.userGroups.findIndex(group => group.id === change.doc.id);
+                            if (groupIndex > -1) {
+                                store.userGroups.splice(groupIndex,1);
+                            }
+
+                            store.userGroupsListners[change.doc.id]();
+
+                            m.redraw()
+                        }
                     });
                 }, err => {
                     console.error('On getUserGroups:', err.name, err.message)
@@ -80,9 +54,29 @@ function getUserGroups(userId) {
     } catch (err) {
         console.error(err)
     }
-} 
-   
 }
+
+function listenToGroup(groupId) {
+
+    return DB.collection('groups').doc(groupId).onSnapshot(groupDB => {
+        let groupIndex = store.userGroups.findIndex(group => group.id === groupId);
+
+        if(store.userGroups[0] === false) store.userGroups.splice(0,1);
+
+        if (groupIndex == -1) {
+            store.userGroups.push(groupDB.data())
+        } else {
+            store.userGroups[groupIndex] = groupDB.data()
+        }
+
+        console.log(store.userGroups)
+        m.redraw()
+    }, err => {
+        console.error('On getUserGroups:', err.name, err.message)
+    })
+
+}
+
 
 function getQuestions(onOff, groupId, vnode) {
     if (onOff === "on") {
