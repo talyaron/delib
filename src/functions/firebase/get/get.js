@@ -3,12 +3,12 @@ import { DB } from "../config";
 import store, { consequencesTop } from "../../../data/store";
 
 //functions
-import { orderBy, set } from 'lodash';
+import { constant, orderBy, set } from 'lodash';
 import { concatenateDBPath, setBrowserUniqueId, getEntityId } from '../../general'
 
 var unsubscribe = {};
 
-function getUserGroups(userId) {
+function listenToUserGroups(userId) {
 
 
 
@@ -17,7 +17,7 @@ function getUserGroups(userId) {
         if (store.userGroupsListen === false) {
             store.userGroupsListen = true;
 
-            
+
 
             DB
                 .collection("users")
@@ -25,36 +25,12 @@ function getUserGroups(userId) {
                 .collection("groupsOwned")
                 .onSnapshot(groupsOwnedDB => {
 
-                    setTimeout(()=>{
-                        if(store.userGroups[0] === false) store.userGroups.splice(0,1);
+                    setTimeout(() => {
+                        if (store.userGroups[0] === false) store.userGroups.splice(0, 1);
                         m.redraw()
-                    },500)
+                    }, 500)
 
-                    
-
-
-                    groupsOwnedDB.docChanges().forEach(change => {
-                        if (change.type === "added") {
-
-                            store.userGroupsListners[change.doc.id] = listenToGroup(change.doc.id);
-
-                        }
-
-                        if (change.type === "removed") {
-
-
-                            //remove from dom
-                            let groupIndex = store.userGroups.findIndex(group => group.id === change.doc.id);
-                            if (groupIndex > -1) {
-                                store.userGroups.splice(groupIndex,1);
-                            }
-
-                            store.userGroupsListners[change.doc.id]();
-
-                            m.redraw()
-                        }
-                    });
-
+                    listenToGroups(groupsOwnedDB);
                     m.redraw();
                 }, err => {
                     console.error('On getUserGroups:', err.name, err.message)
@@ -65,12 +41,61 @@ function getUserGroups(userId) {
     }
 }
 
+function listenToRegisterdGroups() {
+
+    try {
+
+        if ({}.hasOwnProperty.call(store.user, 'uid') && store.registerGroupsListen === false) {
+            store.registerGroupsListen = true;
+
+
+            DB.collection('users').doc(store.user.uid).collection('registerGroups').onSnapshot(groupsDB => {
+                console.log('listenToRegisterdGroups', store.user.uid, groupsDB.size)
+
+                listenToGroups(groupsDB);
+            }, err => {
+                console.error('On listenToRegisterdGroups:', err.name, err.message)
+            })
+        }
+    } catch (e) {
+        console.error(e)
+    }
+
+}
+
+function listenToGroups(groupsDB) {
+    console.log('listenToGroups')
+
+    groupsDB.docChanges().forEach(change => {
+        console.log(change.type, change.doc.id)
+        if (change.type === "added") {
+
+            store.userGroupsListners[change.doc.id] = listenToGroup(change.doc.id);
+
+        } else if (change.type === "removed") {
+
+
+            //remove from dom
+            let groupIndex = store.userGroups.findIndex(group => group.id === change.doc.id);
+            if (groupIndex > -1) {
+                store.userGroups.splice(groupIndex, 1);
+            }
+
+            store.userGroupsListners[change.doc.id]();
+
+            m.redraw()
+        }
+
+        console.log(store.userGroups)
+    });
+}
+
 function listenToGroup(groupId) {
 
     return DB.collection('groups').doc(groupId).onSnapshot(groupDB => {
         let groupIndex = store.userGroups.findIndex(group => group.id === groupId);
 
-        if(store.userGroups[0] === false) store.userGroups.splice(0,1);
+        if (store.userGroups[0] === false) store.userGroups.splice(0, 1);
 
         if (groupIndex == -1) {
             store.userGroups.push(groupDB.data())
@@ -78,10 +103,10 @@ function listenToGroup(groupId) {
             store.userGroups[groupIndex] = groupDB.data()
         }
 
-      
+
         m.redraw()
     }, err => {
-        console.error('On getUserGroups:', err.name, err.message)
+        console.error('On listenToGroup:', err.name, err.message)
     })
 
 }
@@ -1024,7 +1049,8 @@ function getLastTimeEntered(ids, vnode) {
 }
 
 module.exports = {
-    getUserGroups,
+    listenToUserGroups,
+    listenToRegisterdGroups,
     getQuestions,
     getGroupDetails,
     getQuestionDetails,

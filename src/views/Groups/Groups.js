@@ -13,7 +13,7 @@ import CreateNewEntity from '../Commons/CreateNewEntity/CreateNewEntity'
 
 
 //functions
-import { getUserGroups } from '../../functions/firebase/get/get';
+import { listenToUserGroups } from '../../functions/firebase/get/get';
 import { restrictedPage } from '../../functions/logins';
 import { setWrapperHeight, getRandomColor } from '../../functions/general';
 
@@ -25,7 +25,7 @@ module.exports = {
         sessionStorage.setItem('lastPage', store.lastPage);
 
         if (restrictedPage('/groups')) {
-            getUserGroups(store.user.uid);
+            listenToUserGroups(store.user.uid);
         }
 
     },
@@ -40,7 +40,7 @@ module.exports = {
 
     },
     view: () => {
-        console.log(store.userGroups)
+       
         return (
             <div >
                 <Header title='הקבוצות שלי' topic='דליב' upLevelUrl={false} />
