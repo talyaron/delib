@@ -24,7 +24,7 @@ module.exports = {
         sessionStorage.setItem('lastPage', store.lastPage);
 
         if (restrictedPage('/groups')) {
-            getUserGroups('on', store.user.uid);
+            getUserGroups( store.user.uid);
         }
 
     },
@@ -36,7 +36,7 @@ module.exports = {
 
     },
     onremove: vnode => {
-        getUserGroups('off', store.user.uid);
+       
     },
     view: (vnode) => {
         return (
