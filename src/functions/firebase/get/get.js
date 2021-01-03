@@ -25,6 +25,13 @@ function getUserGroups(userId) {
                 .collection("groupsOwned")
                 .onSnapshot(groupsOwnedDB => {
 
+                    setTimeout(()=>{
+                        if(store.userGroups[0] === false) store.userGroups.splice(0,1);
+                        m.redraw()
+                    },500)
+
+                    
+
 
                     groupsOwnedDB.docChanges().forEach(change => {
                         if (change.type === "added") {
@@ -47,6 +54,8 @@ function getUserGroups(userId) {
                             m.redraw()
                         }
                     });
+
+                    m.redraw();
                 }, err => {
                     console.error('On getUserGroups:', err.name, err.message)
                 });
@@ -69,7 +78,7 @@ function listenToGroup(groupId) {
             store.userGroups[groupIndex] = groupDB.data()
         }
 
-        console.log(store.userGroups)
+      
         m.redraw()
     }, err => {
         console.error('On getUserGroups:', err.name, err.message)
