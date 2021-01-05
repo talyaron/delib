@@ -2,39 +2,55 @@ import m from 'mithril'
 import './Picture.css';
 
 //functions
-import {DB} from '../../../functions/firebase/config';
+import { DB } from '../../../functions/firebase/config';
+import { constant } from 'lodash';
 
 module.exports = {
-    view:vnode=>{
-      
-        return (
-            <div class="addPicturesPanel" onclick={addPicture}>
-            <input
-              type="file"
-              class="addPicture"
-              id="pictuerToAdd"
-              onclick={() => {}}
-              onchange={event => {
-                getImage(event, vnode);
-              }}
-            ></input>
-            {vnode.attrs.logo ? (
-              <img src={vnode.attrs.logo} class="imgOption" />
-            ) : (
-              <span> הוסיפו תמונה גודל 120 על 120 פיקסלים</span>
-            )}
+  oninit: vnode => {
+    vnode.state = { filePercent: false }
+  },
+  view: vnode => {
+
+    return (
+      <div class="addPicturesPanel" onclick={addPicture}>
+        <input
+          type="file"
+          class="addPicture"
+          id="pictuerToAdd"
+          onclick={() => { }}
+          onchange={event => {
+            getImage(event, vnode);
+          }}
+        ></input>
+        {vnode.state.filePercent ?
+          <div class='uploader'>
+            <div style={`width: ${vnode.state.filePercent}%`} />
           </div>
-        )
-    }
+          :
+
+          vnode.attrs.logo ? (
+            <img src={vnode.attrs.logo} class="imgOption" />
+          ) : (
+
+
+              <span>הוסיפו תמונה</span>
+
+
+
+            )}
+      </div>
+    )
+  }
 }
 
 function addPicture() {
-    document.getElementById("pictuerToAdd").click();
-  }
-  
-  // functions
-  
-  function getImage(event, vnode) {
+  document.getElementById("pictuerToAdd").click();
+}
+
+// functions
+
+function getImage(event, vnode) {
+  try {
     // imageToUpload = image.target.files[0];
     const ref = firebase.storage().ref("/groups/" + vnode.attrs.id);
     const image = event.target.files[0];
@@ -42,18 +58,49 @@ function addPicture() {
     const metadata = {
       contentType: image.type
     };
-  //   const uid = randomUid();
+    //   const uid = randomUid();
     // const task = ref.child(uid).put(image, metadata);
-    ref
+    var uploadImg = ref
       .put(image, metadata)
-      .then(snapshot => {
-        snapshot.ref.getDownloadURL().then(downloadURL=> {
-          DB.collection('groups').doc(vnode.attrs.id).update({logo:downloadURL})
-          .then(doc=>{
-              vnode.state.logo = downloadURL;
-              m.redraw();           
-          })       
-        });
-      })
-      .catch(err=>console.error(err));
+    // .then(snapshot => {
+    //   snapshot.ref.getDownloadURL().then(downloadURL => {
+    //     DB.collection('groups').doc(vnode.attrs.id).update({ logo: downloadURL })
+    //       .then(doc => {
+    //         vnode.state.logo = downloadURL;
+    //         m.redraw();
+    //       })
+    //   });
+    // })
+    // .catch(err => console.error(err));
+
+    console.log(uploadImg)
+    uploadImg.on('state_changed', snapshot => {
+      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+      vnode.state.filePercent = progress;
+      m.redraw()
+    }, e => {
+      console.error(e)
+      vnode.state.filePercent = false
+      m.redraw();
+    }, () => {
+
+      uploadImg.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+
+        vnode.state.logo = downloadURL;
+
+        DB.collection('groups').doc(vnode.attrs.id).update({ logo: downloadURL })
+          .then(() => {
+            vnode.state.logo = downloadURL;
+            vnode.state.filePercent = false
+            m.redraw();
+          })
+      });
+    })
+  } catch (e) {
+    console.error(e);
+    vnode.state.filePercent = false
+    m.redraw();
   }
+}
+

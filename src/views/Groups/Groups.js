@@ -37,7 +37,7 @@ module.exports = {
 
     },
     view: () => {
-       
+       console.log(store.userGroups)
         return (
             <div >
                 <Header title='הקבוצות שלי' topic='דליב' upLevelUrl={false} />
