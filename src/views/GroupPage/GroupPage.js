@@ -16,8 +16,8 @@ import Spinner from '../Commons/Spinner/Spinner';
 
 
 //functions
-import { createQuestion ,registerGroup} from '../../functions/firebase/set/set';
-import { getQuestions, getGroupDetails, listenToChat, getLastTimeEntered,listenToUserGroups,listenToRegisterdGroups } from '../../functions/firebase/get/get';
+import { createQuestion, registerGroup } from '../../functions/firebase/set/set';
+import { getQuestions, getGroupDetails, listenToChat, getLastTimeEntered } from '../../functions/firebase/get/get';
 import { setLastPage, getIsChat, concatenateDBPath } from '../../functions/general';
 
 
@@ -52,8 +52,7 @@ module.exports = {
             lastTimeEntered: 0
         }
 
-        listenToUserGroups();
-        listenToRegisterdGroups();
+      
 
         getQuestions('on', vnode.attrs.id, vnode);
         vnode.state.undbGroupDetails = getGroupDetails(vnode.attrs.id, vnode);
@@ -61,7 +60,7 @@ module.exports = {
 
         vnode.state.unsubscribe.chat = listenToChat({ groupId: vnode.attrs.id });
 
-        console.log(store.userGroups)
+     
 
     },
     oncreate: vnode => {
@@ -69,13 +68,8 @@ module.exports = {
         let groupId = id;
         getLastTimeEntered({ groupId }, vnode);
 
-        console.log(store.userGroups)
-
     },
     onbeforeupdate: vnode => {
-
-        console.log(store.userGroups)
-
 
         const { id } = vnode.attrs;
         let groupId = id;
@@ -109,12 +103,10 @@ module.exports = {
             return m.createdTime.seconds > vnode.state.lastTimeEntered
         }).length;
 
-        if(!{}.hasOwnProperty.call(store.groupsRegistered, groupId)){
-            store.groupsRegistered[groupId] = true;
 
-            //register to DB
-            registerGroup(groupId)
-        }
+        //register to DB
+        registerGroup(groupId)
+
     },
 
     onremove: vnode => {

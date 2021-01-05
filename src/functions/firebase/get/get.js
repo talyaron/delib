@@ -3,33 +3,36 @@ import { DB } from "../config";
 import store, { consequencesTop } from "../../../data/store";
 
 //functions
-import { constant, orderBy, set } from 'lodash';
+import { cond, constant, orderBy, set } from 'lodash';
 import { concatenateDBPath, setBrowserUniqueId, getEntityId } from '../../general'
 
 var unsubscribe = {};
 
-function listenToUserGroups(userId) {
+function listenToUserGroups() {
 
 
 
     try {
 
+        if (!{}.hasOwnProperty.call(store.user, 'uid')) throw new Error('Cant listen to user groups, because user do not have uid')
+
         if (store.userGroupsListen === false) {
             store.userGroupsListen = true;
 
-
+          
 
             DB
                 .collection("users")
-                .doc(userId)
+                .doc(store.user.uid)
                 .collection("groupsOwned")
                 .onSnapshot(groupsOwnedDB => {
+                 
 
                     setTimeout(() => {
                         if (store.userGroups[0] === false) store.userGroups.splice(0, 1);
                         m.redraw()
                     }, 500)
-
+               
                     listenToGroups(groupsOwnedDB);
                     m.redraw();
                 }, err => {
@@ -43,6 +46,7 @@ function listenToUserGroups(userId) {
 
 function listenToRegisterdGroups() {
 
+
     try {
 
         if ({}.hasOwnProperty.call(store.user, 'uid') && store.registerGroupsListen === false) {
@@ -50,8 +54,7 @@ function listenToRegisterdGroups() {
 
 
             DB.collection('users').doc(store.user.uid).collection('registerGroups').onSnapshot(groupsDB => {
-                console.log('listenToRegisterdGroups', store.user.uid, groupsDB.size)
-
+              
                 listenToGroups(groupsDB);
             }, err => {
                 console.error('On listenToRegisterdGroups:', err.name, err.message)
@@ -66,50 +69,87 @@ function listenToRegisterdGroups() {
 
 
 function listenToGroups(groupsDB) {
-    console.log('listenToGroups')
-
-    groupsDB.docChanges().forEach(change => {
-        console.log(change.type, change.doc.id)
-        if (change.type === "added") {
-
-            store.userGroupsListners[change.doc.id] = listenToGroup(change.doc.id);
-
-        } else if (change.type === "removed") {
 
 
-            //remove from dom
-            let groupIndex = store.userGroups.findIndex(group => group.id === change.doc.id);
-            if (groupIndex > -1) {
-                store.userGroups.splice(groupIndex, 1);
+    try {
+
+        groupsDB.docChanges().forEach(change => {
+
+            if (change.type === "added") {
+
+                //subscribe to group and listen
+
+                store.userGroupsListners[change.doc.id] = listenToGroup(change.doc.id);
+
+
+            } else if (change.type === "removed") {
+
+
+                //remove from dom
+                let groupIndex = store.userGroups.findIndex(group => group.id === change.doc.id);
+                if (groupIndex > -1) {
+                    store.userGroups.splice(groupIndex, 1);
+                }
+                //unsubscribe to group
+                store.userGroupsListners[change.doc.id]();
+
+                delete store.userGroupListen[change.doc.id]
+
+
             }
 
-            store.userGroupsListners[change.doc.id]();
 
             m.redraw()
-        }
 
-        console.log(store.userGroups)
-    });
+
+        });
+    } catch (e) {
+        console.error(e)
+    }
 }
 
 function listenToGroup(groupId) {
 
-    return DB.collection('groups').doc(groupId).onSnapshot(groupDB => {
-        let groupIndex = store.userGroups.findIndex(group => group.id === groupId);
+    try {
+        if (!{}.hasOwnProperty.call(store.userGroupsListners, groupId)){
 
-        if (store.userGroups[0] === false) store.userGroups.splice(0, 1);
+            store.userGroupListen[groupId] = true
+          
 
-        if (groupIndex == -1) {
-            store.userGroups.push(groupDB.data())
+            return DB.collection('groups').doc(groupId).onSnapshot(groupDB => {
+                try {
+                    if (groupDB.exists) {
+                        let groupIndex = store.userGroups.findIndex(group => group.id === groupId);
+
+                        if (store.userGroups[0] === false) store.userGroups.splice(0, 1);
+
+                        if (groupIndex == -1) {
+                            store.userGroups.push(groupDB.data())
+                        } else {
+                            store.userGroups[groupIndex] = groupDB.data()
+                        }
+
+
+                        m.redraw();
+
+                        
+
+
+                    } else {
+                        throw new Error(`group ${groupId} do not exists`)
+                    }
+                } catch (e) {
+                    console.error(e.message)
+                }
+            }, err => {
+                console.error('On listenToGroup:', err.name, err.message)
+            })
         } else {
-            store.userGroups[groupIndex] = groupDB.data()
+            return () => { };
         }
-
-
-        m.redraw()
-    }, err => {
-        console.error('On listenToGroup:', err.name, err.message)
-    })
+    } catch (e) {
+        console.error(e);
+    }
 
 }
 
@@ -125,10 +165,12 @@ function listenToGroupMembers(groupId) {
                 })
 
                 store.groupMembers[groupId] = members;
+                m.redraw();
 
             }, e => { console.error(e) })
     } catch (e) {
         console.error(e)
+        return () => { };
     }
 }
 

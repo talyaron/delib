@@ -17,7 +17,7 @@ import Chat from '../Commons/Chat/Chat';
 
 //functions
 import { getSubQuestion, getGroupDetails, listenToChat, listenToOptions, getLastTimeEntered } from "../../functions/firebase/get/get";
-import { } from '../../functions/firebase/set/set';
+import { registerGroup } from '../../functions/firebase/set/set';
 import { getIsChat, concatenateDBPath } from '../../functions/general';
 
 import { get } from "lodash";
@@ -67,6 +67,8 @@ module.exports = {
 
 
         listenToOptions(groupId, questionId, subQuestionId, 'top');
+
+        registerGroup(groupId);
     },
     oncreate: vnode => {
 
@@ -123,7 +125,7 @@ module.exports = {
     view: vnode => {
 
         const { groupId, questionId, subQuestionId } = vnode.attrs;
-        console.log(vnode.state)
+      
         return (
             <div class='page zoomOutEnter' id='page'>
                 {vnode.state.details.title

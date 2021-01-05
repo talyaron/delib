@@ -6,7 +6,7 @@ import store from '../../data/store';
 
 //function
 import { get } from 'lodash';
-import { setNumberOfMessagesMark } from '../../functions/firebase/set/set';
+import { setNumberOfMessagesMark ,registerGroup} from '../../functions/firebase/set/set';
 import { listenToOption, listenToChat, listenToConsequences, getLastTimeEntered, getSubQuestion } from '../../functions/firebase/get/get';
 import { randomizeArray, getFirstUrl, concatenateDBPath } from '../../functions/general';
 import {enterIn2ndPage} from '../../functions/animations'
@@ -75,7 +75,9 @@ module.exports = {
             vnode.state.subQuestion = get(store.subQuestions, `[${subQuestionId}]`, {})
         }
 
-        sortBy(vnode)
+        sortBy(vnode);
+
+        registerGroup(groupId);
 
     },
     oncreate: vnode => {

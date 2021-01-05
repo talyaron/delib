@@ -1,21 +1,30 @@
 .members{
-    /* display: grid;
-    grid-template-columns: repeat(3,1fr);
-    grid-template-rows: auto; */
-    background-color: white;
+    max-width: var(--maxWidthOnPC);
+    margin: auto;
 }
 
 .members__header{
-    background-color: gray;
+    background-color: #6c6c6c;
     display: grid;
     grid-template-columns: repeat(3,1fr);
+    padding: 10px 5px;
+    color: white;
 
 }
 
 .members__member{
-    background-color: rgb(206, 206, 206);
+    
     display: grid;
     grid-template-columns: repeat(3,1fr);
+    padding: 10px 5px;
+}
+
+
+.members__member:nth-child(even){
+    background-color: rgb(216, 216, 216);
+}
+.members__member:nth-child(odd){
+    background-color: rgb(195, 195, 195);
 }
 
 .members__member:hover{

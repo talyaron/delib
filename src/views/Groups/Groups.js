@@ -13,8 +13,7 @@ import CreateNewEntity from '../Commons/CreateNewEntity/CreateNewEntity'
 
 
 //functions
-import { listenToUserGroups } from '../../functions/firebase/get/get';
-import { restrictedPage } from '../../functions/logins';
+
 import { setWrapperHeight, getRandomColor } from '../../functions/general';
 
 import store from '../../data/store';
@@ -24,9 +23,7 @@ module.exports = {
         store.lastPage = '/groups';
         sessionStorage.setItem('lastPage', store.lastPage);
 
-        if (restrictedPage('/groups')) {
-            listenToUserGroups(store.user.uid);
-        }
+       
 
     },
     oncreate: () => {

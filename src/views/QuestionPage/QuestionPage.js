@@ -20,7 +20,7 @@ import SubQuestionEditModal from './SubQuestionEditModal/SubQuestionEditModal';
 import store from '../../data/store';
 //functions
 import { getQuestionDetails, getSubQuestion, getLastTimeEntered, listenToChat } from '../../functions/firebase/get/get';
-import {  } from '../../functions/firebase/set/set';
+import { registerGroup} from '../../functions/firebase/set/set';
 import { deep_value, getIsChat, concatenateDBPath } from '../../functions/general';
 
 
@@ -93,7 +93,9 @@ module.exports = {
 
         //propare undubscribe function for question details to be used  onremove
         vnode.state.unsubscribeQuestionDetails = getQuestionDetails(groupId, questionId, vnode); //it will then listen to subQuestions
-        vnode.state.unsbscribe.chat = listenToChat({ groupId, questionId })
+        vnode.state.unsbscribe.chat = listenToChat({ groupId, questionId });
+
+        registerGroup(groupId)
 
     },
     oncreate: vnode => {

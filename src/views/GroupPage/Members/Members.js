@@ -14,7 +14,7 @@ import { listenToGroupMembers } from '../../../functions/firebase/get/get';
 
 
 
-
+let subscribeToMembers = ()=>{};
 
 module.exports = {
 
@@ -22,8 +22,11 @@ module.exports = {
 
         const { groupId } = vnode.attrs;
 
-        listenToGroupMembers(groupId);
+        subscribeToMembers = listenToGroupMembers(groupId);
 
+    },
+    onremove:vnode=>{
+        subscribeToMembers();
     },
     view: vnode => {
         const { groupId } = vnode.attrs;
