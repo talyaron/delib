@@ -1,0 +1,29 @@
+.members{
+    /* display: grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-template-rows: auto; */
+    background-color: white;
+}
+
+.members__header{
+    background-color: gray;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+
+}
+
+.members__member{
+    background-color: rgb(206, 206, 206);
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+}
+
+.members__member:hover{
+    background-color: whitesmoke;
+}
+
+.members__member img{
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+}

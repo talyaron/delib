@@ -23,6 +23,7 @@ var store = {
     groups: {}, //groups stored as {groupId:{group info}}
     groupsRegistered:{},
     registerGroupsListen:false,
+    groupMembers:{}, //used to store members of groups. {groupId:[members]}
     option:{}, //options information, stored in option:{optionId:{}}
     options: [],//options in a given question. stored as {subQuestionID:[options]} 
     optionsListen:{}, //used to store if there is a listner in subQuestion of option {subQuestionId:true}

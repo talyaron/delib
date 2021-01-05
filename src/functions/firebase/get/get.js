@@ -63,6 +63,8 @@ function listenToRegisterdGroups() {
 
 }
 
+
+
 function listenToGroups(groupsDB) {
     console.log('listenToGroups')
 
@@ -109,6 +111,25 @@ function listenToGroup(groupId) {
         console.error('On listenToGroup:', err.name, err.message)
     })
 
+}
+
+function listenToGroupMembers(groupId) {
+    try {
+
+        return DB.collection('groups').doc(groupId).collection('members')
+            .onSnapshot(membersDB => {
+                let members = [];
+                membersDB.forEach(memberDB => {
+                    members.push(memberDB.data());
+
+                })
+
+                store.groupMembers[groupId] = members;
+
+            }, e => { console.error(e) })
+    } catch (e) {
+        console.error(e)
+    }
 }
 
 
@@ -1053,6 +1074,7 @@ module.exports = {
     listenToRegisterdGroups,
     getQuestions,
     getGroupDetails,
+    listenToGroupMembers,
     getQuestionDetails,
     listenSubQuestions,
     getSubQuestion,
