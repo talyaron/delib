@@ -912,7 +912,7 @@ function zeroChatFeedMessages(ids, isSubscribed = true) {
 
             const path = generateChatEntitiyId(ids)
 
-            DB.collection('users').doc(store.user.uid).collection('messages').doc(path).update({ msgDifference: 0 }).catch(e => console.error(e))
+            DB.collection('users').doc(store.user.uid).collection('messages').doc(path).set({ msgDifference: 0 },{merge:true}).catch(e => console.error(e))
         }
     } catch (e) {
         console.error(e)
