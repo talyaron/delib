@@ -491,6 +491,8 @@ function updateOptionDescription(ids, description) {
 }
 
 function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like) {
+
+   
     try {
 
 
@@ -694,6 +696,8 @@ function updateSubItem(subItemsType, groupId, questionId, subQuestionId, title, 
 }
 
 function setLikeToSubItem(subItemsType, groupId, questionId, subQuestionId, creatorId, isUp) {
+
+    console.log(subItemsType, groupId, questionId, subQuestionId)
     let subQuestionRef = DB
         .collection('groups')
         .doc(groupId)

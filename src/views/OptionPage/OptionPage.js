@@ -51,7 +51,8 @@ module.exports = {
             orderBy: 'new',
             unreadMessages: 0,
             lastTimeEntered: 0,
-            subQuestion: {}
+            subQuestion: {},
+            userHaveNavigation:get(store.subQuestions,`[${subQuestionId}].userHaveNavigation`,true)
         };
 
         if (firstUrl === 'option') {
@@ -112,6 +113,7 @@ module.exports = {
             vnode.state.subQuestion = get(store.subQuestions, `[${subQuestionId}]`, {})
         }
 
+        vnode.state.userHaveNavigation = get(store.subQuestions,`[${subQuestionId}].userHaveNavigation`,true)
     },
     
     onremove: vnode => {
@@ -262,7 +264,7 @@ module.exports = {
                         url={m.route.get()}
                     />
                 }
-                {subPage === 'main' ? <NavBottom /> : null}
+                {subPage === 'main' && vnode.state.userHaveNavigation  ? <NavBottom /> : null}
             </div>
         )
     }

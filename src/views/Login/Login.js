@@ -17,12 +17,14 @@ module.exports = {
 
         vnode.state = {
             callForAction: '',
-            groupId: ''
+            groupId: undefined
         };
 
         //get call for action
         if (lastPage) {
-            vnode.state.groupId = lastPage.split('/')[2];
+            let groupIdFromBrowser  = lastPage.split('/')[2];
+           if(groupIdFromBrowser !== undefined) vnode.state.groupId = groupIdFromBrowser;
+       
             if (vnode.state.groupId !== undefined && vnode.state.groupId.length > 5) {
                 getGroupDetails(vnode.state.groupId);
             }
@@ -31,7 +33,8 @@ module.exports = {
 
     },
     onbeforeupdate: vnode => {
-        if (vnode.state.groupId.length > 5) {
+       
+        if (vnode.state.groupId && vnode.state.groupId.length > 5) {
             vnode.state.callForAction = get(store.groups, `[${vnode.state.groupId}].callForAction`, '')
         }
     },

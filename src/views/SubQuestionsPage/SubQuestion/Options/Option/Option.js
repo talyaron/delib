@@ -314,7 +314,7 @@ module.exports = {
               }
             </div>
             :
-            <div class='consequences__tip' onclick={() => { enterIn(document.getElementById('page')`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) }}>יש לכם הצעות בעד ונגד?</div>
+            <div class='consequences__tip' onclick={() => { enterIn(document.getElementById('page'),`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) }}>יש לכם טענות בעד ונגד ההצעה?</div>
           }
           <hr></hr>
           <div class="optionCard__info">
