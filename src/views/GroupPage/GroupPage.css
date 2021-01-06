@@ -1,16 +1,15 @@
 .questionsWrapper {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  grid-template-rows: repeat(300, 1fr);
-
+  display: flex;
+  flex-direction: column;
 
   background: #e8e8e8;
   overflow-y: auto;
-  gap: 16px;
+  
   box-sizing: border-box;
+}
 
-
-
+.questionsWrapper>*{
+  height: fit-content;
 }
 
 .questionsWrapper h1 {
@@ -26,13 +25,7 @@
 }
 
 
-.page-grid {
-  width: 100%;
-  height: 100%;
-  display: grid;
-  grid-template-rows: 52px 40px auto 61px;
-  overflow-y: hidden;
-}
+
 
 .questionsWrapper>h1 {
   grid-column-start: 1;
