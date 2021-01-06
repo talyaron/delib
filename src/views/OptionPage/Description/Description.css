@@ -11,10 +11,7 @@
     font-size: var(--size17);
    
 }
-.description p{
-    font-size: var(--size15);
-    
-}
+
 
 .description textarea{
     width: calc(100% - 2*var(--regPadding));
@@ -23,6 +20,12 @@
 
 .description__text img{
     width: 100%;
+}
+
+.description__text p{
+    font-size: var(--size15);
+    opacity: 0.7;
+    
 }
 
 .addVideo{

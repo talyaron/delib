@@ -42,7 +42,7 @@ module.exports = {
         const descriptionParagraphs = changeTextToArray(vnode.state.description);
     
         return (
-            <div class='description title'>
+            <div class='title'>
                 <h1>פתרון אפשרי: {title}</h1>
                 {vnode.state.edit ?
                     <textarea class='inputGeneral' defaultValue={description} onkeyup={e => handleEditDescription(e, vnode)} id={`optionDescription${optionId}`} />

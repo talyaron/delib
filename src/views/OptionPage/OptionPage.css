@@ -7,6 +7,7 @@
     font-size: var(--size17);
     width:100vw;
     padding-bottom: 200px;
+    overflow-y: auto;
 }
 
 .optionPage__main h1{
@@ -23,8 +24,8 @@
     width: 100%;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    position: fixed;
-    bottom: 64px;
+    position: relative;
+    bottom:0px;
     left: 0px;
 }
 

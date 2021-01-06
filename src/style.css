@@ -129,6 +129,10 @@ body {
     height: fit-content;
 }
 
+.title p{
+    font-size: (var(--size15));
+}
+
 @media (max-width: 600px) {
     .title {
         width: 100vw;
