@@ -230,7 +230,7 @@ module.exports = {
                     />
                   )}
               </div>
-              {vnode.state.more.text.length > 0 ? (
+              {/* {vnode.state.more.text.length > 0 ? (
                 <div>
                   {!vnode.state.isEdit ? (
                     <a
@@ -282,11 +282,11 @@ module.exports = {
                             }}
                             placeholder="URL"
                             value={vnode.state.more.URL}
-                          ></input>
+                          ></input> 
                         </div>
                       )}
                   </div>
-                )}
+                )} */}
             </div>
             <div
               class={

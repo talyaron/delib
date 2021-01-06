@@ -791,28 +791,33 @@ function setToFeedLastEntrance() {
 
 
 function updateOption(vnode) {
+   const {groupId, questionId, subQuestionId, optionId} = vnode.attrs.ids;
+    try{
     let creatorName = vnode.state.isNamed
         ? vnode.state.creatorName
         : 'אנונימי/ת'
     DB
         .collection('groups')
-        .doc(vnode.attrs.groupId)
+        .doc(groupId)
         .collection('questions')
-        .doc(vnode.attrs.questionId)
+        .doc(questionId)
         .collection('subQuestions')
-        .doc(vnode.attrs.subQuestionId)
+        .doc(subQuestionId)
         .collection('options')
-        .doc(vnode.attrs.optionId)
+        .doc(optionId)
         .update({
             creatorUid: store.user.uid,
             creatorName,
             title: vnode.state.title,
             description: vnode.state.description,
-            more: {
-                text: vnode.state.more.text || '',
-                URL: vnode.state.more.URL || ''
-            }
-        });
+            
+        })
+        .catch(e=>{
+            console.error(e);
+        })
+    }catch(e){
+        console.error(e)
+    }
 }
 function subscribeUser(settings) {
     try {

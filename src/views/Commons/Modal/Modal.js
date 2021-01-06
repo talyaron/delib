@@ -65,7 +65,7 @@ module.exports = {
 										vnode.state.add.description = e.target.value;
 									}}
 								/>
-								{vnode.state.isSubquestion ? (
+								{/* {vnode.state.isSubquestion ? (
 									<div class="modalMoreInfo">
 										<div class="moduleTitle">קישור לקובץ חיצוני</div>
 										<input
@@ -89,7 +89,7 @@ module.exports = {
 									</div>
 								) : (
 									<div />
-								)}
+								)} */}
 							</div>
 							<div class="moduleButtons">
 								<div

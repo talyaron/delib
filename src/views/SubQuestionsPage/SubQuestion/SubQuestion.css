@@ -1,3 +1,8 @@
+.subQuestionSection{
+    border-radius: 10px;
+    padding-bottom: 9px;
+}
+
 .questionSectionTitle {
     border-radius: 10px 10px 0px 0px;
     font-size: var(--textHeaderSize);
@@ -13,13 +18,14 @@
 
 .subQuestion__question{
   
-    background: var(--accent);
+    /* background: var(--accent); */
     max-width: var(--maxWidthOnPC);
-    color: var(--white);
+    color: var(--gray0);
     margin: auto;
     padding: var(--regPadding);
     border-radius: var(--roundBorder);
     font-size: var(--size17);
+    text-align: center;
 }
 
 
@@ -45,4 +51,8 @@
     cursor: pointer;
     width: fit-content;
     font-size: var(--size13);
+}
+
+.subQuestion__question{
+    
 }

@@ -187,7 +187,7 @@ module.exports = {
                                             vnode.state.details.orderBy = "new";
                                         }}>
                                         <img src='img/new.svg' alt='order by newest' />
-                                        <div>New</div>
+                                        <div>חדשות</div>
                                     </div>
                                     <div
                                         class={vnode.state.details.orderBy == "top"
@@ -197,10 +197,10 @@ module.exports = {
                                             vnode.state.details.orderBy = "top";
                                         }}>
                                         <img src='img/agreed.svg' alt='order by most agreed' />
-                                        <div>Agreed</div>
+                                        <div>מוסכמות</div>
                                     </div>
 
-                                    <div
+                                    {/* <div
                                         class={vnode.state.details.orderBy == "message"
                                             ? "footerButton footerButtonSelected"
                                             : "footerButton"}
@@ -209,7 +209,7 @@ module.exports = {
                                         }}>
                                         <img src='img/talk.svg' alt='order by last talks' />
                                         <div>Talks</div>
-                                    </div>
+                                    </div> */}
                                 </div> : null
                             }
                             {hasNevigation(vnode) && vnode.state.subPage === 'main' ? <NavBottom /> : null}

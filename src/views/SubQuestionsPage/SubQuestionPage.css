@@ -9,6 +9,8 @@
     color: white;
     text-align: center;
     font-size: 1.5rem;
+    box-shadow: 0px 3px 9px #00000094;
+    z-index: 100;
    
 }
 
@@ -31,10 +33,11 @@
 .subQuestion__arrange{
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     position: fixed;
     bottom: 64px;
     left: 0px;
+    box-shadow: 0px -2px 6px #00000087;
 }
 
 .subQuestion__arrange--bottom{

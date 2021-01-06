@@ -67,7 +67,7 @@ module.exports = {
 		const { question, vsp } = vnode.attrs
 		return (
 			<div class="subQuestionWrapper" id="optionsWrapper">
-				<div class={vnode.attrs.isAlone ? "questionSection questionSection--alone" : "questionSection"}>
+				<div class={vnode.attrs.isAlone ? "subQuestionSection questionSection--alone" : "questionSection"}>
 					<div class='title'>
 						שאלה: {question}
 						<div class='subQuestion__addOptionWrapper'>
@@ -76,7 +76,7 @@ module.exports = {
 						</div>
 						</div>
 					</div>
-					<h1>פתרונות שונים לשאלה</h1>
+					<h3 class='subQuestion__question'>פתרונות שונים לשאלה</h3>
 
 					{switchProcess(vnode.state.processType, vnode)}
 

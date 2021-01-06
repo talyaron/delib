@@ -14,7 +14,7 @@
     --maxWidthOnPC: 550px;
 
     --accent: #4269E2;
-    --primary: #2196f3;
+    --primary: #2B74B1;
     --halfPrimary: #7994E7;
     --secondary: #F0F4FF;
     --additional: #F2F2F2;
@@ -24,6 +24,7 @@
     --gray4: #F2F2F2;
     --gray2: #D6D6D6;
     --gray1: #7C7C7C;
+    --gray0:rgb(77, 77, 77);
 
     --roundBorderSmall: 6px;
     --roundBorder: 12px;
@@ -97,7 +98,7 @@ body {
 }
 
 .title {
-    font-size: var(--size21);
+    font-size: var(--size17);
     background-color: var(--primary);
     color: white;
     padding: 20px;
@@ -111,7 +112,7 @@ body {
 
 @media (max-width: 600px) {
     .title {
-        width: 80vw;
+        width: 100vw;
     }
 }
 
