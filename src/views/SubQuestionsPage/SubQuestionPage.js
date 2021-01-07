@@ -90,6 +90,7 @@ module.exports = {
 
         if (store.subQuestions.hasOwnProperty(subQuestionId)) {
             vnode.state.details = store.subQuestions[subQuestionId];
+            console.log(vnode.state.details)
 
         }
 

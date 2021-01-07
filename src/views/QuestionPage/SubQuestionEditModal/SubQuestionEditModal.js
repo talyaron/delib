@@ -30,7 +30,8 @@ module.exports = {
       showSave: title.length > 2 ? true : false,
       showSubQuestion: showSubQuestion,
       userHaveNavigation: userHaveNavigation,
-      proAgainstType: proAgainstType || 'superSimple'
+      proAgainstType: proAgainstType || 'superSimple',
+     
 
     };
   },
