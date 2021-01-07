@@ -667,6 +667,19 @@ function getFirstUrl() {
     return url[1];
 }
 
+function getUser() {
+
+    return new Promise((resolve) => {
+        const int = setInterval(() => {
+            if ({}.hasOwnProperty.call(store.user, 'uid')) {
+                resolve(store.user)
+                clearInterval(int)
+            }
+
+        }, 100)
+    })
+}
+
 module.exports = {
     Reference,
     createRefString,
@@ -694,5 +707,6 @@ module.exports = {
     getColorForPercentage,
     changeTextToArray,
     convertParagraphsToVisual,
-    getFirstUrl
+    getFirstUrl,
+    getUser
 }

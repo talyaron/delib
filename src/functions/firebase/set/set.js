@@ -1,4 +1,5 @@
 import m from 'mithril';
+import {set} from 'lodash';
 import { DB } from '../config';
 import store from '../../../data/store';
 import { concatenateDBPath, uniqueId, generateChatEntitiyId, createIds, getRandomColor } from '../../general';
@@ -51,19 +52,19 @@ function updateGroup(vnode) {
 
 function registerGroup(groupId) {
 
-  
+
     try {
-       
+
         if (!{}.hasOwnProperty.call(store.groupsUserTryToRegister, groupId)) {
             store.groupsUserTryToRegister[groupId] = true;
-           
+
             const waitForUser = setInterval(() => {
 
                 if ({}.hasOwnProperty.call(store.user, 'userColor')) {
-                   
+
                     clearInterval(waitForUser);
 
-                  
+
 
                     if (!{}.hasOwnProperty(store.groupsRegistered, groupId)) {
 
@@ -81,7 +82,7 @@ function registerGroup(groupId) {
                         const { displayName, email, uid, name, photoURL, phoneNumber, userColor, isAnonymous } = store.user;
                         const userObjTemp = { displayName, email, uid, name, photoURL, phoneNumber, userColor, isAnonymous }, userObj = {};
 
-                      
+
                         for (let prop in userObjTemp) {
                             if (userObjTemp[prop] !== null && userObjTemp[prop] !== null) {
                                 userObj[prop] = userObjTemp[prop]
@@ -492,7 +493,7 @@ function updateOptionDescription(ids, description) {
 
 function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like) {
 
-   
+
     try {
 
 
@@ -795,31 +796,31 @@ function setToFeedLastEntrance() {
 
 
 function updateOption(vnode) {
-   const {groupId, questionId, subQuestionId, optionId} = vnode.attrs.ids;
-    try{
-    let creatorName = vnode.state.isNamed
-        ? vnode.state.creatorName
-        : 'אנונימי/ת'
-    DB
-        .collection('groups')
-        .doc(groupId)
-        .collection('questions')
-        .doc(questionId)
-        .collection('subQuestions')
-        .doc(subQuestionId)
-        .collection('options')
-        .doc(optionId)
-        .update({
-            creatorUid: store.user.uid,
-            creatorName,
-            title: vnode.state.title,
-            description: vnode.state.description,
-            
-        })
-        .catch(e=>{
-            console.error(e);
-        })
-    }catch(e){
+    const { groupId, questionId, subQuestionId, optionId } = vnode.attrs.ids;
+    try {
+        let creatorName = vnode.state.isNamed
+            ? vnode.state.creatorName
+            : 'אנונימי/ת'
+        DB
+            .collection('groups')
+            .doc(groupId)
+            .collection('questions')
+            .doc(questionId)
+            .collection('subQuestions')
+            .doc(subQuestionId)
+            .collection('options')
+            .doc(optionId)
+            .update({
+                creatorUid: store.user.uid,
+                creatorName,
+                title: vnode.state.title,
+                description: vnode.state.description,
+
+            })
+            .catch(e => {
+                console.error(e);
+            })
+    } catch (e) {
         console.error(e)
     }
 }
@@ -912,7 +913,7 @@ function zeroChatFeedMessages(ids, isSubscribed = true) {
 
             const path = generateChatEntitiyId(ids)
 
-            DB.collection('users').doc(store.user.uid).collection('messages').doc(path).set({ msgDifference: 0 },{merge:true}).catch(e => console.error(e))
+            DB.collection('users').doc(store.user.uid).collection('messages').doc(path).set({ msgDifference: 0 }, { merge: true }).catch(e => console.error(e))
         }
     } catch (e) {
         console.error(e)
@@ -958,6 +959,33 @@ function setNumberOfMessagesMark(ids, numberOfMessages = 0) {
     }
 }
 
+function handleSubscription(vnode) {
+
+    try {
+
+        //path for subscription object
+        const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
+        const path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
+
+        subscribeUser({
+            vnode,
+            subscribe: vnode.state.subscribed
+        })
+
+        if (vnode.state.subscribed == false) {
+
+            vnode.state.subscribed = true;
+            set(store.subscribe, `[${path}]`, true)
+        } else {
+
+            vnode.state.subscribed = false;
+            set(store.subscribe, `[${path}]`, false)
+        }
+    } catch (e) {
+        console.error(e)
+    }
+}
+
 module.exports = {
     updateOption,
     addToFeed,
@@ -991,5 +1019,6 @@ module.exports = {
     setToFeedLastEntrance,
     zeroChatFeedMessages,
     setNotifications,
-    setNumberOfMessagesMark
+    setNumberOfMessagesMark,
+    handleSubscription
 };

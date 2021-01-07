@@ -1,32 +1,21 @@
-import m, { jsonp } from 'mithril';
+import m from 'mithril';
 import "regenerator-runtime/runtime.js";
 import './Header.css';
-import { get, set } from 'lodash';
+import { get } from 'lodash';
 
 //functions
-import { subscribeUser, setNotifications } from '../../../functions/firebase/set/set';
+import { subscribeUser, setNotifications,handleSubscription } from '../../../functions/firebase/set/set';
 import { listenToSubscription, listenIfGetsMessages } from '../../../functions/firebase/get/get';
 import { subscribeToNotification } from '../../../functions/firebase/messaging';
 import { exitOut } from '../../../functions/animations';
 
 import store from '../../../data/store';
-import { Reference, concatenateDBPath, getEntityId } from '../../../functions/general';
+import { Reference, concatenateDBPath, getEntityId,getUser } from '../../../functions/general';
 
 //components
 import Aside from '../Aside/Aside';
 
-function getUser() {
 
-    return new Promise((resolve, reject) => {
-        const int = setInterval(() => {
-            if ({}.hasOwnProperty.call(store.user, 'uid')) {
-                resolve(store.user)
-                clearInterval(int)
-            }
-
-        }, 100)
-    })
-}
 let entityId = '';
 
 module.exports = {
@@ -204,27 +193,7 @@ function onNewMessageJumpCounter(vnode) {
     vnode.state.previousCount = store.numberOfNewMessages
 }
 
-function handleSubscription(vnode) {
 
-    //path for subscription object
-    const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
-    const path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
-
-    subscribeUser({
-        vnode,
-        subscribe: vnode.state.subscribed
-    })
-
-    if (vnode.state.subscribed == false) {
-
-        vnode.state.subscribed = true;
-        set(store.subscribe, `[${path}]`, true)
-    } else {
-
-        vnode.state.subscribed = false;
-        set(store.subscribe, `[${path}]`, false)
-    }
-}
 
 function toggleMenu(vnode) {
 

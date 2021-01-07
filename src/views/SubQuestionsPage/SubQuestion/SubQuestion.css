@@ -39,7 +39,8 @@
 .subQuestion__addOptionWrapper{
     width: 100%;
     display: flex;
-    justify-content: flex-end;
+    flex-direction: row-reverse;
+    justify-content: space-between;
     margin-top: 20px;
 }
 
@@ -51,6 +52,8 @@
     cursor: pointer;
     width: fit-content;
     font-size: var(--size13);
+    display: flex;
+    align-items: center;
 }
 
 .subQuestion__question{

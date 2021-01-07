@@ -137,7 +137,7 @@ module.exports = {
                                     upLevelUrl={hasNevigation(vnode)}
                                     groupId={groupId}
                                     questionId={questionId}
-                                    showSubscribe={true}
+                                    showSubscribe={false}
                                     subQuestionId={subQuestionId}
                                 />
                                 <NavTop
@@ -165,6 +165,7 @@ module.exports = {
                                     parentVnode={vnode}
                                     info={settings.subItems.options}
                                     processType={vnode.state.details.processType}
+                                    showSubscribe={true}
                                     isAlone={true} />
                                 :
                                 <Chat
