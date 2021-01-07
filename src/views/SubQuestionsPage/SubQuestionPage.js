@@ -125,13 +125,13 @@ module.exports = {
     view: vnode => {
 
         const { groupId, questionId, subQuestionId } = vnode.attrs;
-      
+
         return (
             <div class='page zoomOutEnter' id='page'>
                 {vnode.state.details.title
                     ? (
-                        <div class='page-grid-subQuestion' style={!(vnode.state.details.userHaveNavigation == true || vnode.state.details.userHaveNavigation !== undefined) && vnode.state.subPage === 'main' ? '' : 'grid-template-rows: fit-content(100px) auto;'}>
-                            <div class="subQuestionHeader">
+                        <div class='page__grid'>
+                            <div class="page__header">
                                 <Header
                                     title='שאלה'
                                     upLevelUrl={hasNevigation(vnode)}
@@ -177,30 +177,31 @@ module.exports = {
                             }
 
                             {/* ---------------- Footer -------------- */}
-                            {vnode.state.subPage === 'main' ?
-                                <div class={hasNevigation(vnode) ? "subQuestion__arrange" : "subQuestion__arrange subQuestion__arrange--bottom"} id="questionFooter">
-                                    <div
-                                        class={vnode.state.details.orderBy == "new"
-                                            ? "footerButton footerButtonSelected"
-                                            : "footerButton"}
-                                        onclick={() => {
-                                            vnode.state.details.orderBy = "new";
-                                        }}>
-                                        <img src='img/new.svg' alt='order by newest' />
-                                        <div>חדשות</div>
-                                    </div>
-                                    <div
-                                        class={vnode.state.details.orderBy == "top"
-                                            ? "footerButton footerButtonSelected"
-                                            : "footerButton"}
-                                        onclick={() => {
-                                            vnode.state.details.orderBy = "top";
-                                        }}>
-                                        <img src='img/agreed.svg' alt='order by most agreed' />
-                                        <div>מוסכמות</div>
-                                    </div>
+                            <div class='page__footer'>
+                                {vnode.state.subPage === 'main' ?
+                                    <div class={hasNevigation(vnode) ? "subQuestion__arrange" : "subQuestion__arrange subQuestion__arrange--bottom"} id="questionFooter">
+                                        <div
+                                            class={vnode.state.details.orderBy == "new"
+                                                ? "footerButton footerButtonSelected"
+                                                : "footerButton"}
+                                            onclick={() => {
+                                                vnode.state.details.orderBy = "new";
+                                            }}>
+                                            <img src='img/new.svg' alt='order by newest' />
+                                            <div>חדשות</div>
+                                        </div>
+                                        <div
+                                            class={vnode.state.details.orderBy == "top"
+                                                ? "footerButton footerButtonSelected"
+                                                : "footerButton"}
+                                            onclick={() => {
+                                                vnode.state.details.orderBy = "top";
+                                            }}>
+                                            <img src='img/agreed.svg' alt='order by most agreed' />
+                                            <div>מוסכמות</div>
+                                        </div>
 
-                                    {/* <div
+                                        {/* <div
                                         class={vnode.state.details.orderBy == "message"
                                             ? "footerButton footerButtonSelected"
                                             : "footerButton"}
@@ -210,12 +211,12 @@ module.exports = {
                                         <img src='img/talk.svg' alt='order by last talks' />
                                         <div>Talks</div>
                                     </div> */}
-                                </div> : null
-                            }
-                            {hasNevigation(vnode) && vnode.state.subPage === 'main' ? <NavBottom /> : null}
+                                    </div> : null
+                                }
+                                {hasNevigation(vnode) && vnode.state.subPage === 'main' ? <NavBottom /> : null}
 
 
-
+                            </div>
                         </div>
                     )
                     : (<Spinner />)

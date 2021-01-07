@@ -34,8 +34,8 @@
     width: 100%;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    position: fixed;
-    bottom: 64px;
+    position: relative;
+    bottom: 0px;
     left: 0px;
     box-shadow: 0px -2px 6px #00000087;
 }
