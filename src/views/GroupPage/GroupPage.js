@@ -16,9 +16,9 @@ import Spinner from '../Commons/Spinner/Spinner';
 
 
 //functions
-import { createQuestion } from '../../functions/firebase/set/set';
+import { createQuestion, registerGroup } from '../../functions/firebase/set/set';
 import { getQuestions, getGroupDetails, listenToChat, getLastTimeEntered } from '../../functions/firebase/get/get';
-import { setLastPage, getIsChat, concatenateDBPath} from '../../functions/general';
+import { setLastPage, getIsChat, concatenateDBPath } from '../../functions/general';
 
 
 
@@ -49,8 +49,10 @@ module.exports = {
             unsubscribe: {},
             groupName: get(store, 'groups[' + vnode.attrs.id + '].title', 'שם הקבוצה'),
             unreadMessages: 0,
-            lastTimeEntered:0
+            lastTimeEntered: 0
         }
+
+
 
         getQuestions('on', vnode.attrs.id, vnode);
         vnode.state.undbGroupDetails = getGroupDetails(vnode.attrs.id, vnode);
@@ -65,6 +67,7 @@ module.exports = {
         const { id } = vnode.attrs;
         let groupId = id;
         getLastTimeEntered({ groupId }, vnode);
+
     },
     onbeforeupdate: vnode => {
 
@@ -93,15 +96,19 @@ module.exports = {
             vnode.state.lastTimeEntered = new Date().getTime() / 1000
         }
 
-        
+
         const path = concatenateDBPath(groupId);
         vnode.state.unreadMessages = store.chat[path].filter(m => {
-         
-            return m.createdTime.seconds > vnode.state.lastTimeEntered}).length;
-    },
-    onupdate: vnode => {
+
+            return m.createdTime.seconds > vnode.state.lastTimeEntered
+        }).length;
+
+
+        //register to DB
+        registerGroup(groupId)
 
     },
+
     onremove: vnode => {
         const { id } = vnode.attrs;
         let groupId = id;
@@ -110,8 +117,8 @@ module.exports = {
         vnode.state.undbGroupDetails();
         vnode.state.unsubscribe.chat();
 
-      
-        
+
+
     },
     view: vnode => {
 
@@ -119,27 +126,28 @@ module.exports = {
 
         return (
             <div class='page'>
-                <div class='page-grid' style={vnode.state.subPage == 'main' ? '' : `grid-template-rows: 52px 40px;`}>
-                    <Header
-                        upLevelUrl='/groups'
-                        topic='קבוצה'
-                        title='קבוצה'
-                        isAdmin={vnode.state.isAdmin}
-                        editPageLink={`/editgroup/${vnode.attrs.id}`}
-                        groupId={vnode.attrs.id}
-                        showSubscribe={true}
-                    />
-                    <NavTop
-                        level={'נושאים שונים של הקבוצה'}
-                        current={vnode.state.subPage}
-                        pvs={vnode.state}
-                        mainUrl={`/group/${vnode.attrs.id}`}
-                        chatUrl={`/group-chat/${vnode.attrs.id}`}
-                        ids={{ groupId: vnode.attrs.id }}
-                        unreadMessages={vnode.state.unreadMessages}
-                    />
+                <div class='page__grid'>
+                    <div class='page__header'>
+                        <Header
+                            upLevelUrl='/groups'
+                            topic='קבוצה'
+                            title='קבוצה'
+                            isAdmin={vnode.state.isAdmin}
+                            editPageLink={`/editgroup/${vnode.attrs.id}`}
+                            groupId={vnode.attrs.id}
+                            showSubscribe={true}
+                        />
+                        <NavTop
+                            level={'נושאים שונים של הקבוצה'}
+                            current={vnode.state.subPage}
+                            pvs={vnode.state}
+                            mainUrl={`/group/${vnode.attrs.id}`}
+                            chatUrl={`/group-chat/${vnode.attrs.id}`}
+                            ids={{ groupId: vnode.attrs.id }}
+                            unreadMessages={vnode.state.unreadMessages}
+                        />
 
-
+                    </div>
                     {vnode.state.subPage == 'main' ?
 
                         <div class='questionsWrapper' id='groupWrapper'>
@@ -172,43 +180,45 @@ module.exports = {
                             url={m.route.get()}
                         />
                     }
-                    {vnode.state.subPage == 'main' ?
-                        <div class='fav' onclick={() => { toggleAddQuestion(vnode) }} >
-                            <div>+</div>
-                        </div>
-                        : null
-                    }
-                    {vnode.state.subPage == 'main' ? <NavBottom /> : null}
-                    {
-                        vnode.state.addQuestion ?
-                            <div class='module'>
-                                <div class='moduleBox'>
-                                    <h2 class='moduleTitle'>הוספת שאלה</h2>
-                                    <div class='moduleInputs'>
-                                        <textarea
-                                            class='inputGeneral'
-                                            autofocus='true'
-                                            placeholder='כותרת השאלה'
-                                            onkeyup={(e) => { vnode.state.add.title = e.target.value }}
-                                        ></textarea>
-                                        <textarea
-                                            class='inputGeneral'
-                                            placeholder='הסבר על השאלה'
-                                            onkeyup={(e) => { vnode.state.add.description = e.target.value }}
-                                        ></textarea>
-                                    </div>
-                                    <div class='moduleButtons'>
-                                        <div class='buttons confirm' onclick={() => {
-                                            vnode.state.addQuestion = !vnode.state.addQuestion;
-                                            createQuestion(vnode.attrs.id, store.user.uid, vnode.state.add.title, vnode.state.add.description)
-                                        }}>הוספה</div>
-                                        <div class='buttons cancel' onclick={() => { toggleAddQuestion(vnode) }}>ביטול</div>
+                    <div class='page__footer'>
+                        {vnode.state.subPage == 'main' ?
+                            <div class='fav' onclick={() => { toggleAddQuestion(vnode) }} >
+                                <div>+</div>
+                            </div>
+                            : null
+                        }
+                        {vnode.state.subPage == 'main' ? <NavBottom /> : null}
+                        {
+                            vnode.state.addQuestion ?
+                                <div class='module'>
+                                    <div class='moduleBox'>
+                                        <h2 class='moduleTitle'>הוספת שאלה</h2>
+                                        <div class='moduleInputs'>
+                                            <textarea
+                                                class='inputGeneral'
+                                                autofocus='true'
+                                                placeholder='כותרת השאלה'
+                                                onkeyup={(e) => { vnode.state.add.title = e.target.value }}
+                                            ></textarea>
+                                            <textarea
+                                                class='inputGeneral'
+                                                placeholder='הסבר על השאלה'
+                                                onkeyup={(e) => { vnode.state.add.description = e.target.value }}
+                                            ></textarea>
+                                        </div>
+                                        <div class='moduleButtons'>
+                                            <div class='buttons confirm' onclick={() => {
+                                                vnode.state.addQuestion = !vnode.state.addQuestion;
+                                                createQuestion(vnode.attrs.id, store.user.uid, vnode.state.add.title, vnode.state.add.description)
+                                            }}>הוספה</div>
+                                            <div class='buttons cancel' onclick={() => { toggleAddQuestion(vnode) }}>ביטול</div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            :
-                            null
-                    }
+                                :
+                                null
+                        }
+                    </div>
                 </div >
             </div>
 

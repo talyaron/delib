@@ -8,7 +8,7 @@ aside {
     right: -260px;
     z-index: 3;
     box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.5);
-    transition: all 0.5s;
+    
     color: var(--black);
 }
 
@@ -36,4 +36,36 @@ aside {
     cursor: pointer;
 }
 
+.asideOpen{
+    right:-260px;
+    animation: open 400ms;
+    animation-direction: normal;
+    animation-fill-mode: forwards;
+}
+.asideClose{
+    right: 0px;
+
+    animation: close 400ms;
+    animation-direction: normal;
+    animation-fill-mode: forwards;
+   
+}
+
+@keyframes open{
+    from{
+        right: -260px;
+    }
+    to{
+        right:0px
+    }
+}
+
+@keyframes close{
+    from{
+        right: 0px;
+    }
+    to{
+        right:-260px
+    }
+}
 

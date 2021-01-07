@@ -17,18 +17,24 @@ module.exports = {
 
         vnode.state = {
             callForAction: '',
-            groupId: ''
+            groupId: undefined
         };
 
-        vnode.state.groupId = lastPage.split('/')[2];
-        if (vnode.state.groupId.length > 5) {
-            getGroupDetails(vnode.state.groupId);
+        //get call for action
+        if (lastPage) {
+            let groupIdFromBrowser  = lastPage.split('/')[2];
+           if(groupIdFromBrowser !== undefined) vnode.state.groupId = groupIdFromBrowser;
+       
+            if (vnode.state.groupId !== undefined && vnode.state.groupId.length > 5) {
+                getGroupDetails(vnode.state.groupId);
+            }
         }
 
 
     },
     onbeforeupdate: vnode => {
-        if (vnode.state.groupId.length > 5) {
+       
+        if (vnode.state.groupId && vnode.state.groupId.length > 5) {
             vnode.state.callForAction = get(store.groups, `[${vnode.state.groupId}].callForAction`, '')
         }
     },
@@ -40,10 +46,10 @@ module.exports = {
                 oncreate={m.route.link}
             >
                 <div class='centerElement'>
-                    <div id='login__splashName' class={vnode.state.callForAction.length>1?'opacity07':''}>
+                    <div id='login__splashName' class={vnode.state.callForAction.length > 1 ? 'opacity07' : ''}>
                         Delib
                     </div>
-                    <div id='login__splashSubName' class={vnode.state.callForAction.length>1?'opacity07':''}>
+                    <div id='login__splashSubName' class={vnode.state.callForAction.length > 1 ? 'opacity07' : ''}>
                         מחליטים ביחד
                     </div>
                     <h1 class='login__callForAction'>{vnode.state.callForAction}</h1>

@@ -1,0 +1,20 @@
+.uploader {
+    width: 300px;
+    height: 30px;
+    border-radius: 15px;
+    background: rgb(255, 255, 255);
+    background: linear-gradient(0deg, rgba(255, 255, 255, 1) 0%, rgba(101, 101, 101, 1) 35%, rgba(37, 37, 37, 1) 100%);
+
+    margin: auto;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.uploader>div {
+    background: rgb(2, 0, 36);
+    background: linear-gradient(0deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(0, 212, 255, 1) 100%);
+    height: 30px;
+    border-radius: 15px;
+    transition: all 500ms;
+}

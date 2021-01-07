@@ -6,7 +6,6 @@ import './QuestionPage.css';
 //components
 
 import Header from '../Commons/Header/Header';
-import Feed from '../Commons/Feed/Feed';
 import SubQuestionSolution from './SubQuestionsSolution/SubQuestionSolution';
 import Spinner from '../Commons/Spinner/Spinner';
 import Description from './Description/Description';
@@ -20,7 +19,7 @@ import SubQuestionEditModal from './SubQuestionEditModal/SubQuestionEditModal';
 import store from '../../data/store';
 //functions
 import { getQuestionDetails, getSubQuestion, getLastTimeEntered, listenToChat } from '../../functions/firebase/get/get';
-import {  } from '../../functions/firebase/set/set';
+import { registerGroup } from '../../functions/firebase/set/set';
 import { deep_value, getIsChat, concatenateDBPath } from '../../functions/general';
 
 
@@ -75,7 +74,7 @@ module.exports = {
             },
             subPage: getIsChat() ? 'chat' : 'main',
             unreadMessages: 0,
-            lastTimeEntered:0
+            lastTimeEntered: 0
 
         }
 
@@ -93,7 +92,9 @@ module.exports = {
 
         //propare undubscribe function for question details to be used  onremove
         vnode.state.unsubscribeQuestionDetails = getQuestionDetails(groupId, questionId, vnode); //it will then listen to subQuestions
-        vnode.state.unsbscribe.chat = listenToChat({ groupId, questionId })
+        vnode.state.unsbscribe.chat = listenToChat({ groupId, questionId });
+
+        registerGroup(groupId)
 
     },
     oncreate: vnode => {
@@ -110,7 +111,7 @@ module.exports = {
         vnode.state.title = deep_value(store.questions, `${groupId}.${questionId}.title`, 'כותרת השאלה');
         vnode.state.description = deep_value(store.questions, `${groupId}.${questionId}.description`, '');
         let subQuestions = get(store.subQuestions, `[${groupId}]`, [])
-       
+
         vnode.state.subQuestions = subQuestions.sort((a, b) => a.order - b.order);
         let userRole = deep_value(store.questions, `${groupId}.${questionId}.roles.${store.user.uid}`, false);
         if (!userRole) {
@@ -140,7 +141,7 @@ module.exports = {
 
         vnode.state.unsbscribe.chat();
 
-     
+
 
     },
     view: vnode => {
@@ -148,8 +149,8 @@ module.exports = {
         const { groupId, questionId } = vnode.attrs;
 
         return (
-            <div class='page page-grid-question' style={vnode.state.subPage == 'main' ? '' : `grid-template-rows: fit-content(200px) auto`}>
-                <div class='question__header'>
+            <div class='page page__grid'>
+                <div class='page__header'>
                     <Header
                         topic='נושא'
                         title='נושא'
@@ -164,18 +165,18 @@ module.exports = {
                         chatUrl={`/question-chat/${groupId}/${questionId}`}
                         ids={{ groupId, questionId }}
                         unreadMessages={vnode.state.unreadMessages} />
-                    <Description
-                        title={vnode.state.title}
-                        content={vnode.state.description}
-                        groupId={vnode.attrs.groupId}
-                        questionId={vnode.attrs.questionId}
-                        creatorId={vnode.state.creatorId}
-                    />
+
 
                 </div>
                 {vnode.state.subPage === 'main' ?
                     <div class='question__main'>
-
+                        <Description
+                            title={vnode.state.title}
+                            content={vnode.state.description}
+                            groupId={vnode.attrs.groupId}
+                            questionId={vnode.attrs.questionId}
+                            creatorId={vnode.state.creatorId}
+                        />
                         <div class='wrapperSubQuestions' id='questionWrapperAll'>
                             <h1>שאלות </h1>
                             <div class='subQuestionsWrapper'>
@@ -223,7 +224,9 @@ module.exports = {
                         url={m.route.get()}
                     />
                 }
-                {vnode.state.subPage == 'main' ? <NavBottom /> : null}
+                <div class='page__header'>
+                    <NavBottom />
+                </div>
                 <AlertsSetting
                     isAlertsSetting={vnode.state.isAlertsSetting}
                     title={vnode.state.title}
@@ -262,7 +265,7 @@ module.exports = {
 }
 
 function orderBy(order, vnode) {
-    
+
 
     vnode
         .state

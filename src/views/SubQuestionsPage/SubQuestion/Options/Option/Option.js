@@ -8,6 +8,7 @@ import store, { consequencesTop } from "../../../../../data/store";
 
 //functions
 import { changeTextToArray, convertParagraphsToVisual } from '../../../../../functions/general';
+import { enterIn } from '../../../../../functions/animations';
 import {
   setLike,
   updateOption,
@@ -90,19 +91,19 @@ module.exports = {
       vnode.state.up = false;
       vnode.state.down = false;
     }
-   
-    if ({}.hasOwnProperty.call(store.optionNumberOfMessagesRead, optionId)){
 
-     
+    if ({}.hasOwnProperty.call(store.optionNumberOfMessagesRead, optionId)) {
+
+
       vnode.state.messagesRead = store.optionNumberOfMessagesRead[optionId]
 
-    } 
+    }
   },
   onupdate: (vnode) => {
 
     const { optionId } = vnode.attrs.ids;
 
-    
+
 
     //animation
     let element = vnode.dom;
@@ -229,7 +230,7 @@ module.exports = {
                     />
                   )}
               </div>
-              {vnode.state.more.text.length > 0 ? (
+              {/* {vnode.state.more.text.length > 0 ? (
                 <div>
                   {!vnode.state.isEdit ? (
                     <a
@@ -281,11 +282,11 @@ module.exports = {
                             }}
                             placeholder="URL"
                             value={vnode.state.more.URL}
-                          ></input>
+                          ></input> 
                         </div>
                       )}
                   </div>
-                )}
+                )} */}
             </div>
             <div
               class={
@@ -304,12 +305,16 @@ module.exports = {
           {/* options information panel */}
           <hr></hr>
           {consequencesTop.length > 0 ?
-            consequencesTop.map(consequence => {
+            <div onclick={() => { enterIn(document.getElementById('page'),`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) }}  >
+              {consequencesTop.map(consequence => {
 
-              return (<ConsequenceTop consequence={consequence} ids={{ groupId, questionId, subQuestionId, optionId }} key={consequence.consequenceId} />)
-            })
+                return (<ConsequenceTop consequence={consequence} ids={{ groupId, questionId, subQuestionId, optionId }} key={consequence.consequenceId} />)
+
+              })
+              }
+            </div>
             :
-            <div class='consequences__tip' onclick={() => { m.route.set(`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) }}>יש לכם הצעות בעד ונגד?</div>
+            <div class='consequences__tip' onclick={() => { enterIn(document.getElementById('page'),`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) }}>יש לכם טענות בעד ונגד ההצעה?</div>
           }
           <hr></hr>
           <div class="optionCard__info">

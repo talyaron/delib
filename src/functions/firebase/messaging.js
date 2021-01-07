@@ -42,8 +42,8 @@ let MESSAGING;
             });
         }
     } catch (e) {
-        console.error(e)
-        alert(e.message)
+        console.error(e.message)
+       
     }
 })()
 

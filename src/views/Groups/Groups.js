@@ -8,13 +8,13 @@ import './Groups.css';
 import Group from './Group/Group';
 import Header from '../Commons/Header/Header';
 import Feed from '../Commons/Feed/Feed';
-import Spinner from '../Commons/Spinner/Spinner'
+import Spinner from '../Commons/Spinner/Spinner';
+import CreateNewEntity from '../Commons/CreateNewEntity/CreateNewEntity'
 
 
 //functions
-import { getUserGroups } from '../../functions/firebase/get/get';
-import { restrictedPage } from '../../functions/logins';
-import { setWrapperHeight,getRandomColor } from '../../functions/general';
+
+import { setWrapperHeight, getRandomColor } from '../../functions/general';
 
 import store from '../../data/store';
 
@@ -23,22 +23,21 @@ module.exports = {
         store.lastPage = '/groups';
         sessionStorage.setItem('lastPage', store.lastPage);
 
-        if (restrictedPage('/groups')) {
-            getUserGroups('on', store.user.uid);
-        }
+       
 
     },
-    oncreate: vnode => {
+    oncreate: () => {
         setWrapperHeight('headerContainer', 'groupsWrapper');
     },
-    onupdate: vnode => {
+    onupdate: () => {
         setWrapperHeight('headerContainer', 'groupsWrapper');
 
     },
-    onremove: vnode => {
-        getUserGroups('off', store.user.uid);
+    onremove: () => {
+
     },
-    view: (vnode) => {
+    view: () => {
+     
         return (
             <div >
                 <Header title='הקבוצות שלי' topic='דליב' upLevelUrl={false} />
@@ -47,18 +46,23 @@ module.exports = {
                     {store.userGroups[0] === false ?
                         <Spinner />
                         :
-                        store.userGroups.map((group, key) => {
 
-                            return <Group
-                        route='/group/'
-                        title={group.title}
-                        description={group.description}
-                        groupColor={group.groupColor || getRandomColor()}
-                        id={group.id}
-                        key={key}
-                        logo={group.logo}
-                    />
-                        })
+                        store.userGroups.length > 0 ?
+                            store.userGroups.map((group, key) => {
+
+                                return <Group
+                                    route='/group/'
+                                    title={group.title}
+                                    description={group.description}
+                                    groupColor={group.groupColor || getRandomColor()}
+                                    id={group.id}
+                                    key={key}
+                                    logo={group.logo}
+                                />
+                            })
+                            :
+                            <CreateNewEntity entity='קבוצות' func={() => { m.route.set('/newgroup') }    } />
+
                     }
                 </div>
                 <div class='fav' onclick={() => { m.route.set('/newgroup') }} >

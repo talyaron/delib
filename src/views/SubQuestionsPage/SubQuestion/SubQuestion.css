@@ -1,3 +1,8 @@
+.subQuestionSection{
+    border-radius: 10px;
+    padding-bottom: 9px;
+}
+
 .questionSectionTitle {
     border-radius: 10px 10px 0px 0px;
     font-size: var(--textHeaderSize);
@@ -13,13 +18,14 @@
 
 .subQuestion__question{
   
-    background: var(--accent);
+    /* background: var(--accent); */
     max-width: var(--maxWidthOnPC);
-    color: var(--white);
+    color: var(--gray0);
     margin: auto;
     padding: var(--regPadding);
     border-radius: var(--roundBorder);
     font-size: var(--size17);
+    text-align: center;
 }
 
 
@@ -33,7 +39,8 @@
 .subQuestion__addOptionWrapper{
     width: 100%;
     display: flex;
-    justify-content: flex-end;
+    flex-direction: row-reverse;
+    justify-content: space-between;
     margin-top: 20px;
 }
 
@@ -45,4 +52,10 @@
     cursor: pointer;
     width: fit-content;
     font-size: var(--size13);
+    display: flex;
+    align-items: center;
+}
+
+.subQuestion__question{
+    
 }

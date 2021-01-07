@@ -8,7 +8,8 @@ import {
 import {
 	listenToFeed,
 	listenToFeedLastEntrance,
-	listenToChatFeed
+	listenToChatFeed,
+	listenToUserGroups, listenToRegisterdGroups
 } from '../firebase/get/get';
 import {
 	getRandomColorDark
@@ -46,12 +47,16 @@ function onAuth() {
 						name: store.user.name,
 						email: store.user.email,
 						isAnonymous: false,
-						userColor:getRandomColorDark()
+						userColor:getRandomColorDark(),
+						signIn:true
 					};
 
 					listenToFeed();
 					listenToFeedLastEntrance();
 					listenToChatFeed();
+					
+					listenToUserGroups();
+					listenToRegisterdGroups();
 
 					DB.collection('users').doc(user.uid).set(userSimpleObj).then(function () {}).catch(function (error) {
 						console.error('On login, set user to DB;',error.name, error.message)
@@ -66,6 +71,10 @@ function onAuth() {
 
 					console.info('user is anonymous');
 				
+
+
+					listenToUserGroups();
+					listenToRegisterdGroups();
 				
 					if (store.userTempName) {
 
@@ -76,7 +85,8 @@ function onAuth() {
 							uid: store.user.uid,
 							name: store.user.name,
 							isAnonymous: true,
-							userColor:store.user.userColor
+							userColor:store.user.userColor,
+							signIn:true
 						};
 						DB.collection('users').doc(user.uid).set(userSimpleObj)
 							.then(function () {})
@@ -122,3 +132,4 @@ function getAnonymousName(userId) {
 		console.error(err)
 	});
 }
+

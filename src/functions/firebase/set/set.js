@@ -1,8 +1,9 @@
 import m from 'mithril';
+import {set} from 'lodash';
 import { DB } from '../config';
 import store from '../../../data/store';
-import { Reference, concatenateDBPath, uniqueId, generateChatEntitiyId, createIds, getRandomColor } from '../../general';
-import { merge } from 'lodash';
+import { concatenateDBPath, uniqueId, generateChatEntitiyId, createIds, getRandomColor } from '../../general';
+
 
 function createGroup(creatorId, title, description, callForAction) {
     try {
@@ -44,15 +45,67 @@ function updateGroup(vnode) {
     DB
         .collection('groups')
         .doc(vnode.attrs.id)
-        .update({ title: vnode.state.title, description: vnode.state.description,callForAction:vnode.state.callForAction })
-        .then(doc => {
-            m
-                .route
-                .set(`/group/${vnode.attrs.id}`);
-        })
-        .catch(err => {
-            console.error(err)
-        })
+        .update({ title: vnode.state.title, description: vnode.state.description, callForAction: vnode.state.callForAction })
+        .then(() => { m.route.set(`/group/${vnode.attrs.id}`) })
+        .catch(err => { console.error(err) })
+}
+
+function registerGroup(groupId) {
+
+
+    try {
+
+        if (!{}.hasOwnProperty.call(store.groupsUserTryToRegister, groupId)) {
+            store.groupsUserTryToRegister[groupId] = true;
+
+            const waitForUser = setInterval(() => {
+
+                if ({}.hasOwnProperty.call(store.user, 'userColor')) {
+
+                    clearInterval(waitForUser);
+
+
+
+                    if (!{}.hasOwnProperty(store.groupsRegistered, groupId)) {
+
+                        console.log('register to ', groupId)
+
+                        store.groupsRegistered[groupId] = true;
+
+                        DB.collection('users').doc(store.user.uid)
+                            .collection('registerGroups').doc(groupId)
+                            .set({ register: true })
+                            .then(() => { console.log('user registerd to group', groupId) })
+                            .catch(e => { console.error(e) })
+
+                        //store data from use as member in the group
+                        const { displayName, email, uid, name, photoURL, phoneNumber, userColor, isAnonymous } = store.user;
+                        const userObjTemp = { displayName, email, uid, name, photoURL, phoneNumber, userColor, isAnonymous }, userObj = {};
+
+
+                        for (let prop in userObjTemp) {
+                            if (userObjTemp[prop] !== null && userObjTemp[prop] !== null) {
+                                userObj[prop] = userObjTemp[prop]
+                            }
+                        }
+
+
+                        DB.collection('groups').doc(groupId)
+                            .collection('members').doc(store.user.uid)
+                            .set(userObj, { merge: true })
+                            .then(() => { console.log('user is a member of group', groupId) })
+                            .catch(e => { console.error(e) })
+                    } else {
+                        console.info('user is already registered to', groupId)
+                    }
+                }
+
+            }, 1000);
+        }
+    } catch (e) {
+        console.error(e)
+
+    }
 }
 
 function createQuestion(groupId, creatorId, title, description) {
@@ -149,7 +202,7 @@ function setSubQuestion(ids, settings) {
         const { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions, proAgainstType } = settings;
         const { groupId, questionId, subQuestionId } = ids;
 
-        console.log('setSubQuestion',subQuestionId, proAgainstType)
+        console.log('setSubQuestion', subQuestionId, proAgainstType)
 
         const subQuestionRef = DB
             .collection('groups')
@@ -164,13 +217,13 @@ function setSubQuestion(ids, settings) {
             //new subQuestion
             const uid = uniqueId()
 
-            subQuestionRef.doc(uid).set({ title, processType, orderBy, groupId, questionId, subQuestionId: uid, userHaveNavigation, showSubQuestion, order: numberOfSubquestions,proAgainstType, creator: store.user.uid })
+            subQuestionRef.doc(uid).set({ title, processType, orderBy, groupId, questionId, subQuestionId: uid, userHaveNavigation, showSubQuestion, order: numberOfSubquestions, proAgainstType, creator: store.user.uid })
                 .then(() => { console.info(`saved subQuestion ${uid} to DB`) })
                 .catch(e => {
                     console.error(e)
                 })
         } else {
-            subQuestionRef.doc(subQuestionId).update({ title, processType, orderBy, groupId, questionId, subQuestionId, userHaveNavigation, showSubQuestion,proAgainstType })
+            subQuestionRef.doc(subQuestionId).update({ title, processType, orderBy, groupId, questionId, subQuestionId, userHaveNavigation, showSubQuestion, proAgainstType })
                 .then(() => { console.info(`updated subQuestion ${subQuestionId} to DB`) })
                 .catch(e => {
                     console.error(e)
@@ -439,6 +492,8 @@ function updateOptionDescription(ids, description) {
 }
 
 function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like) {
+
+
     try {
 
 
@@ -642,6 +697,8 @@ function updateSubItem(subItemsType, groupId, questionId, subQuestionId, title, 
 }
 
 function setLikeToSubItem(subItemsType, groupId, questionId, subQuestionId, creatorId, isUp) {
+
+    console.log(subItemsType, groupId, questionId, subQuestionId)
     let subQuestionRef = DB
         .collection('groups')
         .doc(groupId)
@@ -739,28 +796,33 @@ function setToFeedLastEntrance() {
 
 
 function updateOption(vnode) {
-    let creatorName = vnode.state.isNamed
-        ? vnode.state.creatorName
-        : 'אנונימי/ת'
-    DB
-        .collection('groups')
-        .doc(vnode.attrs.groupId)
-        .collection('questions')
-        .doc(vnode.attrs.questionId)
-        .collection('subQuestions')
-        .doc(vnode.attrs.subQuestionId)
-        .collection('options')
-        .doc(vnode.attrs.optionId)
-        .update({
-            creatorUid: store.user.uid,
-            creatorName,
-            title: vnode.state.title,
-            description: vnode.state.description,
-            more: {
-                text: vnode.state.more.text || '',
-                URL: vnode.state.more.URL || ''
-            }
-        });
+    const { groupId, questionId, subQuestionId, optionId } = vnode.attrs.ids;
+    try {
+        let creatorName = vnode.state.isNamed
+            ? vnode.state.creatorName
+            : 'אנונימי/ת'
+        DB
+            .collection('groups')
+            .doc(groupId)
+            .collection('questions')
+            .doc(questionId)
+            .collection('subQuestions')
+            .doc(subQuestionId)
+            .collection('options')
+            .doc(optionId)
+            .update({
+                creatorUid: store.user.uid,
+                creatorName,
+                title: vnode.state.title,
+                description: vnode.state.description,
+
+            })
+            .catch(e => {
+                console.error(e);
+            })
+    } catch (e) {
+        console.error(e)
+    }
 }
 function subscribeUser(settings) {
     try {
@@ -773,7 +835,7 @@ function subscribeUser(settings) {
 
 
         const { uid, displayName, email, photoURL } = store.user;
-      
+
         if (subscribe === false) {
             //if user is not subscribed then subscribe the user
 
@@ -790,7 +852,7 @@ function subscribeUser(settings) {
                             msgLastSeen: 0,
                             msgDifference: 0
                         })
-                        .then(()=>{console.log('user subscribed in messages')})
+                        .then(() => { console.log('user subscribed in messages') })
                         .catch(e => {
                             console.error('Error in saving new chat following on the user', e)
                         })
@@ -807,7 +869,7 @@ function subscribeUser(settings) {
                         .collection('messages').doc(chatEntityId).delete().then(() => {
                             console.info('User unsubscribed succsefuly from entity')
                         })
-                        .then(()=>{console.log('user unsubscribed in messages')})
+                        .then(() => { console.log('user unsubscribed in messages') })
                         .catch(e => {
                             console.error(e)
                         })
@@ -830,7 +892,7 @@ function setChatLastEntrance(ids) {
         let path = concatenateDBPath(groupId, questionId, subQuestionId, optionId, consequenceId);
         const regex = new RegExp('/', 'gi')
         path = path.replace(regex, '-')
-       
+
         if (path !== '-groups') {
             DB.collection(`users`).doc(store.user.uid).collection('chatLastEnterence').doc(path)
                 .set({ lastTime: firebase.firestore.FieldValue.serverTimestamp() })
@@ -851,7 +913,7 @@ function zeroChatFeedMessages(ids, isSubscribed = true) {
 
             const path = generateChatEntitiyId(ids)
 
-            DB.collection('users').doc(store.user.uid).collection('messages').doc(path).update({ msgDifference: 0 }).catch(e => console.error(e))
+            DB.collection('users').doc(store.user.uid).collection('messages').doc(path).set({ msgDifference: 0 }, { merge: true }).catch(e => console.error(e))
         }
     } catch (e) {
         console.error(e)
@@ -897,11 +959,39 @@ function setNumberOfMessagesMark(ids, numberOfMessages = 0) {
     }
 }
 
+function handleSubscription(vnode) {
+
+    try {
+
+        //path for subscription object
+        const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
+        const path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
+
+        subscribeUser({
+            vnode,
+            subscribe: vnode.state.subscribed
+        })
+
+        if (vnode.state.subscribed == false) {
+
+            vnode.state.subscribed = true;
+            set(store.subscribe, `[${path}]`, true)
+        } else {
+
+            vnode.state.subscribed = false;
+            set(store.subscribe, `[${path}]`, false)
+        }
+    } catch (e) {
+        console.error(e)
+    }
+}
+
 module.exports = {
     updateOption,
     addToFeed,
     createGroup,
     updateGroup,
+    registerGroup,
     createQuestion,
     updateQuestion,
     createSubQuestion,
@@ -929,5 +1019,6 @@ module.exports = {
     setToFeedLastEntrance,
     zeroChatFeedMessages,
     setNotifications,
-    setNumberOfMessagesMark
+    setNumberOfMessagesMark,
+    handleSubscription
 };

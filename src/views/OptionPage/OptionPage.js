@@ -6,9 +6,10 @@ import store from '../../data/store';
 
 //function
 import { get } from 'lodash';
-import { setNumberOfMessagesMark } from '../../functions/firebase/set/set';
+import { setNumberOfMessagesMark, registerGroup } from '../../functions/firebase/set/set';
 import { listenToOption, listenToChat, listenToConsequences, getLastTimeEntered, getSubQuestion } from '../../functions/firebase/get/get';
 import { randomizeArray, getFirstUrl, concatenateDBPath } from '../../functions/general';
+import { enterIn2ndPage } from '../../functions/animations'
 
 
 // components
@@ -50,7 +51,8 @@ module.exports = {
             orderBy: 'new',
             unreadMessages: 0,
             lastTimeEntered: 0,
-            subQuestion: {}
+            subQuestion: {},
+            userHaveNavigation: get(store.subQuestions, `[${subQuestionId}].userHaveNavigation`, true)
         };
 
         if (firstUrl === 'option') {
@@ -74,13 +76,16 @@ module.exports = {
             vnode.state.subQuestion = get(store.subQuestions, `[${subQuestionId}]`, {})
         }
 
-        sortBy(vnode)
+        sortBy(vnode);
+
+        registerGroup(groupId);
 
     },
     oncreate: vnode => {
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
 
         getLastTimeEntered({ groupId, questionId, subQuestionId, optionId }, vnode);
+        enterIn2ndPage(vnode.dom)
     },
     onbeforeupdate: vnode => {
 
@@ -108,7 +113,9 @@ module.exports = {
             vnode.state.subQuestion = get(store.subQuestions, `[${subQuestionId}]`, {})
         }
 
+        vnode.state.userHaveNavigation = get(store.subQuestions, `[${subQuestionId}].userHaveNavigation`, true)
     },
+
     onremove: vnode => {
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
 
@@ -118,12 +125,13 @@ module.exports = {
 
     },
     view: vnode => {
+
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
         const { option, subPage, consequences } = vnode.state;
 
         return (
-            <div class='page page-grid-option' style={subPage == 'main' ? '' : `grid-template-rows: fit-content(100px) auto;`}>
-                <div class='optionPage__header'>
+            <div id="page" class='page page__grid'>
+                <div class='page__header'>
                     <Header
                         title="פתרון"
                         upLevelUrl={`/subquestions/${groupId}/${questionId}/${subQuestionId}`}
@@ -133,6 +141,7 @@ module.exports = {
                         optionId={optionId}
                         showSubscribe={true}
                         subQuestionId={subQuestionId}
+                        page={vnode}
                     />
                     <NavTop
                         level={'בעד ונגד'}
@@ -176,7 +185,39 @@ module.exports = {
                                 }
                             </div>
                         </div>
-                        {vnode.state.subPage === 'main' ?
+                        
+
+                        < div
+                            class="fav fav__subQuestion fav--blink"
+                            onclick={() => {
+                                vnode.state.showModal = true;
+
+                            }}>
+                            <div>
+                                <div>+</div>
+                            </div>
+
+                        </div >
+                        {vnode.state.showModal ?
+                            <ModalConsequnce
+                                pvs={vnode.state}
+                                pva={vnode.attrs}
+                            />
+                            :
+                            null
+                        }
+                    </div>
+                    :
+                    <Chat
+                        entity='option'
+                        topic='אפשרות'
+                        ids={{ groupId: groupId, questionId: questionId, subQuestionId, optionId }}
+                        title={option.title}
+                        url={m.route.get()}
+                    />
+                }
+                <div class='page__footer'>
+                {vnode.state.subPage === 'main' ?
                             <div class="optionPage__menu" id="questionFooter">
                                 <div
                                     class={vnode.state.orderBy == "new"
@@ -225,37 +266,8 @@ module.exports = {
                                 </div>
                             </div> : null
                         }
-
-                        < div
-                            class="fav fav__subQuestion fav--blink"
-                            onclick={() => {
-                                vnode.state.showModal = true;
-
-                            }}>
-                            <div>
-                                <div>+</div>
-                            </div>
-
-                        </div >
-                        {vnode.state.showModal ?
-                            <ModalConsequnce
-                                pvs={vnode.state}
-                                pva={vnode.attrs}
-                            />
-                            :
-                            null
-                        }
-                    </div>
-                    :
-                    <Chat
-                        entity='option'
-                        topic='אפשרות'
-                        ids={{ groupId: groupId, questionId: questionId, subQuestionId, optionId }}
-                        title={option.title}
-                        url={m.route.get()}
-                    />
-                }
-                {subPage === 'main' ? <NavBottom /> : null}
+                    {subPage === 'main' && vnode.state.userHaveNavigation ? <NavBottom /> : null}
+                </div>
             </div>
         )
     }

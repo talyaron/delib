@@ -1,4 +1,5 @@
 import m from 'mithril';
+import { get } from 'lodash';
 
 import './SubQuestion.css';
 
@@ -14,7 +15,9 @@ import store from '../../../data/store';
 
 //functions
 import { getSubQuestion, getGroupDetails } from '../../../functions/firebase/get/get';
-import { get } from 'lodash';
+import {handleSubscription} from '../../../functions/firebase/set/set'
+import { concatenateDBPath, getUser } from '../../../functions/general';
+
 
 let unsubscribe = () => { };
 let unsubscribeOptions = () => { };
@@ -23,23 +26,27 @@ let unsubscribeOptions = () => { };
 module.exports = {
 	oninit: (vnode) => {
 
-		getGroupDetails(vnode.attrs.groupId)
+		const { groupId, questionId, subQuestionId, title, orderBy } = vnode.attrs;
+
+		getGroupDetails(groupId)
 
 		vnode.state = {
 			options: [],
-			orderBy: get(store, `subQuestions[${vnode.attrs.subQuestionId}].orderBy`, vnode.attrs.orderBy),
+			orderBy: get(store, `subQuestions[${subQuestionId}].orderBy`, orderBy),
 			showModal: {
 				isShow: false,
 				which: 'subQuestion',
-				subQuestionId: vnode.attrs.subQuestionId,
-				title: vnode.attrs.title
+				subQuestionId: subQuestionId,
+				title: title
 			},
-			details: { title: vnode.attrs.title }
+			details: { title },
+			subscribed:false,
+			path: concatenateDBPath(groupId, questionId, subQuestionId)
 		};
 
 		//get user before login to page
 		store.lastPage =
-			'/subquestions/' + vnode.attrs.groupId + '/' + vnode.attrs.questionId + '/' + vnode.attrs.subQuestionId;
+			'/subquestions/' + vnode.attrs.groupId + '/' + questionId + '/' + subQuestionId;
 		sessionStorage.setItem('lastPage', store.lastPage);
 
 		//check to see if user logged in
@@ -51,11 +58,22 @@ module.exports = {
 
 		unsubscribe = getSubQuestion(va.groupId, va.questionId, va.subQuestionId);
 
+		// wait for user
+		(async () => {
+			await getUser();
+
+			vnode.state.subscribed = get(store.subscribe, `[${vnode.state.path}]`, false);
+
+
+
+		})();
+
 
 	},
 
 	onbeforeupdate: (vnode) => {
 		vnode.state.orderBy = vnode.attrs.orderBy;
+		vnode.state.subscribed = get(store.subscribe, `[${vnode.state.path}]`, false);
 
 
 	},
@@ -67,16 +85,24 @@ module.exports = {
 		const { question, vsp } = vnode.attrs
 		return (
 			<div class="subQuestionWrapper" id="optionsWrapper">
-				<div class={vnode.attrs.isAlone ? "questionSection questionSection--alone" : "questionSection"}>
+				<div class={vnode.attrs.isAlone ? "subQuestionSection questionSection--alone" : "questionSection"}>
 					<div class='title'>
 						שאלה: {question}
 						<div class='subQuestion__addOptionWrapper'>
 							<div class='subQuestion__addOption' onclick={() => { vsp.showModal.isShow = true }}>
 								הוספת פתרון
-						</div>
+							</div>
+							<div
+								class='headerSetFeed'
+								onclick={e => {
+									e.stopPropagation();
+									handleSubscription(vnode);
+								}}>
+								{vnode.state.subscribed ? <div class='title__btnRegister title__btnRegister--unselect'>ביטול הרשמה</div> : <div class='title__btnRegister title__btnRegister--select'>הרשמה</div>}
+							</div>
 						</div>
 					</div>
-					<h1>פתרונות שונים לשאלה</h1>
+					<h3 class='subQuestion__question'>פתרונות שונים לשאלה</h3>
 
 					{switchProcess(vnode.state.processType, vnode)}
 
@@ -163,8 +189,8 @@ function orderOptionsBy(options, orderBy) {
 					return b.consensusPrecentage - a.consensusPrecentage;
 				});
 		}
-	} catch(e){
+	} catch (e) {
 		console.error(e);
-	
+
 	}
 }

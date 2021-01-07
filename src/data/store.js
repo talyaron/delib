@@ -2,6 +2,9 @@ var store = {
     user: {},
     userTempName: '',
     userGroups: [false],// groups the users is listeneing for
+    userGroupsListen:false,
+    userGroupsListners:{}, //these listners for the groups are used to unsubscribe if use do not listen to a group
+    userGroupListen:{}, //used to store groups that the user listne to
     current: {
         org: {
             title: 'שם הארגון'
@@ -19,6 +22,10 @@ var store = {
     },
     questions: {}, //list of questions. stored as {groupId:{questionId:{} }}
     groups: {}, //groups stored as {groupId:{group info}}
+    groupsRegistered:{},
+    registerGroupsListen:false,
+    groupsUserTryToRegister:{},
+    groupMembers:{}, //used to store members of groups. {groupId:[members]}
     option:{}, //options information, stored in option:{optionId:{}}
     options: [],//options in a given question. stored as {subQuestionID:[options]} 
     optionsListen:{}, //used to store if there is a listner in subQuestion of option {subQuestionId:true}

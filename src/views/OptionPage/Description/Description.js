@@ -26,12 +26,12 @@ module.exports = {
 
 
     },
-    onupdate: vnode => {
+    onbeforeupdate: vnode => {
         const { description } = vnode.attrs.option;
-
-        if (description !== undefined && firstDescription === false) {
+     
+        if (description !== undefined && vnode.state.description === '' ) {
             vnode.state.description = description;
-            firstDescription = description
+            // firstDescription = description
         }
 
     },
@@ -40,10 +40,9 @@ module.exports = {
         const {title, description, creatorId, optionId } = vnode.attrs.option;
 
         const descriptionParagraphs = changeTextToArray(vnode.state.description);
-
-
+    
         return (
-            <div class='description title'>
+            <div class='title'>
                 <h1>פתרון אפשרי: {title}</h1>
                 {vnode.state.edit ?
                     <textarea class='inputGeneral' defaultValue={description} onkeyup={e => handleEditDescription(e, vnode)} id={`optionDescription${optionId}`} />
@@ -107,10 +106,12 @@ function handleEditDescription(e, vnode) {
     vnode.state.description = e.target.value;
 }
 function handleEditSave(vnode) {
-
+    
 
     const { groupId, questionId, subQuestionId, optionId } = vnode.attrs.option;
     if (vnode.state.description !== undefined && vnode.state.edit === true) {
+
+     
         updateOptionDescription({ groupId, questionId, subQuestionId, optionId }, vnode.state.description)
     }
     vnode.state.edit = !vnode.state.edit
@@ -119,13 +120,27 @@ function handleEditSave(vnode) {
 function handleInputVideo(e, vnode) {
     let videoUrl = e.target.value;
 
-    let videIdRegExp = /^[A-Za-z0-9_-]{11}$/
+    let videIdRegExp = /^[A-Za-z0-9_-]{11}$/;
+    let videoWatchRegExp = /https:\/\/www.youtube.com\/\watch/;
+    let videoShortRegExp = /https:\/\/youtu.be\//
+
+    
 
     if (videIdRegExp.test(videoUrl)) {
 
         vnode.state.youtubeVideoId = videoUrl;
         e.target.style.background = '#64ff64'
-    } else {
+    } 
+
+    else if(videoWatchRegExp.test(videoUrl)){
+        vnode.state.youtubeVideoId = videoUrl.slice(32, 43);
+        e.target.style.background = '#64ff64'
+    }
+    else if(videoShortRegExp.test(videoUrl)){
+        vnode.state.youtubeVideoId = videoUrl.slice(17,28);
+        e.target.style.background = '#64ff64'
+    }
+    else {  
 
         vnode.state.youtubeVideoId = false;
         e.target.style.background = '#ff9d9d'
@@ -146,8 +161,6 @@ function handleAddVideo(e, vnode) {
         descriptionTextarea.value += `\n--video:${vnode.state.youtubeVideoId}***\n`
         vnode.state.addVideo = false;
 
-        // m.redraw();
-        // vnode.state.edit = false;
     }
 }
 
@@ -156,16 +169,14 @@ function handleAddVideo(e, vnode) {
 
 async function handleUploadImage(e, vnode) {
     let firstFile = e.target.files[0] // upload the first file only
-    console.log(firstFile)
-    await storage.ref(`photos/test/${firstFile.name}`).put(firstFile).then(doc => {
-        console.dir(doc);
-        console.log(doc.metadata.fullPath)
 
+    await storage.ref(`photos/test/${firstFile.name}`).put(firstFile).then(() => {
+      
 
     })
     const imageHref = await storage.ref(`photos/test/${firstFile.name}`).getDownloadURL();
 
-    console.log(imageHref)
+    
 
     //add to text
     const { optionId } = vnode.attrs.option;

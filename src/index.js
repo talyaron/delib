@@ -1,6 +1,7 @@
 const m = require('mithril');
 const root = document.body;
 import './style.css';
+import './animations.css';
 
 //functions
 import './functions/firebase/config';
