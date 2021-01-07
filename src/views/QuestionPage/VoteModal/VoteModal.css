@@ -1,0 +1,21 @@
+.voteModal__bar{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 200ms;
+
+}
+.voteModal__bar>*{
+  
+   margin: 0px 10px;
+   font-size: var(--size15);
+    
+}
+
+.voteModal__text--selected{
+    color: var(--primary);
+    transform: scale(1.15);
+}
+.voteModal__text--unselected{
+    color: var(--gray1);
+}

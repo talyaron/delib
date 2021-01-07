@@ -14,6 +14,7 @@ import Header from '../Commons/Header/Header';
 import NavBottom from '../Commons/NavBottom/NavBottom';
 import NavTop from '../Commons/NavTop/NavTop';
 import Chat from '../Commons/Chat/Chat';
+import AddPanel from '../QuestionPage/AddPanel/AddPanel';
 
 //functions
 import { getSubQuestion, getGroupDetails, listenToChat, listenToOptions, getLastTimeEntered } from "../../functions/firebase/get/get";
@@ -233,6 +234,7 @@ module.exports = {
                     </div>
 
                 </div >
+                
                 <Modal
                     showModal={vnode.state.showModal.isShow}
                     whichModal={vnode.state.showModal.which}
@@ -240,6 +242,7 @@ module.exports = {
                     placeholderTitle="כותרת"
                     placeholderDescription="הסבר"
                     vnode={vnode} />
+               
             </div >
         );
     }

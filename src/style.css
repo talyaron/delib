@@ -260,9 +260,10 @@ body {
     color: white;
     border: none;
     border-radius: 5px;
-    /* box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5); */
     user-select: none;
     cursor: pointer;
+    display: flex;
+    align-items: center;
 }
 
 .buttons--small {
@@ -450,6 +451,7 @@ body {
     border: none;
     padding: var(--regPadding);
     font-size: var(--size17);
+    margin: 5px 0px;
 }
 
 input[type=checkbox] {

@@ -14,6 +14,8 @@ import NavBottom from '../Commons/NavBottom/NavBottom';
 import NavTop from '../Commons/NavTop/NavTop';
 import Chat from '../Commons/Chat/Chat';
 import SubQuestionEditModal from './SubQuestionEditModal/SubQuestionEditModal';
+import AddPanel from './AddPanel/AddPanel';
+import VoteModal from './VoteModal/VoteModal';
 
 //model
 import store from '../../data/store';
@@ -57,6 +59,8 @@ module.exports = {
                 isShow: false,
                 which: 'subQuestion'
             },
+            openAddPanel:false,
+            openVote:false,
             unsbscribe: {
                 subQuestions: {},
                 chat: () => { }
@@ -150,6 +154,8 @@ module.exports = {
 
         return (
             <div class='page page__grid'>
+                 <AddPanel isOpen={vnode.state.openAddPanel} vsp ={vnode.state}/>
+               
                 <div class='page__header'>
                     <Header
                         topic='נושא'
@@ -242,13 +248,15 @@ module.exports = {
                 < div
                     class={store.user.uid == vnode.state.creatorId ? "fav fav__subQuestion fav--blink" : "hidden"}
                     onclick={() => {
-                        vnode.state.modalSubQuestion = { isShow: true, new: true, numberOfSubquestions: vnode.state.subQuestions.length };
+                        vnode.state.openAddPanel = true;
+                        // vnode.state.modalSubQuestion = { isShow: true, new: true, numberOfSubquestions: vnode.state.subQuestions.length };
                     }}>
                     <div>
                         <div>+</div>
                     </div>
 
                 </div >
+                {vnode.state.openVote?<VoteModal vsp={vnode.state}/>:null}
                 {vnode.state.modalSubQuestion.isShow ?
                     <div class='background'>
                         <SubQuestionEditModal
@@ -259,6 +267,7 @@ module.exports = {
                     </div>
                     : null
                 }
+               
             </div>
         )
     }
