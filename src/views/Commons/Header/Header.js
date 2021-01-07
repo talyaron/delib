@@ -4,13 +4,13 @@ import './Header.css';
 import { get } from 'lodash';
 
 //functions
-import { subscribeUser, setNotifications,handleSubscription } from '../../../functions/firebase/set/set';
+import { subscribeUser, setNotifications, handleSubscription } from '../../../functions/firebase/set/set';
 import { listenToSubscription, listenIfGetsMessages } from '../../../functions/firebase/get/get';
 import { subscribeToNotification } from '../../../functions/firebase/messaging';
 import { exitOut } from '../../../functions/animations';
 
 import store from '../../../data/store';
-import { Reference, concatenateDBPath, getEntityId,getUser } from '../../../functions/general';
+import { Reference, concatenateDBPath, getEntityId, getUser } from '../../../functions/general';
 
 //components
 import Aside from '../Aside/Aside';
@@ -102,14 +102,20 @@ module.exports = {
                         <div class='headerTitle'>
                             {vnode.attrs.title}
                         </div>
-                        {vnode.state.notifications ?
-                            <div class='notifications notifications--on' onclick={() => { handleNotifications(false, vnode) }}>
-                                <img src='img/notifications-on.svg' alt='notifications-on' />
-                            </div>
+                        {vnode.attrs.showSubscribe ?
+
+                            vnode.state.notifications ?
+                                <div class='notifications notifications--on' onclick={() => { handleNotifications(false, vnode) }}>
+                                    <img src='img/notifications-on.svg' alt='notifications-on' />
+                                </div>
+                                :
+                                <div class='notifications notifications--off' onclick={() => { handleNotifications(true, vnode) }}>
+                                    <img src='img/add_alert.svg' alt='notifications-off' />
+
+                                </div>
+
                             :
-                            <div class='notifications notifications--off' onclick={() => { handleNotifications(true, vnode) }}>
-                                <img src='img/add_alert.svg' alt='notifications-off' />
-                            </div>
+                            null
                         }
                         {vnode.attrs.showSubscribe == true ?
                             <div
@@ -131,7 +137,7 @@ module.exports = {
                                     e.stopPropagation();
                                     if (vnode.attrs.page) {
                                         const page = vnode.attrs.page.dom;
-                                        
+
                                         exitOut(page, vnode.attrs.upLevelUrl)
                                     } else {
                                         m.route.set(vnode.attrs.upLevelUrl)

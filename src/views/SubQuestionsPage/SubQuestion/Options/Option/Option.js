@@ -216,7 +216,7 @@ module.exports = {
                   </div>
                 )}
 
-              <div class={isImgRegExp.test(description) ? "option__card__description--image" : "option__card__description"} onclick={() => { if (!vnode.state.isEdit) { m.route.set(`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) } }}>
+              <div class={isImgRegExp.test(description) ? "option__card__description--image" : "option__card__description"}>
                 {!vnode.state.isEdit ? (
                   descriptionParagraphs.map((paragraph, index) => {
                     return (convertParagraphsToVisual(paragraph, index))
@@ -303,7 +303,7 @@ module.exports = {
             </div>
           </div>
           {/* options information panel */}
-          <hr></hr>
+          {/* <hr></hr>
           {consequencesTop.length > 0 ?
             <div onclick={() => { enterIn(document.getElementById('page'),`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) }}  >
               {consequencesTop.map(consequence => {
@@ -316,7 +316,7 @@ module.exports = {
             :
             <div class='consequences__tip' onclick={() => { enterIn(document.getElementById('page'),`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) }}>יש לכם טענות בעד ונגד ההצעה?</div>
           }
-          <hr></hr>
+          <hr></hr> */}
           <div class="optionCard__info">
             <div class="optionCard__infoItem">
               <img src="img/group2.svg" />
