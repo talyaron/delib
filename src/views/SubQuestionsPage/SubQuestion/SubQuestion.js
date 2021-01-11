@@ -9,13 +9,12 @@ import Votes from './Votes/Votes';
 import Modal from '../../Commons/Modal/Modal';
 
 //model
-import settings from '../../../data/settings';
 import store from '../../../data/store';
 
 
 //functions
 import { getSubQuestion, getGroupDetails } from '../../../functions/firebase/get/get';
-import {handleSubscription} from '../../../functions/firebase/set/set'
+import { handleSubscription } from '../../../functions/firebase/set/set'
 import { concatenateDBPath, getUser } from '../../../functions/general';
 
 
@@ -40,7 +39,7 @@ module.exports = {
 				title: title
 			},
 			details: { title },
-			subscribed:false,
+			subscribed: false,
 			path: concatenateDBPath(groupId, questionId, subQuestionId)
 		};
 
@@ -133,22 +132,22 @@ function switchProcess(type, vnode) {
 	let options = get(store, `options[${vnode.attrs.subQuestionId}]`, []);
 	options = orderOptionsBy(options, vnode.state.orderBy);
 
+	const { processType, groupId, questionId, subQuestionId, isAlone } = vnode.attrs;
+	
 
-	switch (type) {
-
-
-		case settings.processes.suggestions:
+	switch (processType) {
+		case 'suggestions':
 			return (
 				<Options
-					groupId={vnode.attrs.groupId}
-					questionId={vnode.attrs.questionId}
-					subQuestionId={vnode.attrs.subQuestionId}
+					groupId={groupId}
+					questionId={questionId}
+					subQuestionId={subQuestionId}
 					options={options}
-					isAlone={vnode.attrs.isAlone}
+					isAlone={isAlone}
 				/>
 			);
-		case settings.processes.votes:
-			return <Votes />;
+		case 'votes':
+			return <Votes ids={{groupId, questionId, subQuestionId}} options={options} />;
 		default:
 			return (
 				<Options

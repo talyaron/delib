@@ -30,16 +30,16 @@ exports.scheduledFirestoreExport = functions.pubsub.schedule('every 24 hours').o
     // or set to a list of collection IDs to export,
     // collectionIds: ['users', 'posts']
     collectionIds: []
-    })
-  .then(responses => {
-    const response = responses[0];
-    console.log(`Operation Name: ${response['name']}`);
-    return response
   })
-  .catch(err => {
-    console.error(err);
-    throw new Error('Export operation failed');
-  });
+    .then(responses => {
+      const response = responses[0];
+      console.log(`Operation Name: ${response['name']}`);
+      return response
+    })
+    .catch(err => {
+      console.error(err);
+      throw new Error('Export operation failed');
+    });
 });
 
 exports.totalVotes = functions.firestore
@@ -179,6 +179,170 @@ exports.totalLikesForSubQuestion = functions.firestore
         return transaction.update(subQuestionLikesRef, { totalVotes });
       });
     });
+  });
+
+  exports.setVoteForSubQuestion = functions.firestore
+  .document( "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/votes/{userId}")
+  .onCreate(async (snap, context) => {
+    const optionId = snap.data().optionVoted;
+
+    const optionsRef = db
+      .collection("groups")
+      .doc(context.params.groupId)
+      .collection("questions")
+      .doc(context.params.questionId)
+      .collection("subQuestions")
+      .doc(context.params.subQuestionId)
+      .collection('options')
+      .doc(optionId);
+
+    try {
+      await db.runTransaction(transaction => {
+        return transaction.get(optionsRef)
+          .then((optionDB) => {
+            if (!optionDB.exists) {
+              throw new Error("Document does not exist!");
+
+
+            } else {
+              const optionObj = optionDB.data()
+              if (!{}.hasOwnProperty.call(optionObj, 'votes')) {
+                transaction.update(optionsRef, { votes: 1 });
+              }
+              else if (typeof optionDB.data().votes === 'number') {
+                const newVotes = optionDB.data().votes + 1;
+                transaction.update(optionsRef, { votes: newVotes });
+              } else {
+                transaction.update(optionsRef, { votes: 1 });
+              }
+            }
+            return;
+          });
+      });
+      console.log("vote on option "+optionId +' was set');
+      return;
+    } catch (error) {
+      console.log("Transaction failed: ", error);
+    }
+
+  })
+  
+
+  exports.updateVoteForSubQuestion = functions.firestore
+  .document( "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/votes/{userId}")
+  .onUpdate(async (change, context) => {
+      const optionIdBefore = change.before.data().optionVoted;
+      const optionIdAfter = change.after.data().optionVoted;
+  
+      const optionBeforeRef = db
+        .collection("groups")
+        .doc(context.params.groupId)
+        .collection("questions")
+        .doc(context.params.questionId)
+        .collection("subQuestions")
+        .doc(context.params.subQuestionId)
+        .collection('options')
+        .doc(optionIdBefore);
+  
+      const optionAfterRef = db
+        .collection("groups")
+        .doc(context.params.groupId)
+        .collection("questions")
+        .doc(context.params.questionId)
+        .collection("subQuestions")
+        .doc(context.params.subQuestionId)
+        .collection('options')
+        .doc(optionIdAfter);
+  
+      try {
+        await db.runTransaction(transaction => {
+          return transaction.get(optionBeforeRef)
+            .then((optionDB) => {
+              if (!optionDB.exists) {
+                throw new Error("Document does not exist!");
+  
+  
+              } else {
+                if (typeof optionDB.data().votes === 'number') {
+                  const newVotes = optionDB.data().votes - 1;
+                  transaction.update(optionBeforeRef, { votes: newVotes });
+                } else {
+                  transaction.update(optionBeforeRef, { votes: 0 });
+                }
+              }
+              return;
+            });
+        });
+  
+        await db.runTransaction(transaction => {
+          return transaction.get(optionAfterRef)
+            .then((optionDB) => {
+              if (!optionDB.exists) {
+                throw new Error("Document does not exist!");
+  
+  
+              } else {
+                if (typeof optionDB.data().votes === 'number') {
+                  const newVotes = optionDB.data().votes + 1;
+                  transaction.update(optionAfterRef, { votes: newVotes });
+                } else {
+                  transaction.update(optionAfterRef, { votes: 0 });
+                }
+              }
+              return;
+            });
+        });
+        console.log(`In options ${optionIdBefore}, ${optionIdAfter}, change created correctly `);
+        return;
+      } catch (error) {
+        console.log("Transaction failed: ", error);
+      }
+  
+    })
+
+exports.deleteVoteForSubQuestion = functions.firestore
+  .document(
+    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/votes/{userId}"
+  )
+  
+  .onDelete(async (snap, context) => {
+    const optionId = snap.data().optionVoted;
+
+    const optionsRef = db
+      .collection("groups")
+      .doc(context.params.groupId)
+      .collection("questions")
+      .doc(context.params.questionId)
+      .collection("subQuestions")
+      .doc(context.params.subQuestionId)
+      .collection('options')
+      .doc(optionId);
+
+    try {
+      await db.runTransaction(transaction => {
+        return transaction.get(optionsRef)
+          .then((optionDB) => {
+            if (!optionDB.exists) {
+              throw new Error("Document does not exist!");
+
+
+            } else {
+              if (typeof optionDB.data().votes === 'number') {
+                const newVotes = optionDB.data().votes - 1;
+                transaction.update(optionsRef, { votes: newVotes });
+              } else {
+                transaction.update(optionsRef, { votes: 0 });
+              }
+            }
+            return;
+          });
+      });
+      console.log("vote deleted in option", optionId);
+      return;
+    } catch (error) {
+      console.log("Transaction failed: ", error);
+    }
+
   });
 
 // exports.totalLikesForQuestionsGoals = functions.firestore
@@ -619,7 +783,7 @@ exports.listenToGroupChats = functions.firestore
     }
   })
 
-  exports.listenToQuestionChats = functions.firestore
+exports.listenToQuestionChats = functions.firestore
   .document("groups/{groupId}/questions/{questionId}/messages/{chatMassageId}")
   .onCreate((newMsg, context) => {
     try {
@@ -633,7 +797,7 @@ exports.listenToGroupChats = functions.firestore
           return subscribersDB.forEach(subscriberDB => {
             console.log('update user ', subscriberDB.id)
 
-            const userChatRef = db.collection('users').doc(subscriberDB.id).collection('messages').doc(`${generateChatEntitiyId({ groupId, questionId})}`);
+            const userChatRef = db.collection('users').doc(subscriberDB.id).collection('messages').doc(`${generateChatEntitiyId({ groupId, questionId })}`);
 
             return userChatRef.update({
               msgNumber: FieldValue.increment(1),
@@ -649,11 +813,11 @@ exports.listenToGroupChats = functions.firestore
     }
   })
 
-  exports.listenToSubQuestionChats = functions.firestore
+exports.listenToSubQuestionChats = functions.firestore
   .document("groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/messages/{chatMassageId}")
   .onCreate((newMsg, context) => {
     try {
-      const { groupId, questionId,subQuestionId } = context.params;
+      const { groupId, questionId, subQuestionId } = context.params;
 
 
       return db
@@ -663,7 +827,7 @@ exports.listenToGroupChats = functions.firestore
           return subscribersDB.forEach(subscriberDB => {
             console.log('update user ', subscriberDB.id)
 
-            const userChatRef = db.collection('users').doc(subscriberDB.id).collection('messages').doc(`${generateChatEntitiyId({ groupId, questionId,subQuestionId})}`);
+            const userChatRef = db.collection('users').doc(subscriberDB.id).collection('messages').doc(`${generateChatEntitiyId({ groupId, questionId, subQuestionId })}`);
 
             return userChatRef.update({
               msgNumber: FieldValue.increment(1),
@@ -679,11 +843,11 @@ exports.listenToGroupChats = functions.firestore
     }
   })
 
-  exports.listenToOptionChats = functions.firestore
+exports.listenToOptionChats = functions.firestore
   .document("groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}/messages/{chatMassageId}")
   .onCreate((newMsg, context) => {
     try {
-      const { groupId, questionId,subQuestionId, optionId } = context.params;
+      const { groupId, questionId, subQuestionId, optionId } = context.params;
 
 
       return db
@@ -693,7 +857,7 @@ exports.listenToGroupChats = functions.firestore
           return subscribersDB.forEach(subscriberDB => {
             console.log('update user on option', subscriberDB.id)
 
-            const userChatRef = db.collection('users').doc(subscriberDB.id).collection('messages').doc(`${generateChatEntitiyId({ groupId, questionId,subQuestionId, optionId})}`);
+            const userChatRef = db.collection('users').doc(subscriberDB.id).collection('messages').doc(`${generateChatEntitiyId({ groupId, questionId, subQuestionId, optionId })}`);
 
             return userChatRef.update({
               msgNumber: FieldValue.increment(1),
@@ -918,7 +1082,7 @@ exports.calcValidateEval = functions.firestore
         //if new voter
         if (!change.before.exists) {
           //new voter then add number of votes
-        
+
           totalVotes++
 
 
@@ -942,7 +1106,7 @@ exports.calcValidateEval = functions.firestore
 
         } else {
           //existing voter
-        
+
 
           //get previous votes
 
@@ -963,7 +1127,7 @@ exports.calcValidateEval = functions.firestore
         totalWeight = truthinessAvg * evaluationAvg;
         let totalWeightAbs = Math.abs(totalWeight)
 
-      
+
 
         return transaction.update(consequenceRef, {
           totalVotes,

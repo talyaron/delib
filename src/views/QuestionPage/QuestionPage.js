@@ -256,7 +256,7 @@ module.exports = {
                     </div>
 
                 </div >
-                {vnode.state.openVote?<VoteModal vsp={vnode.state}/>:null}
+                {vnode.state.openVote?<VoteModal vsp={vnode.state} ids={{groupId, questionId}}/>:null}
                 {vnode.state.modalSubQuestion.isShow ?
                     <div class='background'>
                         <SubQuestionEditModal

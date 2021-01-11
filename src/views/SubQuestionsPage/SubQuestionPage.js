@@ -91,7 +91,7 @@ module.exports = {
 
         if (store.subQuestions.hasOwnProperty(subQuestionId)) {
             vnode.state.details = store.subQuestions[subQuestionId];
-            console.log(vnode.state.details)
+
 
         }
 
@@ -181,7 +181,7 @@ module.exports = {
 
                             {/* ---------------- Footer -------------- */}
                             <div class='page__footer'>
-                                {vnode.state.subPage === 'main' ?
+                                {vnode.state.subPage === 'main' && vnode.state.details.processType === 'suggestions' ?
                                     <div class={hasNevigation(vnode) ? "subQuestion__arrange" : "subQuestion__arrange subQuestion__arrange--bottom"} id="questionFooter">
                                         <div
                                             class={vnode.state.details.orderBy == "new"
@@ -224,17 +224,20 @@ module.exports = {
                     )
                     : (<Spinner />)
                 }
-                < div
-                    class="fav fav__subQuestion fav--blink"
-                    onclick={() => {
-                        vnode.state.showModal.isShow = true;
-                    }}>
-                    <div>
-                        <div>+</div>
-                    </div>
+                {vnode.state.details.processType === 'suggestions' ?
+                    < div
+                        class="fav fav__subQuestion fav--blink"
+                        onclick={() => {
+                            vnode.state.showModal.isShow = true;
+                        }}>
+                        <div>
+                            <div>+</div>
+                        </div>
 
-                </div >
-                
+                    </div >
+                    :
+                    null
+                }
                 <Modal
                     showModal={vnode.state.showModal.isShow}
                     whichModal={vnode.state.showModal.which}
@@ -242,7 +245,7 @@ module.exports = {
                     placeholderTitle="כותרת"
                     placeholderDescription="הסבר"
                     vnode={vnode} />
-               
+
             </div >
         );
     }

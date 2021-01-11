@@ -25,35 +25,44 @@ let subQuestionObj;
 module.exports = {
 	oninit: (vnode) => {
 
-		
+
 
 		const va = vnode.attrs;
 
-	
+
 		listenToOptions(va.groupId, va.questionId, va.subQuestionId, 'top', true);
 	},
 	onremove: (vnode) => {
-	
+
 	},
 	view: vnode => {
+		console.log(vnode)
 
-		const { groupId, questionId, subQuestionId, title, creator, showSubQuestion} = vnode.attrs;
-		
-	
+		const { groupId, questionId, subQuestionId, title, creator, showSubQuestion, processType } = vnode.attrs;
+
+
 		const options = get(store, `options[${vnode.attrs.subQuestionId}]`, []);
 		const option = options.sort((b, a) => a.consensusPrecentage - b.consensusPrecentage)[0]
 
 		if (option !== undefined) {
 			return (
-				<div class='subQuestionSolution' id={subQuestionId} style={showSubQuestion === 'hidden'?'opacity:0.6;':'opacity: 1;'} onclick={() => { m.route.set(concatenateURL(groupId, questionId, subQuestionId)) }}>
-					<h1>{title}</h1>
-					<p>{option.title}</p>
+				<div class='subQuestionSolution' id={subQuestionId} style={showSubQuestion === 'hidden' ? 'opacity:0.6;' : 'opacity: 1;'} onclick={() => { m.route.set(concatenateURL(groupId, questionId, subQuestionId)) }}>
+					<div class='subQuestionSolution__header'>
+						<div class='subQuestionSolution__text'>
+							<h1>{title}</h1>
+							<p>{option.title}</p>
+						</div>
+						<div class='icon'>
+							{iconType(vnode)}
+						</div>
+					</div>
+
 					<hr></hr>
 					<div class='subQuestionSolution__info'>
-						{store.user.uid == creator ? 
-						<div onclick={(e)=>{handleEditSubQuestion(e, vnode)}}>
-							<img src='img/edit.svg' alt='edit' />
-						</div>
+						{store.user.uid == creator ?
+							<div onclick={(e) => { handleEditSubQuestion(e, vnode) }}>
+								<img src='img/edit.svg' alt='edit' />
+							</div>
 							: null
 						}
 						<div>
@@ -69,14 +78,14 @@ module.exports = {
 				</div>
 			);
 		} else {
-			return (<div id={subQuestionId} class='subQuestionSolution subQuestionSolution--noAnswer' style={showSubQuestion === 'hidden'?'opacity:0.6;':'opacity: 1;'} onclick={() => { m.route.set(concatenateURL(groupId, questionId, subQuestionId)) }}>
+			return (<div id={subQuestionId} class='subQuestionSolution subQuestionSolution--noAnswer' style={showSubQuestion === 'hidden' ? 'opacity:0.6;' : 'opacity: 1;'} onclick={() => { m.route.set(concatenateURL(groupId, questionId, subQuestionId)) }}>
 				<h1>{vnode.attrs.title}</h1>
 				<p>לשאלה זאת עוד לא הוצעו תשובות. מוזמנים להיכנס לשאלה ולהציע תשובות</p>
 				<hr></hr>
 				{store.user.uid == creator ?
-				
+
 					<div class='subQuestionSolution__info'>
-						<div onclick={(e)=>{handleEditSubQuestion(e, vnode)}}>
+						<div onclick={(e) => { handleEditSubQuestion(e, vnode) }}>
 							<img src='img/edit.svg' alt='edit' />
 						</div>
 					</div>
@@ -157,18 +166,32 @@ function orderOptionsBy(options, orderBy) {
 	}
 }
 
-function handleEditSubQuestion(e, vnode){
+function handleEditSubQuestion(e, vnode) {
 
-	const {pvs} = vnode.attrs;
-	
-	
+	const { pvs } = vnode.attrs;
 
-	e.stopPropagation(); 
+
+
+	e.stopPropagation();
 
 	const subQuestionObj = vnode.attrs
 	subQuestionObj.new = false;
 	subQuestionObj.isShow = true;
 
-	pvs.modalSubQuestion =subQuestionObj ;
-	
+	pvs.modalSubQuestion = subQuestionObj;
+
+}
+
+
+function iconType(vnode) {
+	const { processType } = vnode.attrs;
+
+	if (processType === 'votes') {
+		return (<img src='img/votesDarkGray.svg' alt='votes' />)
+	}
+	else if (processType === 'suggestions') {
+		return (<img src='img/suggestionsDarkGray.svg' alt='suggestions' />)
+	} else {
+		return (<img src='' alt='unknowen process' />)
+	}
 }

@@ -1,5 +1,5 @@
 import m from 'mithril';
-import {set} from 'lodash';
+import { set } from 'lodash';
 import { DB } from '../config';
 import store from '../../../data/store';
 import { concatenateDBPath, uniqueId, generateChatEntitiyId, createIds, getRandomColor } from '../../general';
@@ -148,20 +148,28 @@ function updateQuestion(groupId, questionId, title, description, authorizationOb
 }
 
 function createSubQuestion(groupId, questionId, title, order) {
+    try {
+        return new Promise((resolve, reject) => {
+            const subQuestionId = uniqueId()
 
-    const subQuestionId = uniqueId()
-
-    DB
-        .collection('groups')
-        .doc(groupId)
-        .collection('questions')
-        .doc(questionId)
-        .collection('subQuestions')
-        .doc(subQuestionId)
-        .set({ title, order, creator: store.user.uid, orderBy: 'top', subQuestionId, id: subQuestionId })
-        .catch(function (error) {
-            console.error('Error adding document: ', error);
-        });
+            DB
+                .collection('groups')
+                .doc(groupId)
+                .collection('questions')
+                .doc(questionId)
+                .collection('subQuestions')
+                .doc(subQuestionId)
+                .set({ title, order, creator: store.user.uid, orderBy: 'top', subQuestionId, id: subQuestionId })
+                .then(() => { resolve(subQuestionId) })
+                .catch(function (error) {
+                    console.error('Error adding document: ', error);
+                    reject(undefined)
+                });
+        })
+    } catch (e) {
+        console.error(e);
+        reject(undefined)
+    }
 }
 
 function updateSubQuestion(groupId, questionId, subQuestionId, title) {
@@ -199,36 +207,39 @@ function updateSubQuestionOrderBy(groupId, questionId, subQuestionId, orderBy) {
 
 function setSubQuestion(ids, settings) {
     try {
-        const { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions, proAgainstType } = settings;
-        const { groupId, questionId, subQuestionId } = ids;
-
-        console.log('setSubQuestion', subQuestionId, proAgainstType)
-
-        const subQuestionRef = DB
-            .collection('groups')
-            .doc(groupId)
-            .collection('questions')
-            .doc(questionId)
-            .collection('subQuestions')
+        return new Promise((resolve, reject) => {
+            const { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions, proAgainstType } = settings;
+            const { groupId, questionId, subQuestionId } = ids;
 
 
+            const subQuestionRef = DB
+                .collection('groups')
+                .doc(groupId)
+                .collection('questions')
+                .doc(questionId)
+                .collection('subQuestions')
 
-        if (subQuestionId === undefined) {
-            //new subQuestion
-            const uid = uniqueId()
 
-            subQuestionRef.doc(uid).set({ title, processType, orderBy, groupId, questionId, subQuestionId: uid, userHaveNavigation, showSubQuestion, order: numberOfSubquestions, proAgainstType, creator: store.user.uid })
-                .then(() => { console.info(`saved subQuestion ${uid} to DB`) })
-                .catch(e => {
-                    console.error(e)
-                })
-        } else {
-            subQuestionRef.doc(subQuestionId).update({ title, processType, orderBy, groupId, questionId, subQuestionId, userHaveNavigation, showSubQuestion, proAgainstType })
-                .then(() => { console.info(`updated subQuestion ${subQuestionId} to DB`) })
-                .catch(e => {
-                    console.error(e)
-                })
-        }
+
+            if (subQuestionId === undefined) {
+                //new subQuestion
+                const uid = uniqueId()
+
+                subQuestionRef.doc(uid).set({ title, processType, orderBy, groupId, questionId, subQuestionId: uid, userHaveNavigation, showSubQuestion, order: numberOfSubquestions, proAgainstType, creator: store.user.uid })
+                    .then(() => { console.info(`saved subQuestion ${uid} to DB`); resolve(uid) })
+                    .catch(e => {
+                        console.error(e)
+                        reject(undefined)
+                    })
+            } else {
+                subQuestionRef.doc(subQuestionId).update({ title, processType, orderBy, groupId, questionId, subQuestionId, userHaveNavigation, showSubQuestion, proAgainstType })
+                    .then(() => { console.info(`updated subQuestion ${subQuestionId} to DB`); resolve(uid) })
+                    .catch(e => {
+                        console.error(e);
+                        reject(undefined);
+                    })
+            }
+        })
     } catch (e) {
         console.error(e)
     }
@@ -313,7 +324,7 @@ function setSubQuestionsOrder(groupId, questionId, subQuestionId, order) {
     }
 }
 
-function createOption(groupId, questionId, subQuestionId, type, creatorId, title, description, creatorName, subQuestionTitle) {
+function createOption(groupId, questionId, subQuestionId, type, creatorId, title, description, creatorName, subQuestionTitle, isVote = false) {
 
     const optionId = uniqueId();
 
@@ -343,10 +354,51 @@ function createOption(groupId, questionId, subQuestionId, type, creatorId, title
             .FieldValue
             .serverTimestamp(),
         consensusPrecentage: 0,
-        isActive: true
+        isActive: true,
+        isVote
     }).catch(function (error) {
         console.error('Error adding document: ', error);
     });
+}
+
+function voteOption(ids, settings) {
+    try {
+        const { groupId, questionId, subQuestionId, optionId } = ids;
+
+        const { addVote } = settings;
+        console.log(groupId, questionId, subQuestionId, optionId, addVote);
+
+        const optionRef = DB
+            .collection('groups')
+            .doc(groupId)
+            .collection('questions')
+            .doc(questionId)
+            .collection('subQuestions')
+            .doc(subQuestionId)
+            .collection('votes')
+            .doc(store.user.uid)
+
+        if (addVote) {
+            optionRef.update({
+                optionVoted: optionId,
+                voter: {
+                    voterId: store.user.uid,
+                    name: store.user.name,
+                    photoURL: store.user.photoURL || ""
+                }
+            })
+            .then(()=>{console.info(`Option ${optionId} was voted for`)})
+            .catch(e=>{console.error(e)})
+        } else {
+            optionRef.delete()
+            .then(()=>{console.info(`Option ${optionId} was deleted`)})
+            .catch(e=>{console.error(e)})
+        }
+
+
+    } catch (e) {
+        console.error(e)
+    }
 }
 
 function createConsequence(groupId, questionId, subQuestionId, optionId, creatorId, title, description, goodBad, creatorName) {
@@ -1000,6 +1052,7 @@ module.exports = {
     deleteSubQuestion,
     setSubQuestionsOrder,
     createOption,
+    voteOption,
     updateOptionDescription,
     createConsequence,
     voteConsequence,

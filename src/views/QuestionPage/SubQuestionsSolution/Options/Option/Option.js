@@ -133,6 +133,7 @@ module.exports = {
     vnode.state.likeUnsubscribe();
   },
   view: (vnode) => {
+    console.log(vnode)
     return (
       <div
         class="card optionCard"

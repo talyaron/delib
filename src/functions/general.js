@@ -3,18 +3,23 @@ import m from 'mithril';
 import store from '../data/store';
 
 function deep_value(obj, path, alternativeValue) {
+    try {
 
-    for (var i = 0, path = path.split('.'), len = path.length; i < len; i++) {
+        for (var i = 0, path = path.split('.'), len = path.length; i < len; i++) {
 
-        if (obj.hasOwnProperty(path[i])) {
-            obj = obj[path[i]];
+            if (obj.hasOwnProperty(path[i])) {
+                obj = obj[path[i]];
 
-        } else {
-            return alternativeValue
-        }
-    };
+            } else {
+                return alternativeValue
+            }
+        };
 
-    return obj;
+        return obj;
+    } catch (e) {
+        console.error(e)
+        return alternativeValue
+    }
 };
 
 function setWrapperHeight(headerId, wrapperId) {
@@ -598,7 +603,7 @@ function changeTextToArray(text) {
 }
 
 function convertParagraphsToVisual(paragraph, index) {
-  
+
     try {
         if (typeof paragraph !== 'string') { throw new Error(`Paragraph ${index + 1} is not a string: ${paragraph}`) }
 
@@ -626,7 +631,7 @@ function convertParagraphsToVisual(paragraph, index) {
             } else if (pictureInit > -1) {
                 paragraph = paragraph.slice(0, endUrl)
                 paragraph = paragraph.slice(videoInit + 10);
-              
+
 
 
                 return (
@@ -638,15 +643,15 @@ function convertParagraphsToVisual(paragraph, index) {
         else if (httpRegExp.test(paragraph) || httpsRegExp.test(paragraph)) {
 
             const arr = paragraph.split(' ')
-            
-            return arr.map((word,i)=>{
+
+            return arr.map((word, i) => {
                 if (httpRegExp.test(word) || httpsRegExp.test(word)) {
-                    return(<a key={i} href={word} target='_blank'>{word} </a>)
+                    return (<a key={i} href={word} target='_blank'>{word} </a>)
                 } else {
-                    return(<span key={i}>{word} </span>)
+                    return (<span key={i}>{word} </span>)
                 }
             })
-           
+
 
         } else {
             return (<p key={index}>{paragraph}</p>)

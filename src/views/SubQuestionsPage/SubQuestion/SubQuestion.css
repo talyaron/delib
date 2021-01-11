@@ -1,6 +1,7 @@
 .subQuestionSection{
     border-radius: 10px;
     padding-bottom: 9px;
+    height: 100%;
 }
 
 .questionSectionTitle {
