@@ -559,6 +559,8 @@ function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId) 
     }
 }
 
+
+
 function listenToConsequences(groupId, questionId, subQuestionId, optionId) {
     try {
         if (!{}.hasOwnProperty.call(store.consequencesListen, optionId)) {

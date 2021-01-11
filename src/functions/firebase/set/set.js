@@ -376,23 +376,37 @@ function voteOption(ids, settings) {
             .collection('subQuestions')
             .doc(subQuestionId)
             .collection('votes')
-            .doc(store.user.uid)
+            .doc(store.user.uid);
+
+        const updateObj = {
+            optionVoted: optionId,
+            voter: {
+                voterId: store.user.uid,
+                name: store.user.name,
+                photoURL: store.user.photoURL || ""
+            }
+        }
 
         if (addVote) {
-            optionRef.update({
-                optionVoted: optionId,
-                voter: {
-                    voterId: store.user.uid,
-                    name: store.user.name,
-                    photoURL: store.user.photoURL || ""
-                }
-            })
-            .then(()=>{console.info(`Option ${optionId} was voted for`)})
-            .catch(e=>{console.error(e)})
+            optionRef.update(updateObj)
+                .then(() => { console.info(`Option ${optionId} was voted for`) })
+                .catch(e => {
+                    // console.error(e)
+
+                    let errRexExp = new RegExp('No document to update');
+                    if (errRexExp.test(e.message)) {
+                        optionRef.set(updateObj)
+                            .then(() => { console.log(`A vote to option ${optionId} was added`) })
+                            .catch(e => { console.error(e) })
+                    } else {
+                        console.error(e)
+
+                    }
+                })
         } else {
             optionRef.delete()
-            .then(()=>{console.info(`Option ${optionId} was deleted`)})
-            .catch(e=>{console.error(e)})
+                .then(() => { console.info(`Option ${optionId} was deleted`) })
+                .catch(e => { console.error(e) })
         }
 
 

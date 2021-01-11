@@ -10,7 +10,7 @@ module.exports = {
 
          return (
             <div class='optionVote'>
-                <div class='optionVote__column' style={`height:${Math.random()*100}%`}></div>
+                <div class='optionVote__column' style={`height:${option.votes*20}%`}></div>
                <div class='optionVote__button' onclick={()=>{handleVote(vnode)}}>{option.title}</div>
             </div>
         )

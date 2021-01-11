@@ -181,8 +181,10 @@ exports.totalLikesForSubQuestion = functions.firestore
     });
   });
 
-  exports.setVoteForSubQuestion = functions.firestore
-  .document( "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/votes/{userId}")
+
+// -------------- votes on options --------------
+exports.setVoteForSubQuestion = functions.firestore
+  .document("groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/votes/{userId}")
   .onCreate(async (snap, context) => {
     const optionId = snap.data().optionVoted;
 
@@ -205,106 +207,114 @@ exports.totalLikesForSubQuestion = functions.firestore
 
 
             } else {
-              const optionObj = optionDB.data()
+              const optionObj = optionDB.data();
+
+              //calc and initiate number of voters 
+              if (!{}.hasOwnProperty.call(optionObj, 'voters')) {
+                optionObj.voters = 0;
+              }
+              const newNumberOfVoters = optionObj.voters + 1;
+
               if (!{}.hasOwnProperty.call(optionObj, 'votes')) {
                 transaction.update(optionsRef, { votes: 1 });
               }
               else if (typeof optionDB.data().votes === 'number') {
                 const newVotes = optionDB.data().votes + 1;
-                transaction.update(optionsRef, { votes: newVotes });
+               
+                transaction.update(optionsRef, { votes: newVotes, voters: newNumberOfVoters });
               } else {
-                transaction.update(optionsRef, { votes: 1 });
+                transaction.update(optionsRef, { votes: 1,voters: newNumberOfVoters });
               }
             }
             return;
           });
       });
-      console.log("vote on option "+optionId +' was set');
+      console.log("vote on option " + optionId + ' was set');
       return;
     } catch (error) {
       console.log("Transaction failed: ", error);
     }
 
   })
-  
 
-  exports.updateVoteForSubQuestion = functions.firestore
-  .document( "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/votes/{userId}")
+
+exports.updateVoteForSubQuestion = functions.firestore
+  .document("groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/votes/{userId}")
   .onUpdate(async (change, context) => {
-      const optionIdBefore = change.before.data().optionVoted;
-      const optionIdAfter = change.after.data().optionVoted;
-  
-      const optionBeforeRef = db
-        .collection("groups")
-        .doc(context.params.groupId)
-        .collection("questions")
-        .doc(context.params.questionId)
-        .collection("subQuestions")
-        .doc(context.params.subQuestionId)
-        .collection('options')
-        .doc(optionIdBefore);
-  
-      const optionAfterRef = db
-        .collection("groups")
-        .doc(context.params.groupId)
-        .collection("questions")
-        .doc(context.params.questionId)
-        .collection("subQuestions")
-        .doc(context.params.subQuestionId)
-        .collection('options')
-        .doc(optionIdAfter);
-  
-      try {
-        await db.runTransaction(transaction => {
-          return transaction.get(optionBeforeRef)
-            .then((optionDB) => {
-              if (!optionDB.exists) {
-                throw new Error("Document does not exist!");
-  
-  
-              } else {
-                if (typeof optionDB.data().votes === 'number') {
-                  const newVotes = optionDB.data().votes - 1;
-                  transaction.update(optionBeforeRef, { votes: newVotes });
-                } else {
-                  transaction.update(optionBeforeRef, { votes: 0 });
-                }
-              }
-              return;
-            });
-        });
-  
-        await db.runTransaction(transaction => {
-          return transaction.get(optionAfterRef)
-            .then((optionDB) => {
-              if (!optionDB.exists) {
-                throw new Error("Document does not exist!");
-  
-  
-              } else {
-                if (typeof optionDB.data().votes === 'number') {
-                  const newVotes = optionDB.data().votes + 1;
-                  transaction.update(optionAfterRef, { votes: newVotes });
-                } else {
-                  transaction.update(optionAfterRef, { votes: 0 });
-                }
-              }
-              return;
-            });
-        });
-        console.log(`In options ${optionIdBefore}, ${optionIdAfter}, change created correctly `);
-        return;
-      } catch (error) {
-        console.log("Transaction failed: ", error);
-      }
-  
-    })
+    const optionIdBefore = change.before.data().optionVoted;
+    const optionIdAfter = change.after.data().optionVoted;
+
+    const optionBeforeRef = db
+      .collection("groups")
+      .doc(context.params.groupId)
+      .collection("questions")
+      .doc(context.params.questionId)
+      .collection("subQuestions")
+      .doc(context.params.subQuestionId)
+      .collection('options')
+      .doc(optionIdBefore);
+
+    const optionAfterRef = db
+      .collection("groups")
+      .doc(context.params.groupId)
+      .collection("questions")
+      .doc(context.params.questionId)
+      .collection("subQuestions")
+      .doc(context.params.subQuestionId)
+      .collection('options')
+      .doc(optionIdAfter);
+
+    try {
+      await db.runTransaction(transaction => {
+        return transaction.get(optionBeforeRef)
+          .then((optionDB) => {
+            if (!optionDB.exists) {
+              throw new Error("Document does not exist!");
+
+
+            } else {
+              // if (typeof optionDB.data().votes === 'number') {
+              const newVotes = optionDB.data().votes - 1;
+              transaction.update(optionBeforeRef, { votes: newVotes });
+              // } else {
+              //   transaction.update(optionBeforeRef, { votes: 0 });
+              // }
+            }
+            return;
+          });
+      });
+
+      await db.runTransaction(transaction => {
+        return transaction.get(optionAfterRef)
+          .then((optionDB) => {
+            if (!optionDB.exists) {
+              throw new Error("Document does not exist!");
+
+
+            } else {
+              // if (typeof optionDB.data().votes === 'number') {
+              const newVotes = optionDB.data().votes + 1;
+              transaction.update(optionAfterRef, { votes: newVotes });
+              // } else {
+              //   transaction.update(optionAfterRef, { votes: 0 });
+              // }
+            }
+            return;
+          });
+      });
+      console.log(`In options ${optionIdBefore}, ${optionIdAfter}, change created correctly `);
+      return;
+    } catch (error) {
+      console.log("Transaction failed: ", error);
+    }
+
+  })
 
 exports.deleteVoteForSubQuestion = functions.firestore
   .document(
     "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/votes/{userId}"
   )
-  
+
   .onDelete(async (snap, context) => {
     const optionId = snap.data().optionVoted;
 
@@ -327,11 +337,19 @@ exports.deleteVoteForSubQuestion = functions.firestore
 
 
             } else {
+
+
+                //calc and initiate number of voters 
+                if (!{}.hasOwnProperty.call(optionObj, 'voters')) {
+                  optionObj.voters = 1;
+                }
+                const newNumberOfVoters = optionObj.voters - 1;
+
               if (typeof optionDB.data().votes === 'number') {
                 const newVotes = optionDB.data().votes - 1;
-                transaction.update(optionsRef, { votes: newVotes });
+                transaction.update(optionsRef, { votes: newVotes, voters:newNumberOfVoters });
               } else {
-                transaction.update(optionsRef, { votes: 0 });
+                transaction.update(optionsRef, { votes: 0 ,voters:newNumberOfVoters});
               }
             }
             return;
