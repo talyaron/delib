@@ -158,6 +158,7 @@ module.exports = {
                                 <SubQuestion
                                     vsp={vnode.state}
                                     question={vnode.state.details.title}
+                                    questionObj={vnode.state.details}
                                     groupId={groupId}
                                     questionId={questionId}
                                     subQuestionId={subQuestionId}

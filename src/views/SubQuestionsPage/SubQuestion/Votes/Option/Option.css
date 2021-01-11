@@ -13,6 +13,7 @@
     background: rgb(22,133,226);
 background: linear-gradient(90deg, rgba(22,133,226,1) 0%, rgba(31,132,215,1) 28%, rgba(43,116,177,1) 51%, rgba(49,136,209,1) 73%, rgba(59,162,247,1) 100%);
     border-radius: 20px 20px 0px 0px;
+    transition: all 1s;
 }
 
 .optionVote__button{

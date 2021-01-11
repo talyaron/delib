@@ -6,7 +6,10 @@ import {voteOption} from '../../../../../functions/firebase/set/set';
 module.exports = {
     view: vnode => {
         const {option, question} = vnode.attrs;
-      const voters=question.voters || 1;
+      const voters=question.voters || 100000000000;
+
+      console.log(voters)
+      console.log(question)
 
          return (
             <div class='optionVote'>
