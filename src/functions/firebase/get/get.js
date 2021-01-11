@@ -559,7 +559,7 @@ function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId) 
     }
 }
 
-function listenToVote(vnode) {
+function listenToUserVote(vnode) {
     try {
 
         const {groupId, questionId, subQuestionId} = vnode.attrs.ids;
@@ -1157,7 +1157,7 @@ module.exports = {
     listenToTopConsequences,
     getMyVotesOnConsequence,
     getOptionVote,
-    listenToVote,
+    listenToUserVote,
     getSubItems,
     getSubItemLikes,
     getSubItemUserLike,

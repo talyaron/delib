@@ -1,4 +1,9 @@
+
 .votes{
-    display: flex;
     height: 68%;
+}
+.votes__panel{
+    display: flex;
+    height: 90%;
+    
 }
