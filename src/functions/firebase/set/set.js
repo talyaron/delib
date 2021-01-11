@@ -366,7 +366,7 @@ function voteOption(ids, settings) {
         const { groupId, questionId, subQuestionId, optionId } = ids;
 
         const { addVote } = settings;
-        console.log(groupId, questionId, subQuestionId, optionId, addVote);
+        console.log('addVote:', addVote);
 
         const optionRef = DB
             .collection('groups')

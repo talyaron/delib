@@ -412,7 +412,7 @@ exports.deleteVoteForSubQuestion = functions.firestore
 
 
             } else {
-              const subQuestionObj = subscriberDB.data();
+              const subQuestionObj = subQuestionDB.data();
 
               //calc and initiate number of voters 
               if (!{}.hasOwnProperty.call(subQuestionObj, 'voters')) {

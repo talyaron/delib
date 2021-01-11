@@ -27,7 +27,7 @@ module.exports = {
             <div class='votes'>
                 {options.map(option => {
                     console.log(vnode.state.optionVoted === option.optionId, vnode.state.optionVoted ,option.optionId)
-                    return (<Option option={option} question={question} isSelected={vnode.state.optionVoted === option.optionId} />)
+                    return (<Option option={option} question={question} isSelected={vnode.state.optionVoted === option.optionId} optionVoted={vnode.state.optionVoted} />)
                 })
                 }
             </div>

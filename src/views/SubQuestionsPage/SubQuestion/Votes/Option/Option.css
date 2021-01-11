@@ -1,5 +1,5 @@
-.optionVote{
-    flex:1;
+.optionVote {
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -8,15 +8,15 @@
 
 }
 
-.optionVote__column{
+.optionVote__column {
     width: 50%;
-    background: rgb(22,133,226);
-background: linear-gradient(90deg, rgba(22,133,226,1) 0%, rgba(31,132,215,1) 28%, rgba(43,116,177,1) 51%, rgba(49,136,209,1) 73%, rgba(59,162,247,1) 100%);
+    background: rgb(22, 133, 226);
+    background: linear-gradient(90deg, rgba(22, 133, 226, 1) 0%, rgba(31, 132, 215, 1) 28%, rgba(43, 116, 177, 1) 51%, rgba(49, 136, 209, 1) 73%, rgba(59, 162, 247, 1) 100%);
     border-radius: 20px 20px 0px 0px;
     transition: all 1s;
 }
 
-.optionVote__button{
+.optionVote__button {
     background-color: #1b3d9b41;
     width: 80%;
     text-align: center;
@@ -27,6 +27,6 @@ background: linear-gradient(90deg, rgba(22,133,226,1) 0%, rgba(31,132,215,1) 28%
 }
 
 
-.optionVote__button--selected{
+.optionVote__button--selected {
     background-color: #1b3d9b;
 }
