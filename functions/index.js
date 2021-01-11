@@ -198,6 +198,15 @@ exports.setVoteForSubQuestion = functions.firestore
       .collection('options')
       .doc(optionId);
 
+    const subQuestionRef =
+      db
+        .collection("groups")
+        .doc(context.params.groupId)
+        .collection("questions")
+        .doc(context.params.questionId)
+        .collection("subQuestions")
+        .doc(context.params.subQuestionId)
+
     try {
       await db.runTransaction(transaction => {
         return transaction.get(optionsRef)
@@ -220,16 +229,43 @@ exports.setVoteForSubQuestion = functions.firestore
               }
               else if (typeof optionDB.data().votes === 'number') {
                 const newVotes = optionDB.data().votes + 1;
-               
+
                 transaction.update(optionsRef, { votes: newVotes, voters: newNumberOfVoters });
               } else {
-                transaction.update(optionsRef, { votes: 1,voters: newNumberOfVoters });
+                transaction.update(optionsRef, { votes: 1, voters: newNumberOfVoters });
               }
             }
             return;
           });
       });
       console.log("vote on option " + optionId + ' was set');
+      
+      //update nummber of voters
+      await db.runTransaction(transaction => {
+        return transaction.get(subQuestionRef)
+          .then((subQuestionDB) => {
+            if (!subQuestionDB.exists) {
+              throw new Error("Document does not exist!");
+
+
+            } else {
+              const subQuestionObj = subscriberDB.data();
+
+              //calc and initiate number of voters 
+              if (!{}.hasOwnProperty.call(subQuestionObj, 'voters')) {
+                optionObj.voters = 0;
+              }
+              const newNumberOfVoters = optionObj.voters + 1;
+
+
+
+              transaction.update(subQuestionRef, { voters: newNumberOfVoters });
+
+            }
+            return;
+          });
+      });
+      console.log(`One voter on subQuestion ${context.params.subQuestionId} was added`);
       return;
     } catch (error) {
       console.log("Transaction failed: ", error);
@@ -328,6 +364,15 @@ exports.deleteVoteForSubQuestion = functions.firestore
       .collection('options')
       .doc(optionId);
 
+    const subQuestionRef =
+      db
+        .collection("groups")
+        .doc(context.params.groupId)
+        .collection("questions")
+        .doc(context.params.questionId)
+        .collection("subQuestions")
+        .doc(context.params.subQuestionId)
+
     try {
       await db.runTransaction(transaction => {
         return transaction.get(optionsRef)
@@ -338,24 +383,52 @@ exports.deleteVoteForSubQuestion = functions.firestore
 
             } else {
 
+              const optionObj = optionDB.data();
 
-                //calc and initiate number of voters 
-                if (!{}.hasOwnProperty.call(optionObj, 'voters')) {
-                  optionObj.voters = 1;
-                }
-                const newNumberOfVoters = optionObj.voters - 1;
+              //calc and initiate number of voters 
+              if (!{}.hasOwnProperty.call(optionObj, 'voters')) {
+                optionObj.voters = 1;
+              }
+              const newNumberOfVoters = optionObj.voters - 1;
 
               if (typeof optionDB.data().votes === 'number') {
                 const newVotes = optionDB.data().votes - 1;
-                transaction.update(optionsRef, { votes: newVotes, voters:newNumberOfVoters });
+                transaction.update(optionsRef, { votes: newVotes, voters: newNumberOfVoters });
               } else {
-                transaction.update(optionsRef, { votes: 0 ,voters:newNumberOfVoters});
+                transaction.update(optionsRef, { votes: 0, voters: newNumberOfVoters });
               }
             }
             return;
           });
       });
       console.log("vote deleted in option", optionId);
+
+      //update nummber of voters
+      await db.runTransaction(transaction => {
+        return transaction.get(subQuestionRef)
+          .then((subQuestionDB) => {
+            if (!subQuestionDB.exists) {
+              throw new Error("Document does not exist!");
+
+
+            } else {
+              const subQuestionObj = subscriberDB.data();
+
+              //calc and initiate number of voters 
+              if (!{}.hasOwnProperty.call(subQuestionObj, 'voters')) {
+                optionObj.voters = 1;
+              }
+              const newNumberOfVoters = optionObj.voters - 1;
+
+
+
+              transaction.update(subQuestionRef, { voters: newNumberOfVoters });
+
+            }
+            return;
+          });
+      });
+      console.log(`One voter on subQuestion ${context.params.subQuestionId} was removed`);
       return;
     } catch (error) {
       console.log("Transaction failed: ", error);

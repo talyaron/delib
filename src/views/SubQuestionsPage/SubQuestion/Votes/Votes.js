@@ -19,13 +19,13 @@ module.exports = {
 
     },
     view: vnode => {
-        const { options } = vnode.attrs;
+        const { options,question } = vnode.attrs;
         console.log(options)
 
         return (
             <div class='votes'>
                 {options.map(option => {
-                    return (<Option option={option} />)
+                    return (<Option option={option} question={question} />)
                 })
                 }
             </div>

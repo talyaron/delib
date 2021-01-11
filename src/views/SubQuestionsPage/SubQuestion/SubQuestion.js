@@ -132,7 +132,7 @@ function switchProcess(type, vnode) {
 	let options = get(store, `options[${vnode.attrs.subQuestionId}]`, []);
 	options = orderOptionsBy(options, vnode.state.orderBy);
 
-	const { processType, groupId, questionId, subQuestionId, isAlone } = vnode.attrs;
+	const { processType, groupId, questionId, subQuestionId, isAlone, question } = vnode.attrs;
 	
 
 	switch (processType) {
@@ -147,7 +147,7 @@ function switchProcess(type, vnode) {
 				/>
 			);
 		case 'votes':
-			return <Votes ids={{groupId, questionId, subQuestionId}} options={options} />;
+			return <Votes ids={{groupId, questionId, subQuestionId}} options={options} question={question}/>;
 		default:
 			return (
 				<Options
