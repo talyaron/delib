@@ -19,20 +19,20 @@ function listenToUserGroups() {
         if (store.userGroupsListen === false) {
             store.userGroupsListen = true;
 
-          
+
 
             DB
                 .collection("users")
                 .doc(store.user.uid)
                 .collection("groupsOwned")
                 .onSnapshot(groupsOwnedDB => {
-                 
+
 
                     setTimeout(() => {
                         if (store.userGroups[0] === false) store.userGroups.splice(0, 1);
                         m.redraw()
                     }, 500)
-               
+
                     listenToGroups(groupsOwnedDB);
                     m.redraw();
                 }, err => {
@@ -54,7 +54,7 @@ function listenToRegisterdGroups() {
 
 
             DB.collection('users').doc(store.user.uid).collection('registerGroups').onSnapshot(groupsDB => {
-              
+
                 listenToGroups(groupsDB);
             }, err => {
                 console.error('On listenToRegisterdGroups:', err.name, err.message)
@@ -111,10 +111,10 @@ function listenToGroups(groupsDB) {
 function listenToGroup(groupId) {
 
     try {
-        if (!{}.hasOwnProperty.call(store.userGroupsListners, groupId)){
+        if (!{}.hasOwnProperty.call(store.userGroupsListners, groupId)) {
 
             store.userGroupListen[groupId] = true
-          
+
 
             return DB.collection('groups').doc(groupId).onSnapshot(groupDB => {
                 try {
@@ -132,7 +132,7 @@ function listenToGroup(groupId) {
 
                         m.redraw();
 
-                        
+
 
 
                     } else {
@@ -554,6 +554,35 @@ function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId) 
             m.redraw();
         });
         return unsubscribe;
+    } catch (e) {
+        console.error(e)
+    }
+}
+
+function listenToVote(vnode) {
+    try {
+
+        const {groupId, questionId, subQuestionId} = vnode.attrs.ids;
+
+        DB.collection("groups")
+            .doc(groupId)
+            .collection("questions")
+            .doc(questionId)
+            .collection("subQuestions")
+            .doc(subQuestionId)
+            .collection('votes')
+            .doc(store.user.uid)
+            .onSnapshot(voteDB=>{
+                if(!voteDB.exists){
+                    vnode.state.optionVoted = false;
+                } else {
+                    vnode.state.optionVoted = voteDB.data().optionVoted;
+                }
+                m.redraw();
+
+            },e=>{
+                console.error(e)
+            })
     } catch (e) {
         console.error(e)
     }
@@ -1128,6 +1157,7 @@ module.exports = {
     listenToTopConsequences,
     getMyVotesOnConsequence,
     getOptionVote,
+    listenToVote,
     getSubItems,
     getSubItemLikes,
     getSubItemUserLike,

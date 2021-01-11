@@ -17,7 +17,7 @@ background: linear-gradient(90deg, rgba(22,133,226,1) 0%, rgba(31,132,215,1) 28%
 }
 
 .optionVote__button{
-    background-color: #1b3d9b;
+    background-color: #1b3d9b41;
     width: 80%;
     text-align: center;
     color: white;
@@ -25,8 +25,8 @@ background: linear-gradient(90deg, rgba(22,133,226,1) 0%, rgba(31,132,215,1) 28%
     border-radius: 30px;
     margin-top: 7px;
 }
-.optionVote__button:hover, .optionVote__button:active{
-    background-color: #3d5cb1;
-box-shadow: 0px 0px 10px yellow;
-    box-sizing:content-box;
+
+
+.optionVote__button--selected{
+    background-color: #1b3d9b;
 }
