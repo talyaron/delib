@@ -564,7 +564,7 @@ function listenToUserVote(vnode) {
 
         const {groupId, questionId, subQuestionId} = vnode.attrs.ids;
 
-        DB.collection("groups")
+        return DB.collection("groups")
             .doc(groupId)
             .collection("questions")
             .doc(questionId)
@@ -585,6 +585,7 @@ function listenToUserVote(vnode) {
             })
     } catch (e) {
         console.error(e)
+        return ()=>{};
     }
 }
 

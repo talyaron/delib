@@ -12,6 +12,7 @@ module.exports = {
 
         return (
             <div class='optionVote'>
+                 <div class='optionVote__percent'>{Math.round((option.votes / voters) * 100) || 0}%</div>
                 <div class='optionVote__column' style={`height:${(option.votes / voters) * 100}%`}></div>
                 <div class={isSelected ? 'optionVote__button optionVote__button--selected' : 'optionVote__button'} onclick={() => { handleVote(vnode) }}>{option.title}</div>
             </div>

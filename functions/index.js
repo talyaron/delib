@@ -218,29 +218,28 @@ exports.setVoteForSubQuestion = functions.firestore
             } else {
               const optionObj = optionDB.data();
 
-              //calc and initiate number of voters 
-              if (!{}.hasOwnProperty.call(optionObj, 'voters')) {
-                optionObj.voters = 0;
-              }
-              const newNumberOfVoters = optionObj.voters + 1;
+
+              let newVotes = 0;
 
               if (!{}.hasOwnProperty.call(optionObj, 'votes')) {
-                transaction.update(optionsRef, { votes: 1 });
+                newVotes = 1
               }
-              else if (typeof optionDB.data().votes === 'number') {
-                const newVotes = optionDB.data().votes + 1;
-
-                transaction.update(optionsRef, { votes: newVotes, voters: newNumberOfVoters });
-              } else {
-                transaction.update(optionsRef, { votes: 1, voters: newNumberOfVoters });
+              else if (isNaN(optionObj.votes)) {
+                newVotes = 1
               }
+              else {
+                 newVotes = optionObj.votes + 1;
+                
+              }
+              transaction.update(optionsRef, { votes: newVotes });
             }
+           
             return;
           });
       });
       console.log("vote on option " + optionId + ' was set');
-      
-      //update nummber of voters
+
+      //update number of voters
       await db.runTransaction(transaction => {
         return transaction.get(subQuestionRef)
           .then((subQuestionDB) => {
@@ -250,16 +249,17 @@ exports.setVoteForSubQuestion = functions.firestore
 
             } else {
               const subQuestionObj = subQuestionDB.data();
-
+              let voters = 0
               //calc and initiate number of voters 
               if (!{}.hasOwnProperty.call(subQuestionObj, 'voters')) {
-                subQuestionObj.voters = 0;
+                voters = 1;
+              } else if (isNaN(subQuestionObj.voters)) {
+                voters = 1;
+              } else {
+                voters = subQuestionObj.voters + 1;
               }
-              const newNumberOfVoters = subQuestionObj.voters + 1;
 
-
-
-              transaction.update(subQuestionRef, { voters: newNumberOfVoters });
+              transaction.update(subQuestionRef, { voters });
 
             }
             return;
@@ -301,6 +301,8 @@ exports.updateVoteForSubQuestion = functions.firestore
       .doc(optionIdAfter);
 
     try {
+
+      //remove from the before option the vote
       await db.runTransaction(transaction => {
         return transaction.get(optionBeforeRef)
           .then((optionDB) => {
@@ -308,17 +310,31 @@ exports.updateVoteForSubQuestion = functions.firestore
               throw new Error("Document does not exist!");
 
 
+
             } else {
-              // if (typeof optionDB.data().votes === 'number') {
-              const newVotes = optionDB.data().votes - 1;
+
+              const optionObj = optionDB.data();
+              let newVotes = 0
+
+              if (!{}.hasOwnProperty.call(optionObj, 'votes')) {
+                newVotes = 0;
+              } else if (isNaN(optionObj.votes)) {
+                newVotes = 0;
+              } else {
+                newVotes = optionObj.votes - 1;
+              }
+
+              if (newVotes < 0) newVotes = 0;
+
+
               transaction.update(optionBeforeRef, { votes: newVotes });
-              // } else {
-              //   transaction.update(optionBeforeRef, { votes: 0 });
-              // }
+
             }
             return;
           });
       });
+
+      //add vote to ne new option voted
 
       await db.runTransaction(transaction => {
         return transaction.get(optionAfterRef)
@@ -328,17 +344,27 @@ exports.updateVoteForSubQuestion = functions.firestore
 
 
             } else {
-              // if (typeof optionDB.data().votes === 'number') {
-              const newVotes = optionDB.data().votes + 1;
+
+              const optionObj = optionDB.data();
+              let newVotes = 0
+
+              if (!{}.hasOwnProperty.call(optionObj, 'votes')) {
+                newVotes = 1;
+              } else if (isNaN(optionObj.votes)) {
+                newVotes = 1;
+              } else {
+                newVotes = optionObj.votes + 1;
+              }
+
+              if (newVotes < 0) newVotes = 0;
+
+
               transaction.update(optionAfterRef, { votes: newVotes });
-              // } else {
-              //   transaction.update(optionAfterRef, { votes: 0 });
-              // }
+              return;
             }
-            return;
           });
       });
-      console.log(`In options ${optionIdBefore}, ${optionIdAfter}, change created correctly `);
+      console.log(`In options ${optionIdBefore}, ${optionIdAfter}, change correctly `);
       return;
     } catch (error) {
       console.log("Transaction failed: ", error);
@@ -374,7 +400,9 @@ exports.deleteVoteForSubQuestion = functions.firestore
         .doc(context.params.subQuestionId)
 
     try {
-      await db.runTransaction(transaction => {
+
+      //delete vote from option
+       db.runTransaction(transaction => {
         return transaction.get(optionsRef)
           .then((optionDB) => {
             if (!optionDB.exists) {
@@ -384,27 +412,28 @@ exports.deleteVoteForSubQuestion = functions.firestore
             } else {
 
               const optionObj = optionDB.data();
+              let newVotes = 0
 
-              //calc and initiate number of voters 
-              if (!{}.hasOwnProperty.call(optionObj, 'voters')) {
-                optionObj.voters = 1;
-              }
-              const newNumberOfVoters = optionObj.voters - 1;
-
-              if (typeof optionDB.data().votes === 'number') {
-                const newVotes = optionDB.data().votes - 1;
-                transaction.update(optionsRef, { votes: newVotes, voters: newNumberOfVoters });
+              if (!{}.hasOwnProperty.call(optionObj, 'votes')) {
+                newVotes = 0;
+              } else if (isNaN(optionObj.votes)) {
+                newVotes = 0;
               } else {
-                transaction.update(optionsRef, { votes: 0, voters: newNumberOfVoters });
+                newVotes = optionObj.votes - 1;
               }
+
+              if (newVotes < 0) newVotes = 0;
+
+
+              transaction.update(optionsRef, { votes: newVotes });
             }
             return;
           });
       });
       console.log("vote deleted in option", optionId);
 
-      //update nummber of voters
-      await db.runTransaction(transaction => {
+      //decrease number of voters
+       db.runTransaction(transaction => {
         return transaction.get(subQuestionRef)
           .then((subQuestionDB) => {
             if (!subQuestionDB.exists) {
@@ -413,14 +442,15 @@ exports.deleteVoteForSubQuestion = functions.firestore
 
             } else {
               const subQuestionObj = subQuestionDB.data();
-
+              let newNumberOfVoters = 0;
               //calc and initiate number of voters 
               if (!{}.hasOwnProperty.call(subQuestionObj, 'voters')) {
-                subQuestionObj.voters = 1;
+                newNumberOfVoters = 0;
+              } else if (isNaN(subQuestionObj.voters)) {
+                newNumberOfVoters = 0;
+              } else {
+                newNumberOfVoters = subQuestionObj.voters - 1;
               }
-              const newNumberOfVoters = subQuestionObj.voters - 1;
-
-
 
               transaction.update(subQuestionRef, { voters: newNumberOfVoters });
 
