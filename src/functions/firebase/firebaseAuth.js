@@ -48,7 +48,8 @@ function onAuth() {
 						email: store.user.email,
 						isAnonymous: false,
 						userColor:getRandomColorDark(),
-						signIn:true
+						signIn:true,
+						groupsUserTryToRegister:{}
 					};
 
 					listenToFeed();
@@ -86,7 +87,8 @@ function onAuth() {
 							name: store.user.name,
 							isAnonymous: true,
 							userColor:store.user.userColor,
-							signIn:true
+							signIn:true,
+							groupsUserTryToRegister:{}
 						};
 						DB.collection('users').doc(user.uid).set(userSimpleObj)
 							.then(function () {})

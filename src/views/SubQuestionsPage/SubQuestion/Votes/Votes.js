@@ -7,6 +7,10 @@ import Option from './Option/Option';
 
 //functions
 import { listenToUserVote } from '../../../../functions/firebase/get/get';
+import {logout} from '../../../../functions/firebase/googleLogin';
+
+//data
+import store from '../../../../data/store';
 
 let subscribe = () => { };
 
@@ -21,18 +25,28 @@ module.exports = {
     },
     view: vnode => {
         const { options, question } = vnode.attrs;
-        console.log('question', question)
 
         return (
             <div class='votes'>
                 <h2>הצביעו: {question.voters || 0}</h2>
                 <div class='votes__panel'>
                     {options.map(option => {
-                        console.log(vnode.state.optionVoted === option.optionId, vnode.state.optionVoted, option.optionId)
+         
                         return (<Option option={option} question={question} isSelected={vnode.state.optionVoted === option.optionId} optionVoted={vnode.state.optionVoted} />)
                     })
                     }
+
                 </div>
+                {store.user.isAnonymous === true ?
+                    <div class='votes__loginMessage'>
+                        <div class='buttons' onclick={() => {
+                            store.lastPage = m.route.get();
+                            logout();
+                            m.route.set('/login');
+                        }}
+                        >כדי להצביע עליכם להרשם עם חשבון גוגל</div>
+                    </div> : null
+                }
             </div>
         )
     }

@@ -21,10 +21,11 @@
 }
 
 .optionVote__button {
-    background-color: #1b3d9b41;
+    background-color: #1b3d9b00;
+    border:2px solid #1b3d9b;
     width: 80%;
     text-align: center;
-    color: white;
+    color:  #1b3d9b;
     padding: 10px;
     border-radius: 30px;
     margin-top: 7px;
@@ -35,4 +36,5 @@
 
 .optionVote__button--selected {
     background-color: #1b3d9b;
+    color:  white;
 }

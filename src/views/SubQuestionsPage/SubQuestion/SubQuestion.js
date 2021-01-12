@@ -81,16 +81,18 @@ module.exports = {
 		unsubscribeOptions();
 	},
 	view: (vnode) => {
-		const { question, vsp } = vnode.attrs
+		const { question, vsp, processType } = vnode.attrs
 		return (
 			<div class="subQuestionWrapper" id="optionsWrapper">
 				<div class={vnode.attrs.isAlone ? "subQuestionSection questionSection--alone" : "questionSection"}>
 					<div class='title'>
 						שאלה: {question}
 						<div class='subQuestion__addOptionWrapper'>
-							<div class='subQuestion__addOption' onclick={() => { vsp.showModal.isShow = true }}>
+							{processType !== 'votes' ? <div class='subQuestion__addOption' onclick={() => { vsp.showModal.isShow = true }}>
 								הוספת פתרון
 							</div>
+								: null
+							}
 							<div
 								class='headerSetFeed'
 								onclick={e => {
@@ -101,7 +103,7 @@ module.exports = {
 							</div>
 						</div>
 					</div>
-					<h3 class='subQuestion__question'>פתרונות שונים לשאלה</h3>
+					{processType !== 'votes'?<h3 class='subQuestion__question'>פתרונות שונים לשאלה</h3>:null}
 
 					{switchProcess(vnode.state.processType, vnode)}
 
@@ -133,7 +135,7 @@ function switchProcess(type, vnode) {
 	options = orderOptionsBy(options, vnode.state.orderBy);
 
 	const { processType, groupId, questionId, subQuestionId, isAlone, questionObj } = vnode.attrs;
-	
+
 
 	switch (processType) {
 		case 'suggestions':
@@ -147,7 +149,7 @@ function switchProcess(type, vnode) {
 				/>
 			);
 		case 'votes':
-			return <Votes ids={{groupId, questionId, subQuestionId}} options={options} question={questionObj}/>;
+			return <Votes ids={{ groupId, questionId, subQuestionId }} options={options} question={questionObj} />;
 		default:
 			return (
 				<Options

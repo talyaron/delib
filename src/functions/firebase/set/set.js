@@ -1,5 +1,5 @@
 import m from 'mithril';
-import { set } from 'lodash';
+import { set, get } from 'lodash';
 import { DB } from '../config';
 import store from '../../../data/store';
 import { concatenateDBPath, uniqueId, generateChatEntitiyId, createIds, getRandomColor } from '../../general';
@@ -55,32 +55,39 @@ function registerGroup(groupId) {
 
     try {
 
-        if (!{}.hasOwnProperty.call(store.groupsUserTryToRegister, groupId)) {
-            store.groupsUserTryToRegister[groupId] = true;
+      
 
+        let isUserRgisterdToGroup = get(store.user, `.groupsUserTryToRegister[${groupId}]`, false);
+      
+        if (!isUserRgisterdToGroup) {
+            // store.user.groupsUserTryToRegister[groupId] = true;
+            set(store.user, `.groupsUserTryToRegister[${groupId}]`, true)
+           
             const waitForUser = setInterval(() => {
 
-                if ({}.hasOwnProperty.call(store.user, 'userColor')) {
+            
+
+                if ({}.hasOwnProperty.call(store.user, 'uid')) {
 
                     clearInterval(waitForUser);
 
 
+                
+                    if (!isUserRgisterdToGroup) {
 
-                    if (!{}.hasOwnProperty(store.groupsRegistered, groupId)) {
-
-                        console.log('register to ', groupId)
+                    
 
                         store.groupsRegistered[groupId] = true;
 
                         DB.collection('users').doc(store.user.uid)
                             .collection('registerGroups').doc(groupId)
                             .set({ register: true })
-                            .then(() => { console.log('user registerd to group', groupId) })
+                            .then(() => { console.info('user registerd to group', groupId) })
                             .catch(e => { console.error(e) })
 
                         //store data from use as member in the group
-                        const { displayName, email, uid, name, photoURL, phoneNumber, userColor, isAnonymous } = store.user;
-                        const userObjTemp = { displayName, email, uid, name, photoURL, phoneNumber, userColor, isAnonymous }, userObj = {};
+                        const { displayName, email, uid, name, photoURL, phoneNumber, isAnonymous } = store.user;
+                        const userObjTemp = { displayName, email, uid, name, photoURL, phoneNumber, isAnonymous }, userObj = {};
 
 
                         for (let prop in userObjTemp) {
@@ -93,7 +100,7 @@ function registerGroup(groupId) {
                         DB.collection('groups').doc(groupId)
                             .collection('members').doc(store.user.uid)
                             .set(userObj, { merge: true })
-                            .then(() => { console.log('user is a member of group', groupId) })
+                            .then(() => { console.info('user is a member of group', groupId) })
                             .catch(e => { console.error(e) })
                     } else {
                         console.info('user is already registered to', groupId)
@@ -101,7 +108,7 @@ function registerGroup(groupId) {
                 }
 
             }, 1000);
-        }
+        } 
     } catch (e) {
         console.error(e)
 
@@ -366,7 +373,7 @@ function voteOption(ids, settings) {
         const { groupId, questionId, subQuestionId, optionId } = ids;
 
         const { addVote } = settings;
-        console.log('addVote:', addVote);
+
 
         const optionRef = DB
             .collection('groups')
