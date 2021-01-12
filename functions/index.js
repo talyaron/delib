@@ -324,8 +324,6 @@ exports.updateVoteForSubQuestion = functions.firestore
                 newVotes = optionObj.votes - 1;
               }
 
-              if (newVotes < 0) newVotes = 0;
-
 
               transaction.update(optionBeforeRef, { votes: newVotes });
 
@@ -356,8 +354,7 @@ exports.updateVoteForSubQuestion = functions.firestore
                 newVotes = optionObj.votes + 1;
               }
 
-              if (newVotes < 0) newVotes = 0;
-
+            
 
               transaction.update(optionAfterRef, { votes: newVotes });
               return;
