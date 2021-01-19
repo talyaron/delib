@@ -3,20 +3,25 @@ import "./NewGroupPage.css";
 
 //model
 import store from "../../../data/store";
+import lang from '../../../data/languages';
 //compnents
 import Header from "../../Commons/Header/Header";
 import Picture from '../../Commons/Picture/Picture';
+
+const optionsArray = getLangOptions(lang);
 
 //functions
 import { createGroup } from "../../../functions/firebase/set/set";
 
 module.exports = {
   oninit: vnode => {
+    
     vnode.state = {
       title: false,
       description: "",
-      callForAction:'',
-      logo: false
+      callForAction: '',
+      logo: false,
+      language:'he'
     };
   },
   view: vnode => {
@@ -24,6 +29,14 @@ module.exports = {
       <div>
         <Header topic="קבוצות" title="יצירת קבוצה חדשה" upLevelUrl="/groups" />
         <div class="wrapper wrapper_newGroup inputs">
+          <select class="inputGeneral" onchange={(e)=>handleLanguageChange(e, vnode)}>
+            {
+            optionsArray.map(lng => {
+              return (<option value={lng.key}>{lng.name}</option>)
+            })
+
+            }
+          </select>
           <input
             class="inputGeneral"
             type="text"
@@ -62,3 +75,24 @@ module.exports = {
     );
   }
 };
+
+function handleLanguageChange(e, vnode){
+  
+  vnode.state.language = e.target.value
+}
+
+
+function getLangOptions(langObj) {
+
+  const optionsArray = []
+  // get array of languages
+  const languageKeys = Object.keys(langObj);
+  languageKeys.map((languageKey, i) => {
+    optionsArray[i] = { key: languageKey, name: langObj[languageKey].langName }
+  })
+
+
+
+  return optionsArray
+
+}

@@ -221,7 +221,7 @@ module.exports = {
                             <div class="optionPage__menu" id="questionFooter">
                                 <div
                                     class={vnode.state.orderBy == "new"
-                                        ? "footerButton footerButtonSelected"
+                                        ? "footerButton footerButton--selected"
                                         : "footerButton"}
                                     onclick={() => {
                                         vnode.state.orderBy = "new";
@@ -232,7 +232,7 @@ module.exports = {
                                 </div>
                                 <div
                                     class={vnode.state.orderBy == "for"
-                                        ? "footerButton footerButtonSelected"
+                                        ? "footerButton footerButton--selected"
                                         : "footerButton"}
                                     onclick={() => {
                                         vnode.state.orderBy = "for";
@@ -243,7 +243,7 @@ module.exports = {
                                 </div>
                                 <div
                                     class={vnode.state.orderBy == "against"
-                                        ? "footerButton footerButtonSelected"
+                                        ? "footerButton footerButton--selected"
                                         : "footerButton"}
                                     onclick={() => {
                                         vnode.state.orderBy = "against";
@@ -255,7 +255,7 @@ module.exports = {
 
                                 <div
                                     class={vnode.state.orderBy == "random"
-                                        ? "footerButton footerButtonSelected"
+                                        ? "footerButton footerButton--selected"
                                         : "footerButton"}
                                     onclick={() => {
                                         vnode.state.orderBy = "random";

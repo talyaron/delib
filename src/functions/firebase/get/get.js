@@ -123,10 +123,15 @@ function listenToGroup(groupId) {
 
                         if (store.userGroups[0] === false) store.userGroups.splice(0, 1);
 
+                        let groupObj = groupDB.data();
+                        if(!{}.hasOwnProperty.call(groupObj, 'id')){
+                            DB.collection('groups').doc(groupId).update({id: groupId, groupId}).catch(e=>console.error(e))
+                        }
+                        groupObj.id = groupObj.groupId =  groupDB.id;
                         if (groupIndex == -1) {
-                            store.userGroups.push(groupDB.data())
+                            store.userGroups.push(groupObj)
                         } else {
-                            store.userGroups[groupIndex] = groupDB.data()
+                            store.userGroups[groupIndex] = groupObj
                         }
 
 
@@ -266,17 +271,21 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
 
     try {
 
+        console.log('listenSubQuestions',groupId, questionId)
+
         //listen only once
 
         if (!{}.hasOwnProperty.call(store.subQuestionsListners, questionId)) {
 
-            store.subQuestionsListners[questionId] = { listen: true }
+            store.subQuestionsListners[questionId] = { listen: true };
+
+            console.log('listenSubQuestions, listen to sub groups')
 
             if (!{}.hasOwnProperty.call(vnode.state, 'creatorId')) { throw new Error('No creatorId in vnode at listenSubQuestions') }
 
             let term, search;
 
-            //sub question seen by the admin are diffrenet then subquestions seen by yhe simple user
+            // sub question seen by the admin are diffrenet then subquestions seen by yhe simple user
             if (vnode.state.creatorId != store.user.uid) {
 
                 //simple user view
@@ -289,16 +298,12 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
 
 
 
-            let subQuestionRef = DB
+             DB
                 .collection("groups")
                 .doc(groupId)
                 .collection("questions")
                 .doc(questionId)
-                .collection("subQuestions");
-
-
-
-            return subQuestionRef
+                .collection("subQuestions") 
                 .where('showSubQuestion', term, search)
                 .onSnapshot(subQuestionsDB => {
                     let subQuestionsArray = [];
@@ -315,6 +320,7 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
 
 
                     store.subQuestions[groupId] = subQuestionsArray;
+                    console.log()
 
                     m.redraw();
 

@@ -49,6 +49,7 @@ module.exports = {
 
                         store.userGroups.length > 0 ?
                             store.userGroups.map((group, key) => {
+                            
 
                                 return <Group
                                     route='/group/'

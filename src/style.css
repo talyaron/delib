@@ -54,6 +54,7 @@ body {
     font-family: 'Varela Round', sans-serif;
     font-size: 13px;
     background: #e8e8e8;
+    direction: ltr;
 }
 
 body {
@@ -406,8 +407,10 @@ body {
     color: var(--gray1);
 }
 
-.footerButtonSelected {
+.footerButton--selected {
     background: var(--gray2);
+    border: 1px solid #555555;
+    border-radius: 4px;
 }
 
 .checkBoxes [type="checkbox"] {

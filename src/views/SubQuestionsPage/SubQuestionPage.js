@@ -186,7 +186,7 @@ module.exports = {
                                     <div class={hasNevigation(vnode) ? "subQuestion__arrange" : "subQuestion__arrange subQuestion__arrange--bottom"} id="questionFooter">
                                         <div
                                             class={vnode.state.details.orderBy == "new"
-                                                ? "footerButton footerButtonSelected"
+                                                ? "footerButton footerButton--selected"
                                                 : "footerButton"}
                                             onclick={() => {
                                                 vnode.state.details.orderBy = "new";
@@ -196,7 +196,7 @@ module.exports = {
                                         </div>
                                         <div
                                             class={vnode.state.details.orderBy == "top"
-                                                ? "footerButton footerButtonSelected"
+                                                ? "footerButton footerButton--selected"
                                                 : "footerButton"}
                                             onclick={() => {
                                                 vnode.state.details.orderBy = "top";
@@ -207,7 +207,7 @@ module.exports = {
 
                                         {/* <div
                                         class={vnode.state.details.orderBy == "message"
-                                            ? "footerButton footerButtonSelected"
+                                            ? "footerButton footerButton--selected"
                                             : "footerButton"}
                                         onclick={() => {
                                             vnode.state.details.orderBy = "message";

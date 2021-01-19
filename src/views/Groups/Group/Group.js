@@ -26,6 +26,7 @@ module.exports = {
                 <div class='groupCard__info'>
                     <h1 class='cardTitle'>{title}</h1>
                     <p class='cardDescription'>{description}</p>
+                  
                 </div>
                 
             </div>
