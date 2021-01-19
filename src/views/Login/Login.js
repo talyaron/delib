@@ -6,7 +6,7 @@ import store from '../../data/store';
 
 //functions
 import { googleLogin, anonymousLogin } from '../../functions/firebase/googleLogin';
-import { getGroupDetails } from '../../functions/firebase/get/get';
+import { listenToGroupDetails } from '../../functions/firebase/get/get';
 import { get } from 'lodash';
 
 module.exports = {
@@ -26,7 +26,7 @@ module.exports = {
            if(groupIdFromBrowser !== undefined) vnode.state.groupId = groupIdFromBrowser;
        
             if (vnode.state.groupId !== undefined && vnode.state.groupId.length > 5) {
-                getGroupDetails(vnode.state.groupId);
+                listenToGroupDetails(vnode.state.groupId);
             }
         }
 

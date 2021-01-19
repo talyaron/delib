@@ -15,6 +15,9 @@ import { Reference, concatenateDBPath, getEntityId,getUser } from '../../../func
 //components
 import Aside from '../Aside/Aside';
 
+//model
+import lang from '../../../data/languages'
+
 
 let entityId = '';
 
@@ -43,7 +46,8 @@ module.exports = {
             isMenuOpen: false,
             subscribed: false,
             notifications: get(store.listenToMessages, `[${entityId}]`, false),
-            path: concatenateDBPath(groupId, questionId, subQuestionId, optionId)
+            path: concatenateDBPath(groupId, questionId, subQuestionId, optionId),
+            language:'he'
         }
         //set refernce string
         let reference = new Reference(vnode.state.refArray, 'array', 'collection');
@@ -84,7 +88,8 @@ module.exports = {
     },
     view: (vnode) => {
 
-        vnode.state.isMenuOpen
+        vnode.state.isMenuOpen;
+        const language = vnode.attrs.language ||'he';
 
         return (
             <div>
@@ -118,7 +123,7 @@ module.exports = {
                                     e.stopPropagation();
                                     handleSubscription(vnode);
                                 }}>
-                                {vnode.state.subscribed ? <div class='setButton setButton--cancel'>ביטול הרשמה</div> : <div class='setButton setButton--activate'>הרשמה</div>}
+                                {vnode.state.subscribed ? <div class='setButton setButton--cancel'>{lang[language].unfollow}</div> : <div class='setButton setButton--activate'>{lang[language].follow}</div>}
                             </div>
                             :
                             null

@@ -13,7 +13,7 @@ import store from '../../../data/store';
 import { EntityModel } from '../../../data/dataTypes';
 
 //functions
-import { listenToOptions, getGroupDetails } from '../../../functions/firebase/get/get';
+import { listenToOptions, listenToGroupDetails } from '../../../functions/firebase/get/get';
 
 import { concatenateURL } from '../../../functions/general';
 import { get } from 'lodash';

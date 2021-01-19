@@ -214,7 +214,7 @@ function setStore(obj, groupId, questionId, data) {
     }
 }
 
-function getGroupDetails(groupId, vnode) {
+function listenToGroupDetails(groupId, vnode) {
     try {
 
         if (typeof groupId !== 'string') {
@@ -233,7 +233,7 @@ function getGroupDetails(groupId, vnode) {
 
                     m.redraw();
                 }, err => {
-                    console.error(`At getGroupDetails: ${err.name}, ${err.message}`);
+                    console.error(`At listenToGroupDetails: ${err.name}, ${err.message}`);
                     if (err.message === 'Missing or insufficient permissions.') {
                         m.route.set('/unauthorized');
                     }
@@ -1157,7 +1157,7 @@ module.exports = {
     listenToUserGroups,
     listenToRegisterdGroups,
     getQuestions,
-    getGroupDetails,
+    listenToGroupDetails,
     listenToGroupMembers,
     getQuestionDetails,
     listenSubQuestions,

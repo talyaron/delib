@@ -10,10 +10,11 @@ import Modal from '../../Commons/Modal/Modal';
 
 //model
 import store from '../../../data/store';
+import lang from '../../../data/languages';
 
 
 //functions
-import { getSubQuestion, getGroupDetails } from '../../../functions/firebase/get/get';
+import { getSubQuestion, listenToGroupDetails } from '../../../functions/firebase/get/get';
 import { handleSubscription } from '../../../functions/firebase/set/set'
 import { concatenateDBPath, getUser } from '../../../functions/general';
 
@@ -27,7 +28,7 @@ module.exports = {
 
 		const { groupId, questionId, subQuestionId, title, orderBy } = vnode.attrs;
 
-		getGroupDetails(groupId)
+		listenToGroupDetails(groupId)
 
 		vnode.state = {
 			options: [],
@@ -81,15 +82,15 @@ module.exports = {
 		unsubscribeOptions();
 	},
 	view: (vnode) => {
-		const { question, vsp, processType } = vnode.attrs
+		const { question, vsp, processType, language } = vnode.attrs
 		return (
 			<div class="subQuestionWrapper" id="optionsWrapper">
 				<div class={vnode.attrs.isAlone ? "subQuestionSection questionSection--alone" : "questionSection"}>
 					<div class='title'>
-						שאלה: {question}
+						{lang[language].question}: {question}
 						<div class='subQuestion__addOptionWrapper'>
 							{processType !== 'votes' ? <div class='subQuestion__addOption' onclick={() => { vsp.showModal.isShow = true }}>
-								הוספת פתרון
+								{lang[language].addSolution}
 							</div>
 								: null
 							}
@@ -99,11 +100,11 @@ module.exports = {
 									e.stopPropagation();
 									handleSubscription(vnode);
 								}}>
-								{vnode.state.subscribed ? <div class='title__btnRegister title__btnRegister--unselect'>ביטול הרשמה</div> : <div class='title__btnRegister title__btnRegister--select'>הרשמה</div>}
+								{vnode.state.subscribed ? <div class='title__btnRegister title__btnRegister--unselect'>{lang[language].unfollow}</div> : <div class='title__btnRegister title__btnRegister--select'>{lang[language].follow}</div>}
 							</div>
 						</div>
 					</div>
-					{processType !== 'votes'?<h3 class='subQuestion__question'>פתרונות שונים לשאלה</h3>:null}
+					{processType !== 'votes'?<h3 class='subQuestion__question'>{lang[language].solutions}</h3>:null}
 
 					{switchProcess(vnode.state.processType, vnode)}
 
@@ -113,20 +114,25 @@ module.exports = {
 					showModal={vnode.state.showModal.isShow}
 					whichModal={vnode.state.showModal.which}
 					title={vnode.state.showModal.title}
-					placeholderTitle="כותרת"
-					placeholderDescription="הסבר"
-					vnode={vnode} />
+					placeholderTitle={lang[language].title}
+					placeholderDescription={lang[language].description}
+					vnode={vnode}
+					language={language}
+					/>
 			</div>
 		);
 	}
 };
 
 function addQuestion(vnode, type) {
+
+	const {language} = vnode.state;
+
 	vnode.attrs.parentVnode.state.showModal = {
 		subQuestionId: vnode.attrs.subQuestionId,
 		which: type,
 		isShow: true,
-		title: 'הוסף אפשרות'
+		title: lang[language].solutions
 	};
 }
 
