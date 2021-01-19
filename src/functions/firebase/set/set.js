@@ -5,22 +5,25 @@ import store from '../../../data/store';
 import { concatenateDBPath, uniqueId, generateChatEntitiyId, createIds, getRandomColor } from '../../general';
 
 
-function createGroup(creatorId, title, description, callForAction) {
+function createGroup(settings) {
     try {
+        const {creatorId, title, description, callForAction, language} = settings;
+        console.log(creatorId, title, description, callForAction, language)
         const groupId = uniqueId()
 
         DB
             .collection('groups')
             .doc(groupId)
             .set({
-                title: title,
-                description: description,
-                creatorId: creatorId,
+                title,
+                description,
+                creatorId,
                 time: new Date().getTime(),
                 groupId,
                 id: groupId,
                 groupColor: getRandomColor(),
-                callForAction
+                callForAction,
+                language
             })
             .then(() => {
 

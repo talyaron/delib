@@ -55,7 +55,7 @@ module.exports = {
 
 
         getQuestions('on', vnode.attrs.id, vnode);
-        vnode.state.undbGroupDetails = getGroupDetails(vnode.attrs.id, vnode);
+         getGroupDetails(vnode.attrs.id, vnode);
 
 
         vnode.state.unsubscribe.chat = listenToChat({ groupId: vnode.attrs.id });
@@ -114,7 +114,7 @@ module.exports = {
         let groupId = id;
 
         getQuestions('off', vnode.attrs.id, vnode);
-        vnode.state.undbGroupDetails();
+      
         vnode.state.unsubscribe.chat();
 
 

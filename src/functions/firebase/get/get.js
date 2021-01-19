@@ -124,10 +124,10 @@ function listenToGroup(groupId) {
                         if (store.userGroups[0] === false) store.userGroups.splice(0, 1);
 
                         let groupObj = groupDB.data();
-                        if(!{}.hasOwnProperty.call(groupObj, 'id')){
-                            DB.collection('groups').doc(groupId).update({id: groupId, groupId}).catch(e=>console.error(e))
+                        if (!{}.hasOwnProperty.call(groupObj, 'id')) {
+                            DB.collection('groups').doc(groupId).update({ id: groupId, groupId }).catch(e => console.error(e))
                         }
-                        groupObj.id = groupObj.groupId =  groupDB.id;
+                        groupObj.id = groupObj.groupId = groupDB.id;
                         if (groupIndex == -1) {
                             store.userGroups.push(groupObj)
                         } else {
@@ -222,20 +222,24 @@ function getGroupDetails(groupId, vnode) {
             throw new Error(' groupId is not a string')
         }
 
-        return DB
-            .collection("groups")
-            .doc(groupId)
-            .onSnapshot(groupDB => {
-                store.groups[groupId] = groupDB.data();
+        if (!{}.hasOwnProperty.call(store.groupListen, groupId)) {
+            store.groupListen[groupId] = true;
 
-                m.redraw();
-            }, err => {
-                console.error(`At getGroupDetails: ${err.name}, ${err.message}`);
-                if (err.message === 'Missing or insufficient permissions.') {
-                    m.route.set('/unauthorized');
-                }
+            DB
+                .collection("groups")
+                .doc(groupId)
+                .onSnapshot(groupDB => {
+                    store.groups[groupId] = groupDB.data();
 
-            });
+                    m.redraw();
+                }, err => {
+                    console.error(`At getGroupDetails: ${err.name}, ${err.message}`);
+                    if (err.message === 'Missing or insufficient permissions.') {
+                        m.route.set('/unauthorized');
+                    }
+
+                });
+        }
     } catch (err) {
         console.error(err)
     }
@@ -271,7 +275,7 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
 
     try {
 
-        console.log('listenSubQuestions',groupId, questionId)
+        console.log('listenSubQuestions', groupId, questionId)
 
         //listen only once
 
@@ -298,12 +302,12 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
 
 
 
-             DB
+            DB
                 .collection("groups")
                 .doc(groupId)
                 .collection("questions")
                 .doc(questionId)
-                .collection("subQuestions") 
+                .collection("subQuestions")
                 .where('showSubQuestion', term, search)
                 .onSnapshot(subQuestionsDB => {
                     let subQuestionsArray = [];
@@ -568,7 +572,7 @@ function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId) 
 function listenToUserVote(vnode) {
     try {
 
-        const {groupId, questionId, subQuestionId} = vnode.attrs.ids;
+        const { groupId, questionId, subQuestionId } = vnode.attrs.ids;
 
         return DB.collection("groups")
             .doc(groupId)
@@ -578,20 +582,20 @@ function listenToUserVote(vnode) {
             .doc(subQuestionId)
             .collection('votes')
             .doc(store.user.uid)
-            .onSnapshot(voteDB=>{
-                if(!voteDB.exists){
+            .onSnapshot(voteDB => {
+                if (!voteDB.exists) {
                     vnode.state.optionVoted = false;
                 } else {
                     vnode.state.optionVoted = voteDB.data().optionVoted;
                 }
                 m.redraw();
 
-            },e=>{
+            }, e => {
                 console.error(e)
             })
     } catch (e) {
         console.error(e)
-        return ()=>{};
+        return () => { };
     }
 }
 

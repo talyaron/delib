@@ -61,12 +61,8 @@ module.exports = {
             onclick={() => {
               if (vnode.state.title != false && vnode.state.title.length > 2) {
 
-                createGroup(
-                  store.user.uid,
-                  vnode.state.title,
-                  vnode.state.description,
-                  vnode.state.callForAction
-                );
+                const {uid, title, description, callForAction, language} = vnode.state;
+                createGroup({creatorId:store.user.uid,title,description,callForAction,language} );
               }
             }}
           ></input>

@@ -22,6 +22,7 @@ userGroupListen:{}, //used to store groups that the user listne toau
     },
     questions: {}, //list of questions. stored as {groupId:{questionId:{} }}
     groups: {}, //groups stored as {groupId:{group info}}
+    groupListen:{}, //check if group is listened to
     groupsRegistered:{},
     registerGroupsListen:false,
     groupsUserTryToRegister:{},
