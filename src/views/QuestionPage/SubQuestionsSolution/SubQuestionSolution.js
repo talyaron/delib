@@ -36,7 +36,7 @@ module.exports = {
 
 	},
 	view: vnode => {
-		console.log(vnode)
+		
 
 		const { groupId, questionId, subQuestionId, title, creator, showSubQuestion, processType } = vnode.attrs;
 

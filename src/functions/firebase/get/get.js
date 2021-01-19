@@ -308,7 +308,7 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
                 .collection("questions")
                 .doc(questionId)
                 .collection("subQuestions")
-                .where('showSubQuestion', term, search)
+                // .where('showSubQuestion', term, search)
                 .onSnapshot(subQuestionsDB => {
                     let subQuestionsArray = [];
                     let subQuestionsObj = {};
@@ -324,7 +324,7 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
 
 
                     store.subQuestions[groupId] = subQuestionsArray;
-                    console.log()
+                    console.log(subQuestionsArray)
 
                     m.redraw();
 

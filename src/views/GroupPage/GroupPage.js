@@ -127,10 +127,9 @@ module.exports = {
     },
     view: vnode => {
 
-        console.log(lang)
 
             const {language} = vnode.state
-console.log(lang[language].chat)
+
 
         return (
             <div class='page'>

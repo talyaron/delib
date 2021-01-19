@@ -10,9 +10,7 @@ module.exports = {
     view: vnode => {
         let { level, current, pvs, mainUrl, chatUrl, ids, isSubscribed, unreadMessages, chat } = vnode.attrs;
 
-        console.log(vnode.attrs)
-
-
+     
         return (
             <div class='navTop'>
                 <div

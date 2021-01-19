@@ -159,7 +159,7 @@ module.exports = {
                                     unreadMessages={vnode.state.unreadMessages}
                                 />
                             </div>
-                            <div style={`direction:${lang[language].dir}`}>
+                            <div style={`direction:${lang[language].dir}`} class='page__main'>
                                 {vnode.state.subPage === 'main' ?
 
                                     <SubQuestion
@@ -193,7 +193,7 @@ module.exports = {
                             </div>
                             {/* ---------------- Footer -------------- */}
                             <div class='page__footer'>
-                                {vnode.state.subPage === 'main' && vnode.state.details.processType === 'suggestions' ?
+                                {vnode.state.subPage === 'main' && (vnode.state.details.processType === 'suggestions' || vnode.state.details.processType === undefined)?
                                     <div class={hasNevigation(vnode) ? "subQuestion__arrange" : "subQuestion__arrange subQuestion__arrange--bottom"} id="questionFooter">
                                         <div
                                             class={vnode.state.details.orderBy == "new"
@@ -237,7 +237,7 @@ module.exports = {
                     : (<Spinner />)
                 }
                 {
-                    vnode.state.details.processType === 'suggestions' ?
+                    (vnode.state.details.processType === 'suggestions' ||vnode.state.details.processType === undefined) ?
                         < div
                             class="fav fav__subQuestion fav--blink"
                             onclick={() => {
