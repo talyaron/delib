@@ -749,18 +749,18 @@ exports.updateQuestionSubscribers = functions.firestore
     }
   });
 
-//update subscribers on CUD of options under a subQuestion
-// exports.updateSubQuestionSubscribers = functions.firestore
-//   .document(
-//     "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}"
-//   )
-//   .onWrite((change, context) => {
-//     // try {
-//     //   return sendToSubscribers({ change, context });
-//     // } catch (err) {
-//     //   console.log('err')
-//     // }
-//   });
+// update subscribers on CUD of options under a subQuestion
+exports.updateSubQuestionSubscribers = functions.firestore
+  .document(
+    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}"
+  )
+  .onWrite((change, context) => {
+    try {
+      return sendToSubscribers({ change, context });
+    } catch (err) {
+      console.log('err')
+    }
+  });
 
 function sendToSubscribers(info) {
   try {
