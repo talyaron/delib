@@ -33,7 +33,9 @@ function createGroup(settings) {
                     .collection("groupsOwned")
                     .doc(groupId).set({ id: groupId, date: new Date().getTime() })
                     .then(() => { console.info(`added the group to the groups the user owns`) })
-                    .catch(e => { console.error(e) })
+                    .catch(e => { console.error(e) });
+
+                    subscribeUser({groupId, subscribe:false})
                 m.route.set(`/group/${groupId}`);
             })
             .catch(function (error) {
@@ -902,8 +904,8 @@ function updateOption(vnode) {
 }
 function subscribeUser(settings) {
     try {
-        const { groupId, questionId, subQuestionId, optionId, title, entityType } = settings.vnode.attrs;
-        const { subscribe } = settings;
+      
+        const {  groupId, questionId, subQuestionId, optionId, subscribe } = settings;
 
        
         //build path for the enenties subscription collection
@@ -1045,8 +1047,7 @@ function handleSubscription(vnode) {
         const path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
 
         subscribeUser({
-            vnode,
-            subscribe: vnode.state.subscribed
+            groupId, questionId, subQuestionId, optionId , subscribe: vnode.state.subscribed
         })
 
         if (vnode.state.subscribed == false) {
