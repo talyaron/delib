@@ -275,8 +275,6 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
 
     try {
 
-        console.log('listenSubQuestions', groupId, questionId)
-
         //listen only once
 
         if (!{}.hasOwnProperty.call(store.subQuestionsListners, questionId)) {
@@ -321,10 +319,7 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
                         subQuestionsObj[subQuestionObj.id] = {};
                     });
 
-
-
                     store.subQuestions[groupId] = subQuestionsArray;
-                    console.log(subQuestionsArray)
 
                     m.redraw();
 
@@ -1159,6 +1154,7 @@ module.exports = {
     getQuestions,
     listenToGroupDetails,
     listenToGroupMembers,
+    listenToGroup,
     getQuestionDetails,
     listenSubQuestions,
     getSubQuestion,

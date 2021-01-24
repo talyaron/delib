@@ -685,6 +685,16 @@ function getUser() {
     })
 }
 
+function getLanguage(groupId){
+    const group = store.userGroups.find(group=>group.id === groupId);
+    if(group && {}.hasOwnProperty.call(group, 'language')){
+        return group.language;
+       
+    }
+    return 'he';
+
+}
+
 module.exports = {
     Reference,
     createRefString,
@@ -713,5 +723,6 @@ module.exports = {
     changeTextToArray,
     convertParagraphsToVisual,
     getFirstUrl,
-    getUser
+    getUser,
+    getLanguage
 }

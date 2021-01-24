@@ -6,6 +6,7 @@ admin.initializeApp();
 const db = admin.firestore();
 const settings = {
   timestampsInSnapshots: true,
+  ignoreUndefinedProperties: true
 };
 db.settings(settings);
 const FieldValue = require('firebase-admin').firestore.FieldValue;
@@ -228,12 +229,12 @@ exports.setVoteForSubQuestion = functions.firestore
                 newVotes = 1
               }
               else {
-                 newVotes = optionObj.votes + 1;
-                
+                newVotes = optionObj.votes + 1;
+
               }
               transaction.update(optionsRef, { votes: newVotes });
             }
-           
+
             return;
           });
       });
@@ -354,7 +355,7 @@ exports.updateVoteForSubQuestion = functions.firestore
                 newVotes = optionObj.votes + 1;
               }
 
-            
+
 
               transaction.update(optionAfterRef, { votes: newVotes });
               return;
@@ -399,7 +400,7 @@ exports.deleteVoteForSubQuestion = functions.firestore
     try {
 
       //delete vote from option
-       db.runTransaction(transaction => {
+      db.runTransaction(transaction => {
         return transaction.get(optionsRef)
           .then((optionDB) => {
             if (!optionDB.exists) {
@@ -430,7 +431,7 @@ exports.deleteVoteForSubQuestion = functions.firestore
       console.log("vote deleted in option", optionId);
 
       //decrease number of voters
-       db.runTransaction(transaction => {
+      db.runTransaction(transaction => {
         return transaction.get(subQuestionRef)
           .then((subQuestionDB) => {
             if (!subQuestionDB.exists) {
@@ -724,13 +725,18 @@ exports.groupChatNotifications = functions.firestore
 
 // =============== end of notifications ==================
 
+
+// =============== Feed =================================
+
+const GROUP = 'GROUP', QUESTION = 'QUESTION', SUB_QUESTION = 'SUB_QUESTION', OPTION = 'OPTION'
+
 //update subscribers on CUD of questions under a group
 exports.updateGroupSubscribers = functions.firestore
   .document("groups/{groupId}/questions/{questionId}")
   .onWrite((change, context) => {
     try {
 
-      sendToSubscribers({ change, context });
+      sendToSubscribers({ change, context, lisetnToEntity: GROUP });
     } catch (err) {
       console.log(err);
     }
@@ -743,7 +749,7 @@ exports.updateQuestionSubscribers = functions.firestore
   )
   .onWrite((change, context) => {
     try {
-      return sendToSubscribers({ change, context });
+      return sendToSubscribers({ change, context, lisetnToEntity: QUESTION });
     } catch (err) {
       console.log(err);
     }
@@ -756,16 +762,33 @@ exports.updateSubQuestionSubscribers = functions.firestore
   )
   .onWrite((change, context) => {
     try {
-      return sendToSubscribers({ change, context });
+      return sendToSubscribers({ change, context, lisetnToEntity: SUB_QUESTION });
     } catch (err) {
       console.log('err')
     }
   });
 
+// update subscribers on CUD of options under a subQuestion
+exports.updateOptionSubscribers = functions.firestore
+  .document(
+    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}/consequences/{consequenceId}"
+  )
+  .onWrite((change, context) => {
+    try {
+
+      return sendToSubscribers({ change, context, lisetnToEntity: OPTION });
+    } catch (err) {
+      console.log('err')
+      return true
+    }
+  });
+
 function sendToSubscribers(info) {
   try {
-    const { change, context } = info;
-    let { groupId, questionId, subQuestionId, optionId } = context.params;
+    const { change, context, lisetnToEntity } = info;
+    let { groupId, questionId, subQuestionId, optionId, consequenceId } = context.params;
+
+
     const DATA = change.after.data();
     const { before, after } = change;
 
@@ -782,45 +805,50 @@ function sendToSubscribers(info) {
         `Unkown firestore event! before: '${before}', after: '${after}'`
       );
 
+    //initial settings
+    let changedEntity = "group", entityId = 'groups', dbLevelSubscribers = db.collection("groups").doc(groupId), url = "/groups";
+
     //find update level
-    let listenToLevel = "group", entityId = 'groups',
+    if (lisetnToEntity === GROUP) {
+      changedEntity = "question";
+      entityId = groupId;
       dbLevelSubscribers = db.collection("groups").doc(groupId);
 
-    url = message !== "deleted" ? `group/${groupId}` : "/groups";
+      url = message !== "deleted" ? `/question/${groupId}/${questionId}` : `/group/${groupId}`;
 
-    if (subQuestionId === undefined) {
+    } else if (lisetnToEntity === QUESTION) {
       //update in subscribers in level group - listen to questions
 
       entityId = questionId;
-      listenToLevel = "question";
-      dbLevelSubscribers = db.collection("groups").doc(groupId);
-      subQuestionId = false;
+      changedEntity = "subQuestion";
+      dbLevelSubscribers = db.collection("groups").doc(groupId).collection('questions').doc(questionId);
+    
       optionId = false;
-      url =
-        message !== "deleted"
-          ? `/question/${groupId}/${questionId}`
-          : `/group/${groupId}`;
-    } else if (optionId === undefined) {
+      url = message !== "deleted" ? `/subquestions/${groupId}/${questionId}/${subQuestionId}` : `/question/${groupId}/${questionId}`;
+
+
+    } else if (lisetnToEntity === SUB_QUESTION) {
       //update in subscribers in level question - listen to subQuestions
 
       entityId = subQuestionId;
-      listenToLevel = "subQuestion";
+      changedEntity = "option";
       dbLevelSubscribers = db
         .collection("groups")
         .doc(groupId)
         .collection("questions")
         .doc(questionId)
+        .collection('subQuestions')
+        .doc(subQuestionId)
 
       optionId = false;
-      url =
-        message !== "deleted"
-          ? `/subquestions/${groupId}/${questionId}/${subQuestionId}`
-          : `/question/${groupId}/${questionId}`;
-    } else {
+      url = message !== "deleted" ? `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}` : `/subquestions/${groupId}/${questionId}/${subQuestionId}`;
+
+
+    } else if (lisetnToEntity === OPTION) {
       //update in subscribers in level subQuestion - listen to options
 
       entityId = optionId;
-      listenToLevel = "option";
+      changedEntity = "consequence";
       dbLevelSubscribers = db
         .collection("groups")
         .doc(groupId)
@@ -828,34 +856,55 @@ function sendToSubscribers(info) {
         .doc(questionId)
         .collection("subQuestions")
         .doc(subQuestionId)
+        .collection('options')
+        .doc(optionId)
 
-      url =
-        message !== "deleted"
-          ? `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`
-          : `/subquestion/${groupId}/${questionId}/${subQuestionId}`;
+      url = `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`;
+
+
+    } else {
+      //update in subscribers in level option - listen to consequences
+
+      throw new Error('No entity to update')
+
+      // entityId = optionId;
+      // changedEntity = "option";
+      // dbLevelSubscribers = db
+      //   .collection("groups")
+      //   .doc(groupId)
+      //   .collection("questions")
+      //   .doc(questionId)
+      //   .collection("subQuestions")
+      //   .doc(subQuestionId)
+      //   .collection("options")
+      //   .doc(consequenceId)
+
+      // url = `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`
     }
 
     return dbLevelSubscribers
       .collection("subscribers")
-      .get()
+      .get() //get all subscribers on this level and update them
       .then((subscribersDB) => {
         return subscribersDB.forEach((subscriberDB) => {
-          console.log("subscriber ID:", subscriberDB.id);
+
           db.collection("users")
             .doc(subscriberDB.id)
             .collection("feed")
             .add({
               message:
-                listenToLevel !== "option"
-                  ? `A ${listenToLevel} was ${message}`
-                  : `An ${listenToLevel} was ${message}`,
+                changedEntity !== "option"
+                  ? `A ${changedEntity} was ${message}`
+                  : `An ${changedEntity} was ${message}`,
+              changedEntity,
+              changeType:message,
               groupId,
               questionId,
               subQuestionId,
               optionId,
+              consequenceId,
               entityId,
-              data: DATA,
-              change: JSON.stringify(change),
+              data: JSON.parse(JSON.stringify(DATA)),
               date: new Date(),
               url,
             })

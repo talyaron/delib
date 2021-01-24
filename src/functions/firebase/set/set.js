@@ -905,7 +905,7 @@ function subscribeUser(settings) {
         const { groupId, questionId, subQuestionId, optionId, title, entityType } = settings.vnode.attrs;
         const { subscribe } = settings;
 
-        console.log(groupId, questionId, subQuestionId, optionId)
+       
         //build path for the enenties subscription collection
         const subscriptionPath = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
         let chatEntityId = generateChatEntitiyId({ groupId, questionId, subQuestionId, optionId });
@@ -931,7 +931,7 @@ function subscribeUser(settings) {
                         })
                         .then(() => { console.log('user subscribed in messages') })
                         .catch(e => {
-                            console.error('Error in saving new chat following on the user', e)
+                            console.error( e)
                         })
                 })
                 .catch(err => console.error(err))

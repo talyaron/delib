@@ -19,10 +19,11 @@ import VoteModal from './VoteModal/VoteModal';
 
 //model
 import store from '../../data/store';
+import lang from '../../data/languages';
 //functions
-import { getQuestionDetails, getSubQuestion, getLastTimeEntered, listenToChat} from '../../functions/firebase/get/get';
+import { getQuestionDetails, getSubQuestion, getLastTimeEntered, listenToChat,listenToGroup} from '../../functions/firebase/get/get';
 import { registerGroup } from '../../functions/firebase/set/set';
-import { deep_value, getIsChat, concatenateDBPath } from '../../functions/general';
+import { deep_value, getIsChat, concatenateDBPath,getLanguage } from '../../functions/general';
 
 
 
@@ -78,8 +79,8 @@ module.exports = {
             },
             subPage: getIsChat() ? 'chat' : 'main',
             unreadMessages: 0,
-            lastTimeEntered: 0
-
+            lastTimeEntered: 0,
+            language:'he'
         }
 
         //get user before login to page
@@ -100,7 +101,8 @@ module.exports = {
 
        
 
-        registerGroup(groupId)
+        registerGroup(groupId);
+        listenToGroup(groupId);
 
     },
     oncreate: vnode => {
@@ -131,7 +133,10 @@ module.exports = {
         }
         const path = concatenateDBPath(groupId, questionId);
         vnode.state.unreadMessages = store.chat[path].filter(m => m.createdTime.seconds > vnode.state.lastTimeEntered).length;
-
+        
+        //get language
+        vnode.state.language = getLanguage(groupId);
+      
     },
 
     onremove: vnode => {
@@ -152,6 +157,8 @@ module.exports = {
     },
     view: vnode => {
 
+        const {language} = vnode.state;
+
         const { groupId, questionId } = vnode.attrs;
 
         return (
@@ -167,7 +174,9 @@ module.exports = {
                         showSubscribe={true}
                         questionId={vnode.attrs.questionId}
                     />
-                    <NavTop level={'שאלות'} current={vnode.state.subPage}
+                    <NavTop level={'שאלות'} 
+                        current={vnode.state.subPage}
+                        chat={lang[language].chat}
                         pvs={vnode.state}
                         mainUrl={`/question/${groupId}/${questionId}`}
                         chatUrl={`/question-chat/${groupId}/${questionId}`}
