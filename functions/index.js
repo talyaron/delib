@@ -736,9 +736,11 @@ exports.updateGroupSubscribers = functions.firestore
   .onWrite((change, context) => {
     try {
 
-      sendToSubscribers({ change, context, lisetnToEntity: GROUP });
+      return sendToSubscribers({ change, context, lisetnToEntity: GROUP });
+
     } catch (err) {
       console.log(err);
+      return true
     }
   });
 
@@ -783,7 +785,7 @@ exports.updateOptionSubscribers = functions.firestore
     }
   });
 
-function sendToSubscribers(info) {
+async function sendToSubscribers(info) {
   try {
     const { change, context, lisetnToEntity } = info;
     let { groupId, questionId, subQuestionId, optionId, consequenceId } = context.params;
@@ -806,11 +808,12 @@ function sendToSubscribers(info) {
       );
 
     //initial settings
-    let changedEntity = "group", entityId = 'groups', dbLevelSubscribers = db.collection("groups").doc(groupId), url = "/groups";
+    let changedEntity = "group", entityId = 'groups', dbLevelSubscribers = db.collection("groups").doc(groupId), url = "/groups", parentEntityType ='groups';
 
     //find update level
     if (lisetnToEntity === GROUP) {
       changedEntity = "question";
+      parentEntityType = 'group';
       entityId = groupId;
       dbLevelSubscribers = db.collection("groups").doc(groupId);
 
@@ -821,8 +824,9 @@ function sendToSubscribers(info) {
 
       entityId = questionId;
       changedEntity = "subQuestion";
+      parentEntityType = 'question';
       dbLevelSubscribers = db.collection("groups").doc(groupId).collection('questions').doc(questionId);
-    
+
       optionId = false;
       url = message !== "deleted" ? `/subquestions/${groupId}/${questionId}/${subQuestionId}` : `/question/${groupId}/${questionId}`;
 
@@ -832,6 +836,7 @@ function sendToSubscribers(info) {
 
       entityId = subQuestionId;
       changedEntity = "option";
+      parentEntityType = 'subQuestion';
       dbLevelSubscribers = db
         .collection("groups")
         .doc(groupId)
@@ -849,6 +854,7 @@ function sendToSubscribers(info) {
 
       entityId = optionId;
       changedEntity = "consequence";
+      parentEntityType = 'option';
       dbLevelSubscribers = db
         .collection("groups")
         .doc(groupId)
@@ -882,22 +888,26 @@ function sendToSubscribers(info) {
       // url = `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`
     }
 
+    const parentEntity = await getUpperEntityDetails(dbLevelSubscribers);
+    parentEntity.type = parentEntityType;
+
     return dbLevelSubscribers
       .collection("subscribers")
       .get() //get all subscribers on this level and update them
       .then((subscribersDB) => {
         return subscribersDB.forEach((subscriberDB) => {
 
-          db.collection("users")
+          return db.collection("users")
             .doc(subscriberDB.id)
             .collection("feed")
             .add({
+              parentEntity,
               message:
                 changedEntity !== "option"
-                  ? `A ${changedEntity} was ${message}`
-                  : `An ${changedEntity} was ${message}`,
+                  ? `In ${parentEntityType} ${parentEntity.title} a ${changedEntity} was ${message}`
+                  : `In ${parentEntityType} ${parentEntity.title} an ${changedEntity} was ${message}`,
               changedEntity,
-              changeType:message,
+              changeType: message,
               groupId,
               questionId,
               subQuestionId,
@@ -908,16 +918,47 @@ function sendToSubscribers(info) {
               date: new Date(),
               url,
             })
-            .then(() => console.log("add to user", subscriberDB.id, "action:", message))
-            .catch((err) => console.log(err.message));
+            .then(() => {
+              console.log("add to user", subscriberDB.id, "action:", message);
+              return true
+            })
+            .catch((err) =>{
+              console.log(err.message)
+              return true;
+            });
         });
       })
       .catch((err) => console.log(err.message));
   } catch (err) {
     console.log(err);
+    return false;
   }
 }
 
+
+function getUpperEntityDetails(ref) {
+  try {
+    return new Promise((resolve, reject) => {
+      ref.get()
+        .then(entityDB => {
+          if (entityDB.exists) {
+            resolve(entityDB.data())
+            return true;
+          } else {
+            reject(new Error('Error at getUpperEntityDetails'));
+            return false;
+          }
+        })
+        .catch(e => {
+          console.error(e)
+        })
+    })
+  } catch (e) {
+    console.error(e);
+    reject({})
+    return false;
+  }
+}
 
 // ---------- listen to chats ------ ///
 exports.listenToGroupChats = functions.firestore

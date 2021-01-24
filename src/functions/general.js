@@ -486,6 +486,7 @@ function timeParse(time) {
         if (Object.prototype.toString.call(time) !== '[object Date]') throw new Error('Expected a Date object but got somthing else', time)
 
         return (
+            time.toDateString() + ' '+
             ("0" + time.getHours()).slice(-2) + ":" +
             ("0" + time.getMinutes()).slice(-2)
         )
