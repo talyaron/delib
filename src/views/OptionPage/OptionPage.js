@@ -3,12 +3,13 @@ import './OptionPage.css';
 
 //data
 import store from '../../data/store';
+import lang from '../../data/languages';
 
 //function
 import { get } from 'lodash';
 import { setNumberOfMessagesMark, registerGroup } from '../../functions/firebase/set/set';
-import { listenToOption, listenToChat, listenToConsequences, getLastTimeEntered, getSubQuestion } from '../../functions/firebase/get/get';
-import { randomizeArray, getFirstUrl, concatenateDBPath } from '../../functions/general';
+import { listenToOption, listenToChat, listenToConsequences, getLastTimeEntered, getSubQuestion, listenToGroup } from '../../functions/firebase/get/get';
+import { randomizeArray, getFirstUrl, concatenateDBPath,getLanguage } from '../../functions/general';
 import { enterIn2ndPage } from '../../functions/animations'
 
 
@@ -52,7 +53,8 @@ module.exports = {
             unreadMessages: 0,
             lastTimeEntered: 0,
             subQuestion: {},
-            userHaveNavigation: get(store.subQuestions, `[${subQuestionId}].userHaveNavigation`, true)
+            userHaveNavigation: get(store.subQuestions, `[${subQuestionId}].userHaveNavigation`, true),
+            language:'he'
         };
 
         if (firstUrl === 'option') {
@@ -79,6 +81,7 @@ module.exports = {
         sortBy(vnode);
 
         registerGroup(groupId);
+        listenToGroup(groupId);
 
     },
     oncreate: vnode => {
@@ -113,7 +116,9 @@ module.exports = {
             vnode.state.subQuestion = get(store.subQuestions, `[${subQuestionId}]`, {})
         }
 
-        vnode.state.userHaveNavigation = get(store.subQuestions, `[${subQuestionId}].userHaveNavigation`, true)
+        vnode.state.userHaveNavigation = get(store.subQuestions, `[${subQuestionId}].userHaveNavigation`, true);
+
+        vnode.state.language = getLanguage(groupId);
     },
 
     onremove: vnode => {
@@ -127,7 +132,7 @@ module.exports = {
     view: vnode => {
 
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
-        const { option, subPage, consequences } = vnode.state;
+        const { option, subPage, consequences,language } = vnode.state;
 
         return (
             <div id="page" class='page page__grid'>
@@ -152,6 +157,7 @@ module.exports = {
                         ids={{ groupId, questionId, subQuestionId, optionId }}
                         isSubscribed={vnode.state.subscribed}
                         unreadMessages={vnode.state.unreadMessages}
+                        chat={lang[language].chat}
                     />
                 </div>
                 {subPage === 'main' ?
