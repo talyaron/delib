@@ -4,6 +4,7 @@ import './Modal.css';
 import { createOption } from '../../../functions/firebase/set/set';
 
 import store from '../../../data/store';
+import lang from '../../../data/languages';
 
 module.exports = {
 	oninit: (vnode) => {
@@ -29,10 +30,12 @@ module.exports = {
 	},
 	view: (vnode) => {
 		let vnp = vnode.state.ParentVnode;
+		const {language} = vnode.attrs;
+		console.log('language', language)
 		return (
 			<div>
 				{vnode.state.showModal ? (
-					<div class="module">
+					<div class="module" style={`direction:${lang[language].dir}`}>
 						<div class="moduleBox">
 							<div class="moduleCreator">
 								<input
@@ -43,24 +46,24 @@ module.exports = {
 									}}
 								/>
 								{vnode.state.isNamed ? (
-									<span>יוזם/ת: {store.user.name}</span>
+									<span>{lang[language].name}: {store.user.name}</span>
 								) : (
-									<span>ההצעה שלכם תופיע ללא שם</span>
+									<span>{lang[language].anonymous}</span>
 								)}
 							</div>
-							<div class="moduleTitle">{vnode.attrs.title}</div>
+							{/* <div class="moduleTitle">{vnode.attrs.title}</div> */}
 							<div class="inputs">
 								<textarea
 									class="inputGeneral"
 									autofocus="true"
-									placeholder={vnode.attrs.placeholderTitle}
+									placeholder={lang[language].title}
 									onkeyup={(e) => {
 										vnode.state.add.title = e.target.value;
 									}}
 								/>
 								<textarea
 									class="inputGeneral inputDescription"
-									placeholder={vnode.attrs.placeholderDescription}
+									placeholder={lang[language].description}
 									onkeyup={(e) => {
 										vnode.state.add.description = e.target.value;
 									}}
@@ -98,14 +101,14 @@ module.exports = {
 										setNewInfo(vnp, vnode);
 										toggleShowModal('off', vnode);
 									}}>
-									הוספה
+				{lang[language].add}
 								</div>
 								<div
 									class="buttons cancel"
 									onclick={() => {
 										toggleShowModal('off', vnode);
 									}}>
-									ביטול
+									{lang[language].cancel}
 								</div>
 							</div>
 						</div>

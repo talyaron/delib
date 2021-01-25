@@ -54,6 +54,7 @@ body {
     font-family: 'Varela Round', sans-serif;
     font-size: 13px;
     background: #e8e8e8;
+    direction: ltr;
 }
 
 body {
@@ -76,6 +77,10 @@ body {
 .page__header{
     box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.486);
     z-index: 100;
+}
+
+.page__main{
+    overflow-y: auto;
 }
 
 .page__footer{
@@ -260,9 +265,10 @@ body {
     color: white;
     border: none;
     border-radius: 5px;
-    /* box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5); */
     user-select: none;
     cursor: pointer;
+    display: flex;
+    align-items: center;
 }
 
 .buttons--small {
@@ -405,8 +411,10 @@ body {
     color: var(--gray1);
 }
 
-.footerButtonSelected {
+.footerButton--selected {
     background: var(--gray2);
+    border: 1px solid #555555;
+    border-radius: 4px;
 }
 
 .checkBoxes [type="checkbox"] {
@@ -450,6 +458,7 @@ body {
     border: none;
     padding: var(--regPadding);
     font-size: var(--size17);
+    margin: 5px 0px;
 }
 
 input[type=checkbox] {
@@ -601,3 +610,4 @@ input[type=checkbox] {
     flex-direction: column;
     font-size: .75rem;
 }   
+

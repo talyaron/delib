@@ -19,20 +19,20 @@ function listenToUserGroups() {
         if (store.userGroupsListen === false) {
             store.userGroupsListen = true;
 
-          
+
 
             DB
                 .collection("users")
                 .doc(store.user.uid)
                 .collection("groupsOwned")
                 .onSnapshot(groupsOwnedDB => {
-                 
+
 
                     setTimeout(() => {
                         if (store.userGroups[0] === false) store.userGroups.splice(0, 1);
                         m.redraw()
                     }, 500)
-               
+
                     listenToGroups(groupsOwnedDB);
                     m.redraw();
                 }, err => {
@@ -54,7 +54,7 @@ function listenToRegisterdGroups() {
 
 
             DB.collection('users').doc(store.user.uid).collection('registerGroups').onSnapshot(groupsDB => {
-              
+
                 listenToGroups(groupsDB);
             }, err => {
                 console.error('On listenToRegisterdGroups:', err.name, err.message)
@@ -111,10 +111,10 @@ function listenToGroups(groupsDB) {
 function listenToGroup(groupId) {
 
     try {
-        if (!{}.hasOwnProperty.call(store.userGroupsListners, groupId)){
+        if (!{}.hasOwnProperty.call(store.userGroupsListners, groupId)) {
 
             store.userGroupListen[groupId] = true
-          
+
 
             return DB.collection('groups').doc(groupId).onSnapshot(groupDB => {
                 try {
@@ -123,16 +123,21 @@ function listenToGroup(groupId) {
 
                         if (store.userGroups[0] === false) store.userGroups.splice(0, 1);
 
+                        let groupObj = groupDB.data();
+                        if (!{}.hasOwnProperty.call(groupObj, 'id')) {
+                            DB.collection('groups').doc(groupId).update({ id: groupId, groupId }).catch(e => console.error(e))
+                        }
+                        groupObj.id = groupObj.groupId = groupDB.id;
                         if (groupIndex == -1) {
-                            store.userGroups.push(groupDB.data())
+                            store.userGroups.push(groupObj)
                         } else {
-                            store.userGroups[groupIndex] = groupDB.data()
+                            store.userGroups[groupIndex] = groupObj
                         }
 
 
                         m.redraw();
 
-                        
+
 
 
                     } else {
@@ -209,7 +214,7 @@ function setStore(obj, groupId, questionId, data) {
     }
 }
 
-function getGroupDetails(groupId, vnode) {
+function listenToGroupDetails(groupId, vnode) {
     try {
 
         if (typeof groupId !== 'string') {
@@ -217,20 +222,24 @@ function getGroupDetails(groupId, vnode) {
             throw new Error(' groupId is not a string')
         }
 
-        return DB
-            .collection("groups")
-            .doc(groupId)
-            .onSnapshot(groupDB => {
-                store.groups[groupId] = groupDB.data();
+        if (!{}.hasOwnProperty.call(store.groupListen, groupId)) {
+            store.groupListen[groupId] = true;
 
-                m.redraw();
-            }, err => {
-                console.error(`At getGroupDetails: ${err.name}, ${err.message}`);
-                if (err.message === 'Missing or insufficient permissions.') {
-                    m.route.set('/unauthorized');
-                }
+            DB
+                .collection("groups")
+                .doc(groupId)
+                .onSnapshot(groupDB => {
+                    store.groups[groupId] = groupDB.data();
 
-            });
+                    m.redraw();
+                }, err => {
+                    console.error(`At listenToGroupDetails: ${err.name}, ${err.message}`);
+                    if (err.message === 'Missing or insufficient permissions.') {
+                        m.route.set('/unauthorized');
+                    }
+
+                });
+        }
     } catch (err) {
         console.error(err)
     }
@@ -270,13 +279,15 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
 
         if (!{}.hasOwnProperty.call(store.subQuestionsListners, questionId)) {
 
-            store.subQuestionsListners[questionId] = { listen: true }
+            store.subQuestionsListners[questionId] = { listen: true };
+
+            console.log('listenSubQuestions, listen to sub groups')
 
             if (!{}.hasOwnProperty.call(vnode.state, 'creatorId')) { throw new Error('No creatorId in vnode at listenSubQuestions') }
 
             let term, search;
 
-            //sub question seen by the admin are diffrenet then subquestions seen by yhe simple user
+            // sub question seen by the admin are diffrenet then subquestions seen by yhe simple user
             if (vnode.state.creatorId != store.user.uid) {
 
                 //simple user view
@@ -289,17 +300,13 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
 
 
 
-            let subQuestionRef = DB
+            DB
                 .collection("groups")
                 .doc(groupId)
                 .collection("questions")
                 .doc(questionId)
-                .collection("subQuestions");
-
-
-
-            return subQuestionRef
-                .where('showSubQuestion', term, search)
+                .collection("subQuestions")
+                // .where('showSubQuestion', term, search)
                 .onSnapshot(subQuestionsDB => {
                     let subQuestionsArray = [];
                     let subQuestionsObj = {};
@@ -311,8 +318,6 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
                         subQuestionsArray.push(subQuestionObj);
                         subQuestionsObj[subQuestionObj.id] = {};
                     });
-
-
 
                     store.subQuestions[groupId] = subQuestionsArray;
 
@@ -558,6 +563,38 @@ function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId) 
         console.error(e)
     }
 }
+
+function listenToUserVote(vnode) {
+    try {
+
+        const { groupId, questionId, subQuestionId } = vnode.attrs.ids;
+
+        return DB.collection("groups")
+            .doc(groupId)
+            .collection("questions")
+            .doc(questionId)
+            .collection("subQuestions")
+            .doc(subQuestionId)
+            .collection('votes')
+            .doc(store.user.uid)
+            .onSnapshot(voteDB => {
+                if (!voteDB.exists) {
+                    vnode.state.optionVoted = false;
+                } else {
+                    vnode.state.optionVoted = voteDB.data().optionVoted;
+                }
+                m.redraw();
+
+            }, e => {
+                console.error(e)
+            })
+    } catch (e) {
+        console.error(e)
+        return () => { };
+    }
+}
+
+
 
 function listenToConsequences(groupId, questionId, subQuestionId, optionId) {
     try {
@@ -1115,8 +1152,9 @@ module.exports = {
     listenToUserGroups,
     listenToRegisterdGroups,
     getQuestions,
-    getGroupDetails,
+    listenToGroupDetails,
     listenToGroupMembers,
+    listenToGroup,
     getQuestionDetails,
     listenSubQuestions,
     getSubQuestion,
@@ -1126,6 +1164,7 @@ module.exports = {
     listenToTopConsequences,
     getMyVotesOnConsequence,
     getOptionVote,
+    listenToUserVote,
     getSubItems,
     getSubItemLikes,
     getSubItemUserLike,

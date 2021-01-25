@@ -30,7 +30,8 @@ module.exports = {
       showSave: title.length > 2 ? true : false,
       showSubQuestion: showSubQuestion,
       userHaveNavigation: userHaveNavigation,
-      proAgainstType: proAgainstType || 'superSimple'
+      proAgainstType: proAgainstType || 'superSimple',
+     
 
     };
   },
@@ -204,7 +205,7 @@ function handleSubmit(e, vnode) {
     const { groupId, questionId } = pva;
     const { numberOfSubquestions, subQuestionId } = subQuestion;
 
-    setSubQuestion({ groupId, questionId, subQuestionId }, { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions, proAgainstType });
+    setSubQuestion({ groupId, questionId, subQuestionId }, { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions, proAgainstType:'superSimple' });
 
     //hide modal
     pvs.modalSubQuestion.isShow = false

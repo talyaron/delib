@@ -9,12 +9,13 @@ module.exports = {
         vnode.dom.children[0].checked = vnode.attrs.isOn;
     },
     view: (vnode) => {
+        const{vp} = vnode.attrs;
         
 		return (
             <label class="switch" >
                 <input type="checkbox"
                     onclick={(e) => {
-                        vnode.attrs.vp.state.alertsSetting[vnode.attrs.index].isOn = e.target.checked;
+                        vp.state.alertsSetting[vnode.attrs.index].isOn = e.target.checked;
                       
                        
                     }} />

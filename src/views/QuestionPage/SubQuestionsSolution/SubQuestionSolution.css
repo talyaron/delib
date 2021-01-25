@@ -21,13 +21,19 @@
     background-color: var(--gray5);
 }
 
+.subQuestionSolution__header{
+    display: grid;
+    grid-template-columns: auto 34;
+    align-items: center;
+}
 
-.subQuestionSolution>h1 {
+
+.subQuestionSolution h1 {
     color: var(--black);
     font-size: var(--size15);
 }
 
-.subQuestionSolution>p {
+.subQuestionSolution p {
     color: var(--gray1);
     font-size: var(--size16);
 }

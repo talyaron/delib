@@ -41,11 +41,11 @@ module.exports = {
                 </div>
                 <div class='menuAside'>
                     {store.user.name ?
-                        <div onclick={() => { logout() }}>התנתקות</div>
+                        <div onclick={() => { logout();m.route.set('/login')}}>התנתקות</div>
                         :
                         <div onclick={() => {
                             store.lastPage = m.route.get();
-                            m.route.set('/logingoogle')
+                            m.route.set('/login')
                         }}>התחברות</div>
                     }
                     {vnode.attrs.isAdmin ?

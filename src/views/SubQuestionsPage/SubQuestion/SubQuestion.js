@@ -9,13 +9,13 @@ import Votes from './Votes/Votes';
 import Modal from '../../Commons/Modal/Modal';
 
 //model
-import settings from '../../../data/settings';
 import store from '../../../data/store';
+import lang from '../../../data/languages';
 
 
 //functions
-import { getSubQuestion, getGroupDetails } from '../../../functions/firebase/get/get';
-import {handleSubscription} from '../../../functions/firebase/set/set'
+import { getSubQuestion, listenToGroupDetails } from '../../../functions/firebase/get/get';
+import { handleSubscription } from '../../../functions/firebase/set/set'
 import { concatenateDBPath, getUser } from '../../../functions/general';
 
 
@@ -28,7 +28,7 @@ module.exports = {
 
 		const { groupId, questionId, subQuestionId, title, orderBy } = vnode.attrs;
 
-		getGroupDetails(groupId)
+		listenToGroupDetails(groupId)
 
 		vnode.state = {
 			options: [],
@@ -40,7 +40,7 @@ module.exports = {
 				title: title
 			},
 			details: { title },
-			subscribed:false,
+			subscribed: false,
 			path: concatenateDBPath(groupId, questionId, subQuestionId)
 		};
 
@@ -82,27 +82,29 @@ module.exports = {
 		unsubscribeOptions();
 	},
 	view: (vnode) => {
-		const { question, vsp } = vnode.attrs
+		const { question, vsp, processType, language } = vnode.attrs
 		return (
 			<div class="subQuestionWrapper" id="optionsWrapper">
 				<div class={vnode.attrs.isAlone ? "subQuestionSection questionSection--alone" : "questionSection"}>
 					<div class='title'>
-						שאלה: {question}
+						{lang[language].question}: {question}
 						<div class='subQuestion__addOptionWrapper'>
-							<div class='subQuestion__addOption' onclick={() => { vsp.showModal.isShow = true }}>
-								הוספת פתרון
+							{processType !== 'votes' ? <div class='subQuestion__addOption' onclick={() => { vsp.showModal.isShow = true }}>
+								{lang[language].addSolution}
 							</div>
+								: null
+							}
 							<div
 								class='headerSetFeed'
 								onclick={e => {
 									e.stopPropagation();
 									handleSubscription(vnode);
 								}}>
-								{vnode.state.subscribed ? <div class='title__btnRegister title__btnRegister--unselect'>ביטול הרשמה</div> : <div class='title__btnRegister title__btnRegister--select'>הרשמה</div>}
+								{vnode.state.subscribed ? <div class='title__btnRegister title__btnRegister--unselect'>{lang[language].unfollow}</div> : <div class='title__btnRegister title__btnRegister--select'>{lang[language].follow}</div>}
 							</div>
 						</div>
 					</div>
-					<h3 class='subQuestion__question'>פתרונות שונים לשאלה</h3>
+					{processType !== 'votes'?<h3 class='subQuestion__question'>{lang[language].solutions}</h3>:null}
 
 					{switchProcess(vnode.state.processType, vnode)}
 
@@ -112,20 +114,25 @@ module.exports = {
 					showModal={vnode.state.showModal.isShow}
 					whichModal={vnode.state.showModal.which}
 					title={vnode.state.showModal.title}
-					placeholderTitle="כותרת"
-					placeholderDescription="הסבר"
-					vnode={vnode} />
+					placeholderTitle={lang[language].title}
+					placeholderDescription={lang[language].description}
+					vnode={vnode}
+					language={language}
+					/>
 			</div>
 		);
 	}
 };
 
 function addQuestion(vnode, type) {
+
+	const {language} = vnode.state;
+
 	vnode.attrs.parentVnode.state.showModal = {
 		subQuestionId: vnode.attrs.subQuestionId,
 		which: type,
 		isShow: true,
-		title: 'הוסף אפשרות'
+		title: lang[language].solutions
 	};
 }
 
@@ -133,22 +140,22 @@ function switchProcess(type, vnode) {
 	let options = get(store, `options[${vnode.attrs.subQuestionId}]`, []);
 	options = orderOptionsBy(options, vnode.state.orderBy);
 
+	const { processType, groupId, questionId, subQuestionId, isAlone, questionObj } = vnode.attrs;
 
-	switch (type) {
 
-
-		case settings.processes.suggestions:
+	switch (processType) {
+		case 'suggestions':
 			return (
 				<Options
-					groupId={vnode.attrs.groupId}
-					questionId={vnode.attrs.questionId}
-					subQuestionId={vnode.attrs.subQuestionId}
+					groupId={groupId}
+					questionId={questionId}
+					subQuestionId={subQuestionId}
 					options={options}
-					isAlone={vnode.attrs.isAlone}
+					isAlone={isAlone}
 				/>
 			);
-		case settings.processes.votes:
-			return <Votes />;
+		case 'votes':
+			return <Votes ids={{ groupId, questionId, subQuestionId }} options={options} question={questionObj} />;
 		default:
 			return (
 				<Options

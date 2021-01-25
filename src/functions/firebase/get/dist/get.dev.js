@@ -103,14 +103,14 @@ function setStore(obj, groupId, questionId, data) {
   }
 }
 
-function getGroupDetails(groupId, vnode) {
+function listenToGroupDetails(groupId, vnode) {
   try {
     return _config.DB.collection("groups").doc(groupId).onSnapshot(function (groupDB) {
       _store["default"].groups[groupId] = groupDB.data();
 
       _mithril["default"].redraw();
     }, function (err) {
-      console.error("At getGroupDetails: ".concat(err.name, ", ").concat(err.message));
+      console.error("At listenToGroupDetails: ".concat(err.name, ", ").concat(err.message));
 
       if (err.message === 'Missing or insufficient permissions.') {
         _mithril["default"].route.set('/unauthorized');
@@ -570,7 +570,7 @@ function listenToChat(ids) {
 module.exports = {
   getUserGroups: getUserGroups,
   getQuestions: getQuestions,
-  getGroupDetails: getGroupDetails,
+  listenToGroupDetails: listenToGroupDetails,
   getQuestionDetails: getQuestionDetails,
   getSubQuestions: getSubQuestions,
   getSubQuestion: getSubQuestion,

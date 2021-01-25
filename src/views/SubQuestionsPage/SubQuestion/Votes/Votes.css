@@ -1,0 +1,18 @@
+
+.votes{
+    height: 68%;
+}
+
+.votes h2{
+    text-align: center;
+}
+.votes__panel{
+    display: flex;
+    height: 100%;
+    
+}
+
+.votes__loginMessage{
+    display: flex;
+    justify-content: center;
+}

@@ -12,7 +12,7 @@ import Members from '../Members/Members'
 
 //functions
 import { updateGroup } from "../../../functions/firebase/set/set";
-import { getGroupDetails } from "../../../functions/firebase/get/get";
+import { listenToGroupDetails } from "../../../functions/firebase/get/get";
 
 module.exports = {
   oninit: vnode => {
@@ -24,7 +24,7 @@ module.exports = {
     };
   },
   oncreate: vnode => {
-    getGroupDetails(vnode.attrs.id, vnode);
+    listenToGroupDetails(vnode.attrs.id, vnode);
   },
   onbeforeupdate: vnode => {
     vnode.state = get(store, `groups[${vnode.attrs.id}]`, vnode.state);

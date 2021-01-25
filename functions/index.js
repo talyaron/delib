@@ -6,6 +6,7 @@ admin.initializeApp();
 const db = admin.firestore();
 const settings = {
   timestampsInSnapshots: true,
+  ignoreUndefinedProperties: true
 };
 db.settings(settings);
 const FieldValue = require('firebase-admin').firestore.FieldValue;
@@ -30,16 +31,16 @@ exports.scheduledFirestoreExport = functions.pubsub.schedule('every 24 hours').o
     // or set to a list of collection IDs to export,
     // collectionIds: ['users', 'posts']
     collectionIds: []
-    })
-  .then(responses => {
-    const response = responses[0];
-    console.log(`Operation Name: ${response['name']}`);
-    return response
   })
-  .catch(err => {
-    console.error(err);
-    throw new Error('Export operation failed');
-  });
+    .then(responses => {
+      const response = responses[0];
+      console.log(`Operation Name: ${response['name']}`);
+      return response
+    })
+    .catch(err => {
+      console.error(err);
+      throw new Error('Export operation failed');
+    });
 });
 
 exports.totalVotes = functions.firestore
@@ -179,6 +180,288 @@ exports.totalLikesForSubQuestion = functions.firestore
         return transaction.update(subQuestionLikesRef, { totalVotes });
       });
     });
+  });
+
+
+// -------------- votes on options --------------
+exports.setVoteForSubQuestion = functions.firestore
+  .document("groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/votes/{userId}")
+  .onCreate(async (snap, context) => {
+    const optionId = snap.data().optionVoted;
+
+    const optionsRef = db
+      .collection("groups")
+      .doc(context.params.groupId)
+      .collection("questions")
+      .doc(context.params.questionId)
+      .collection("subQuestions")
+      .doc(context.params.subQuestionId)
+      .collection('options')
+      .doc(optionId);
+
+    const subQuestionRef =
+      db
+        .collection("groups")
+        .doc(context.params.groupId)
+        .collection("questions")
+        .doc(context.params.questionId)
+        .collection("subQuestions")
+        .doc(context.params.subQuestionId)
+
+    try {
+      await db.runTransaction(transaction => {
+        return transaction.get(optionsRef)
+          .then((optionDB) => {
+            if (!optionDB.exists) {
+              throw new Error("Document does not exist!");
+
+
+            } else {
+              const optionObj = optionDB.data();
+
+
+              let newVotes = 0;
+
+              if (!{}.hasOwnProperty.call(optionObj, 'votes')) {
+                newVotes = 1
+              }
+              else if (isNaN(optionObj.votes)) {
+                newVotes = 1
+              }
+              else {
+                newVotes = optionObj.votes + 1;
+
+              }
+              transaction.update(optionsRef, { votes: newVotes });
+            }
+
+            return;
+          });
+      });
+      console.log("vote on option " + optionId + ' was set');
+
+      //update number of voters
+      await db.runTransaction(transaction => {
+        return transaction.get(subQuestionRef)
+          .then((subQuestionDB) => {
+            if (!subQuestionDB.exists) {
+              throw new Error("Document does not exist!");
+
+
+            } else {
+              const subQuestionObj = subQuestionDB.data();
+              let voters = 0
+              //calc and initiate number of voters 
+              if (!{}.hasOwnProperty.call(subQuestionObj, 'voters')) {
+                voters = 1;
+              } else if (isNaN(subQuestionObj.voters)) {
+                voters = 1;
+              } else {
+                voters = subQuestionObj.voters + 1;
+              }
+
+              transaction.update(subQuestionRef, { voters });
+
+            }
+            return;
+          });
+      });
+      console.log(`One voter on subQuestion ${context.params.subQuestionId} was added`);
+      return;
+    } catch (error) {
+      console.log("Transaction failed: ", error);
+    }
+
+  })
+
+
+exports.updateVoteForSubQuestion = functions.firestore
+  .document("groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/votes/{userId}")
+  .onUpdate(async (change, context) => {
+    const optionIdBefore = change.before.data().optionVoted;
+    const optionIdAfter = change.after.data().optionVoted;
+
+    const optionBeforeRef = db
+      .collection("groups")
+      .doc(context.params.groupId)
+      .collection("questions")
+      .doc(context.params.questionId)
+      .collection("subQuestions")
+      .doc(context.params.subQuestionId)
+      .collection('options')
+      .doc(optionIdBefore);
+
+    const optionAfterRef = db
+      .collection("groups")
+      .doc(context.params.groupId)
+      .collection("questions")
+      .doc(context.params.questionId)
+      .collection("subQuestions")
+      .doc(context.params.subQuestionId)
+      .collection('options')
+      .doc(optionIdAfter);
+
+    try {
+
+      //remove from the before option the vote
+      await db.runTransaction(transaction => {
+        return transaction.get(optionBeforeRef)
+          .then((optionDB) => {
+            if (!optionDB.exists) {
+              throw new Error("Document does not exist!");
+
+
+
+            } else {
+
+              const optionObj = optionDB.data();
+              let newVotes = 0
+
+              if (!{}.hasOwnProperty.call(optionObj, 'votes')) {
+                newVotes = 0;
+              } else if (isNaN(optionObj.votes)) {
+                newVotes = 0;
+              } else {
+                newVotes = optionObj.votes - 1;
+              }
+
+
+              transaction.update(optionBeforeRef, { votes: newVotes });
+
+            }
+            return;
+          });
+      });
+
+      //add vote to ne new option voted
+
+      await db.runTransaction(transaction => {
+        return transaction.get(optionAfterRef)
+          .then((optionDB) => {
+            if (!optionDB.exists) {
+              throw new Error("Document does not exist!");
+
+
+            } else {
+
+              const optionObj = optionDB.data();
+              let newVotes = 0
+
+              if (!{}.hasOwnProperty.call(optionObj, 'votes')) {
+                newVotes = 1;
+              } else if (isNaN(optionObj.votes)) {
+                newVotes = 1;
+              } else {
+                newVotes = optionObj.votes + 1;
+              }
+
+
+
+              transaction.update(optionAfterRef, { votes: newVotes });
+              return;
+            }
+          });
+      });
+      console.log(`In options ${optionIdBefore}, ${optionIdAfter}, change correctly `);
+      return;
+    } catch (error) {
+      console.log("Transaction failed: ", error);
+    }
+
+  })
+
+exports.deleteVoteForSubQuestion = functions.firestore
+  .document(
+    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/votes/{userId}"
+  )
+
+  .onDelete(async (snap, context) => {
+    const optionId = snap.data().optionVoted;
+
+    const optionsRef = db
+      .collection("groups")
+      .doc(context.params.groupId)
+      .collection("questions")
+      .doc(context.params.questionId)
+      .collection("subQuestions")
+      .doc(context.params.subQuestionId)
+      .collection('options')
+      .doc(optionId);
+
+    const subQuestionRef =
+      db
+        .collection("groups")
+        .doc(context.params.groupId)
+        .collection("questions")
+        .doc(context.params.questionId)
+        .collection("subQuestions")
+        .doc(context.params.subQuestionId)
+
+    try {
+
+      //delete vote from option
+      db.runTransaction(transaction => {
+        return transaction.get(optionsRef)
+          .then((optionDB) => {
+            if (!optionDB.exists) {
+              throw new Error("Document does not exist!");
+
+
+            } else {
+
+              const optionObj = optionDB.data();
+              let newVotes = 0
+
+              if (!{}.hasOwnProperty.call(optionObj, 'votes')) {
+                newVotes = 0;
+              } else if (isNaN(optionObj.votes)) {
+                newVotes = 0;
+              } else {
+                newVotes = optionObj.votes - 1;
+              }
+
+              if (newVotes < 0) newVotes = 0;
+
+
+              transaction.update(optionsRef, { votes: newVotes });
+            }
+            return;
+          });
+      });
+      console.log("vote deleted in option", optionId);
+
+      //decrease number of voters
+      db.runTransaction(transaction => {
+        return transaction.get(subQuestionRef)
+          .then((subQuestionDB) => {
+            if (!subQuestionDB.exists) {
+              throw new Error("Document does not exist!");
+
+
+            } else {
+              const subQuestionObj = subQuestionDB.data();
+              let newNumberOfVoters = 0;
+              //calc and initiate number of voters 
+              if (!{}.hasOwnProperty.call(subQuestionObj, 'voters')) {
+                newNumberOfVoters = 0;
+              } else if (isNaN(subQuestionObj.voters)) {
+                newNumberOfVoters = 0;
+              } else {
+                newNumberOfVoters = subQuestionObj.voters - 1;
+              }
+
+              transaction.update(subQuestionRef, { voters: newNumberOfVoters });
+
+            }
+            return;
+          });
+      });
+      console.log(`One voter on subQuestion ${context.params.subQuestionId} was removed`);
+      return;
+    } catch (error) {
+      console.log("Transaction failed: ", error);
+    }
+
   });
 
 // exports.totalLikesForQuestionsGoals = functions.firestore
@@ -442,15 +725,22 @@ exports.groupChatNotifications = functions.firestore
 
 // =============== end of notifications ==================
 
+
+// =============== Feed =================================
+
+const GROUP = 'GROUP', QUESTION = 'QUESTION', SUB_QUESTION = 'SUB_QUESTION', OPTION = 'OPTION'
+
 //update subscribers on CUD of questions under a group
 exports.updateGroupSubscribers = functions.firestore
   .document("groups/{groupId}/questions/{questionId}")
   .onWrite((change, context) => {
     try {
 
-      sendToSubscribers({ change, context });
+      return sendToSubscribers({ change, context, lisetnToEntity: GROUP });
+
     } catch (err) {
       console.log(err);
+      return true
     }
   });
 
@@ -461,29 +751,46 @@ exports.updateQuestionSubscribers = functions.firestore
   )
   .onWrite((change, context) => {
     try {
-      return sendToSubscribers({ change, context });
+      return sendToSubscribers({ change, context, lisetnToEntity: QUESTION });
     } catch (err) {
       console.log(err);
     }
   });
 
-//update subscribers on CUD of options under a subQuestion
-// exports.updateSubQuestionSubscribers = functions.firestore
-//   .document(
-//     "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}"
-//   )
-//   .onWrite((change, context) => {
-//     // try {
-//     //   return sendToSubscribers({ change, context });
-//     // } catch (err) {
-//     //   console.log('err')
-//     // }
-//   });
+// update subscribers on CUD of options under a subQuestion
+exports.updateSubQuestionSubscribers = functions.firestore
+  .document(
+    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}"
+  )
+  .onWrite((change, context) => {
+    try {
+      return sendToSubscribers({ change, context, lisetnToEntity: SUB_QUESTION });
+    } catch (err) {
+      console.log('err')
+    }
+  });
 
-function sendToSubscribers(info) {
+// update subscribers on CUD of options under a subQuestion
+exports.updateOptionSubscribers = functions.firestore
+  .document(
+    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}/consequences/{consequenceId}"
+  )
+  .onWrite((change, context) => {
+    try {
+
+      return sendToSubscribers({ change, context, lisetnToEntity: OPTION });
+    } catch (err) {
+      console.log('err')
+      return true
+    }
+  });
+
+async function sendToSubscribers(info) {
   try {
-    const { change, context } = info;
-    let { groupId, questionId, subQuestionId, optionId } = context.params;
+    const { change, context, lisetnToEntity } = info;
+    let { groupId, questionId, subQuestionId, optionId, consequenceId } = context.params;
+
+
     const DATA = change.after.data();
     const { before, after } = change;
 
@@ -500,45 +807,54 @@ function sendToSubscribers(info) {
         `Unkown firestore event! before: '${before}', after: '${after}'`
       );
 
+    //initial settings
+    let changedEntity = "group", entityId = 'groups', dbLevelSubscribers = db.collection("groups").doc(groupId), url = "/groups", parentEntityType ='groups';
+
     //find update level
-    let listenToLevel = "group", entityId = 'groups',
+    if (lisetnToEntity === GROUP) {
+      changedEntity = "question";
+      parentEntityType = 'group';
+      entityId = groupId;
       dbLevelSubscribers = db.collection("groups").doc(groupId);
 
-    url = message !== "deleted" ? `group/${groupId}` : "/groups";
+      url = message !== "deleted" ? `/question/${groupId}/${questionId}` : `/group/${groupId}`;
 
-    if (subQuestionId === undefined) {
+    } else if (lisetnToEntity === QUESTION) {
       //update in subscribers in level group - listen to questions
 
       entityId = questionId;
-      listenToLevel = "question";
-      dbLevelSubscribers = db.collection("groups").doc(groupId);
-      subQuestionId = false;
+      changedEntity = "subQuestion";
+      parentEntityType = 'question';
+      dbLevelSubscribers = db.collection("groups").doc(groupId).collection('questions').doc(questionId);
+
       optionId = false;
-      url =
-        message !== "deleted"
-          ? `/question/${groupId}/${questionId}`
-          : `/group/${groupId}`;
-    } else if (optionId === undefined) {
+      url = message !== "deleted" ? `/subquestions/${groupId}/${questionId}/${subQuestionId}` : `/question/${groupId}/${questionId}`;
+
+
+    } else if (lisetnToEntity === SUB_QUESTION) {
       //update in subscribers in level question - listen to subQuestions
 
       entityId = subQuestionId;
-      listenToLevel = "subQuestion";
+      changedEntity = "option";
+      parentEntityType = 'subQuestion';
       dbLevelSubscribers = db
         .collection("groups")
         .doc(groupId)
         .collection("questions")
         .doc(questionId)
+        .collection('subQuestions')
+        .doc(subQuestionId)
 
       optionId = false;
-      url =
-        message !== "deleted"
-          ? `/subquestions/${groupId}/${questionId}/${subQuestionId}`
-          : `/question/${groupId}/${questionId}`;
-    } else {
+      url = message !== "deleted" ? `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}` : `/subquestions/${groupId}/${questionId}/${subQuestionId}`;
+
+
+    } else if (lisetnToEntity === OPTION) {
       //update in subscribers in level subQuestion - listen to options
 
       entityId = optionId;
-      listenToLevel = "option";
+      changedEntity = "consequence";
+      parentEntityType = 'option';
       dbLevelSubscribers = db
         .collection("groups")
         .doc(groupId)
@@ -546,47 +862,103 @@ function sendToSubscribers(info) {
         .doc(questionId)
         .collection("subQuestions")
         .doc(subQuestionId)
+        .collection('options')
+        .doc(optionId)
 
-      url =
-        message !== "deleted"
-          ? `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`
-          : `/subquestion/${groupId}/${questionId}/${subQuestionId}`;
+      url = `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`;
+
+
+    } else {
+      //update in subscribers in level option - listen to consequences
+
+      throw new Error('No entity to update')
+
+      // entityId = optionId;
+      // changedEntity = "option";
+      // dbLevelSubscribers = db
+      //   .collection("groups")
+      //   .doc(groupId)
+      //   .collection("questions")
+      //   .doc(questionId)
+      //   .collection("subQuestions")
+      //   .doc(subQuestionId)
+      //   .collection("options")
+      //   .doc(consequenceId)
+
+      // url = `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`
     }
+
+    const parentEntity = await getUpperEntityDetails(dbLevelSubscribers);
+    parentEntity.type = parentEntityType;
 
     return dbLevelSubscribers
       .collection("subscribers")
-      .get()
+      .get() //get all subscribers on this level and update them
       .then((subscribersDB) => {
         return subscribersDB.forEach((subscriberDB) => {
-          console.log("subscriber ID:", subscriberDB.id);
-          db.collection("users")
+
+          return db.collection("users")
             .doc(subscriberDB.id)
             .collection("feed")
             .add({
+              parentEntity,
               message:
-                listenToLevel !== "option"
-                  ? `A ${listenToLevel} was ${message}`
-                  : `An ${listenToLevel} was ${message}`,
+                changedEntity !== "option"
+                  ? `In ${parentEntityType} ${parentEntity.title} a ${changedEntity} was ${message}`
+                  : `In ${parentEntityType} ${parentEntity.title} an ${changedEntity} was ${message}`,
+              changedEntity,
+              changeType: message,
               groupId,
               questionId,
               subQuestionId,
               optionId,
+              consequenceId,
               entityId,
-              data: DATA,
-              change: JSON.stringify(change),
+              data: JSON.parse(JSON.stringify(DATA)),
               date: new Date(),
               url,
             })
-            .then(() => console.log("add to user", subscriberDB.id, "action:", message))
-            .catch((err) => console.log(err.message));
+            .then(() => {
+              console.log("add to user", subscriberDB.id, "action:", message);
+              return true
+            })
+            .catch((err) =>{
+              console.log(err.message)
+              return true;
+            });
         });
       })
       .catch((err) => console.log(err.message));
   } catch (err) {
     console.log(err);
+    return false;
   }
 }
 
+
+function getUpperEntityDetails(ref) {
+  try {
+    return new Promise((resolve, reject) => {
+      ref.get()
+        .then(entityDB => {
+          if (entityDB.exists) {
+            resolve(entityDB.data())
+            return true;
+          } else {
+            reject(new Error('Error at getUpperEntityDetails'));
+            return false;
+          }
+        })
+        .catch(e => {
+          console.error(e)
+        })
+    })
+  } catch (e) {
+    console.error(e);
+    reject({})
+    return false;
+  }
+}
 
 // ---------- listen to chats ------ ///
 exports.listenToGroupChats = functions.firestore
@@ -619,7 +991,7 @@ exports.listenToGroupChats = functions.firestore
     }
   })
 
-  exports.listenToQuestionChats = functions.firestore
+exports.listenToQuestionChats = functions.firestore
   .document("groups/{groupId}/questions/{questionId}/messages/{chatMassageId}")
   .onCreate((newMsg, context) => {
     try {
@@ -633,7 +1005,7 @@ exports.listenToGroupChats = functions.firestore
           return subscribersDB.forEach(subscriberDB => {
             console.log('update user ', subscriberDB.id)
 
-            const userChatRef = db.collection('users').doc(subscriberDB.id).collection('messages').doc(`${generateChatEntitiyId({ groupId, questionId})}`);
+            const userChatRef = db.collection('users').doc(subscriberDB.id).collection('messages').doc(`${generateChatEntitiyId({ groupId, questionId })}`);
 
             return userChatRef.update({
               msgNumber: FieldValue.increment(1),
@@ -649,11 +1021,11 @@ exports.listenToGroupChats = functions.firestore
     }
   })
 
-  exports.listenToSubQuestionChats = functions.firestore
+exports.listenToSubQuestionChats = functions.firestore
   .document("groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/messages/{chatMassageId}")
   .onCreate((newMsg, context) => {
     try {
-      const { groupId, questionId,subQuestionId } = context.params;
+      const { groupId, questionId, subQuestionId } = context.params;
 
 
       return db
@@ -663,7 +1035,7 @@ exports.listenToGroupChats = functions.firestore
           return subscribersDB.forEach(subscriberDB => {
             console.log('update user ', subscriberDB.id)
 
-            const userChatRef = db.collection('users').doc(subscriberDB.id).collection('messages').doc(`${generateChatEntitiyId({ groupId, questionId,subQuestionId})}`);
+            const userChatRef = db.collection('users').doc(subscriberDB.id).collection('messages').doc(`${generateChatEntitiyId({ groupId, questionId, subQuestionId })}`);
 
             return userChatRef.update({
               msgNumber: FieldValue.increment(1),
@@ -679,11 +1051,11 @@ exports.listenToGroupChats = functions.firestore
     }
   })
 
-  exports.listenToOptionChats = functions.firestore
+exports.listenToOptionChats = functions.firestore
   .document("groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}/messages/{chatMassageId}")
   .onCreate((newMsg, context) => {
     try {
-      const { groupId, questionId,subQuestionId, optionId } = context.params;
+      const { groupId, questionId, subQuestionId, optionId } = context.params;
 
 
       return db
@@ -693,7 +1065,7 @@ exports.listenToGroupChats = functions.firestore
           return subscribersDB.forEach(subscriberDB => {
             console.log('update user on option', subscriberDB.id)
 
-            const userChatRef = db.collection('users').doc(subscriberDB.id).collection('messages').doc(`${generateChatEntitiyId({ groupId, questionId,subQuestionId, optionId})}`);
+            const userChatRef = db.collection('users').doc(subscriberDB.id).collection('messages').doc(`${generateChatEntitiyId({ groupId, questionId, subQuestionId, optionId })}`);
 
             return userChatRef.update({
               msgNumber: FieldValue.increment(1),
@@ -918,7 +1290,7 @@ exports.calcValidateEval = functions.firestore
         //if new voter
         if (!change.before.exists) {
           //new voter then add number of votes
-        
+
           totalVotes++
 
 
@@ -942,7 +1314,7 @@ exports.calcValidateEval = functions.firestore
 
         } else {
           //existing voter
-        
+
 
           //get previous votes
 
@@ -963,7 +1335,7 @@ exports.calcValidateEval = functions.firestore
         totalWeight = truthinessAvg * evaluationAvg;
         let totalWeightAbs = Math.abs(totalWeight)
 
-      
+
 
         return transaction.update(consequenceRef, {
           totalVotes,

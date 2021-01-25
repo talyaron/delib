@@ -27,6 +27,7 @@
     padding: 6px;
     display: flex;
     width: 30px;
+    min-height: 30px;
     margin: 10px;
     justify-content: center;
     align-items: center;
@@ -79,6 +80,7 @@
     overflow-y: auto;
     cursor: pointer;
     user-select: none;
+    max-height: 250px;
 }
 .option__card__description>p{
     margin: 4px 0px;

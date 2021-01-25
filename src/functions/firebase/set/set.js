@@ -1,26 +1,29 @@
 import m from 'mithril';
-import {set} from 'lodash';
+import { set, get } from 'lodash';
 import { DB } from '../config';
 import store from '../../../data/store';
 import { concatenateDBPath, uniqueId, generateChatEntitiyId, createIds, getRandomColor } from '../../general';
 
 
-function createGroup(creatorId, title, description, callForAction) {
+function createGroup(settings) {
     try {
+        const {creatorId, title, description, callForAction, language} = settings;
+        console.log(creatorId, title, description, callForAction, language)
         const groupId = uniqueId()
 
         DB
             .collection('groups')
             .doc(groupId)
             .set({
-                title: title,
-                description: description,
-                creatorId: creatorId,
+                title,
+                description,
+                creatorId,
                 time: new Date().getTime(),
                 groupId,
                 id: groupId,
                 groupColor: getRandomColor(),
-                callForAction
+                callForAction,
+                language
             })
             .then(() => {
 
@@ -30,7 +33,9 @@ function createGroup(creatorId, title, description, callForAction) {
                     .collection("groupsOwned")
                     .doc(groupId).set({ id: groupId, date: new Date().getTime() })
                     .then(() => { console.info(`added the group to the groups the user owns`) })
-                    .catch(e => { console.error(e) })
+                    .catch(e => { console.error(e) });
+
+                    subscribeUser({groupId, subscribe:false})
                 m.route.set(`/group/${groupId}`);
             })
             .catch(function (error) {
@@ -55,32 +60,39 @@ function registerGroup(groupId) {
 
     try {
 
-        if (!{}.hasOwnProperty.call(store.groupsUserTryToRegister, groupId)) {
-            store.groupsUserTryToRegister[groupId] = true;
+      
 
+        let isUserRgisterdToGroup = get(store.user, `.groupsUserTryToRegister[${groupId}]`, false);
+      
+        if (!isUserRgisterdToGroup) {
+            // store.user.groupsUserTryToRegister[groupId] = true;
+            set(store.user, `.groupsUserTryToRegister[${groupId}]`, true)
+           
             const waitForUser = setInterval(() => {
 
-                if ({}.hasOwnProperty.call(store.user, 'userColor')) {
+            
+
+                if ({}.hasOwnProperty.call(store.user, 'uid')) {
 
                     clearInterval(waitForUser);
 
 
+                
+                    if (!isUserRgisterdToGroup) {
 
-                    if (!{}.hasOwnProperty(store.groupsRegistered, groupId)) {
-
-                        console.log('register to ', groupId)
+                    
 
                         store.groupsRegistered[groupId] = true;
 
                         DB.collection('users').doc(store.user.uid)
                             .collection('registerGroups').doc(groupId)
                             .set({ register: true })
-                            .then(() => { console.log('user registerd to group', groupId) })
+                            .then(() => { console.info('user registerd to group', groupId) })
                             .catch(e => { console.error(e) })
 
                         //store data from use as member in the group
-                        const { displayName, email, uid, name, photoURL, phoneNumber, userColor, isAnonymous } = store.user;
-                        const userObjTemp = { displayName, email, uid, name, photoURL, phoneNumber, userColor, isAnonymous }, userObj = {};
+                        const { displayName, email, uid, name, photoURL, phoneNumber, isAnonymous } = store.user;
+                        const userObjTemp = { displayName, email, uid, name, photoURL, phoneNumber, isAnonymous }, userObj = {};
 
 
                         for (let prop in userObjTemp) {
@@ -93,7 +105,7 @@ function registerGroup(groupId) {
                         DB.collection('groups').doc(groupId)
                             .collection('members').doc(store.user.uid)
                             .set(userObj, { merge: true })
-                            .then(() => { console.log('user is a member of group', groupId) })
+                            .then(() => { console.info('user is a member of group', groupId) })
                             .catch(e => { console.error(e) })
                     } else {
                         console.info('user is already registered to', groupId)
@@ -101,7 +113,7 @@ function registerGroup(groupId) {
                 }
 
             }, 1000);
-        }
+        } 
     } catch (e) {
         console.error(e)
 
@@ -148,20 +160,28 @@ function updateQuestion(groupId, questionId, title, description, authorizationOb
 }
 
 function createSubQuestion(groupId, questionId, title, order) {
+    try {
+        return new Promise((resolve, reject) => {
+            const subQuestionId = uniqueId()
 
-    const subQuestionId = uniqueId()
-
-    DB
-        .collection('groups')
-        .doc(groupId)
-        .collection('questions')
-        .doc(questionId)
-        .collection('subQuestions')
-        .doc(subQuestionId)
-        .set({ title, order, creator: store.user.uid, orderBy: 'top', subQuestionId, id: subQuestionId })
-        .catch(function (error) {
-            console.error('Error adding document: ', error);
-        });
+            DB
+                .collection('groups')
+                .doc(groupId)
+                .collection('questions')
+                .doc(questionId)
+                .collection('subQuestions')
+                .doc(subQuestionId)
+                .set({ title, order, creator: store.user.uid, orderBy: 'top', subQuestionId, id: subQuestionId })
+                .then(() => { resolve(subQuestionId) })
+                .catch(function (error) {
+                    console.error('Error adding document: ', error);
+                    reject(undefined)
+                });
+        })
+    } catch (e) {
+        console.error(e);
+        reject(undefined)
+    }
 }
 
 function updateSubQuestion(groupId, questionId, subQuestionId, title) {
@@ -199,36 +219,39 @@ function updateSubQuestionOrderBy(groupId, questionId, subQuestionId, orderBy) {
 
 function setSubQuestion(ids, settings) {
     try {
-        const { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions, proAgainstType } = settings;
-        const { groupId, questionId, subQuestionId } = ids;
-
-        console.log('setSubQuestion', subQuestionId, proAgainstType)
-
-        const subQuestionRef = DB
-            .collection('groups')
-            .doc(groupId)
-            .collection('questions')
-            .doc(questionId)
-            .collection('subQuestions')
+        return new Promise((resolve, reject) => {
+            const { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions, proAgainstType } = settings;
+            const { groupId, questionId, subQuestionId } = ids;
 
 
+            const subQuestionRef = DB
+                .collection('groups')
+                .doc(groupId)
+                .collection('questions')
+                .doc(questionId)
+                .collection('subQuestions')
 
-        if (subQuestionId === undefined) {
-            //new subQuestion
-            const uid = uniqueId()
 
-            subQuestionRef.doc(uid).set({ title, processType, orderBy, groupId, questionId, subQuestionId: uid, userHaveNavigation, showSubQuestion, order: numberOfSubquestions, proAgainstType, creator: store.user.uid })
-                .then(() => { console.info(`saved subQuestion ${uid} to DB`) })
-                .catch(e => {
-                    console.error(e)
-                })
-        } else {
-            subQuestionRef.doc(subQuestionId).update({ title, processType, orderBy, groupId, questionId, subQuestionId, userHaveNavigation, showSubQuestion, proAgainstType })
-                .then(() => { console.info(`updated subQuestion ${subQuestionId} to DB`) })
-                .catch(e => {
-                    console.error(e)
-                })
-        }
+
+            if (subQuestionId === undefined) {
+                //new subQuestion
+                const uid = uniqueId()
+
+                subQuestionRef.doc(uid).set({ title, processType, orderBy, groupId, questionId, subQuestionId: uid, userHaveNavigation, showSubQuestion, order: numberOfSubquestions, proAgainstType, creator: store.user.uid })
+                    .then(() => { console.info(`saved subQuestion ${uid} to DB`); resolve(uid) })
+                    .catch(e => {
+                        console.error(e)
+                        reject(undefined)
+                    })
+            } else {
+                subQuestionRef.doc(subQuestionId).update({ title, processType, orderBy, groupId, questionId, subQuestionId, userHaveNavigation, showSubQuestion, proAgainstType })
+                    .then(() => { console.info(`updated subQuestion ${subQuestionId} to DB`); resolve(uid) })
+                    .catch(e => {
+                        console.error(e);
+                        reject(undefined);
+                    })
+            }
+        })
     } catch (e) {
         console.error(e)
     }
@@ -313,7 +336,7 @@ function setSubQuestionsOrder(groupId, questionId, subQuestionId, order) {
     }
 }
 
-function createOption(groupId, questionId, subQuestionId, type, creatorId, title, description, creatorName, subQuestionTitle) {
+function createOption(groupId, questionId, subQuestionId, type, creatorId, title, description, creatorName, subQuestionTitle, isVote = false) {
 
     const optionId = uniqueId();
 
@@ -343,10 +366,65 @@ function createOption(groupId, questionId, subQuestionId, type, creatorId, title
             .FieldValue
             .serverTimestamp(),
         consensusPrecentage: 0,
-        isActive: true
+        isActive: true,
+        isVote
     }).catch(function (error) {
         console.error('Error adding document: ', error);
     });
+}
+
+function voteOption(ids, settings) {
+    try {
+        const { groupId, questionId, subQuestionId, optionId } = ids;
+
+        const { addVote } = settings;
+
+
+        const optionRef = DB
+            .collection('groups')
+            .doc(groupId)
+            .collection('questions')
+            .doc(questionId)
+            .collection('subQuestions')
+            .doc(subQuestionId)
+            .collection('votes')
+            .doc(store.user.uid);
+
+        const updateObj = {
+            optionVoted: optionId,
+            voter: {
+                voterId: store.user.uid,
+                name: store.user.name,
+                photoURL: store.user.photoURL || ""
+            }
+        }
+
+        if (addVote) {
+            optionRef.update(updateObj)
+                .then(() => { console.info(`Option ${optionId} was voted for`) })
+                .catch(e => {
+                    // console.error(e)
+
+                    let errRexExp = new RegExp('No document to update');
+                    if (errRexExp.test(e.message)) {
+                        optionRef.set(updateObj)
+                            .then(() => { console.log(`A vote to option ${optionId} was added`) })
+                            .catch(e => { console.error(e) })
+                    } else {
+                        console.error(e)
+
+                    }
+                })
+        } else {
+            optionRef.delete()
+                .then(() => { console.info(`Option ${optionId} was deleted`) })
+                .catch(e => { console.error(e) })
+        }
+
+
+    } catch (e) {
+        console.error(e)
+    }
 }
 
 function createConsequence(groupId, questionId, subQuestionId, optionId, creatorId, title, description, goodBad, creatorName) {
@@ -826,9 +904,10 @@ function updateOption(vnode) {
 }
 function subscribeUser(settings) {
     try {
-        const { groupId, questionId, subQuestionId, optionId, title, entityType } = settings.vnode.attrs;
-        const { subscribe } = settings;
+      
+        const {  groupId, questionId, subQuestionId, optionId, subscribe } = settings;
 
+       
         //build path for the enenties subscription collection
         const subscriptionPath = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
         let chatEntityId = generateChatEntitiyId({ groupId, questionId, subQuestionId, optionId });
@@ -854,7 +933,7 @@ function subscribeUser(settings) {
                         })
                         .then(() => { console.log('user subscribed in messages') })
                         .catch(e => {
-                            console.error('Error in saving new chat following on the user', e)
+                            console.error( e)
                         })
                 })
                 .catch(err => console.error(err))
@@ -968,8 +1047,7 @@ function handleSubscription(vnode) {
         const path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
 
         subscribeUser({
-            vnode,
-            subscribe: vnode.state.subscribed
+            groupId, questionId, subQuestionId, optionId , subscribe: vnode.state.subscribed
         })
 
         if (vnode.state.subscribed == false) {
@@ -1000,6 +1078,7 @@ module.exports = {
     deleteSubQuestion,
     setSubQuestionsOrder,
     createOption,
+    voteOption,
     updateOptionDescription,
     createConsequence,
     voteConsequence,

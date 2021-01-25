@@ -4,6 +4,7 @@ import "./SubQuestionPage.css";
 //model
 import store from "../../data/store";
 import settings from "../../data/settings";
+import lang from '../../data/languages';
 
 //components
 
@@ -15,8 +16,9 @@ import NavBottom from '../Commons/NavBottom/NavBottom';
 import NavTop from '../Commons/NavTop/NavTop';
 import Chat from '../Commons/Chat/Chat';
 
+
 //functions
-import { getSubQuestion, getGroupDetails, listenToChat, listenToOptions, getLastTimeEntered } from "../../functions/firebase/get/get";
+import { getSubQuestion, listenToGroupDetails, listenToChat, listenToOptions, getLastTimeEntered } from "../../functions/firebase/get/get";
 import { registerGroup } from '../../functions/firebase/set/set';
 import { getIsChat, concatenateDBPath } from '../../functions/general';
 
@@ -62,7 +64,8 @@ module.exports = {
             subscribed: false,
             path: concatenateDBPath(groupId, questionId, subQuestionId),
             unreadMessages: 0,
-            lastTimeEntered: 0
+            lastTimeEntered: 0,
+            language: 'he'
         }
 
 
@@ -79,7 +82,7 @@ module.exports = {
 
         vnode.state.subscribed = get(store.subscribe, `[${vnode.state.path}]`, false)
 
-        getGroupDetails(groupId);
+        listenToGroupDetails(groupId);
 
         getLastTimeEntered({ groupId, questionId, subQuestionId }, vnode);
 
@@ -90,6 +93,7 @@ module.exports = {
 
         if (store.subQuestions.hasOwnProperty(subQuestionId)) {
             vnode.state.details = store.subQuestions[subQuestionId];
+
 
         }
 
@@ -106,6 +110,7 @@ module.exports = {
         const path = concatenateDBPath(groupId, questionId, subQuestionId);
         vnode.state.unreadMessages = store.chat[path].filter(m => m.createdTime.seconds > vnode.state.lastTimeEntered).length;
 
+        vnode.state.language = get(store.groups, `[${groupId}].language`, 'he')
 
     },
     onupdate: vnode => {
@@ -125,6 +130,7 @@ module.exports = {
     view: vnode => {
 
         const { groupId, questionId, subQuestionId } = vnode.attrs;
+        const { language } = vnode.state;
 
         return (
             <div class='page zoomOutEnter' id='page'>
@@ -133,15 +139,17 @@ module.exports = {
                         <div class='page__grid'>
                             <div class="page__header">
                                 <Header
-                                    title='שאלה'
+                                    title={lang[language].question}
                                     upLevelUrl={hasNevigation(vnode)}
                                     groupId={groupId}
                                     questionId={questionId}
                                     showSubscribe={false}
                                     subQuestionId={subQuestionId}
+                                    language={language}
                                 />
                                 <NavTop
-                                    level={'פתרונות'}
+                                    level={lang[language].solutions}
+                                    chat={lang[language].chat}
                                     current={vnode.state.subPage}
                                     pvs={vnode.state}
                                     mainUrl={`/subquestions/${groupId}/${questionId}/${subQuestionId}`}
@@ -150,61 +158,67 @@ module.exports = {
                                     isSubscribed={vnode.state.subscribed}
                                     unreadMessages={vnode.state.unreadMessages}
                                 />
+                            </div>
+                            <div style={`direction:${lang[language].dir}`} class='page__main'>
+                                {vnode.state.subPage === 'main' ?
+
+                                    <SubQuestion
+                                        vsp={vnode.state}
+                                        question={vnode.state.details.title}
+                                        questionObj={vnode.state.details}
+                                        groupId={groupId}
+                                        questionId={questionId}
+                                        subQuestionId={subQuestionId}
+                                        orderBy={vnode.state.details.orderBy}
+                                        title={vnode.state.details.title}
+                                        subItems={vnode.state.details.options}
+                                        parentVnode={vnode}
+                                        info={settings.subItems.options}
+                                        processType={vnode.state.details.processType}
+                                        showSubscribe={true}
+                                        isAlone={true}
+                                        language={language}
+                                    />
+
+                                    :
+                                    <Chat
+                                        entity='subQuestion'
+                                        topic='תת שאלה'
+                                        ids={{ groupId, questionId, subQuestionId }}
+                                        title={vnode.state.details.title}
+                                        url={m.route.get()}
+                                    />
+                                }
 
                             </div>
-                            {vnode.state.subPage === 'main' ?
-                                <SubQuestion
-                                    vsp={vnode.state}
-                                    question={vnode.state.details.title}
-                                    groupId={groupId}
-                                    questionId={questionId}
-                                    subQuestionId={subQuestionId}
-                                    orderBy={vnode.state.details.orderBy}
-                                    title={vnode.state.details.title}
-                                    subItems={vnode.state.details.options}
-                                    parentVnode={vnode}
-                                    info={settings.subItems.options}
-                                    processType={vnode.state.details.processType}
-                                    showSubscribe={true}
-                                    isAlone={true} />
-                                :
-                                <Chat
-                                    entity='subQuestion'
-                                    topic='תת שאלה'
-                                    ids={{ groupId, questionId, subQuestionId }}
-                                    title={vnode.state.details.title}
-                                    url={m.route.get()}
-                                />
-                            }
-
                             {/* ---------------- Footer -------------- */}
                             <div class='page__footer'>
-                                {vnode.state.subPage === 'main' ?
+                                {vnode.state.subPage === 'main' && (vnode.state.details.processType === 'suggestions' || vnode.state.details.processType === undefined)?
                                     <div class={hasNevigation(vnode) ? "subQuestion__arrange" : "subQuestion__arrange subQuestion__arrange--bottom"} id="questionFooter">
                                         <div
                                             class={vnode.state.details.orderBy == "new"
-                                                ? "footerButton footerButtonSelected"
+                                                ? "footerButton footerButton--selected"
                                                 : "footerButton"}
                                             onclick={() => {
                                                 vnode.state.details.orderBy = "new";
                                             }}>
                                             <img src='img/new.svg' alt='order by newest' />
-                                            <div>חדשות</div>
+                                            <div>{lang[language].new}</div>
                                         </div>
                                         <div
                                             class={vnode.state.details.orderBy == "top"
-                                                ? "footerButton footerButtonSelected"
+                                                ? "footerButton footerButton--selected"
                                                 : "footerButton"}
                                             onclick={() => {
                                                 vnode.state.details.orderBy = "top";
                                             }}>
                                             <img src='img/agreed.svg' alt='order by most agreed' />
-                                            <div>מוסכמות</div>
+                                            <div>{lang[language].agreed}</div>
                                         </div>
 
                                         {/* <div
                                         class={vnode.state.details.orderBy == "message"
-                                            ? "footerButton footerButtonSelected"
+                                            ? "footerButton footerButton--selected"
                                             : "footerButton"}
                                         onclick={() => {
                                             vnode.state.details.orderBy = "message";
@@ -216,29 +230,36 @@ module.exports = {
                                 }
                                 {hasNevigation(vnode) && vnode.state.subPage === 'main' ? <NavBottom /> : null}
 
-
                             </div>
                         </div>
+
                     )
                     : (<Spinner />)
                 }
-                < div
-                    class="fav fav__subQuestion fav--blink"
-                    onclick={() => {
-                        vnode.state.showModal.isShow = true;
-                    }}>
-                    <div>
-                        <div>+</div>
-                    </div>
+                {
+                    (vnode.state.details.processType === 'suggestions' ||vnode.state.details.processType === undefined) ?
+                        < div
+                            class="fav fav__subQuestion fav--blink"
+                            onclick={() => {
+                                vnode.state.showModal.isShow = true;
+                            }}>
+                            <div>
+                                <div>+</div>
+                            </div>
 
-                </div >
+                        </div >
+                        :
+                        null
+                }
                 <Modal
                     showModal={vnode.state.showModal.isShow}
                     whichModal={vnode.state.showModal.which}
                     title={vnode.state.showModal.title}
-                    placeholderTitle="כותרת"
-                    placeholderDescription="הסבר"
-                    vnode={vnode} />
+                    vnode={vnode}
+                    language={language}
+                />
+
+
             </div >
         );
     }

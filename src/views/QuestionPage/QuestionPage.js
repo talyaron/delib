@@ -14,13 +14,16 @@ import NavBottom from '../Commons/NavBottom/NavBottom';
 import NavTop from '../Commons/NavTop/NavTop';
 import Chat from '../Commons/Chat/Chat';
 import SubQuestionEditModal from './SubQuestionEditModal/SubQuestionEditModal';
+import AddPanel from './AddPanel/AddPanel';
+import VoteModal from './VoteModal/VoteModal';
 
 //model
 import store from '../../data/store';
+import lang from '../../data/languages';
 //functions
-import { getQuestionDetails, getSubQuestion, getLastTimeEntered, listenToChat } from '../../functions/firebase/get/get';
+import { getQuestionDetails, getSubQuestion, getLastTimeEntered, listenToChat,listenToGroup} from '../../functions/firebase/get/get';
 import { registerGroup } from '../../functions/firebase/set/set';
-import { deep_value, getIsChat, concatenateDBPath } from '../../functions/general';
+import { deep_value, getIsChat, concatenateDBPath,getLanguage } from '../../functions/general';
 
 
 
@@ -57,6 +60,8 @@ module.exports = {
                 isShow: false,
                 which: 'subQuestion'
             },
+            openAddPanel:false,
+            openVote:false,
             unsbscribe: {
                 subQuestions: {},
                 chat: () => { }
@@ -74,8 +79,8 @@ module.exports = {
             },
             subPage: getIsChat() ? 'chat' : 'main',
             unreadMessages: 0,
-            lastTimeEntered: 0
-
+            lastTimeEntered: 0,
+            language:'he'
         }
 
         //get user before login to page
@@ -94,7 +99,10 @@ module.exports = {
         vnode.state.unsubscribeQuestionDetails = getQuestionDetails(groupId, questionId, vnode); //it will then listen to subQuestions
         vnode.state.unsbscribe.chat = listenToChat({ groupId, questionId });
 
-        registerGroup(groupId)
+       
+
+        registerGroup(groupId);
+        listenToGroup(groupId);
 
     },
     oncreate: vnode => {
@@ -125,7 +133,10 @@ module.exports = {
         }
         const path = concatenateDBPath(groupId, questionId);
         vnode.state.unreadMessages = store.chat[path].filter(m => m.createdTime.seconds > vnode.state.lastTimeEntered).length;
-
+        
+        //get language
+        vnode.state.language = getLanguage(groupId);
+      
     },
 
     onremove: vnode => {
@@ -146,10 +157,14 @@ module.exports = {
     },
     view: vnode => {
 
+        const {language} = vnode.state;
+
         const { groupId, questionId } = vnode.attrs;
 
         return (
             <div class='page page__grid'>
+                 <AddPanel isOpen={vnode.state.openAddPanel} vsp ={vnode.state}/>
+               
                 <div class='page__header'>
                     <Header
                         topic='נושא'
@@ -159,7 +174,9 @@ module.exports = {
                         showSubscribe={true}
                         questionId={vnode.attrs.questionId}
                     />
-                    <NavTop level={'שאלות'} current={vnode.state.subPage}
+                    <NavTop level={'שאלות'} 
+                        current={vnode.state.subPage}
+                        chat={lang[language].chat}
                         pvs={vnode.state}
                         mainUrl={`/question/${groupId}/${questionId}`}
                         chatUrl={`/question-chat/${groupId}/${questionId}`}
@@ -242,13 +259,15 @@ module.exports = {
                 < div
                     class={store.user.uid == vnode.state.creatorId ? "fav fav__subQuestion fav--blink" : "hidden"}
                     onclick={() => {
-                        vnode.state.modalSubQuestion = { isShow: true, new: true, numberOfSubquestions: vnode.state.subQuestions.length };
+                        vnode.state.openAddPanel = true;
+                        // vnode.state.modalSubQuestion = { isShow: true, new: true, numberOfSubquestions: vnode.state.subQuestions.length };
                     }}>
                     <div>
                         <div>+</div>
                     </div>
 
                 </div >
+                {vnode.state.openVote?<VoteModal vsp={vnode.state} ids={{groupId, questionId}}/>:null}
                 {vnode.state.modalSubQuestion.isShow ?
                     <div class='background'>
                         <SubQuestionEditModal
@@ -259,6 +278,7 @@ module.exports = {
                     </div>
                     : null
                 }
+               
             </div>
         )
     }

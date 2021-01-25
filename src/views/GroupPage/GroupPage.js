@@ -3,6 +3,7 @@ import { get } from 'lodash';
 
 import { deep_value, setWrapperHeight } from '../../functions/general';
 import store from '../../data/store';
+import lang from '../../data/languages';
 
 
 //components
@@ -17,7 +18,7 @@ import Spinner from '../Commons/Spinner/Spinner';
 
 //functions
 import { createQuestion, registerGroup } from '../../functions/firebase/set/set';
-import { getQuestions, getGroupDetails, listenToChat, getLastTimeEntered } from '../../functions/firebase/get/get';
+import { getQuestions, listenToGroupDetails, listenToChat, getLastTimeEntered } from '../../functions/firebase/get/get';
 import { setLastPage, getIsChat, concatenateDBPath } from '../../functions/general';
 
 
@@ -49,13 +50,14 @@ module.exports = {
             unsubscribe: {},
             groupName: get(store, 'groups[' + vnode.attrs.id + '].title', 'שם הקבוצה'),
             unreadMessages: 0,
-            lastTimeEntered: 0
+            lastTimeEntered: 0,
+            language:'he'
         }
 
 
 
         getQuestions('on', vnode.attrs.id, vnode);
-        vnode.state.undbGroupDetails = getGroupDetails(vnode.attrs.id, vnode);
+        listenToGroupDetails(vnode.attrs.id, vnode);
 
 
         vnode.state.unsubscribe.chat = listenToChat({ groupId: vnode.attrs.id });
@@ -107,14 +109,17 @@ module.exports = {
         //register to DB
         registerGroup(groupId)
 
+        //get language
+        vnode.state.language = get(store.groups,`[${groupId}].language`,'he')
+
     },
 
     onremove: vnode => {
         const { id } = vnode.attrs;
         let groupId = id;
 
-        getQuestions('off', vnode.attrs.id, vnode);
-        vnode.state.undbGroupDetails();
+        getQuestions('off', groupId, vnode);
+
         vnode.state.unsubscribe.chat();
 
 
@@ -123,6 +128,8 @@ module.exports = {
     view: vnode => {
 
 
+            const {language} = vnode.state
+
 
         return (
             <div class='page'>
@@ -130,29 +137,31 @@ module.exports = {
                     <div class='page__header'>
                         <Header
                             upLevelUrl='/groups'
-                            topic='קבוצה'
-                            title='קבוצה'
+                            topic={lang[language].groupTitle}
+                            title={lang[language].groupTitle}
                             isAdmin={vnode.state.isAdmin}
                             editPageLink={`/editgroup/${vnode.attrs.id}`}
                             groupId={vnode.attrs.id}
                             showSubscribe={true}
+                            language={language}
                         />
                         <NavTop
-                            level={'נושאים שונים של הקבוצה'}
+                            level={lang[language].groupTopics}
                             current={vnode.state.subPage}
                             pvs={vnode.state}
                             mainUrl={`/group/${vnode.attrs.id}`}
                             chatUrl={`/group-chat/${vnode.attrs.id}`}
                             ids={{ groupId: vnode.attrs.id }}
                             unreadMessages={vnode.state.unreadMessages}
+                            chat={lang[language].chat}
                         />
 
                     </div>
                     {vnode.state.subPage == 'main' ?
 
-                        <div class='questionsWrapper' id='groupWrapper'>
-                            <div class='title'>קבוצה: {vnode.state.groupName}</div>
-                            <h1>נושאים שונים של הקבוצה</h1>
+                        <div class='questionsWrapper' id='groupWrapper' style={`direction:${lang[language].dir}`}>
+                            <div class='title'>{lang[language].groupTitle}: {vnode.state.groupName}</div>
+                            <h1>{lang[language].groupTopics}</h1>
                             {vnode.state.questions[0] === false ?
                                 <Spinner />
                                 :

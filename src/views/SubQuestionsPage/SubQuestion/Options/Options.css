@@ -3,6 +3,7 @@
      position: relative;
      max-height: 70vh;
      margin-bottom: 200px;
+     height: 100%;
 }
 
 .optionsWrapper--alone{
