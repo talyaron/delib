@@ -17,7 +17,9 @@ const lang={
         add:'הוספה',
         cancel:'ביטול',
         new:'חדשות',
-        agreed:'מוסכמות'
+        agreed:'מוסכמות',
+        getMailNotifications:'קבלת התרעות (דחיפה) על הודעות חדשות',
+        getUpdateOnNewOptions:'קבלת עדכונים על אופציות נוספות'
 
     },
     en:{
@@ -38,7 +40,9 @@ const lang={
         add:'Add',
         cancel:'Cancel',
         new:'New',
-        agreed:'Agreed'
+        agreed:'Agreed',
+        getMailNotifications:'Would you like to get mail notification on this option?',
+        getUpdateOnNewOptions:'Would you like to get updates on new options?'
     }
 
 }

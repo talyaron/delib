@@ -1044,6 +1044,7 @@ function handleSubscription(vnode) {
 
         //path for subscription object
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
+        console.log( groupId, questionId, subQuestionId, optionId)
         const path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
 
         subscribeUser({

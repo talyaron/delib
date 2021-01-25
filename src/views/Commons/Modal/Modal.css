@@ -32,7 +32,7 @@
 .moduleCreator>span {
     font-size: 1.5rem;
     color: var(--textheader);
-    margin-left: 10px;
+    margin: 0px 10px;
 }
 
 .moduleTitle {
@@ -41,5 +41,19 @@
     color: var(--textHeader);
    
     font-weight: var(--textHeaderWeight);
+}
+
+.module__subscribe{
+
+}
+
+.module__subscribe p{
+    display: flex;
+    align-items: center;
+}
+.module__subscribe p label{
+    user-select: none;
+   margin: 0px 5px;
+   color:var(--gray1)
 }
 
