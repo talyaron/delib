@@ -1,8 +1,11 @@
 import m from 'mithril';
 import './Modal.css';
 
+//functions
 import { createOption, handleSubscription } from '../../../functions/firebase/set/set';
+import {subscribeToNotification} from '../../../functions/firebase/messaging';
 
+//data
 import store from '../../../data/store';
 import lang from '../../../data/languages';
 
@@ -127,6 +130,8 @@ module.exports = {
 
 function setNewInfo(vnp, vnode) {
 	try {
+
+	
 		//in question, questionId is called id. These is used to fix the problem
 		let questionId, subQuestionId;
 
@@ -154,9 +159,9 @@ function setNewInfo(vnp, vnode) {
 		console.log(vnode.attrs.vnode.attrs);
 		if (!{}.hasOwnProperty.call(vnode.attrs.vnode.attrs, 'subQuestionId')) throw new Error("Modal dosn't contain parent subQuestionId");
 
-		handleSubscription(vnode.attrs.vnode);
+		if(vnode.state.newOptionsUpdte) handleSubscription(vnode.attrs.vnode);
 
-		createOption(
+		const optionId = createOption(
 			vnp.attrs.groupId,
 			questionId,
 			subQuestionId,
@@ -167,6 +172,12 @@ function setNewInfo(vnp, vnode) {
 			userName,
 			vnp.state.details.title || vnp.state.showModal.title
 		);
+
+		console.log('optionId',optionId)
+
+
+		if(vnode.state.messagesNotification) subscribeToNotification({groupId:vnp.attrs.groupId,questionId, subQuestionId, optionId});
+
 
 		// createOption(
 		// 	vnp.attrs.groupId,

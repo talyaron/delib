@@ -122,6 +122,7 @@ function handleTokenRefresh(ids, subscribe) {
         if ('Notification' in window) {
             return MESSAGING.getToken().then((token) => {
                 const { groupId, questionId, subQuestionId, optionId } = ids;
+                console.log('handleTokenRefresh', groupId, questionId, subQuestionId, optionId)
 
                 //get device unique id
                 let deviceUniqueId = localStorage.getItem('deviceUniqueId');
@@ -130,6 +131,7 @@ function handleTokenRefresh(ids, subscribe) {
                 }
 
                 const dbPath = `${concatenateDBPath(groupId, questionId, subQuestionId, optionId)}/notifications/${store.user.uid}`;
+                console.log(dbPath)
                 const tokenRef = DB.doc(dbPath);
 
                 if (subscribe === true) {

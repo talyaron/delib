@@ -7,7 +7,7 @@ import { concatenateDBPath, uniqueId, generateChatEntitiyId, createIds, getRando
 
 function createGroup(settings) {
     try {
-        const {creatorId, title, description, callForAction, language} = settings;
+        const { creatorId, title, description, callForAction, language } = settings;
         console.log(creatorId, title, description, callForAction, language)
         const groupId = uniqueId()
 
@@ -35,7 +35,7 @@ function createGroup(settings) {
                     .then(() => { console.info(`added the group to the groups the user owns`) })
                     .catch(e => { console.error(e) });
 
-                    subscribeUser({groupId, subscribe:false})
+                subscribeUser({ groupId, subscribe: false })
                 m.route.set(`/group/${groupId}`);
             })
             .catch(function (error) {
@@ -60,27 +60,27 @@ function registerGroup(groupId) {
 
     try {
 
-      
+
 
         let isUserRgisterdToGroup = get(store.user, `.groupsUserTryToRegister[${groupId}]`, false);
-      
+
         if (!isUserRgisterdToGroup) {
             // store.user.groupsUserTryToRegister[groupId] = true;
             set(store.user, `.groupsUserTryToRegister[${groupId}]`, true)
-           
+
             const waitForUser = setInterval(() => {
 
-            
+
 
                 if ({}.hasOwnProperty.call(store.user, 'uid')) {
 
                     clearInterval(waitForUser);
 
 
-                
+
                     if (!isUserRgisterdToGroup) {
 
-                    
+
 
                         store.groupsRegistered[groupId] = true;
 
@@ -113,7 +113,7 @@ function registerGroup(groupId) {
                 }
 
             }, 1000);
-        } 
+        }
     } catch (e) {
         console.error(e)
 
@@ -339,38 +339,46 @@ function setSubQuestionsOrder(groupId, questionId, subQuestionId, order) {
 function createOption(groupId, questionId, subQuestionId, type, creatorId, title, description, creatorName, subQuestionTitle, isVote = false) {
 
     const optionId = uniqueId();
+    try {
+        
 
-    let optionRef = DB
-        .collection('groups')
-        .doc(groupId)
-        .collection('questions')
-        .doc(questionId)
-        .collection('subQuestions')
-        .doc(subQuestionId)
-        .collection('options');
+        let optionRef = DB
+            .collection('groups')
+            .doc(groupId)
+            .collection('questions')
+            .doc(questionId)
+            .collection('subQuestions')
+            .doc(subQuestionId)
+            .collection('options');
 
-    optionRef.doc(optionId).set({
-        groupId,
-        questionId,
-        subQuestionId,
-        optionId,
-        id: optionId,
-        creatorId,
-        type,
-        title,
-        description,
-        creatorName,
-        subQuestionTitle,
-        time: firebase
-            .firestore
-            .FieldValue
-            .serverTimestamp(),
-        consensusPrecentage: 0,
-        isActive: true,
-        isVote
-    }).catch(function (error) {
-        console.error('Error adding document: ', error);
-    });
+        optionRef.doc(optionId).set({
+            groupId,
+            questionId,
+            subQuestionId,
+            optionId,
+            id: optionId,
+            creatorId,
+            type,
+            title,
+            description,
+            creatorName,
+            subQuestionTitle,
+            time: firebase
+                .firestore
+                .FieldValue
+                .serverTimestamp(),
+            consensusPrecentage: 0,
+            isActive: true,
+            isVote
+        }).catch(function (error) {
+            console.error('Error adding document: ', error);
+        });
+
+        return optionId;
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
 }
 
 function voteOption(ids, settings) {
@@ -904,10 +912,10 @@ function updateOption(vnode) {
 }
 function subscribeUser(settings) {
     try {
-      
-        const {  groupId, questionId, subQuestionId, optionId, subscribe } = settings;
 
-       
+        const { groupId, questionId, subQuestionId, optionId, subscribe } = settings;
+
+
         //build path for the enenties subscription collection
         const subscriptionPath = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
         let chatEntityId = generateChatEntitiyId({ groupId, questionId, subQuestionId, optionId });
@@ -933,7 +941,7 @@ function subscribeUser(settings) {
                         })
                         .then(() => { console.log('user subscribed in messages') })
                         .catch(e => {
-                            console.error( e)
+                            console.error(e)
                         })
                 })
                 .catch(err => console.error(err))
@@ -1044,11 +1052,11 @@ function handleSubscription(vnode) {
 
         //path for subscription object
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
-        console.log( groupId, questionId, subQuestionId, optionId)
+        console.log(groupId, questionId, subQuestionId, optionId)
         const path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
 
         subscribeUser({
-            groupId, questionId, subQuestionId, optionId , subscribe: vnode.state.subscribed
+            groupId, questionId, subQuestionId, optionId, subscribe: vnode.state.subscribed
         })
 
         if (vnode.state.subscribed == false) {
