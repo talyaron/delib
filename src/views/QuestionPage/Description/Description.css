@@ -6,7 +6,10 @@
 }
 
 .questionDescription__text{
-    color: var(--gray1);
-    font-size: var(--size13);
+    color: var(--gray4);
+    font-size: var(--size15);
     margin-bottom: var(--regPadding);
+    line-height: 1.8rem;
+    max-height: 25vh;
+    overflow-y: auto;
 }

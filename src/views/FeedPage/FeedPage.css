@@ -3,9 +3,11 @@
     
 }
 
-.wrapper2{
-    max-width: 600px;
-    margin: 90px auto 120px auto;
+.feed__main{
+    
+    margin: 0px auto 0px auto;
     padding: 20px;
     box-sizing: border-box;
+    overflow-y: auto;
+    width: 100%;
 }
