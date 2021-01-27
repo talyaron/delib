@@ -96,7 +96,7 @@ function registerGroup(groupId) {
 
 
                         for (let prop in userObjTemp) {
-                            if (userObjTemp[prop] !== null && userObjTemp[prop] !== null) {
+                            if (userObjTemp[prop] !== null && userObjTemp[prop] !== undefined) {
                                 userObj[prop] = userObjTemp[prop]
                             }
                         }

@@ -20,7 +20,7 @@ import Chat from '../Commons/Chat/Chat';
 //functions
 import { getSubQuestion, listenToGroupDetails, listenToChat, listenToOptions, getLastTimeEntered } from "../../functions/firebase/get/get";
 import { registerGroup } from '../../functions/firebase/set/set';
-import { getIsChat, concatenateDBPath } from '../../functions/general';
+import { getIsChat, concatenateDBPath,getFirstUrl } from '../../functions/general';
 
 import { get } from "lodash";
 
@@ -33,9 +33,12 @@ module.exports = {
 
         const { groupId, questionId, subQuestionId } = vnode.attrs;
 
+        const firstUrl = getFirstUrl();
+
         //get user before login to page
-        store.lastPage = `/subquestions/${groupId}/${questionId}/${subQuestionId}`;
+        store.lastPage = `/${firstUrl}/${groupId}/${questionId}/${subQuestionId}`;
         sessionStorage.setItem("lastPage", store.lastPage);
+
 
         if (store.user.uid == undefined) {
             m

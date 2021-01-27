@@ -281,7 +281,6 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
 
             store.subQuestionsListners[questionId] = { listen: true };
 
-            console.log('listenSubQuestions, listen to sub groups')
 
             if (!{}.hasOwnProperty.call(vnode.state, 'creatorId')) { throw new Error('No creatorId in vnode at listenSubQuestions') }
 
@@ -480,6 +479,8 @@ function listenToUserLastReadOfOptionChat(optionId) {
 
 function listenToOption(ids) {
     try {
+
+       
         const { groupId, questionId, subQuestionId, optionId } = ids;
 
         if (groupId === undefined) throw new Error('missing groupId');
@@ -498,10 +499,14 @@ function listenToOption(ids) {
             .doc(optionId)
             .onSnapshot(optionDB => {
                 let optionObj = optionDB.data();
-                optionObj.optionId = optionDB.data().id;
+           
+                optionObj.optionId = optionDB.data().optionId;
 
                 set(store, `option[${optionId}]`, optionObj);
+               
                 m.redraw()
+            },e=>{
+                console.error(e);
             })
 
     } catch (e) {

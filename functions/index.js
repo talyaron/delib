@@ -573,7 +573,7 @@ exports.sendPushForNewOptions = functions.firestore
 
     // send notification
 
-    const pathForAction = concatenateURL(groupId, questionId, subQuestionId, optionId);
+    const pathForAction = concatenateURL({ groupId, questionId, subQuestionId, optionId }, 'option');
     const pathDBNotifications = `groups/${groupId}/questions/${questionId}/subQuestions/${subQuestionId}/notifications`
 
     const payload = {
@@ -767,6 +767,7 @@ exports.updateSubQuestionSubscribers = functions.firestore
       return sendToSubscribers({ change, context, lisetnToEntity: SUB_QUESTION });
     } catch (err) {
       console.log('err')
+      return true
     }
   });
 
@@ -788,7 +789,9 @@ exports.updateOptionSubscribers = functions.firestore
 async function sendToSubscribers(info) {
   try {
     const { change, context, lisetnToEntity } = info;
-    let { groupId, questionId, subQuestionId, optionId, consequenceId } = context.params;
+    const { groupId, questionId, subQuestionId, optionId, consequenceId } = context.params;
+
+    console.log('........ optionId:  ', optionId)
 
 
     const DATA = change.after.data();
@@ -808,7 +811,7 @@ async function sendToSubscribers(info) {
       );
 
     //initial settings
-    let changedEntity = "group", entityId = 'groups', dbLevelSubscribers = db.collection("groups").doc(groupId), url = "/groups", parentEntityType ='groups';
+    let changedEntity = "group", entityId = 'groups', dbLevelSubscribers = db.collection("groups").doc(groupId), url = "/groups", parentEntityType = 'groups';
 
     //find update level
     if (lisetnToEntity === GROUP) {
@@ -827,7 +830,7 @@ async function sendToSubscribers(info) {
       parentEntityType = 'question';
       dbLevelSubscribers = db.collection("groups").doc(groupId).collection('questions').doc(questionId);
 
-      optionId = false;
+
       url = message !== "deleted" ? `/subquestions/${groupId}/${questionId}/${subQuestionId}` : `/question/${groupId}/${questionId}`;
 
 
@@ -845,7 +848,7 @@ async function sendToSubscribers(info) {
         .collection('subQuestions')
         .doc(subQuestionId)
 
-      optionId = false;
+
       url = message !== "deleted" ? `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}` : `/subquestions/${groupId}/${questionId}/${subQuestionId}`;
 
 
@@ -922,7 +925,7 @@ async function sendToSubscribers(info) {
               console.log("add to user", subscriberDB.id, "action:", message);
               return true
             })
-            .catch((err) =>{
+            .catch((err) => {
               console.log(err.message)
               return true;
             });
@@ -1126,9 +1129,6 @@ function notifiyUsers(payload, ids, pathDB) {
     const { groupId, questionId, subQuestionId, optionId } = ids;
 
 
-
-
-
     // go over all token given by users and see which user set a token for this
     // entity
     const path2 = generateCollectionPath({ groupId, questionId, subQuestionId, optionId })
@@ -1204,25 +1204,34 @@ function notifiyUsers(payload, ids, pathDB) {
 }
 
 
-function concatenateURL(groupId, questionId, subQuestionId, optionId) {
+function concatenateURL(ids, level) {
   try {
-    let subscriptionPath = 'groups/'
-    if (groupId !== undefined) {
-      subscriptionPath = 'group/' + groupId;
-      if (questionId !== undefined) {
+
+    const { groupId, questionId, subQuestionId, optionId } = ids;
+
+    let subscriptionPath = 'groups/';
+
+    switch (level) {
+      case 'group':
+        subscriptionPath = 'group/' + groupId;
+        break;
+      case 'question':
         subscriptionPath = `question/${groupId}/${questionId}`;
-        if (subQuestionId !== undefined) {
-          subscriptionPath = `/subquestions/${groupId}/${questionId}/${subQuestionId}`;
-          if (optionId !== undefined) {
-            subscriptionPath = `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`
-          }
-        }
-      }
-      return subscriptionPath
-    } else {
-      return '/groups'
+        break;
+      case 'subQuestion':
+        subscriptionPath = `subquestions/${groupId}/${questionId}/${subQuestionId}`;
+        break;
+      case 'option':
+        subscriptionPath = `option/${groupId}/${questionId}/${subQuestionId}/${optionId}`
+        break;
+      default:
+        subscriptionPath = 'groups/';
+        console.log(`entity ${level} was not found in switch`)
 
     }
+
+    return subscriptionPath
+
 
 
   } catch (err) {

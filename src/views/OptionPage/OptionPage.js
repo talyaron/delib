@@ -33,6 +33,7 @@ module.exports = {
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
 
         let firstUrl = getFirstUrl();
+       
 
         store.lastPage = `/${firstUrl}/${groupId}/${questionId}/${subQuestionId}/${optionId}`;
         sessionStorage.setItem('lastPage', store.lastPage)
