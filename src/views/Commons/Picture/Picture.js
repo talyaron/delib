@@ -58,20 +58,9 @@ function getImage(event, vnode) {
     const metadata = {
       contentType: image.type
     };
-    //   const uid = randomUid();
-    // const task = ref.child(uid).put(image, metadata);
-    var uploadImg = ref
-      .put(image, metadata)
-    // .then(snapshot => {
-    //   snapshot.ref.getDownloadURL().then(downloadURL => {
-    //     DB.collection('groups').doc(vnode.attrs.id).update({ logo: downloadURL })
-    //       .then(doc => {
-    //         vnode.state.logo = downloadURL;
-    //         m.redraw();
-    //       })
-    //   });
-    // })
-    // .catch(err => console.error(err));
+    
+    const uploadImg = ref.put(image, metadata)
+    
 
     console.log(uploadImg)
     uploadImg.on('state_changed', snapshot => {
@@ -83,7 +72,7 @@ function getImage(event, vnode) {
       console.error(e)
       vnode.state.filePercent = false
       m.redraw();
-    }, () => {
+    }, () => { //when finshed upload
 
       uploadImg.snapshot.ref.getDownloadURL().then(function (downloadURL) {
 

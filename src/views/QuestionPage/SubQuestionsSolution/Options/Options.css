@@ -1,5 +1,5 @@
 .optionsWrapper{
-    overflow-y: auto;
+    /* overflow-y: auto; */
      position: relative;
      max-height: 70vh;
     
