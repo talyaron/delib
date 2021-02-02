@@ -19,7 +19,7 @@ module.exports = {
 
     const installBtn = vnode.dom.children.installBtn;
 
-    console.dir(installBtn);
+   
 
     window.addEventListener('beforeinstallprompt', (e) => {
       console.log('beforeinstallprompt..................................')
@@ -49,9 +49,6 @@ module.exports = {
         });
       });
     });
-
-    console.dir(vnode.dom)
-
 
 
   },

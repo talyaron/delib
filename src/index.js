@@ -42,10 +42,13 @@ if (nativeURL.includes('&')) {
 //service worker
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js')
-        .then(function (registration) {
+        .then(registration => {
+            console.log('sw.js was registerd');
+            console.dir(registration)
             registration.addEventListener('updatefound', () => {
                 // If updatefound is fired, it means that there's
                 // a new service worker being installed.
+                console.log('new service worker being installed')
                 var installingWorker = registration.installing;
                 console.log('A new service worker is being installed:',
                     installingWorker);
@@ -54,7 +57,7 @@ if ('serviceWorker' in navigator) {
                 // state via installingWorker.onstatechange
             });
         })
-        .catch(function (error) {
+        .catch( error=> {
             console.log('Service worker registration failed:', error);
         });
 } else {

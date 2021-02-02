@@ -12,7 +12,7 @@ import NavBottom from '../Commons/NavBottom/NavBottom'
 
 //functions
 
-import { setWrapperHeight, getRandomColor } from '../../functions/general';
+import { getRandomColor } from '../../functions/general';
 
 import store from '../../data/store';
 
@@ -20,19 +20,6 @@ module.exports = {
     oninit: (vnode) => {
         store.lastPage = '/groups';
         sessionStorage.setItem('lastPage', store.lastPage);
-
-       
-
-    },
-    oncreate: () => {
-        setWrapperHeight('headerContainer', 'groupsWrapper');
-    },
-    onupdate: () => {
-        setWrapperHeight('headerContainer', 'groupsWrapper');
-
-    },
-    onremove: () => {
-
     },
     view: () => {
      

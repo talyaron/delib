@@ -1,6 +1,6 @@
 {
-    "short_name": "Delib 3",
-    "name": "Delib 3",
+    "short_name": "Delib",
+    "name": "Delib - Deciding Together",
     "icons": [
         {
             "src": "/img/logo-192.png",
@@ -20,5 +20,6 @@
     "background_color": "#32527b",
     "display": "standalone",
     "scope": "/",
-    "theme_color": "#32527b"
+    "theme_color": "#32527b",
+    "orientation":"portrait-primary"
 }
