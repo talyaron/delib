@@ -37,3 +37,8 @@ workbox.routing.registerNavigationRoute(workbox.precaching.getCacheKeyForURL("/i
   
   blacklist: [/^\/_/,/\/[^/?]+\.[^/]+$/],
 });
+
+const unreadCount = 24;
+navigator.setAppBadge(unreadCount).catch(e => {
+  console.error(e)
+});

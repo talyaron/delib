@@ -1,15 +1,13 @@
 import m from 'mithril';
-import set from 'lodash/set';
-import get from 'lodash/get';
-import omit from 'lodash/omit';
-import values from 'lodash/values';
+
 
 import './Groups.css';
 import Group from './Group/Group';
 import Header from '../Commons/Header/Header';
 import Feed from '../Commons/Feed/Feed';
 import Spinner from '../Commons/Spinner/Spinner';
-import CreateNewEntity from '../Commons/CreateNewEntity/CreateNewEntity'
+import CreateNewEntity from '../Commons/CreateNewEntity/CreateNewEntity';
+import NavBottom from '../Commons/NavBottom/NavBottom'
 
 
 //functions
@@ -39,7 +37,7 @@ module.exports = {
     view: () => {
      
         return (
-            <div >
+            <div class='page page__grid'>
                 <Header title='הקבוצות שלי' topic='דליב' upLevelUrl={false} />
 
                 <div class='groupsWrapper' id='groupsWrapper'>
@@ -66,6 +64,7 @@ module.exports = {
 
                     }
                 </div>
+                <NavBottom />
                 <div class='fav' onclick={() => { m.route.set('/newgroup') }} >
                     <div>+</div>
                 </div>
