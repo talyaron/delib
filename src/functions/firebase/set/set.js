@@ -245,7 +245,7 @@ function setSubQuestion(ids, settings) {
                     })
             } else {
                 subQuestionRef.doc(subQuestionId).update({ title, processType, orderBy, groupId, questionId, subQuestionId, userHaveNavigation, showSubQuestion, proAgainstType })
-                    .then(() => { console.info(`updated subQuestion ${subQuestionId} to DB`); resolve(uid) })
+                    .then(() => { console.info(`updated subQuestion ${subQuestionId} to DB`); resolve(subQuestionId) })
                     .catch(e => {
                         console.error(e);
                         reject(undefined);
