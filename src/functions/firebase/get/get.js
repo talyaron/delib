@@ -349,6 +349,7 @@ function getSubQuestion(groupId, questionId, subQuestionId, isSingle) {
                 m.redraw();
             } else {
                 console.error(`subQuestion ${groupId}/${questionId}/${subQuestionId} dont exists `)
+                m.route.set(`question/${groupId}/${questionId}`)
             }
         })
     } catch (e) {

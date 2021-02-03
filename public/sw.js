@@ -1,6 +1,5 @@
 const SITE_STATIC = 'site-static';
 const assets = [
-    '/',
     '/js/velocity.js',
     '/settings.js',
     '/img/new.svg',
@@ -8,6 +7,9 @@ const assets = [
     '/img/add_alert.svg',
     '/img/home-24px.svg',
     '/img/feed.svg',
+    '/img/back.svg',
+    '/img/logo.png',
+    '/img/favicon.ico',
     '/img/messages.svg',
     '/img/addToHome.svg',
     '/manifest.webmanifest',
@@ -30,10 +32,17 @@ self.addEventListener('install', installEvn => {
 
 self.addEventListener('activate', activationEvt => {
     console.log('.........sw was activated', activationEvt);
+
+    // activationEvt.waitUntil(
+    //     caches.keys().then(keys=>{
+    //         console.log(keys)
+    //         return Promise.all(keys.filter(key=>key !== SITE_STATIC).map(key=>caches.delete(key)))
+    //     })
+    // )
 })
 
 self.addEventListener('fetch', ev => {
-    console.log('fetch event', ev.request.url);
+   
 
     ev.respondWith(
         caches.match(ev.request)
