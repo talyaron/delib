@@ -29,7 +29,7 @@ module.exports = {
 
 
         //scroll to bottom
-        const chatWrapper = vnode.dom.children[0];
+        const chatWrapper = vnode.dom.children[1];
 
         chatWrapper.scrollTo({
             top: chatWrapper.scrollHeight,
