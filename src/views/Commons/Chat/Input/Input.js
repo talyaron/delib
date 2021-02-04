@@ -8,6 +8,8 @@ import store from '../../../../data/store';
 
 //functions
 import { sendMessage } from '../../../../functions/firebase/set/set';
+import {getLastEntityId,concatenateDBPath} from '../../../../functions/general';
+import {get} from 'lodash';
 
 
 module.exports = {
@@ -44,9 +46,49 @@ module.exports = {
 
 function handleSend(options) {
 
-   
+    const { vnode,groupId, questionId, subQuestionId, optionId } = options;
+    const {pv} = vnode.attrs;
 
-    const { vnode } = options;
+    showRequestToRegister({groupId, questionId, subQuestionId, optionId},pv )
+
+   
+    
     sendMessage(options)
     vnode.state.message = '';
+}
+
+async function showRequestToRegister(ids, pv) {
+    try {
+        const { groupId, questionId, subQuestionId, optionId } = ids;
+     
+        console.log(pv)
+
+        const entityId = getLastEntityId(ids);
+        const path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
+
+        if (entityId === false) throw new Error('couldnt find last entity id');
+
+        const isRegisterd = get(store.listenToMessages, `[${entityId}]`, false);
+
+        //search first in the array of messages, if not, search in the database.
+        let isUserInMessages = store.chat[path].find(msg => msg.uid === store.user.uid)
+
+        if (!isRegisterd) {
+
+            //check if the user is allready in messages. if he is not, then show the alert
+
+            if (isUserInMessages === undefined) {
+               pv.state.showRegistration = true; 
+                return false
+               
+            } else {
+
+                //dont show
+                return false
+            }
+        }
+    } catch (e) {
+        console.error(e)
+    }
+
 }

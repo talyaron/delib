@@ -1,4 +1,3 @@
-import { truncate } from 'lodash';
 import m from 'mithril';
 import store from '../data/store';
 
@@ -21,6 +20,18 @@ function deep_value(obj, path, alternativeValue) {
         return alternativeValue
     }
 };
+
+function getLastEntityId(ids){
+    const {groupId, questionId, subQuestionId, optionId, consequenceId} = ids;
+
+    if(consequenceId !== undefined) return consequenceId;
+    if(optionId !== undefined) return optionId;
+    if(subQuestionId !== undefined) return subQuestionId;
+    if(questionId !== undefined) return questionId;
+    if(groupId !== undefined) return groupId;
+    return false;
+    
+}
 
 function setWrapperHeight(headerId, wrapperId) {
     let header = document.getElementById(headerId);
@@ -699,6 +710,7 @@ function getLanguage(groupId){
 module.exports = {
     Reference,
     createRefString,
+    getLastEntityId,
     msToTime,
     deep_value,
     setWrapperHeight,

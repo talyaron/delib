@@ -282,6 +282,12 @@ body {
 
 }
 
+.buttons--danger {
+
+    background: red;
+
+}
+
 .buttons--nonactive {
     opacity: .3;
 }

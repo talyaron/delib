@@ -340,7 +340,7 @@ function createOption(groupId, questionId, subQuestionId, type, creatorId, title
 
     const optionId = uniqueId();
     try {
-        
+
 
         let optionRef = DB
             .collection('groups')
@@ -1073,6 +1073,16 @@ function handleSubscription(vnode) {
     }
 }
 
+function dontShowPopAgain() {
+    try {
+        DB.collection('users').doc(store.user.uid).update({ stopRegistrationMessages: true })
+            .then(() => console.info('user will not recive pop messages again'))
+            .catch(e => console.error(e))
+    } catch (e) {
+        console.error(e)
+    }
+}
+
 module.exports = {
     updateOption,
     addToFeed,
@@ -1108,5 +1118,6 @@ module.exports = {
     zeroChatFeedMessages,
     setNotifications,
     setNumberOfMessagesMark,
-    handleSubscription
+    handleSubscription,
+    dontShowPopAgain
 };

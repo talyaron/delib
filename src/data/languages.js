@@ -25,7 +25,7 @@ const lang={
         agreed:'מוסכמות',
         getMailNotifications:'קבלת התרעות (דחיפה) על הודעות חדשות',
         getUpdateOnNewOptions:'קבלת עדכונים על אופציות נוספות',
-        willYouRegister:'האם תרצו להרשם לקבלת הודעות, על מסרים חדשים בדיון הזה?',
+        willYouRegister:'האם תרצו להרשם לקבלת הודעות, על מסרים חדשים בדיון זה?',
         dontShowAgain:'אל תציג הודעות כאלו בעתיד'
 
     },

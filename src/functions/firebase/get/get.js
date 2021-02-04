@@ -1053,6 +1053,7 @@ function listenToChat(ids) {
             store.chatMessegesNotRead[path] = 0;
         }
 
+     
 
         return DB.collection(chatPath)
             .where('createdTime', '>', lastRead)
@@ -1061,6 +1062,8 @@ function listenToChat(ids) {
             .onSnapshot(messagesDB => {
                 messagesDB.docChanges().forEach(function (change) {
                     if (change.type === "added") {
+
+                  
 
                         if (!(path in store.chat)) { store.chat[path] = [] }
                         store.chat[path].push(change.doc.data());
