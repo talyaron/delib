@@ -1,0 +1,31 @@
+.explanation{
+    background: var(--primary);
+    color: white;
+    min-width: 600px;
+    margin: 0px auto;
+    padding: var(--regPadding);
+    border-radius: 0px 0px var(--roundBorder) var(--roundBorder);
+}
+
+.explanation h1{
+    font-size: var(--size17);
+}
+
+.explanation p{
+    font-size: var(--size15);
+    color: var(--gray4);
+}
+
+.questionDescription__title{
+   
+    margin-bottom: var(--regPadding);
+}
+
+.questionDescription__text{
+    color: var(--gray4);
+    font-size: var(--size15);
+    margin-bottom: var(--regPadding);
+    line-height: 1.8rem;
+    max-height: 25vh;
+    overflow-y: auto;
+}

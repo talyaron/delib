@@ -111,6 +111,7 @@ module.exports = {
 
         //get language
         vnode.state.language = get(store.groups,`[${groupId}].language`,'he')
+        vnode.state.add.description = get(store.groups,`[${groupId}].description`,'')
 
     },
 
@@ -186,6 +187,8 @@ module.exports = {
                             topic='קבוצה'
                             ids={{ groupId: vnode.attrs.id }}
                             title={vnode.state.groupName}
+                            description={vnode.state.add.description}
+                            language={vnode.state.language}
                             url={m.route.get()}
                         />
                     }

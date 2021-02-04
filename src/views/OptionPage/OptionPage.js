@@ -220,6 +220,8 @@ module.exports = {
                         topic='אפשרות'
                         ids={{ groupId: groupId, questionId: questionId, subQuestionId, optionId }}
                         title={option.title}
+                        description={option.description}
+                        language={vnode.state.language}
                         url={m.route.get()}
                     />
                 }

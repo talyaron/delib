@@ -4,6 +4,7 @@ import './Chat.css';
 //components
 import Message from './Message/Message';
 import Input from './Input/Input';
+import Explanation from '../../Commons/Explanation/Explanation'; 
 
 //functions
 import {concatenateDBPath} from '../../../functions/general'
@@ -34,7 +35,7 @@ module.exports = {
     },
     view: vnode => {
 
-        const {ids, title, entity, topic, url} = vnode.attrs;
+        const {ids, title, description, entity,language, topic, url} = vnode.attrs;
         const{groupId, questionId, subQuestionId, optionId} = ids;
 
        
@@ -44,6 +45,7 @@ module.exports = {
         
         return (
             <div class='chat'>
+                <Explanation ids={ids} title={title} description={description} language={language} entity={entity}/>
                 <div class='chatWrapper'>
                     {
                         store.chat[path].map((message, index)=>{
