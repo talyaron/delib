@@ -8,6 +8,21 @@ import { concatenateDBPath, setBrowserUniqueId, getEntityId } from '../../genera
 
 var unsubscribe = {};
 
+function getUser(uid) {
+
+    DB.collection('users').doc(uid)
+        .get()
+        .then(userDB => {
+            if (userDB.exists) {
+                let { stopRegistrationMessages } = userDB.data()
+                if (stopRegistrationMessages === undefined) stopRegistrationMessages = false;
+
+                store.user.stopRegistrationMessages = stopRegistrationMessages;
+                
+            }
+        })
+}
+
 function listenToUserGroups() {
 
 
@@ -481,7 +496,7 @@ function listenToUserLastReadOfOptionChat(optionId) {
 function listenToOption(ids) {
     try {
 
-       
+
         const { groupId, questionId, subQuestionId, optionId } = ids;
 
         if (groupId === undefined) throw new Error('missing groupId');
@@ -500,13 +515,13 @@ function listenToOption(ids) {
             .doc(optionId)
             .onSnapshot(optionDB => {
                 let optionObj = optionDB.data();
-           
+
                 optionObj.optionId = optionDB.data().optionId;
 
                 set(store, `option[${optionId}]`, optionObj);
-               
+
                 m.redraw()
-            },e=>{
+            }, e => {
                 console.error(e);
             })
 
@@ -1155,6 +1170,7 @@ function getLastTimeEntered(ids, vnode) {
 }
 
 module.exports = {
+    getUser,
     listenToUserGroups,
     listenToRegisterdGroups,
     getQuestions,

@@ -5,6 +5,7 @@ import './Chat.css';
 import Message from './Message/Message';
 import Input from './Input/Input';
 import Explanation from '../../Commons/Explanation/Explanation'; 
+import PopRegistration from '../../Commons/PopRegistration/PopRegistration';
 
 //functions
 import {concatenateDBPath} from '../../../functions/general'
@@ -57,6 +58,7 @@ module.exports = {
                     
                 </div>
                 <Input ids={ids} entity={entity} title={title} name={entity} topic={topic} url={url}/>
+                <PopRegistration language={language}/>
             </div>
         )
     }

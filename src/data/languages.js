@@ -20,10 +20,13 @@ const lang={
         anonymous:'אנונימי',
         add:'הוספה',
         cancel:'ביטול',
+        register:'הרשמה',
         new:'חדשות',
         agreed:'מוסכמות',
         getMailNotifications:'קבלת התרעות (דחיפה) על הודעות חדשות',
-        getUpdateOnNewOptions:'קבלת עדכונים על אופציות נוספות'
+        getUpdateOnNewOptions:'קבלת עדכונים על אופציות נוספות',
+        willYouRegister:'האם תרצו להרשם לקבלת הודעות, על מסרים חדשים בדיון הזה?',
+        dontShowAgain:'אל תציג הודעות כאלו בעתיד'
 
     },
     en:{
@@ -47,10 +50,13 @@ const lang={
         anonymous:'Anonymous',
         add:'Add',
         cancel:'Cancel',
+        register:'Register',
         new:'New',
         agreed:'Agreed',
         getMailNotifications:'Would you like to get mail notification on this option?',
-        getUpdateOnNewOptions:'Would you like to get updates on new options?'
+        getUpdateOnNewOptions:'Would you like to get updates on new options?',
+        willYouRegister:"Would you like to get notifications on new messages regarding this thread?",
+        dontShowAgain:"Don't show messages like that in the future"
     }
 
 }
