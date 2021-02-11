@@ -20,7 +20,7 @@ import Chat from '../Commons/Chat/Chat';
 //functions
 import { getSubQuestion, listenToGroupDetails, listenToChat, listenToOptions, getLastTimeEntered } from "../../functions/firebase/get/get";
 import { registerGroup } from '../../functions/firebase/set/set';
-import { getIsChat, concatenateDBPath,getFirstUrl } from '../../functions/general';
+import { getIsChat, concatenateDBPath, getFirstUrl } from '../../functions/general';
 
 import { get } from "lodash";
 
@@ -195,8 +195,9 @@ module.exports = {
 
                             </div>
                             {/* ---------------- Footer -------------- */}
-                            <div class='page__footer'>
-                                {vnode.state.subPage === 'main' && (vnode.state.details.processType === 'suggestions' || vnode.state.details.processType === undefined)?
+
+                            {vnode.state.subPage === 'main' && (vnode.state.details.processType === 'suggestions' || vnode.state.details.processType === undefined) ?
+                                <div class='page__footer'>
                                     <div class={hasNevigation(vnode) ? "subQuestion__arrange" : "subQuestion__arrange subQuestion__arrange--bottom"} id="questionFooter">
                                         <div
                                             class={vnode.state.details.orderBy == "new"
@@ -229,18 +230,19 @@ module.exports = {
                                         <img src='img/talk.svg' alt='order by last talks' />
                                         <div>Talks</div>
                                     </div> */}
-                                    </div> : null
-                                }
-                                {hasNevigation(vnode) && vnode.state.subPage === 'main' ? <NavBottom /> : null}
+                                    </div>
+                                </div> : null
+                            }
+                            {hasNevigation(vnode) && vnode.state.subPage === 'main' ? <NavBottom /> : null}
 
-                            </div>
+
                         </div>
 
                     )
                     : (<Spinner />)
                 }
                 {
-                    (vnode.state.details.processType === 'suggestions' ||vnode.state.details.processType === undefined) ?
+                    (vnode.state.details.processType === 'suggestions' || vnode.state.details.processType === undefined) ?
                         < div
                             class="fav fav__subQuestion fav--blink"
                             onclick={() => {

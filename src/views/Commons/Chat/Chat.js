@@ -11,7 +11,6 @@ import PopRegistration from '../../Commons/PopRegistration/PopRegistration';
 import { concatenateDBPath } from '../../../functions/general'
 
 
-
 //data
 import store from '../../../data/store';
 

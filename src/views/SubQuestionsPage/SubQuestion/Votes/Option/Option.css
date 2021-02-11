@@ -5,6 +5,7 @@
     justify-content: flex-end;
     align-items: center;
     transition: all 200ms;
+    height: 100%;
 
 }
 
@@ -26,11 +27,13 @@
     width: 80%;
     text-align: center;
     color:  #1b3d9b;
-    padding: 10px;
-    border-radius: 30px;
+    padding: 5px;
+    border-radius: 10px;
     margin-top: 7px;
     user-select: none;
     cursor: pointer;
+    max-height: 100px;
+    overflow-y: auto;
 }
 
 
