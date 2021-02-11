@@ -85,7 +85,7 @@ body {
 
 .page__footer{
     box-shadow: 0px -3px 9px rgba(0, 0, 0, 0.486);
-    z-index: 100;
+    z-index: 1;
 }
 
 
@@ -342,7 +342,7 @@ body {
     box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.5);
     user-select: none;
     cursor: pointer;
-    z-index: 5;
+    z-index: 200;
 }
 
 .fav:active {
