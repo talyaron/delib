@@ -1,10 +1,12 @@
 .explanation{
     background: var(--primary);
     color: white;
-    min-width: 600px;
+   
     margin: 0px auto;
     padding: var(--regPadding);
     border-radius: 0px 0px var(--roundBorder) var(--roundBorder);
+    max-width: 600px;
+    overflow-y: auto;
 }
 
 .explanation h1{

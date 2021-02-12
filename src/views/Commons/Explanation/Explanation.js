@@ -16,9 +16,9 @@ module.exports = {
         return (
             <div class='explanation'>
                 <h1>{lang[language][entity]}: {vnode.attrs.title}</h1>
-                <p>
+                <div>
                     {vnode.attrs.description}
-                </p>
+                </div>
                 {/* <div class='qexplanation__footer'>
                     
                 </div> */}
