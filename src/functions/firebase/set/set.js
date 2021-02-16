@@ -1083,6 +1083,17 @@ function dontShowPopAgain() {
     }
 }
 
+function markUserSeenSuggestionsWizard(){
+    try{
+        DB.collection('users').doc(store.user.uid)
+        .update({firstTimeOnSuggestions:false})
+        .then(()=>{console.info('user seen wizared')})
+        .catch(e=>console.error(e))
+    }catch(e){
+        console.error(e)
+    }
+}
+
 module.exports = {
     updateOption,
     addToFeed,
@@ -1119,5 +1130,6 @@ module.exports = {
     setNotifications,
     setNumberOfMessagesMark,
     handleSubscription,
-    dontShowPopAgain
+    dontShowPopAgain,
+    markUserSeenSuggestionsWizard
 };

@@ -19,8 +19,8 @@ import Chat from '../Commons/Chat/Chat';
 
 //functions
 import { getSubQuestion, listenToGroupDetails, listenToChat, listenToOptions, getLastTimeEntered } from "../../functions/firebase/get/get";
-import { registerGroup } from '../../functions/firebase/set/set';
-import { getIsChat, concatenateDBPath, getFirstUrl } from '../../functions/general';
+import { registerGroup, markUserSeenSuggestionsWizard } from '../../functions/firebase/set/set';
+import { getIsChat, concatenateDBPath, getFirstUrl, getUser } from '../../functions/general';
 
 import { get } from "lodash";
 
@@ -45,7 +45,15 @@ module.exports = {
                 .route
                 .set('/login');
 
+        } else {
+
+            //should we show wiz for first new comers?
+            waitToCheckIfUserSeenSuggestionsWizard(vnode);
+           
         }
+
+
+        console.log(store.user)
 
         vnode.state = {
             orderBy: "top",
@@ -68,7 +76,8 @@ module.exports = {
             path: concatenateDBPath(groupId, questionId, subQuestionId),
             unreadMessages: 0,
             lastTimeEntered: 0,
-            language: 'he'
+            language: 'he',
+            firstTimeOnSuggestions: false
         }
 
 
@@ -231,9 +240,10 @@ module.exports = {
                                         <div>Talks</div>
                                     </div> */}
                                     </div>
+                                    {hasNevigation(vnode) && vnode.state.subPage === 'main' ? <NavBottom /> : null}
                                 </div> : null
                             }
-                            {hasNevigation(vnode) && vnode.state.subPage === 'main' ? <NavBottom /> : null}
+
 
 
                         </div>
@@ -263,6 +273,15 @@ module.exports = {
                     vnode={vnode}
                     language={language}
                 />
+                {vnode.state.firstTimeOnSuggestions === true ?
+                    <div class='suggestionsWiz'>
+                        <div class='suggestionsWiz__box'>
+                            <h2>ברוכים הבאים לדליב</h2>
+                            <h2>כך תוכלו להציע רעיונות ולהצביע</h2>
+                            <img src='/img/suggestions-wiz.gif' />
+                            <button class='buttons' onclick={() => closeSuggestionsWizard(vnode)}>סגירה</button>
+                        </div>
+                    </div> : null}
 
 
             </div >
@@ -283,4 +302,23 @@ function hasNevigation(vnode) {
         console.error(e)
         return false;
     }
+}
+
+function closeSuggestionsWizard(vnode) {
+    markUserSeenSuggestionsWizard();
+    vnode.state.firstTimeOnSuggestions = false;
+}
+
+
+function waitToCheckIfUserSeenSuggestionsWizard(vnode){
+    let count = 1;
+    const int = setInterval(() => {
+      
+        if (count > 20 || store.user.firstTimeOnSuggestions !== undefined) {
+
+            vnode.state.firstTimeOnSuggestions = store.user.firstTimeOnSuggestions || false;
+            clearInterval(int);
+        }
+        count++
+    }, 500)
 }

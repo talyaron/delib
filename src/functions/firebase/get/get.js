@@ -9,18 +9,26 @@ import { concatenateDBPath, setBrowserUniqueId, getEntityId } from '../../genera
 var unsubscribe = {};
 
 function getUser(uid) {
+    try {
 
-    DB.collection('users').doc(uid)
-        .get()
-        .then(userDB => {
-            if (userDB.exists) {
-                let { stopRegistrationMessages } = userDB.data()
-                if (stopRegistrationMessages === undefined) stopRegistrationMessages = false;
+        DB.collection('users').doc(uid)
+            .get()
+            .then(userDB => {
+                if (userDB.exists) {
+                    let { stopRegistrationMessages, firstTimeOnSuggestions} = userDB.data()
+                    if (stopRegistrationMessages === undefined) stopRegistrationMessages = false;
 
-                store.user.stopRegistrationMessages = stopRegistrationMessages;
-                
-            }
-        })
+                    store.user.stopRegistrationMessages = stopRegistrationMessages;
+
+                    //check if user is first time on suggestions
+                    if(firstTimeOnSuggestions === undefined) store.user.firstTimeOnSuggestions = true;
+
+                }
+            })
+            .catch(e=>{console.error(e)})
+    } catch (e) {
+        console.error(e)
+    }
 }
 
 function listenToUserGroups() {
@@ -1053,7 +1061,7 @@ function listenToChat(ids) {
             store.chatMessegesNotRead[path] = 0;
         }
 
-     
+
 
         return DB.collection(chatPath)
             .where('createdTime', '>', lastRead)
@@ -1063,7 +1071,7 @@ function listenToChat(ids) {
                 messagesDB.docChanges().forEach(function (change) {
                     if (change.type === "added") {
 
-                  
+
 
                         if (!(path in store.chat)) { store.chat[path] = [] }
                         store.chat[path].push(change.doc.data());
