@@ -73,9 +73,8 @@ function onAuth() {
 					//if user anonymous
 
 					console.info('user is anonymous');
-
-
-
+					getUser(store.user.uid);
+					
 					listenToUserGroups();
 					listenToRegisterdGroups();
 

@@ -314,8 +314,11 @@ function waitToCheckIfUserSeenSuggestionsWizard(vnode){
     let count = 1;
     const int = setInterval(() => {
       
-        if (count > 20 || store.user.firstTimeOnSuggestions !== undefined) {
+       
+       
 
+        if (count > 20 || store.user.firstTimeOnSuggestions !== undefined ) {
+           
             vnode.state.firstTimeOnSuggestions = store.user.firstTimeOnSuggestions || false;
             clearInterval(int);
         }
