@@ -32,7 +32,7 @@ export function setNewReaction({ groupId, questionId, type }) {
             .collection('questions')
             .doc(questionId)
             .collection('reactions')
-            .add({ userId: store.user.uid, reactionType: type, date: firebase.firestore.FieldValue.serverTimestamp() })
+            .add({ userId: store.user.uid, reactionType: type, dateSeconds: (new Date().getTime()/1000) })
             .then(() => {
                 console.info('New reaction was set by user', store.user.uid)
             })

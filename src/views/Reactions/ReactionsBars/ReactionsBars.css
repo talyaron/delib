@@ -1,0 +1,12 @@
+.reactionsBars{
+    display: flex;
+    align-items: flex-end;
+}
+
+.reactionsBar{
+ flex: 1;
+ background: green;
+ border: 1px solid gray;
+ transition: all 1s;
+ max-height: 100%;
+}

@@ -10,6 +10,7 @@ import { listenToReactions } from '../../functions/firebase/get/getQuestions';
 //components
 import Header from '../Commons/Header/Header';
 import ReactionsMenu from './ReactionsMenu/ReactionsMenu';
+import ReactionsBars from './ReactionsBars/ReactionsBars';
 
 let unsubscribe = () => { };
 
@@ -34,6 +35,7 @@ module.exports = {
         }
 
     },
+   
     onremove: vnode => {
         console.log('...... unsubscribe......')
         unsubscribe();
@@ -45,7 +47,7 @@ module.exports = {
         return (
             <div class='page page__grid'>
                 <Header upLevelUrl={`/question/${groupId}/${questionId}`} />
-                Reactions: {groupId}, {questionId}
+                <ReactionsBars reactions={vnode.state.reactions} ids={{ groupId, questionId }} />
                 <ReactionsMenu ids={{ groupId, questionId }} reactions={vnode.state.reactions} />
             </div>
         )

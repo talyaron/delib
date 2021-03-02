@@ -1,3 +1,4 @@
+import m from 'mithril';
 import store from '../../../data/store';
 import { DB } from '../config';
 
@@ -37,35 +38,29 @@ export function listenToReactions({ groupId, questionId }) {
         //create reaction in store, if don't exists
         if (!{}.hasOwnProperty.call(store.reactions, questionId)) store.reactions[questionId] = [];
 
+        const currentDate = (new Date().getTime()/1000)-60;
+        console.log(currentDate)
+
         return DB
             .collection('groups')
             .doc(groupId)
             .collection('questions')
             .doc(questionId)
             .collection('reactions')
+            .where('dateSeconds', '>',currentDate)
             .onSnapshot(reactionsDB => {
                 console.log('go....')
 
-                reactionsDB.forEach(reactionDB => {
-
-                    console.log(reactionDB.data())
-                    console.log(store.reactions)
-
-                    if (reactionDB.id !== 'info') {
-                        store.reactions[questionId].push(reactionDB.data())
-
-                        console.log(reactionDB.data().date.seconds)
-
-
-
-
-                        console.log(store.reactions[questionId])
-
+                reactionsDB.docChanges().forEach((change) => {
+                    if (change.type === "added") {
+                       
+                        store.reactions[questionId].push(change.doc.data())
                     }
-
-
-                    // store.reactions[questionId].push(reactionDB.data())
+                   
                 })
+                console.log('finished reading........')
+                console.log(store.reactions[questionId]);
+                m.redraw()
 
             }, e => { console.error(e) })
     } catch (e) {
