@@ -21,9 +21,11 @@ import VoteModal from './VoteModal/VoteModal';
 import store from '../../data/store';
 import lang from '../../data/languages';
 //functions
-import { getQuestionDetails, getSubQuestion, getLastTimeEntered, listenToChat,listenToGroup} from '../../functions/firebase/get/get';
+import { getQuestionDetails, getSubQuestion, getLastTimeEntered, listenToChat, listenToGroup } from '../../functions/firebase/get/get';
 import { registerGroup } from '../../functions/firebase/set/set';
-import { deep_value, getIsChat, concatenateDBPath,getLanguage } from '../../functions/general';
+import { deep_value, getIsChat, concatenateDBPath, getLanguage } from '../../functions/general';
+import {cheackIfReactionExists} from '../../functions/firebase/get/getQuestions';
+import {createReactions} from '../../functions/firebase/set/setQuestions';
 
 
 
@@ -60,8 +62,8 @@ module.exports = {
                 isShow: false,
                 which: 'subQuestion'
             },
-            openAddPanel:false,
-            openVote:false,
+            openAddPanel: false,
+            openVote: false,
             unsbscribe: {
                 subQuestions: {},
                 chat: () => { }
@@ -80,7 +82,7 @@ module.exports = {
             subPage: getIsChat() ? 'chat' : 'main',
             unreadMessages: 0,
             lastTimeEntered: 0,
-            language:'he'
+            language: 'he'
         }
 
         //get user before login to page
@@ -99,7 +101,7 @@ module.exports = {
         vnode.state.unsubscribeQuestionDetails = getQuestionDetails(groupId, questionId, vnode); //it will then listen to subQuestions
         vnode.state.unsbscribe.chat = listenToChat({ groupId, questionId });
 
-       
+
 
         registerGroup(groupId);
         listenToGroup(groupId);
@@ -133,10 +135,10 @@ module.exports = {
         }
         const path = concatenateDBPath(groupId, questionId);
         vnode.state.unreadMessages = store.chat[path].filter(m => m.createdTime.seconds > vnode.state.lastTimeEntered).length;
-        
+
         //get language
         vnode.state.language = getLanguage(groupId);
-      
+
     },
 
     onremove: vnode => {
@@ -157,14 +159,14 @@ module.exports = {
     },
     view: vnode => {
 
-        const {language} = vnode.state;
+        const { language } = vnode.state;
 
         const { groupId, questionId } = vnode.attrs;
 
         return (
             <div class='page page__grid'>
-                 <AddPanel isOpen={vnode.state.openAddPanel} vsp ={vnode.state}/>
-               
+                <AddPanel isOpen={vnode.state.openAddPanel} vsp={vnode.state} />
+
                 <div class='page__header'>
                     <Header
                         topic='נושא'
@@ -174,7 +176,7 @@ module.exports = {
                         showSubscribe={true}
                         questionId={vnode.attrs.questionId}
                     />
-                    <NavTop level={'שאלות'} 
+                    <NavTop level={'שאלות'}
                         current={vnode.state.subPage}
                         chat={lang[language].chat}
                         pvs={vnode.state}
@@ -197,7 +199,10 @@ module.exports = {
                         <div class='wrapperSubQuestions' id='questionWrapperAll'>
                             <h1>שאלות </h1>
                             <div class='subQuestionsWrapper'>
-
+                                <div class='question__reactions' onclick={() => handleOpenReactions(vnode)}>
+                                    <h1>On line reactions</h1>
+                                    <img src='img/reactions.svg'></img>
+                                </div>
                                 {vnode.state.subQuestions.map((subQuestion, index) => {
 
                                     return (<SubQuestionSolution
@@ -269,7 +274,7 @@ module.exports = {
                     </div>
 
                 </div >
-                {vnode.state.openVote?<VoteModal vsp={vnode.state} ids={{groupId, questionId}}/>:null}
+                {vnode.state.openVote ? <VoteModal vsp={vnode.state} ids={{ groupId, questionId }} /> : null}
                 {vnode.state.modalSubQuestion.isShow ?
                     <div class='background'>
                         <SubQuestionEditModal
@@ -280,7 +285,7 @@ module.exports = {
                     </div>
                     : null
                 }
-               
+
             </div>
         )
     }
@@ -294,4 +299,31 @@ function orderBy(order, vnode) {
         .unsubscribeOptions();
     vnode.state.unsubscribeOptions = getSubQuestion('on', vnode.attrs.groupId, vnode.attrs.questionId, order);
     vnode.state.orderBy = order
+}
+
+async function handleOpenReactions(vnode) {
+    try {
+       
+        const { groupId, questionId } = vnode.attrs;
+        const { title } = vnode.state;
+        if(!title) throw new Error('Title is missing');
+
+        //check if reactions exists. if note create the reactions in DB.
+        //then redirect to questions' reactions.
+
+        let reactions = await cheackIfReactionExists({groupId, questionId });
+        if(reactions) {
+          
+            m.route.set(`/reactions/${groupId}/${questionId}`)
+        } else {
+            const isCreated = await createReactions({groupId, questionId, title});
+            
+            if(isCreated) m.route.set(`/reactions/${groupId}/${questionId}`)
+            else throw new Error(isCreated)
+        }
+       
+
+    } catch (e) {
+        console.error(e);
+    }
 }

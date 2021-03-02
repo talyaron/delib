@@ -1,0 +1,23 @@
+.reactionsMenu{
+    display: flex;
+}
+.reactionsMenu__button{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    background: white;
+    border-right: 1px solid gray;
+    padding: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+.reactionsMenu__button:hover{
+    background: var(--gray5);
+}
+
+.reactionsMenu__button p{
+    margin: 3px 0px;
+    color: var(--gray1);
+    text-transform: capitalize;
+}

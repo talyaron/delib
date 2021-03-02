@@ -124,3 +124,20 @@
         grid-template-columns: repeat(1, 1fr);
     }
 }
+
+.question__reactions{
+    width: 100%;
+    background: white;
+    border-radius: var(--roundBorder);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    color: var(--gray0);
+}
+
+.question__reactions:hover{
+    background-color: var(--gray5);
+}

@@ -21,6 +21,7 @@ var store = {
         chatFeed: false
     },
     questions: {}, //list of questions. stored as {groupId:{questionId:{} }}
+    reactions:{}, //list of reaction under a question {questionId:[reactions]}
     groups: {}, //groups stored as {groupId:{group info}}
     groupListen: {}, //check if group is listened to
     groupsRegistered: {},
