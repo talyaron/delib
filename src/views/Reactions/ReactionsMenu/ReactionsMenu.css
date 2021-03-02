@@ -21,3 +21,10 @@
     color: var(--gray1);
     text-transform: capitalize;
 }
+
+.reactionsMenu__button--pressed{
+    background: var(--gray2);
+}
+.reactionsMenu__button--pressed:hover{
+    background: var(--gray2);
+}

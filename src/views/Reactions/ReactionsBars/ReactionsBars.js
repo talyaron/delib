@@ -66,5 +66,11 @@ function updateBars(vnode) {
         return reactionsArr.filter(rctn => rctn.reactionType === reaction.type).filter(rctn => rctn.dateSeconds > currentDate)
     })
 
+   reactions.map((reaction,i)=>{
+       if(reaction.pressedTime < currentDate) {
+           reactions[i].pressed = false;
+       }
+   })
+
     m.redraw();
 }

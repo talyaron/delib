@@ -27,15 +27,15 @@ module.exports = {
 
         vnode.state = {
             reactions: [
-                { img: 'edit.svg', value: 1, text: 'like', type: 'testType1' },
-                { img: 'edit.svg', value: 1, text: 'intresting', type: 'testType2' },
-                { img: 'edit.svg', value: -1, text: 'focus', type: 'testType3' },
-                { img: 'edit.svg', value: -1, text: 'stop', type: 'testType4' }
+                { img: 'edit.svg', value: 1, text: 'like', type: 'testType1', pressed: false },
+                { img: 'edit.svg', value: 1, text: 'intresting', type: 'testType2', pressed: false },
+                { img: 'edit.svg', value: -1, text: 'focus', type: 'testType3', pressed: false },
+                { img: 'edit.svg', value: -1, text: 'stop', type: 'testType4', pressed: false }
             ]
         }
 
     },
-   
+
     onremove: vnode => {
         console.log('...... unsubscribe......')
         unsubscribe();
