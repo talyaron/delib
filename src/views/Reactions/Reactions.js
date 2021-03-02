@@ -22,7 +22,7 @@ module.exports = {
         store.lastPage = `/reactions/${groupId}/${questionId}`;
         sessionStorage.setItem('lastPage', store.lastPage);
 
-        console.log('on init .... listen......')
+       
         unsubscribe = listenToReactions({ groupId, questionId });
 
         vnode.state = {
@@ -37,7 +37,7 @@ module.exports = {
     },
 
     onremove: vnode => {
-        console.log('...... unsubscribe......')
+     
         unsubscribe();
     },
     view: (vnode) => {

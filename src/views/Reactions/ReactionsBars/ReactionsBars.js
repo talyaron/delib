@@ -38,13 +38,16 @@ module.exports = {
     },
     view: (vnode) => {
         const { groupId, questionId } = vnode.attrs.ids;
+        const {reactions} = vnode.attrs;
 
         return (
             <div class='reactionsBars'>
                 {vnode.state.reactionsBars.map((reaction, index) => {
+                  
                     return (
-                        <div key={index} class='reactionsBar' style={`height:${10 * reaction.length}%`} >
-                            dfgd
+                        <div key={index} 
+                        class={reactions[index].value<=0?'reactionsBar reactionsBar--positive':'reactionsBar reactionsBar--negative'} style={`height:${10 * reaction.length}%`} >
+                            {reaction.length>0?reaction.length:null}
                         </div>
                     )
                 })}
@@ -56,9 +59,10 @@ module.exports = {
 function updateBars(vnode) {
     const { questionId } = vnode.attrs.ids;
     const { reactions } = vnode.attrs;
+  
     let reactionsArr = store.reactions[questionId] || [];
   
-    const currentDate = (new Date().getTime() / 1000) - 5;
+    const currentDate = (new Date().getTime() / 1000) - 30;
 
 
     vnode.state.reactionsBars = reactions.map((reaction, i) => {

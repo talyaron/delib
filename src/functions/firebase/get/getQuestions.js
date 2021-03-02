@@ -3,7 +3,7 @@ import store from '../../../data/store';
 import { DB } from '../config';
 
 export function cheackIfReactionExists({ groupId, questionId }) {
-    console.log(groupId, questionId);
+ 
     try {
 
         return new Promise((resolve, reject) => {
@@ -16,7 +16,7 @@ export function cheackIfReactionExists({ groupId, questionId }) {
                 .doc('info')
                 .get()
                 .then(reactionsInfoDB => {
-                    console.log(reactionsInfoDB.exists)
+              
                     if (reactionsInfoDB.exists) resolve(reactionsInfoDB.data());
                     else resolve(false)
                 })
@@ -33,13 +33,12 @@ export function cheackIfReactionExists({ groupId, questionId }) {
 export function listenToReactions({ groupId, questionId }) {
     try {
 
-        console.log('listenToReactions', groupId, questionId)
 
         //create reaction in store, if don't exists
         if (!{}.hasOwnProperty.call(store.reactions, questionId)) store.reactions[questionId] = [];
 
         const currentDate = (new Date().getTime()/1000)-60;
-        console.log(currentDate)
+      
 
         return DB
             .collection('groups')
@@ -49,7 +48,6 @@ export function listenToReactions({ groupId, questionId }) {
             .collection('reactions')
             .where('dateSeconds', '>',currentDate)
             .onSnapshot(reactionsDB => {
-                console.log('go....')
 
                 reactionsDB.docChanges().forEach((change) => {
                     if (change.type === "added") {
@@ -58,8 +56,7 @@ export function listenToReactions({ groupId, questionId }) {
                     }
                    
                 })
-                console.log('finished reading........')
-                console.log(store.reactions[questionId]);
+              
                 m.redraw()
 
             }, e => { console.error(e) })

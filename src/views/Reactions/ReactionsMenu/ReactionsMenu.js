@@ -44,7 +44,7 @@ module.exports = {
 }
 
 function handleReaction({ type, vnode, index }) {
-    console.log(type, vnode)
+    
     const { groupId, questionId } = vnode.attrs.ids;
 
     if (vnode.attrs.reactions[index].pressed === false) {

@@ -1,12 +1,24 @@
-.reactionsBars{
+.reactionsBars {
     display: flex;
     align-items: flex-end;
 }
 
-.reactionsBar{
- flex: 1;
- background: green;
- border: 1px solid gray;
- transition: all 1s;
- max-height: 100%;
+.reactionsBar {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 1s;
+    max-height: 100%;
+    margin: 0px 40px;
+    border-radius: 10px 10px 0px 0px;
+    font-size: 3rem;
+}
+
+.reactionsBar--positive {
+    background: rgb(41, 206, 41);
+}
+
+.reactionsBar--negative {
+    background: rgb(206, 41, 63);
 }
