@@ -27,10 +27,10 @@ module.exports = {
 
         vnode.state = {
             reactions: [
-                { img: 'edit.svg', value: 1, text: 'like', type: 'testType1', pressed: false },
-                { img: 'edit.svg', value: 1, text: 'intresting', type: 'testType2', pressed: false },
-                { img: 'edit.svg', value: -1, text: 'focus', type: 'testType3', pressed: false },
-                { img: 'edit.svg', value: -1, text: 'stop', type: 'testType4', pressed: false }
+                { img: 'blub.svg', value: 1, text: 'Good Idea', type: 'idea', pressed: false },
+                { img: 'clapping.svg', value: 1, text: 'Well Done!', type: 'good', pressed: false },
+                { img: 'focus.svg', value: -1, text: 'focus', type: 'focus', pressed: false },
+                { img: 'question.svg', value: 1, text: 'I have a Question', type: 'question', pressed: false }
             ]
         }
 

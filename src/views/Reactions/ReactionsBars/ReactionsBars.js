@@ -46,7 +46,7 @@ module.exports = {
                   
                     return (
                         <div key={index} 
-                        class={reactions[index].value<=0?'reactionsBar reactionsBar--positive':'reactionsBar reactionsBar--negative'} style={`height:${10 * reaction.length}%`} >
+                        class={reactions[index].value>=0?'reactionsBar reactionsBar--positive':'reactionsBar reactionsBar--negative'} style={`height:${10 * reaction.length}%`} >
                             {reaction.length>0?reaction.length:null}
                         </div>
                     )

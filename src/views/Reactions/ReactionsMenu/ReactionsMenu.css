@@ -22,6 +22,10 @@
     text-transform: capitalize;
 }
 
+.reactionsMenu__button img{
+   max-height: 40px;
+}
+
 .reactionsMenu__button--pressed{
     background: var(--gray2);
 }
