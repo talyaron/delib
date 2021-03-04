@@ -1,7 +1,8 @@
-.reactionsMenu{
+.reactionsMenu {
     display: flex;
 }
-.reactionsMenu__button{
+
+.reactionsMenu__button {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -12,23 +13,34 @@
     cursor: pointer;
     user-select: none;
 }
-.reactionsMenu__button:hover{
+
+.reactionsMenu__button:hover {
     background: var(--gray5);
 }
 
-.reactionsMenu__button p{
+
+
+.reactionsMenu__button p {
     margin: 3px 0px;
     color: var(--gray1);
     text-transform: capitalize;
 }
 
-.reactionsMenu__button img{
-   max-height: 40px;
+@media screen and (max-width: 600px) {
+    .reactionsMenu__button p {
+        font-size: 10px;
+    }
 }
 
-.reactionsMenu__button--pressed{
+.reactionsMenu__button img {
+    max-height: 40px;
+    max-width: 20px;
+}
+
+.reactionsMenu__button--pressed {
     background: var(--gray2);
 }
-.reactionsMenu__button--pressed:hover{
+
+.reactionsMenu__button--pressed:hover {
     background: var(--gray2);
 }

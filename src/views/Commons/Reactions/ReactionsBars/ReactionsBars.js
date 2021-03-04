@@ -57,18 +57,23 @@ module.exports = {
 }
 
 function updateBars(vnode) {
-    const { questionId } = vnode.attrs.ids;
+    const { subQuestionId } = vnode.attrs.ids;
     const { reactions } = vnode.attrs;
   
-    let reactionsArr = store.reactions[questionId] || [];
+    let reactionsArr = store.reactions[subQuestionId] || [];
   
-    const currentDate = (new Date().getTime() / 1000) - 30;
+    const currentDate = (new Date().getTime() / 1000) - 60;
 
+    let count = 0;
 
     vnode.state.reactionsBars = reactions.map((reaction, i) => {
 
-        return reactionsArr.filter(rctn => rctn.reactionType === reaction.type).filter(rctn => rctn.dateSeconds > currentDate)
+        const reactionTypeArr =  reactionsArr.filter(rctn => rctn.reactionType === reaction.type).filter(rctn => rctn.dateSeconds > currentDate)
+        count += reactionTypeArr.length;
+        return reactionTypeArr;
     })
+
+    store.reactionsNumber[subQuestionId] = count;
 
    reactions.map((reaction,i)=>{
        if(reaction.pressedTime < currentDate) {

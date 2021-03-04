@@ -22,11 +22,12 @@ import Reactions from '../Commons/Reactions/Reactions';
 import { getSubQuestion, listenToGroupDetails, listenToChat, listenToOptions, getLastTimeEntered } from "../../functions/firebase/get/get";
 import { registerGroup, markUserSeenSuggestionsWizard } from '../../functions/firebase/set/set';
 import { getIsChat, concatenateDBPath, getFirstUrl, getUser } from '../../functions/general';
+import { listenToReactions } from '../../functions/firebase/get/getQuestions';
 
 import { get } from "lodash";
 
 let unsubscribe = () => { }, unsubscribeChat = () => { };
-
+let unsubscribeReactions = ()=>{}
 
 module.exports = {
 
@@ -53,8 +54,6 @@ module.exports = {
 
         }
 
-
-        console.log(store.user)
 
         vnode.state = {
             orderBy: "top",
@@ -83,7 +82,7 @@ module.exports = {
 
 
         listenToOptions(groupId, questionId, subQuestionId, 'top');
-
+        unsubscribeReactions = listenToReactions({ groupId, questionId, subQuestionId});
         registerGroup(groupId);
     },
     oncreate: vnode => {
@@ -138,6 +137,7 @@ module.exports = {
 
         unsubscribe();
         unsubscribeChat();
+        unsubscribeReactions();
 
     },
     view: vnode => {
@@ -208,7 +208,7 @@ module.exports = {
                                     <Reactions
                                         groupId={groupId}
                                         questionId={questionId}
-
+                                        subQuestionId={subQuestionId}
                                     /> : null
                                 }
 

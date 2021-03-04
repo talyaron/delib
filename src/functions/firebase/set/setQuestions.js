@@ -19,8 +19,8 @@ export function createReactions({ groupId, questionId, title }) {
     })
 }
 
-export function setNewReaction({ groupId, questionId, type }) {
-    console.log(groupId, questionId)
+export function setNewReaction({ groupId, questionId, subQuestionId, type }) {
+
     try {
 
         if (!groupId) throw new Error('no groupId was given');
@@ -31,10 +31,12 @@ export function setNewReaction({ groupId, questionId, type }) {
             .doc(groupId)
             .collection('questions')
             .doc(questionId)
+            .collection('subQuestions')
+            .doc(subQuestionId)
             .collection('reactions')
             .add({ userId: store.user.uid, reactionType: type, dateSeconds: (new Date().getTime()/1000) })
             .then(() => {
-                console.info('New reaction was set by user', store.user.uid)
+                // console.info('New reaction was set by user', store.user.uid)
             })
             .catch(e => {
                 console.error(e)

@@ -30,12 +30,12 @@ export function cheackIfReactionExists({ groupId, questionId }) {
     }
 }
 
-export function listenToReactions({ groupId, questionId }) {
+export function listenToReactions({ groupId, questionId, subQuestionId}) {
     try {
 
 
         //create reaction in store, if don't exists
-        if (!{}.hasOwnProperty.call(store.reactions, questionId)) store.reactions[questionId] = [];
+        if (!{}.hasOwnProperty.call(store.reactions, subQuestionId)) store.reactions[subQuestionId] = [];
 
         const currentDate = (new Date().getTime()/1000)-60;
       
@@ -45,6 +45,8 @@ export function listenToReactions({ groupId, questionId }) {
             .doc(groupId)
             .collection('questions')
             .doc(questionId)
+            .collection('subQuestions')
+            .doc(subQuestionId)
             .collection('reactions')
             .where('dateSeconds', '>',currentDate)
             .onSnapshot(reactionsDB => {
@@ -52,7 +54,7 @@ export function listenToReactions({ groupId, questionId }) {
                 reactionsDB.docChanges().forEach((change) => {
                     if (change.type === "added") {
                        
-                        store.reactions[questionId].push(change.doc.data())
+                        store.reactions[subQuestionId].push(change.doc.data())
                     }
                    
                 })

@@ -201,10 +201,7 @@ module.exports = {
                         <div class='wrapperSubQuestions' id='questionWrapperAll'>
                             <h1>שאלות </h1>
                             <div class='subQuestionsWrapper'>
-                                <div class='question__reactions' onclick={() => handleOpenReactions(vnode)}>
-                                    <h1>On line reactions</h1>
-                                    <img src='img/reactions.svg'></img>
-                                </div>
+                                
                                 {vnode.state.subQuestions.map((subQuestion, index) => {
 
                                     return (<SubQuestionSolution
@@ -251,13 +248,7 @@ module.exports = {
                     url={m.route.get()}
                 /> : null
                 }
-                {vnode.state.subPage === 'reactions' ?
-                    <Reactions
-                        groupId={groupId}
-                        questionId={questionId}
-
-                    /> : null
-                }
+                
                 <div class='page__header'>
                     <NavBottom />
                 </div>
@@ -311,29 +302,4 @@ function orderBy(order, vnode) {
     vnode.state.orderBy = order
 }
 
-async function handleOpenReactions(vnode) {
-    try {
 
-        const { groupId, questionId } = vnode.attrs;
-        const { title } = vnode.state;
-        if (!title) throw new Error('Title is missing');
-
-        //check if reactions exists. if note create the reactions in DB.
-        //then redirect to questions' reactions.
-
-        let reactions = await cheackIfReactionExists({ groupId, questionId });
-        if (reactions) {
-
-            m.route.set(`/reactions/${groupId}/${questionId}`)
-        } else {
-            const isCreated = await createReactions({ groupId, questionId, title });
-
-            if (isCreated) m.route.set(`/reactions/${groupId}/${questionId}`)
-            else throw new Error(isCreated)
-        }
-
-
-    } catch (e) {
-        console.error(e);
-    }
-}

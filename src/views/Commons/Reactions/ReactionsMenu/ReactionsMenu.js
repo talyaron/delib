@@ -23,7 +23,7 @@ module.exports = {
 
     },
     view: (vnode) => {
-        const { groupId, questionId } = vnode.attrs.ids;
+        const { groupId, questionId, subQuestionId} = vnode.attrs.ids;
 
         // const { reactions } = vnode.attrs;
 
@@ -45,7 +45,7 @@ module.exports = {
 
 function handleReaction({ type, vnode, index }) {
     
-    const { groupId, questionId } = vnode.attrs.ids;
+    const { groupId, questionId,subQuestionId } = vnode.attrs.ids;
 
     if (vnode.attrs.reactions[index].pressed === false) {
 
@@ -54,6 +54,6 @@ function handleReaction({ type, vnode, index }) {
         m.redraw()
 
 
-        setNewReaction({ groupId, questionId, type })
+        setNewReaction({ groupId, questionId,subQuestionId, type })
     }
 }
