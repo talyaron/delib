@@ -118,6 +118,7 @@ import UnAuthorized from './views/UnAuthorized/UnAuthorized';
 import ChatFeed from './views/ChatFeed/ChatFeed';
 import OptionPage from './views/OptionPage/OptionPage';
 import FeedPage from './views/FeedPage/FeedPage';
+import Map from './views/Map/Map'
 
 
 m.route(root, "/login", {
@@ -140,7 +141,8 @@ m.route(root, "/login", {
     "/edit": Edit,
     '/unauthorized': UnAuthorized,
     "/feed": FeedPage,
-    "/chatfeed": ChatFeed
+    "/chatfeed": ChatFeed,
+    "/map/:id": Map
 
 
 })

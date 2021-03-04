@@ -29,11 +29,12 @@
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
+    "cytoscape": "^3.18.1",
     "lodash": "^4.17.19",
     "mithril": "^1.1.7",
     "regenerator-runtime": "^0.13.7",
-    "sortablejs": "^1.8.4",
     "serialize-javascript": ">=3.1.0",
-    "set-value": ">=2.0.1"
+    "set-value": ">=2.0.1",
+    "sortablejs": "^1.8.4"
   }
 }
