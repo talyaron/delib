@@ -8,7 +8,7 @@ import { zeroChatFeedMessages, setChatLastEntrance } from '../../../functions/fi
 module.exports = {
 
     view: vnode => {
-        let { level, current, pvs, mainUrl, chatUrl, ids, isSubscribed, unreadMessages, chat } = vnode.attrs;
+        let { level, current, pvs, mainUrl, chatUrl, ids, isSubscribed, unreadMessages, chat, reactions,activeReactions} = vnode.attrs;
 
      
         return (
@@ -26,6 +26,13 @@ module.exports = {
                     <div>{chat}</div>
                     {unreadMessages ? <div class='counter'>{unreadMessages}</div> : null}
                 </div>
+                {reactions?<div
+                    class={current == 'reactions' ? 'navTop__btn navTop__btn--selected' : 'navTop__btn'}
+                    onclick={() => { m.route.set(chatUrl); pvs.subPage = 'reactions'; }}
+                >
+                    <div>{reactions}</div>
+                    {activeReactions ? <div class='counter'>{activeReactions}</div> : null}
+                </div>:null}
             </div>
         )
     }

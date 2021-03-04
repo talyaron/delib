@@ -108,7 +108,7 @@ import Groups from "./views/Groups/Groups";
 import GroupPage from './views/GroupPage/GroupPage';
 import Question from './views/QuestionPage/QuestionPage';
 import QuestionEdit from './views/QuestionEdit/QuestionEdit';
-import Reactions from './views/Reactions/Reactions';
+import Reactions from './views/Commons/Reactions/Reactions';
 
 import SubQuestionsPage from './views/SubQuestionsPage/SubQuestionPage';
 import Edit from './views/Commons/Edit/Edit';

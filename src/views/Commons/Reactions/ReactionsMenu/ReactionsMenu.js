@@ -5,7 +5,7 @@ import './ReactionsMenu.css';
 // import store from '../../data/store';
 
 //functions
-import { setNewReaction } from '../../../functions/firebase/set/setQuestions';
+import { setNewReaction } from '../../../../functions/firebase/set/setQuestions';
 
 //components
 

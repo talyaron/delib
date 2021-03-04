@@ -16,6 +16,7 @@ import Chat from '../Commons/Chat/Chat';
 import SubQuestionEditModal from './SubQuestionEditModal/SubQuestionEditModal';
 import AddPanel from './AddPanel/AddPanel';
 import VoteModal from './VoteModal/VoteModal';
+import Reactions from '../Commons/Reactions/Reactions'
 
 //model
 import store from '../../data/store';
@@ -24,8 +25,8 @@ import lang from '../../data/languages';
 import { getQuestionDetails, getSubQuestion, getLastTimeEntered, listenToChat, listenToGroup } from '../../functions/firebase/get/get';
 import { registerGroup } from '../../functions/firebase/set/set';
 import { deep_value, getIsChat, concatenateDBPath, getLanguage } from '../../functions/general';
-import {cheackIfReactionExists} from '../../functions/firebase/get/getQuestions';
-import {createReactions} from '../../functions/firebase/set/setQuestions';
+import { cheackIfReactionExists } from '../../functions/firebase/get/getQuestions';
+import { createReactions } from '../../functions/firebase/set/setQuestions';
 
 
 
@@ -179,6 +180,7 @@ module.exports = {
                     <NavTop level={'שאלות'}
                         current={vnode.state.subPage}
                         chat={lang[language].chat}
+                        
                         pvs={vnode.state}
                         mainUrl={`/question/${groupId}/${questionId}`}
                         chatUrl={`/question-chat/${groupId}/${questionId}`}
@@ -237,16 +239,24 @@ module.exports = {
                         }
 
                     </div>
-                    :
-                    <Chat
-                        entity='question'
-                        topic='שאלה'
-                        ids={{ groupId: vnode.attrs.groupId, questionId: vnode.attrs.questionId }}
-                        title={vnode.state.title}
-                        description={vnode.state.description}
-                        language={vnode.state.language}
-                        url={m.route.get()}
-                    />
+                    : null
+                }
+                {vnode.state.subPage === 'chat' ? <Chat
+                    entity='question'
+                    topic='שאלה'
+                    ids={{ groupId: vnode.attrs.groupId, questionId: vnode.attrs.questionId }}
+                    title={vnode.state.title}
+                    description={vnode.state.description}
+                    language={vnode.state.language}
+                    url={m.route.get()}
+                /> : null
+                }
+                {vnode.state.subPage === 'reactions' ?
+                    <Reactions
+                        groupId={groupId}
+                        questionId={questionId}
+
+                    /> : null
                 }
                 <div class='page__header'>
                     <NavBottom />
@@ -303,25 +313,25 @@ function orderBy(order, vnode) {
 
 async function handleOpenReactions(vnode) {
     try {
-       
+
         const { groupId, questionId } = vnode.attrs;
         const { title } = vnode.state;
-        if(!title) throw new Error('Title is missing');
+        if (!title) throw new Error('Title is missing');
 
         //check if reactions exists. if note create the reactions in DB.
         //then redirect to questions' reactions.
 
-        let reactions = await cheackIfReactionExists({groupId, questionId });
-        if(reactions) {
-          
+        let reactions = await cheackIfReactionExists({ groupId, questionId });
+        if (reactions) {
+
             m.route.set(`/reactions/${groupId}/${questionId}`)
         } else {
-            const isCreated = await createReactions({groupId, questionId, title});
-            
-            if(isCreated) m.route.set(`/reactions/${groupId}/${questionId}`)
+            const isCreated = await createReactions({ groupId, questionId, title });
+
+            if (isCreated) m.route.set(`/reactions/${groupId}/${questionId}`)
             else throw new Error(isCreated)
         }
-       
+
 
     } catch (e) {
         console.error(e);

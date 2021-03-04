@@ -2,13 +2,12 @@ import m from 'mithril';
 import './Reactions.css';
 
 //model
-import store from '../../data/store';
+import store from '../../../data/store';
 
 //functions
-import { listenToReactions } from '../../functions/firebase/get/getQuestions';
+import { listenToReactions } from '../../../functions/firebase/get/getQuestions';
 
 //components
-import Header from '../Commons/Header/Header';
 import ReactionsMenu from './ReactionsMenu/ReactionsMenu';
 import ReactionsBars from './ReactionsBars/ReactionsBars';
 
@@ -18,10 +17,7 @@ module.exports = {
     oninit: vnode => {
         const { groupId, questionId } = vnode.attrs;
 
-        //get user before login to page
-        store.lastPage = `/reactions/${groupId}/${questionId}`;
-        sessionStorage.setItem('lastPage', store.lastPage);
-
+    
        
         unsubscribe = listenToReactions({ groupId, questionId });
 
@@ -36,7 +32,7 @@ module.exports = {
 
     },
 
-    onremove: vnode => {
+    onremove: () => {
      
         unsubscribe();
     },
@@ -45,8 +41,8 @@ module.exports = {
         const reactions = store.reactions[questionId] || [];
 
         return (
-            <div class='page page__grid'>
-                <Header upLevelUrl={`/question/${groupId}/${questionId}`} />
+            <div class='reactions'>
+               
                 <ReactionsBars reactions={vnode.state.reactions} ids={{ groupId, questionId }} />
                 <ReactionsMenu ids={{ groupId, questionId }} reactions={vnode.state.reactions} />
             </div>

@@ -15,6 +15,7 @@ import Header from '../Commons/Header/Header';
 import NavBottom from '../Commons/NavBottom/NavBottom';
 import NavTop from '../Commons/NavTop/NavTop';
 import Chat from '../Commons/Chat/Chat';
+import Reactions from '../Commons/Reactions/Reactions';
 
 
 //functions
@@ -49,7 +50,7 @@ module.exports = {
 
             //should we show wiz for first new comers?
             waitToCheckIfUserSeenSuggestionsWizard(vnode);
-           
+
         }
 
 
@@ -162,6 +163,7 @@ module.exports = {
                                 <NavTop
                                     level={lang[language].solutions}
                                     chat={lang[language].chat}
+                                    reactions={lang[language].reactions}
                                     current={vnode.state.subPage}
                                     pvs={vnode.state}
                                     mainUrl={`/subquestions/${groupId}/${questionId}/${subQuestionId}`}
@@ -190,16 +192,24 @@ module.exports = {
                                         showSubscribe={true}
                                         isAlone={true}
                                         language={language}
-                                    />
+                                    /> : null
+                                }
 
-                                    :
+                                {vnode.state.subPage === 'chat' ?
                                     <Chat
                                         entity='subQuestion'
                                         topic='תת שאלה'
                                         ids={{ groupId, questionId, subQuestionId }}
                                         title={vnode.state.details.title}
                                         url={m.route.get()}
-                                    />
+                                    /> : null
+                                }
+                                {vnode.state.subPage === 'reactions' ?
+                                    <Reactions
+                                        groupId={groupId}
+                                        questionId={questionId}
+
+                                    /> : null
                                 }
 
                             </div>
@@ -310,15 +320,15 @@ function closeSuggestionsWizard(vnode) {
 }
 
 
-function waitToCheckIfUserSeenSuggestionsWizard(vnode){
+function waitToCheckIfUserSeenSuggestionsWizard(vnode) {
     let count = 1;
     const int = setInterval(() => {
-      
-       
-       
 
-        if (count > 20 || store.user.firstTimeOnSuggestions !== undefined ) {
-           
+
+
+
+        if (count > 20 || store.user.firstTimeOnSuggestions !== undefined) {
+
             vnode.state.firstTimeOnSuggestions = store.user.firstTimeOnSuggestions || false;
             clearInterval(int);
         }

@@ -2,7 +2,7 @@ import m from 'mithril';
 import './ReactionsBars.css';
 
 //model
-import store from '../../../data/store';
+import store from '../../../../data/store';
 
 //functions
 
