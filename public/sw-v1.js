@@ -1,6 +1,17 @@
 const SITE_STATIC = 'site-static';
 const SITE_DYNAMIC = 'site-dynamic-v1';
 
+
+if( "setAppBadge" in navigator && "clearAppBadge" in navigator){
+
+	//use the native badge API
+    console.log('WE can start using badges');
+    navigator.setAppBadge(12).catch(e=>{console.error(e)})
+
+}  else {
+    console.error('no badges in brwoser')
+}
+
 const assets = [
     '/js/velocity.js',
     '/settings.js',
@@ -59,3 +70,4 @@ self.addEventListener('fetch', ev => {
             })
     )
 })
+
