@@ -11,7 +11,7 @@ import {
 	listenToFeedLastEntrance,
 	listenToUserGroups, listenToRegisterdGroups
 } from '../firebase/get/get';
-import {listenToChatFeed} from '../firebase/get/getChats';
+import {listenToChatFeed,listenToBageMessages} from '../firebase/get/getChats';
 import {
 	getRandomColorDark
 } from '../general';
@@ -59,6 +59,10 @@ function onAuth() {
 
 					listenToUserGroups();
 					listenToRegisterdGroups();
+
+					listenToBageMessages()
+				
+					
 
 					DB.collection('users').doc(user.uid).set(userSimpleObj, {merge:true})
 					.then(function () { }).catch(function (error) {

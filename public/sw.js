@@ -2,17 +2,8 @@ const SITE_STATIC = 'site-static';
 const SITE_DYNAMIC = 'site-dynamic-v1';
 
 
-if( "setAppBadge" in navigator && "clearAppBadge" in navigator){
-
-	//use the native badge API
-    console.log('WE can start using badges');
-    navigator.setAppBadge(12).catch(e=>{console.error(e)})
-
-}  else {
-    console.error('no badges in brwoser')
-}
-
 const assets = [
+    '/index.html',
     '/js/velocity.js',
     '/settings.js',
     '/img/new.svg',
@@ -33,10 +24,10 @@ const assets = [
 ]
 
 self.addEventListener('install', installEvn => {
-    console.log('sw has been installed', installEvn)
+    console.info('sw has been installed')
     const preCache = async () => {
         const cache = await caches.open(SITE_STATIC);
-        console.log('cached')
+        console.info('cached')
         return cache.addAll(assets);
     };
     installEvn.waitUntil(preCache());
@@ -44,29 +35,23 @@ self.addEventListener('install', installEvn => {
 })
 
 self.addEventListener('activate', activationEvt => {
-    console.log('.........sw was activated', activationEvt);
+    console.info('.........sw was activated', activationEvt);
 
-    //     activationEvt.waitUntil(
-    //         caches.keys().then(keys=>{
-    //             console.log(keys)
-    //             return Promise.all(keys.filter(key=>key !== SITE_STATIC).map(key=>caches.delete(key)))
-    //         })
-    //     )
 })
 
 self.addEventListener('fetch', ev => {
 
+    console.dir(ev)
 
     ev.respondWith(
         caches.match(ev.request)
             .then(cacheRes => {
                 return cacheRes || fetch(ev.request)
-                    // .then(fetchRes => {
-                    //     return caches.open(SITE_DYNAMIC).then(cache => {
-                    //         cache.put(ev.request.url, fetchRes.clone());
-                    //         return fetchRes;
-                    //     })
-                    // })
+                .then(async fetchRes => {
+                    const cache = await caches.open(SITE_DYNAMIC);
+                    cache.put(ev.request.url, fetchRes.clone());
+                    return fetchRes;
+                })
             })
     )
 })

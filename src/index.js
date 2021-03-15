@@ -43,14 +43,14 @@ if (nativeURL.includes('&')) {
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js')
         .then(registration => {
-            console.log('sw.js was registerd');
-            console.dir(registration)
+            console.info('sw.js was registerd');
+          
             registration.addEventListener('updatefound', () => {
                 // If updatefound is fired, it means that there's
                 // a new service worker being installed.
-                console.log('new service worker being installed')
+                console.info('new service worker being installed')
                 var installingWorker = registration.installing;
-                console.log('A new service worker is being installed:',
+                console.info('A new service worker is being installed:',
                     installingWorker);
 
                 // You can listen for changes to the installing service worker's
@@ -58,10 +58,10 @@ if ('serviceWorker' in navigator) {
             });
         })
         .catch( error=> {
-            console.log('Service worker registration failed:', error);
+            console.error('Service worker registration failed:', error);
         });
 } else {
-    console.log('Service workers are not supported.');
+    console.error('Service workers are not supported.');
 }
 
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -91,14 +91,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
     });
   });
 
-//badge
-if ('clearAppBadge' in navigator) {
-    console.log('clearAppBadge in navigator!');
-    const unreadCount = 24;
-    navigator.setAppBadge(unreadCount).catch((error) => {
 
-    });
-}
 
 //Views
 import Login from "./views/Login/Login";

@@ -35,3 +35,18 @@ export function listenToChatFeed() {
         console.error(e)
     }
 }
+
+export function listenToBageMessages() {
+    if ("setAppBadge" in navigator && "clearAppBadge" in navigator) {
+
+        return DB.collection('users').doc(store.user.uid).collection('messagesCounter').doc('counter').onSnapshot(counterDB => {
+            if (counterDB.exists) {
+                let counter = counterDB.data().messages;
+            
+                navigator.setAppBadge(counter).catch(e => { console.error(e) })
+            }
+        })
+    } else {
+        return () => { };
+    }
+}

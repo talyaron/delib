@@ -3,6 +3,7 @@ import "./NavBottom.css";
 
 //functions
 import { setToFeedLastEntrance } from '../../../functions/firebase/set/set';
+import {setZeroChatCounter} from '../../../functions/firebase/set/setChats';
 
 //data
 import store from '../../../data/store'
@@ -50,7 +51,7 @@ module.exports = {
             <div class="navBottom__btnText">Feed</div>
           </div>
         </div>
-        <div class="navBottom__btn" onclick={() => { m.route.set('/chatfeed') }}>
+        <div class="navBottom__btn" onclick={() => {setZeroChatCounter(); m.route.set('/chatfeed') }}>
           <div class="navBottom__btnInfo">
             {store.chatFeedCounter > 0 ?
               <div class='counter'>{store.chatFeedCounter}</div>

@@ -974,7 +974,7 @@ exports.listenToGroupChats = functions.firestore
       return db
         .collection(`/groups/${groupId}/subscribers`)
         .get()
-        .then(subscribersDB => {
+        .then(async subscribersDB => {
           return subscribersDB.forEach(subscriberDB => {
             console.log('update user ', subscriberDB.id)
 
@@ -985,7 +985,12 @@ exports.listenToGroupChats = functions.firestore
               msgDifference: FieldValue.increment(1),
               msg: newMsg.data(),
               date: new Date()
+            }).then(()=>{
+              return db.collection('users').doc(subscriberDB.id).collection('messagesCounter').doc('counter').set({messages:FieldValue.increment(1)}, {merge:true})
             })
+            .catch(e=>console.error(e))
+
+            
           })
 
         })
@@ -1015,6 +1020,8 @@ exports.listenToQuestionChats = functions.firestore
               msgDifference: FieldValue.increment(1),
               msg: newMsg.data(),
               date: new Date()
+            }).then(()=>{
+              return db.collection('users').doc(subscriberDB.id).collection('messagesCounter').doc('counter').set({messages:FieldValue.increment(1)}, {merge:true})
             })
           })
 
@@ -1045,6 +1052,8 @@ exports.listenToSubQuestionChats = functions.firestore
               msgDifference: FieldValue.increment(1),
               msg: newMsg.data(),
               date: new Date()
+            }).then(()=>{
+              return db.collection('users').doc(subscriberDB.id).collection('messagesCounter').doc('counter').set({messages:FieldValue.increment(1)}, {merge:true})
             })
           })
 
@@ -1075,6 +1084,8 @@ exports.listenToOptionChats = functions.firestore
               msgDifference: FieldValue.increment(1),
               msg: newMsg.data(),
               date: new Date()
+            }).then(()=>{
+              return db.collection('users').doc(subscriberDB.id).collection('messagesCounter').doc('counter').set({messages:FieldValue.increment(1)}, {merge:true})
             })
           })
 
