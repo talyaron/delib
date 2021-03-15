@@ -41,7 +41,7 @@ if (nativeURL.includes('&')) {
 
 //service worker
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw-v1.js')
+    navigator.serviceWorker.register('./sw.js')
         .then(registration => {
             console.log('sw.js was registerd');
             console.dir(registration)

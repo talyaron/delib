@@ -9,9 +9,9 @@ import {
 	getUser,
 	listenToFeed,
 	listenToFeedLastEntrance,
-	listenToChatFeed,
 	listenToUserGroups, listenToRegisterdGroups
 } from '../firebase/get/get';
+import {listenToChatFeed} from '../firebase/get/getChats';
 import {
 	getRandomColorDark
 } from '../general';
