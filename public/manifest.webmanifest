@@ -16,10 +16,10 @@
             "gcm_sender_id": "103953800507"
         }
     ],
-    "start_url": "/",
+    "start_url": "/?/chatfeed",
     "background_color": "#32527b",
     "display": "standalone",
     "scope": "/",
     "theme_color": "#32527b",
-    "orientation":"portrait-primary"
+    "orientation":"natural"
 }
