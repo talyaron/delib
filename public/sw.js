@@ -41,7 +41,7 @@ self.addEventListener('activate', activationEvt => {
 
 self.addEventListener('fetch', ev => {
 
-    console.dir(ev)
+
 
     ev.respondWith(
         caches.match(ev.request)

@@ -7,7 +7,7 @@ import './Input.css';
 import store from '../../../../data/store';
 
 //functions
-import { sendMessage } from '../../../../functions/firebase/set/set';
+import { sendMessage } from '../../../../functions/firebase/set/setChats';
 import {getLastEntityId,concatenateDBPath} from '../../../../functions/general';
 import {get} from 'lodash';
 

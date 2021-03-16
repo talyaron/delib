@@ -4,7 +4,7 @@ import './ChatFeedMessage.css';
 
 //functions
 
-import { zeroChatFeedMessages } from '../../../functions/firebase/set/set';
+import { zeroChatFeedMessages } from '../../../functions/firebase/set/setChats';
 
 
 
@@ -13,7 +13,7 @@ module.exports = {
         try {
             const { message } = vnode.attrs;
             const { msg } = message;
-            console.log(msg)
+      
 let groupName = false
             if(msg.group){
                 groupName = msg.group.title;

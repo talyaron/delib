@@ -1010,25 +1010,25 @@ exports.listenToQuestionChats = functions.firestore
         .collection(`/groups/${groupId}/questions/${questionId}/subscribers`)
         .get()
         .then(subscribersDB => {
-          return subscribersDB.forEach(subscriberDB => {
+          return subscribersDB.forEach( subscriberDB => {
             console.log('update user ', subscriberDB.id)
 
             const userChatRef = db.collection('users').doc(subscriberDB.id).collection('messages').doc(`${generateChatEntitiyId({ groupId, questionId })}`);
 
-            return userChatRef.update({
+            userChatRef.update({
               msgNumber: FieldValue.increment(1),
               msgDifference: FieldValue.increment(1),
               msg: newMsg.data(),
               date: new Date()
-            }).then(()=>{
-              return db.collection('users').doc(subscriberDB.id).collection('messagesCounter').doc('counter').set({messages:FieldValue.increment(1)}, {merge:true})
-            })
+            });
+            db.collection('users').doc(subscriberDB.id).collection('messagesCounter').doc('counter').set({ messages: FieldValue.increment(1) }, { merge: true });
           })
 
         })
     } catch (err) {
       console.log(err)
     }
+    return true
   })
 
 exports.listenToSubQuestionChats = functions.firestore

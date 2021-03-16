@@ -3,7 +3,7 @@ import m from 'mithril';
 import './NavTop.css';
 
 //functions
-import { zeroChatFeedMessages, setChatLastEntrance } from '../../../functions/firebase/set/set';
+import { zeroChatFeedMessages, setChatLastEntrance } from '../../../functions/firebase/set/setChats';
 import store from "../../../data/store";
 
 module.exports = {

@@ -4,7 +4,7 @@ import './Header.css';
 import { get } from 'lodash';
 
 //functions
-import { subscribeUser, setNotifications, handleSubscription } from '../../../functions/firebase/set/set';
+import { subscribeUser, setNotifications} from '../../../functions/firebase/set/setChats';
 import { listenToSubscription, listenIfGetsMessages } from '../../../functions/firebase/get/get';
 import { subscribeToNotification } from '../../../functions/firebase/messaging';
 import { exitOut } from '../../../functions/animations';
@@ -176,7 +176,8 @@ function handleNotifications(setNotificationTo, vnode) {
 
 
 
-    subscribeToNotification(ids, setNotificationTo)
+    subscribeToNotification(ids, setNotificationTo);
+    subscribeUser({subscribe:!setNotificationTo, groupId, questionId, subQuestionId, optionId})
 
 
 }
@@ -203,4 +204,33 @@ function onNewMessageJumpCounter(vnode) {
 function toggleMenu(vnode) {
 
     vnode.state.isMenuOpen = !vnode.state.isMenuOpen
+}
+
+function handleSubscription(vnode) {
+
+    try {
+
+        //path for subscription object
+        const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
+        console.log(groupId, questionId, subQuestionId, optionId)
+        const path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
+
+        console.log('subscribed:', vnode.state.subscribed)
+
+        subscribeUser({
+            groupId, questionId, subQuestionId, optionId, subscribe: vnode.state.subscribed
+        })
+
+        if (vnode.state.subscribed == false) {
+
+            vnode.state.subscribed = true;
+            set(store.subscribe, `[${path}]`, true)
+        } else {
+
+            vnode.state.subscribed = false;
+            set(store.subscribe, `[${path}]`, false)
+        }
+    } catch (e) {
+        console.error(e)
+    }
 }
