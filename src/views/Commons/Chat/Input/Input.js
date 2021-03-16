@@ -51,7 +51,10 @@ function handleSend(options) {
 
     showRequestToRegister({groupId, questionId, subQuestionId, optionId},pv )
 
-   
+   const group = store.groups[groupId];
+   if(group){
+       options.group = group;
+   }
     
     sendMessage(options)
     vnode.state.message = '';

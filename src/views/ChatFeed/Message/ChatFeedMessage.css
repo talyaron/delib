@@ -13,15 +13,13 @@
 
 .chatFeedMessage__texts {
    
-   
+    width: max-content;
+    max-width: var(--maxWidthOnPC);
   
     
 }
 
-.chatFeedMessage__user img {
-    width: 100%;
-    border-radius: 100px;
-}
+
 
 .chatFeedMessage__text {
     background-color: var(--white);
@@ -35,6 +33,17 @@
 
 .chatFeedMessage__textMain {
     margin-right: var(--regPadding);
+    display: flex;
+    align-items: center;
+}
+.chatFeedMessage__textMain img {
+    width: 30px;
+    border-radius: 100px;
+}
+
+.chatFeedMessage__textMain span {
+    width: 100%;
+    color: var(--gray0);
 }
 
 .chatFeedMessage__unRead {

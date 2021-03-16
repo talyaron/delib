@@ -11,7 +11,9 @@ var store = {
         },
         team: {
             title: 'שם הקבוצה'
-        }
+        },
+        
+
     },
     orgs: [], //not used?
     teams: [], //not used?

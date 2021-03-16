@@ -70,12 +70,14 @@ module.exports = {
         let groupId = id;
         getLastTimeEntered({ groupId }, vnode);
 
+        
+
     },
     onbeforeupdate: vnode => {
 
         const { id } = vnode.attrs;
         let groupId = id;
-
+        
 
 
         //check is admin
@@ -127,7 +129,7 @@ module.exports = {
 
     },
     view: vnode => {
-
+       
 
             const {language} = vnode.state
 

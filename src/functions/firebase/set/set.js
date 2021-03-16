@@ -605,7 +605,7 @@ function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like) 
     }
 }
 
-function sendMessage({ groupId, questionId, subQuestionId, optionId, message, title, entity, topic, url, vnode }) {
+function sendMessage({ groupId, questionId, subQuestionId, optionId, message, title, entity, topic, url, vnode, group }) {
     try {
 
         if (vnode.attrs.title === undefined) throw new Error(`No title of entity in vnode`)
@@ -638,6 +638,7 @@ function sendMessage({ groupId, questionId, subQuestionId, optionId, message, ti
         let ids = { groupId, questionId, subQuestionId, optionId }
         ids = createIds(ids)
 
+        if(!group) group = {};
 
         if (message) {
 
@@ -655,6 +656,7 @@ function sendMessage({ groupId, questionId, subQuestionId, optionId, message, ti
                 url,
                 ids,
                 userColor,
+                group,
                 createdTime: firebase
                     .firestore
                     .FieldValue
