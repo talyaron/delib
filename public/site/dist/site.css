@@ -1,0 +1,110 @@
+html {
+  font-size: 12px;
+}
+
+body {
+  background-color: #32527b;
+  color: white;
+  font-family: "Varela Round", sans-serif;
+  display: flex;
+  flex-direction: column;
+  direction: rtl;
+}
+
+.center {
+  text-align: center;
+}
+
+.wrapper {
+  max-width: 600px;
+  margin: auto;
+}
+
+header {
+  text-align: center;
+  margin-top: 3vw;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+header h1 {
+  font-size: 4rem;
+}
+header p {
+  font-size: 1.2rem;
+}
+header article {
+  text-align: center;
+}
+header img {
+  width: 300px;
+  position: relative;
+}
+header .mainImage {
+  background-color: white;
+  border-radius: 200px;
+  width: 400px;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+}
+header a {
+  color: yellow;
+  text-decoration: none;
+}
+
+.button {
+  background-color: red;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 40px;
+  user-select: none;
+  cursor: pointer;
+  opacity: 1 !important;
+  width: fit-content;
+  text-decoration: none;
+  text-align: center;
+  position: relative;
+}
+.button a {
+  color: white;
+  text-decoration: none;
+}
+
+.buttons__box {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+footer {
+  position: relative;
+  top: 0px;
+  text-align: center;
+  font-size: 0.6rem;
+}
+footer a {
+  color: yellow;
+  text-decoration: none;
+}
+
+a {
+  color: yellow;
+  text-decoration: none;
+}
+
+@media only screen and (max-width: 600px) {
+  header article {
+    padding: 10px;
+    width: 80vw;
+  }
+  header .mainImage {
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+    width: 80vw;
+    height: 80vw;
+  }
+  header img {
+    width: 60vw;
+  }
+}
