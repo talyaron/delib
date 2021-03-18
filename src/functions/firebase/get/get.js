@@ -8,6 +8,29 @@ import { concatenateDBPath, setBrowserUniqueId, getEntityId } from '../../genera
 
 var unsubscribe = {};
 
+function getUser(uid) {
+    try {
+
+        DB.collection('users').doc(uid)
+            .get()
+            .then(userDB => {
+                if (userDB.exists) {
+                    let { stopRegistrationMessages, firstTimeOnSuggestions} = userDB.data()
+                    if (stopRegistrationMessages === undefined) stopRegistrationMessages = false;
+
+                    store.user.stopRegistrationMessages = stopRegistrationMessages;
+
+                    //check if user is first time on suggestions
+                    if(firstTimeOnSuggestions === undefined) store.user.firstTimeOnSuggestions = true;
+
+                }
+            })
+            .catch(e=>{console.error(e)})
+    } catch (e) {
+        console.error(e)
+    }
+}
+
 function listenToUserGroups() {
 
 
@@ -281,7 +304,6 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
 
             store.subQuestionsListners[questionId] = { listen: true };
 
-            console.log('listenSubQuestions, listen to sub groups')
 
             if (!{}.hasOwnProperty.call(vnode.state, 'creatorId')) { throw new Error('No creatorId in vnode at listenSubQuestions') }
 
@@ -350,6 +372,7 @@ function getSubQuestion(groupId, questionId, subQuestionId, isSingle) {
                 m.redraw();
             } else {
                 console.error(`subQuestion ${groupId}/${questionId}/${subQuestionId} dont exists `)
+                m.route.set(`question/${groupId}/${questionId}`)
             }
         })
     } catch (e) {
@@ -480,6 +503,8 @@ function listenToUserLastReadOfOptionChat(optionId) {
 
 function listenToOption(ids) {
     try {
+
+
         const { groupId, questionId, subQuestionId, optionId } = ids;
 
         if (groupId === undefined) throw new Error('missing groupId');
@@ -498,10 +523,14 @@ function listenToOption(ids) {
             .doc(optionId)
             .onSnapshot(optionDB => {
                 let optionObj = optionDB.data();
-                optionObj.optionId = optionDB.data().id;
+
+                optionObj.optionId = optionDB.data().optionId;
 
                 set(store, `option[${optionId}]`, optionObj);
+
                 m.redraw()
+            }, e => {
+                console.error(e);
             })
 
     } catch (e) {
@@ -975,39 +1004,7 @@ function listenToFeedLastEntrance() {
 //     }
 // }
 
-function listenToChatFeed() {
 
-    try {
-
-        if (store.listen.chatFeed == false) {
-            DB.collection('users').doc(store.user.uid).collection('messages')
-                .orderBy("date", "asc")
-                .onSnapshot(chatDB => {
-                    let unreadMessagesCouner = 0;
-                    const messages = [];
-                    chatDB.forEach(newMessageDB => {
-
-
-                        messages.push(newMessageDB.data());
-
-                        unreadMessagesCouner += newMessageDB.data().msgDifference;
-                    })
-
-
-                    store.chatFeed = messages;
-
-                    store.chatFeedCounter = unreadMessagesCouner;
-
-                    m.redraw()
-                })
-
-            store.listen.chatFeed = true;
-        }
-
-    } catch (e) {
-        console.error(e)
-    }
-}
 
 function listenToChat(ids) {
 
@@ -1033,6 +1030,7 @@ function listenToChat(ids) {
         }
 
 
+
         return DB.collection(chatPath)
             .where('createdTime', '>', lastRead)
             .orderBy('createdTime', 'desc')
@@ -1040,6 +1038,8 @@ function listenToChat(ids) {
             .onSnapshot(messagesDB => {
                 messagesDB.docChanges().forEach(function (change) {
                     if (change.type === "added") {
+
+
 
                         if (!(path in store.chat)) { store.chat[path] = [] }
                         store.chat[path].push(change.doc.data());
@@ -1149,6 +1149,7 @@ function getLastTimeEntered(ids, vnode) {
 }
 
 module.exports = {
+    getUser,
     listenToUserGroups,
     listenToRegisterdGroups,
     getQuestions,
@@ -1173,7 +1174,6 @@ module.exports = {
     getMessages,
     listenToFeed,
     listenToChat,
-    listenToChatFeed,
     listenToFeedLastEntrance,
     listenToSubscription,
     listenIfGetsMessages,

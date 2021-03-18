@@ -14,7 +14,7 @@ window.logout = logout;
 m.route.prefix('?');
 
 //model
-import { EntityModel } from './data/dataTypes';
+import store from './data/store';
 
 //dealing with URLs from facebook with %
 let nativeURL = window.document.URL;
@@ -39,6 +39,46 @@ if (nativeURL.includes('&')) {
 
 }
 
+//service worker
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js')
+        .then(registration => {
+            console.info('sw.js was registerd');
+          
+            registration.addEventListener('updatefound', () => {
+                // If updatefound is fired, it means that there's
+                // a new service worker being installed.
+                console.info('new service worker being installed')
+                var installingWorker = registration.installing;
+                console.info('A new service worker is being installed:',
+                    installingWorker);
+
+                // You can listen for changes to the installing service worker's
+                // state via installingWorker.onstatechange
+            });
+        })
+        .catch( error=> {
+            console.error('Service worker registration failed:', error);
+        });
+} else {
+    console.error('Service workers are not supported.');
+}
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent Chrome 67 and earlier from automatically showing the prompt
+    e.preventDefault();
+console.log('can install!')
+    console.log('beforeinstallprompt')
+    // Stash the event so it can be triggered later.
+    store.deferredPrompt = e;
+    m.redraw();
+   
+   
+    
+  });
+
+
+
 //Views
 import Login from "./views/Login/Login";
 import LoginGoogle from "./views/Login/LoginGoogle";
@@ -47,6 +87,7 @@ import Groups from "./views/Groups/Groups";
 import GroupPage from './views/GroupPage/GroupPage';
 import Question from './views/QuestionPage/QuestionPage';
 import QuestionEdit from './views/QuestionEdit/QuestionEdit';
+import Reactions from './views/Commons/Reactions/Reactions';
 
 import SubQuestionsPage from './views/SubQuestionsPage/SubQuestionPage';
 import Edit from './views/Commons/Edit/Edit';
@@ -69,6 +110,7 @@ m.route(root, "/login", {
     "/editgroup/:id": EditGroupPage,
     '/question/:groupId/:questionId': Question,
     '/question-chat/:groupId/:questionId': Question,
+    "/reactions/:groupId/:questionId":Reactions,
     "/questionEdit/:groupId/:questionId": QuestionEdit,
     "/subquestions/:groupId/:questionId/:subQuestionId": SubQuestionsPage,
     "/subquestions-chat/:groupId/:questionId/:subQuestionId": SubQuestionsPage,

@@ -2,13 +2,17 @@ const lang={
     he:{
         langName:'עברית',
         dir:'rtl',
+        group:'קבוצה',
         groupTitle:'קבוצה',
         groupTopics:'נושאי הדיון של הקבוצה',
         chat:'דיון',
         follow:'מעקב',
         unfollow:'לא לעקוב',
         solutions:'פתרונות אפשריים',
+        solution:'פתרון אפשרי',
         question:'שאלה',
+        subQuestion:'שאלה',
+        option:'פתרון אפשרי',
         addSolution:'הוספת פתרון',
         title:'כותרת',
         description:'הסבר',
@@ -16,20 +20,30 @@ const lang={
         anonymous:'אנונימי',
         add:'הוספה',
         cancel:'ביטול',
+        register:'הרשמה',
         new:'חדשות',
-        agreed:'מוסכמות'
+        agreed:'מוסכמות',
+        reactions:'תחושות',
+        getMailNotifications:'קבלת התרעות (דחיפה) על הודעות חדשות',
+        getUpdateOnNewOptions:'קבלת עדכונים על אופציות נוספות',
+        willYouRegister:'האם תרצו להרשם לקבלת הודעות, על מסרים חדשים בדיון זה?',
+        dontShowAgain:'אל תציג הודעות כאלו בעתיד'
 
     },
     en:{
         langName:'English',
         dir:'ltr',
+        group:'A group',
         groupTitle:'Team',
         groupTopics:"Grsuoup's topics",
         chat:'Discusion',
         follow:'Follow',
         unfollow:'Unfollow',
         solutions:'Solutions',
+        solution:'A solution',
         question:'Question',
+        subQuestion:'A question',
+        option:'A solution',
         addSolution:'Add solution',
         title:'Title',
         description:'Description',
@@ -37,8 +51,14 @@ const lang={
         anonymous:'Anonymous',
         add:'Add',
         cancel:'Cancel',
+        register:'Register',
         new:'New',
-        agreed:'Agreed'
+        agreed:'Agreed',
+        reactions:'Reactions',
+        getMailNotifications:'Would you like to get mail notification on this option?',
+        getUpdateOnNewOptions:'Would you like to get updates on new options?',
+        willYouRegister:"Would you like to get notifications on new messages regarding this thread?",
+        dontShowAgain:"Don't show messages like that in the future"
     }
 
 }

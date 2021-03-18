@@ -16,14 +16,17 @@ import Chat from '../Commons/Chat/Chat';
 import SubQuestionEditModal from './SubQuestionEditModal/SubQuestionEditModal';
 import AddPanel from './AddPanel/AddPanel';
 import VoteModal from './VoteModal/VoteModal';
+import Reactions from '../Commons/Reactions/Reactions'
 
 //model
 import store from '../../data/store';
 import lang from '../../data/languages';
 //functions
-import { getQuestionDetails, getSubQuestion, getLastTimeEntered, listenToChat,listenToGroup} from '../../functions/firebase/get/get';
+import { getQuestionDetails, getSubQuestion, getLastTimeEntered, listenToChat, listenToGroup } from '../../functions/firebase/get/get';
 import { registerGroup } from '../../functions/firebase/set/set';
-import { deep_value, getIsChat, concatenateDBPath,getLanguage } from '../../functions/general';
+import { deep_value, getIsChat, concatenateDBPath, getLanguage } from '../../functions/general';
+import { cheackIfReactionExists } from '../../functions/firebase/get/getQuestions';
+import { createReactions } from '../../functions/firebase/set/setQuestions';
 
 
 
@@ -60,8 +63,8 @@ module.exports = {
                 isShow: false,
                 which: 'subQuestion'
             },
-            openAddPanel:false,
-            openVote:false,
+            openAddPanel: false,
+            openVote: false,
             unsbscribe: {
                 subQuestions: {},
                 chat: () => { }
@@ -80,7 +83,7 @@ module.exports = {
             subPage: getIsChat() ? 'chat' : 'main',
             unreadMessages: 0,
             lastTimeEntered: 0,
-            language:'he'
+            language: 'he'
         }
 
         //get user before login to page
@@ -99,7 +102,7 @@ module.exports = {
         vnode.state.unsubscribeQuestionDetails = getQuestionDetails(groupId, questionId, vnode); //it will then listen to subQuestions
         vnode.state.unsbscribe.chat = listenToChat({ groupId, questionId });
 
-       
+
 
         registerGroup(groupId);
         listenToGroup(groupId);
@@ -133,10 +136,10 @@ module.exports = {
         }
         const path = concatenateDBPath(groupId, questionId);
         vnode.state.unreadMessages = store.chat[path].filter(m => m.createdTime.seconds > vnode.state.lastTimeEntered).length;
-        
+
         //get language
         vnode.state.language = getLanguage(groupId);
-      
+
     },
 
     onremove: vnode => {
@@ -157,14 +160,14 @@ module.exports = {
     },
     view: vnode => {
 
-        const {language} = vnode.state;
+        const { language } = vnode.state;
 
         const { groupId, questionId } = vnode.attrs;
 
         return (
             <div class='page page__grid'>
-                 <AddPanel isOpen={vnode.state.openAddPanel} vsp ={vnode.state}/>
-               
+                <AddPanel isOpen={vnode.state.openAddPanel} vsp={vnode.state} />
+
                 <div class='page__header'>
                     <Header
                         topic='נושא'
@@ -174,9 +177,10 @@ module.exports = {
                         showSubscribe={true}
                         questionId={vnode.attrs.questionId}
                     />
-                    <NavTop level={'שאלות'} 
+                    <NavTop level={'שאלות'}
                         current={vnode.state.subPage}
                         chat={lang[language].chat}
+                        
                         pvs={vnode.state}
                         mainUrl={`/question/${groupId}/${questionId}`}
                         chatUrl={`/question-chat/${groupId}/${questionId}`}
@@ -197,7 +201,7 @@ module.exports = {
                         <div class='wrapperSubQuestions' id='questionWrapperAll'>
                             <h1>שאלות </h1>
                             <div class='subQuestionsWrapper'>
-
+                                
                                 {vnode.state.subQuestions.map((subQuestion, index) => {
 
                                     return (<SubQuestionSolution
@@ -232,15 +236,19 @@ module.exports = {
                         }
 
                     </div>
-                    :
-                    <Chat
-                        entity='question'
-                        topic='שאלה'
-                        ids={{ groupId: vnode.attrs.groupId, questionId: vnode.attrs.questionId }}
-                        title={vnode.state.title}
-                        url={m.route.get()}
-                    />
+                    : null
                 }
+                {vnode.state.subPage === 'chat' ? <Chat
+                    entity='question'
+                    topic='שאלה'
+                    ids={{ groupId: vnode.attrs.groupId, questionId: vnode.attrs.questionId }}
+                    title={vnode.state.title}
+                    description={vnode.state.description}
+                    language={vnode.state.language}
+                    url={m.route.get()}
+                /> : null
+                }
+                
                 <div class='page__header'>
                     <NavBottom />
                 </div>
@@ -257,7 +265,7 @@ module.exports = {
                     }
                     ]} />
                 < div
-                    class={store.user.uid == vnode.state.creatorId ? "fav fav__subQuestion fav--blink" : "hidden"}
+                    class={true ? "fav fav__subQuestion fav--blink" : "hidden"}
                     onclick={() => {
                         vnode.state.openAddPanel = true;
                         // vnode.state.modalSubQuestion = { isShow: true, new: true, numberOfSubquestions: vnode.state.subQuestions.length };
@@ -267,7 +275,7 @@ module.exports = {
                     </div>
 
                 </div >
-                {vnode.state.openVote?<VoteModal vsp={vnode.state} ids={{groupId, questionId}}/>:null}
+                {vnode.state.openVote ? <VoteModal vsp={vnode.state} ids={{ groupId, questionId }} /> : null}
                 {vnode.state.modalSubQuestion.isShow ?
                     <div class='background'>
                         <SubQuestionEditModal
@@ -278,7 +286,7 @@ module.exports = {
                     </div>
                     : null
                 }
-               
+
             </div>
         )
     }
@@ -293,3 +301,5 @@ function orderBy(order, vnode) {
     vnode.state.unsubscribeOptions = getSubQuestion('on', vnode.attrs.groupId, vnode.attrs.questionId, order);
     vnode.state.orderBy = order
 }
+
+

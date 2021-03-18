@@ -1,0 +1,46 @@
+{
+    "short_name": "Delib",
+    "name": "Delib - Deciding Together",
+    "icons": [
+        {
+            "src": "/img/logo-48px.png",
+            "type": "image/png",
+            "sizes": "48x48"
+        },
+        {
+            "src": "/img/logo-72px.png",
+            "type": "image/png",
+            "sizes": "72x72"
+        },
+        {
+            "src": "/img/logo-96px.png",
+            "type": "image/png",
+            "sizes": "96x96"
+        },
+        {
+            "src": "/img/logo-128px.png",
+            "type": "image/png",
+            "sizes": "128x128"
+        },
+       
+        {
+            "src": "/img/logo-192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "/img/logo-512px.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        },
+        {
+            "gcm_sender_id": "103953800507"
+        }
+    ],
+    "start_url": "/?/chatfeed",
+    "background_color": "#32527b",
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "#32527b",
+    "orientation":"natural"
+}

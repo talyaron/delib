@@ -29,9 +29,14 @@
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
+    "async-each": "^1.0.3",
+    "chokidar": "^3.5.1",
     "lodash": "^4.17.19",
     "mithril": "^1.1.7",
+    "path-dirname": "^1.0.2",
     "regenerator-runtime": "^0.13.7",
+    "serialize-javascript": ">=3.1.0",
+    "set-value": ">=2.0.1",
     "sortablejs": "^1.8.4"
   }
 }

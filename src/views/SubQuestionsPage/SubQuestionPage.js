@@ -15,17 +15,19 @@ import Header from '../Commons/Header/Header';
 import NavBottom from '../Commons/NavBottom/NavBottom';
 import NavTop from '../Commons/NavTop/NavTop';
 import Chat from '../Commons/Chat/Chat';
+import Reactions from '../Commons/Reactions/Reactions';
 
 
 //functions
 import { getSubQuestion, listenToGroupDetails, listenToChat, listenToOptions, getLastTimeEntered } from "../../functions/firebase/get/get";
-import { registerGroup } from '../../functions/firebase/set/set';
-import { getIsChat, concatenateDBPath } from '../../functions/general';
+import { registerGroup, markUserSeenSuggestionsWizard } from '../../functions/firebase/set/set';
+import { getIsChat, concatenateDBPath, getFirstUrl, getUser } from '../../functions/general';
+import { listenToReactions } from '../../functions/firebase/get/getQuestions';
 
 import { get } from "lodash";
 
 let unsubscribe = () => { }, unsubscribeChat = () => { };
-
+let unsubscribeReactions = ()=>{}
 
 module.exports = {
 
@@ -33,16 +35,25 @@ module.exports = {
 
         const { groupId, questionId, subQuestionId } = vnode.attrs;
 
+        const firstUrl = getFirstUrl();
+
         //get user before login to page
-        store.lastPage = `/subquestions/${groupId}/${questionId}/${subQuestionId}`;
+        store.lastPage = `/${firstUrl}/${groupId}/${questionId}/${subQuestionId}`;
         sessionStorage.setItem("lastPage", store.lastPage);
+
 
         if (store.user.uid == undefined) {
             m
                 .route
                 .set('/login');
 
+        } else {
+
+            //should we show wiz for first new comers?
+            waitToCheckIfUserSeenSuggestionsWizard(vnode);
+
         }
+
 
         vnode.state = {
             orderBy: "top",
@@ -65,12 +76,13 @@ module.exports = {
             path: concatenateDBPath(groupId, questionId, subQuestionId),
             unreadMessages: 0,
             lastTimeEntered: 0,
-            language: 'he'
+            language: 'he',
+            firstTimeOnSuggestions: false
         }
 
 
         listenToOptions(groupId, questionId, subQuestionId, 'top');
-
+        unsubscribeReactions = listenToReactions({ groupId, questionId, subQuestionId});
         registerGroup(groupId);
     },
     oncreate: vnode => {
@@ -125,6 +137,7 @@ module.exports = {
 
         unsubscribe();
         unsubscribeChat();
+        unsubscribeReactions();
 
     },
     view: vnode => {
@@ -150,6 +163,7 @@ module.exports = {
                                 <NavTop
                                     level={lang[language].solutions}
                                     chat={lang[language].chat}
+                                    reactions={lang[language].reactions}
                                     current={vnode.state.subPage}
                                     pvs={vnode.state}
                                     mainUrl={`/subquestions/${groupId}/${questionId}/${subQuestionId}`}
@@ -178,22 +192,31 @@ module.exports = {
                                         showSubscribe={true}
                                         isAlone={true}
                                         language={language}
-                                    />
+                                    /> : null
+                                }
 
-                                    :
+                                {vnode.state.subPage === 'chat' ?
                                     <Chat
                                         entity='subQuestion'
                                         topic='תת שאלה'
                                         ids={{ groupId, questionId, subQuestionId }}
                                         title={vnode.state.details.title}
                                         url={m.route.get()}
-                                    />
+                                    /> : null
+                                }
+                                {vnode.state.subPage === 'reactions' ?
+                                    <Reactions
+                                        groupId={groupId}
+                                        questionId={questionId}
+                                        subQuestionId={subQuestionId}
+                                    /> : null
                                 }
 
                             </div>
                             {/* ---------------- Footer -------------- */}
-                            <div class='page__footer'>
-                                {vnode.state.subPage === 'main' && (vnode.state.details.processType === 'suggestions' || vnode.state.details.processType === undefined)?
+
+                            {vnode.state.subPage === 'main' && (vnode.state.details.processType === 'suggestions' || vnode.state.details.processType === undefined) ?
+                                <div class='page__footer'>
                                     <div class={hasNevigation(vnode) ? "subQuestion__arrange" : "subQuestion__arrange subQuestion__arrange--bottom"} id="questionFooter">
                                         <div
                                             class={vnode.state.details.orderBy == "new"
@@ -226,18 +249,20 @@ module.exports = {
                                         <img src='img/talk.svg' alt='order by last talks' />
                                         <div>Talks</div>
                                     </div> */}
-                                    </div> : null
-                                }
-                                {hasNevigation(vnode) && vnode.state.subPage === 'main' ? <NavBottom /> : null}
+                                    </div>
+                                    {hasNevigation(vnode) && vnode.state.subPage === 'main' ? <NavBottom /> : null}
+                                </div> : null
+                            }
 
-                            </div>
+
+
                         </div>
 
                     )
                     : (<Spinner />)
                 }
                 {
-                    (vnode.state.details.processType === 'suggestions' ||vnode.state.details.processType === undefined) ?
+                    (vnode.state.details.processType === 'suggestions' || vnode.state.details.processType === undefined) ?
                         < div
                             class="fav fav__subQuestion fav--blink"
                             onclick={() => {
@@ -258,6 +283,15 @@ module.exports = {
                     vnode={vnode}
                     language={language}
                 />
+                {vnode.state.firstTimeOnSuggestions === true ?
+                    <div class='suggestionsWiz'>
+                        <div class='suggestionsWiz__box'>
+                            <h2>ברוכים הבאים לדליב</h2>
+                            <h2>כך תוכלו להציע רעיונות ולהצביע</h2>
+                            <img src='/img/suggestions-wiz.gif' />
+                            <button class='buttons' onclick={() => closeSuggestionsWizard(vnode)}>סגירה</button>
+                        </div>
+                    </div> : null}
 
 
             </div >
@@ -278,4 +312,26 @@ function hasNevigation(vnode) {
         console.error(e)
         return false;
     }
+}
+
+function closeSuggestionsWizard(vnode) {
+    markUserSeenSuggestionsWizard();
+    vnode.state.firstTimeOnSuggestions = false;
+}
+
+
+function waitToCheckIfUserSeenSuggestionsWizard(vnode) {
+    let count = 1;
+    const int = setInterval(() => {
+
+
+
+
+        if (count > 20 || store.user.firstTimeOnSuggestions !== undefined) {
+
+            vnode.state.firstTimeOnSuggestions = store.user.firstTimeOnSuggestions || false;
+            clearInterval(int);
+        }
+        count++
+    }, 500)
 }

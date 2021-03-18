@@ -23,10 +23,15 @@ module.exports = {
             feedLength:store.feed2.length
         };
 
-       
+      
     },
     oncreate:vnode=>{
         window.scrollTo(0,document.body.scrollHeight);
+
+        const feed = document.querySelector('#feed__main');
+        console.dir(feed)
+       
+        feed.scrollTo(0, feed.scrollHeight)
 
     },
     onbeforeupdate:vnode=>{
@@ -43,6 +48,8 @@ module.exports = {
     },
     onupdate:vnode=>{
 
+        
+
         //scroll if new item
         if(vnode.state.feedLength< store.feed2.length){
             window.scrollTo(0,document.body.scrollHeight);
@@ -53,10 +60,11 @@ module.exports = {
         setToFeedLastEntrance();
     },
     view:vnode=>{
+
         return(
-            <div class='page feedPage'>
+            <div class='page page__grid'>
                 <Header title='חדשות' showSubscribe={false}/>
-                <div class='wrapper2'>
+                <div class='feed__main' id='feed__main'>
                     {vnode.state.feed.map(feedItem=>{
                         return( <FeedItem feedItem={feedItem} key={feedItem.feedItemId}/>)
                     })}

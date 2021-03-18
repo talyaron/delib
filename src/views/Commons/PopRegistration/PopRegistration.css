@@ -1,0 +1,31 @@
+.popRegistration{
+    position: fixed;
+    top: 50vh;
+    left: 50vw;
+    margin: auto;
+    background-color: #529155;
+    color: white;
+    box-shadow: 10px 10px 30px rgb(0 0 0 / 52%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 500px;
+    transform: translateX(-50%);
+    padding: var(--regPadding);
+    border-radius: 6px;
+    font-size: var(--size17);
+    text-align: center;
+   
+
+    animation-name: showPop;
+    animation-duration: 300ms;
+    animation-fill-mode: forwards;
+}
+
+@keyframes showPop{
+    from{
+       top:70vh;
+    } to{
+        top:50vh;
+    }
+}

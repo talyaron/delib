@@ -85,7 +85,7 @@ module.exports = {
 		const { question, vsp, processType, language } = vnode.attrs
 		return (
 			<div class="subQuestionWrapper" id="optionsWrapper">
-				<div class={vnode.attrs.isAlone ? "subQuestionSection questionSection--alone" : "questionSection"}>
+				<div class={vnode.attrs.isAlone ? "subQuestionSection questionSection--alone" : "questionSection"} style={processType=== 'votes'?'display: flex; flex-direction: column;':null} >
 					<div class='title'>
 						{lang[language].question}: {question}
 						<div class='subQuestion__addOptionWrapper'>

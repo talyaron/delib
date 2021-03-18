@@ -59,3 +59,39 @@
     background-color: var(--white);
     width:100%;
 }
+
+.suggestionsWiz{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    background: #020202c7;
+    z-index: 200;
+}
+
+.suggestionsWiz__box{
+    position: fixed;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    z-index: 300;
+    background: white;
+    padding: 10px 50px;
+    box-shadow: 6px 6px 18px rgba(0, 0, 0, 0.445);
+    border-radius: var(--roundBorder);
+}
+
+.suggestionsWiz__box img{
+    max-width: 500px;
+    max-height: 63vh;
+    border:2px solid gray;
+}
+
+.suggestionsWiz__box button{
+    height: 72px;
+    width: 120px;
+    text-align: center;
+    justify-content: center;
+    font-size: 24px;
+}

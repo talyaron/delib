@@ -4,13 +4,13 @@ import './Header.css';
 import { get } from 'lodash';
 
 //functions
-import { subscribeUser, setNotifications,handleSubscription } from '../../../functions/firebase/set/set';
+import { subscribeUser, setNotifications} from '../../../functions/firebase/set/setChats';
 import { listenToSubscription, listenIfGetsMessages } from '../../../functions/firebase/get/get';
 import { subscribeToNotification } from '../../../functions/firebase/messaging';
 import { exitOut } from '../../../functions/animations';
 
 import store from '../../../data/store';
-import { Reference, concatenateDBPath, getEntityId,getUser } from '../../../functions/general';
+import { Reference, concatenateDBPath, getEntityId, getUser } from '../../../functions/general';
 
 //components
 import Aside from '../Aside/Aside';
@@ -47,7 +47,7 @@ module.exports = {
             subscribed: false,
             notifications: get(store.listenToMessages, `[${entityId}]`, false),
             path: concatenateDBPath(groupId, questionId, subQuestionId, optionId),
-            language:'he'
+            language: 'he'
         }
         //set refernce string
         let reference = new Reference(vnode.state.refArray, 'array', 'collection');
@@ -89,77 +89,77 @@ module.exports = {
     view: (vnode) => {
 
         vnode.state.isMenuOpen;
-        const language = vnode.attrs.language ||'he';
+        const language = vnode.attrs.language || 'he';
 
         return (
-            <div>
-                <header id='headerContainer'>
-                    <div class='headerContainer'>
 
-                        <img
-                            onclick={(e) => {
-                                e.stopPropagation();
-                                toggleMenu(vnode);
-                            }}
-                            class='headerHamburger'
-                            src='img/hamburger.svg' />
+            <header id='headerContainer'>
+                <div class='headerContainer'>
 
-                        <div class='headerTitle'>
-                            {vnode.attrs.title}
-                        </div>
-                        {vnode.state.notifications ?
-                            <div class='notifications notifications--on' onclick={() => { handleNotifications(false, vnode) }}>
-                                <img src='img/notifications-on.svg' alt='notifications-on' />
-                            </div>
-                            :
-                            <div class='notifications notifications--off' onclick={() => { handleNotifications(true, vnode) }}>
-                                <img src='img/add_alert.svg' alt='notifications-off' />
-                            </div>
-                        }
-                        {vnode.attrs.showSubscribe == true ?
-                            <div
-                                class='headerSetFeed'
-                                onclick={e => {
-                                    e.stopPropagation();
-                                    handleSubscription(vnode);
-                                }}>
-                                {vnode.state.subscribed ? <div class='setButton setButton--cancel'>{lang[language].unfollow}</div> : <div class='setButton setButton--activate'>{lang[language].follow}</div>}
-                            </div>
-                            :
-                            null
-                        }
+                    <img
+                        onclick={(e) => {
+                            e.stopPropagation();
+                            toggleMenu(vnode);
+                        }}
+                        class='headerHamburger'
+                        src='img/hamburger.svg' />
 
-                        {vnode.attrs.upLevelUrl
-                            ? <div
-                                class='headerBack'
-                                onclick={(e) => {
-                                    e.stopPropagation();
-                                    if (vnode.attrs.page) {
-                                        const page = vnode.attrs.page.dom;
-                                        
-                                        exitOut(page, vnode.attrs.upLevelUrl)
-                                    } else {
-                                        m.route.set(vnode.attrs.upLevelUrl)
-                                    }
-
-                                }}>
-                                <img src='img/back.svg' />
-                            </div>
-                            : <div class='headerEmptyBack' />
-                        }
+                    <div class='headerTitle'>
+                        {vnode.attrs.title}
                     </div>
-                    {!vnode.attrs.option == undefined
-                        ? <div class='chatOptionHeader'>
-                            אופציה: {vnode.attrs.option}
+                    {vnode.state.notifications ?
+                        <div class='notifications notifications--on' onclick={() => { handleNotifications(false, vnode) }}>
+                            <img src='img/notifications-on.svg' alt='notifications-on' />
                         </div>
-                        : <div />
+                        :
+                        <div class='notifications notifications--off' onclick={() => { handleNotifications(true, vnode) }}>
+                            <img src='img/add_alert.svg' alt='notifications-off' />
+                        </div>
+                    }
+                    {vnode.attrs.showSubscribe == true ?
+                        <div
+                            class='headerSetFeed'
+                            onclick={e => {
+                                e.stopPropagation();
+                                handleSubscription(vnode);
+                            }}>
+                            {vnode.state.subscribed ? <div class='setButton setButton--cancel'>{lang[language].unfollow}</div> : <div class='setButton setButton--activate'>{lang[language].follow}</div>}
+                        </div>
+                        :
+                        null
                     }
 
-                </header>
+                    {vnode.attrs.upLevelUrl
+                        ? <div
+                            class='headerBack'
+                            onclick={(e) => {
+                                e.stopPropagation();
+                                if (vnode.attrs.page) {
+                                    const page = vnode.attrs.page.dom;
 
+                                    exitOut(page, vnode.attrs.upLevelUrl)
+                                } else {
+                                    m.route.set(vnode.attrs.upLevelUrl)
+                                }
+
+                            }}>
+                            <img src='img/back.svg' />
+                        </div>
+                        : <div class='headerEmptyBack' />
+                    }
+                </div>
+                {!vnode.attrs.option == undefined
+                    ? <div class='chatOptionHeader'>
+                        אופציה: {vnode.attrs.option}
+                    </div>
+                    : <div />
+                }
                 <Aside isAdmin={vnode.attrs.isAdmin} editPageLink={vnode.attrs.editPageLink} isOpen={vnode.state.isMenuOpen} />
+            </header>
 
-            </div>
+
+
+
         )
     }
 }
@@ -176,7 +176,8 @@ function handleNotifications(setNotificationTo, vnode) {
 
 
 
-    subscribeToNotification(ids, setNotificationTo)
+    subscribeToNotification(ids, setNotificationTo);
+    subscribeUser({subscribe:!setNotificationTo, groupId, questionId, subQuestionId, optionId})
 
 
 }
@@ -203,4 +204,33 @@ function onNewMessageJumpCounter(vnode) {
 function toggleMenu(vnode) {
 
     vnode.state.isMenuOpen = !vnode.state.isMenuOpen
+}
+
+function handleSubscription(vnode) {
+
+    try {
+
+        //path for subscription object
+        const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
+        console.log(groupId, questionId, subQuestionId, optionId)
+        const path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
+
+        console.log('subscribed:', vnode.state.subscribed)
+
+        subscribeUser({
+            groupId, questionId, subQuestionId, optionId, subscribe: vnode.state.subscribed
+        })
+
+        if (vnode.state.subscribed == false) {
+
+            vnode.state.subscribed = true;
+            set(store.subscribe, `[${path}]`, true)
+        } else {
+
+            vnode.state.subscribed = false;
+            set(store.subscribe, `[${path}]`, false)
+        }
+    } catch (e) {
+        console.error(e)
+    }
 }

@@ -33,6 +33,7 @@ module.exports = {
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
 
         let firstUrl = getFirstUrl();
+       
 
         store.lastPage = `/${firstUrl}/${groupId}/${questionId}/${subQuestionId}/${optionId}`;
         sessionStorage.setItem('lastPage', store.lastPage)
@@ -219,6 +220,8 @@ module.exports = {
                         topic='אפשרות'
                         ids={{ groupId: groupId, questionId: questionId, subQuestionId, optionId }}
                         title={option.title}
+                        description={option.description}
+                        language={vnode.state.language}
                         url={m.route.get()}
                     />
                 }

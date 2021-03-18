@@ -1,7 +1,7 @@
 .page-grid-feed{
     display: grid;
     height: 100vh;
-    grid-template-rows: 44px auto 64px;
+    grid-template-rows: 66px auto 64px;
 }
 
 .chatFeed__wrapper{

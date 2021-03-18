@@ -1,18 +1,75 @@
 
 .votes{
-    height: 68%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
+@media screen and (max-height: 1300px){
+    .votes{
+        height: 75%;
+       
+    }
+}
+
+@media screen and (max-height: 900px){
+    .votes{
+        height: 60%;
+       
+    }
+}
+
+@media screen and (max-height: 800px){
+    .votes{
+        height: 55%;
+       
+    }
+}
+
+@media screen and (max-height: 650px){
+    .votes{
+        height: 48%;
+       
+    }
+}
 .votes h2{
     text-align: center;
 }
 .votes__panel{
-    display: flex;
-    height: 100%;
+    flex-grow: 1;
+    display: grid;
     
 }
 
 .votes__loginMessage{
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    font-size: 2rem;
+    background: white;
+    padding: 20px;
+    width: fit-content;
+    margin: auto;
+    border-radius: var(--roundBorder);
+    align-items: center;
+    box-shadow: 10px 10px 20px #00000085;
+}
+
+.votes__modelBackground{
+    position: fixed;
+    background-color: rgb(251 251 251 / 0%);
+    width: 100Vw;
+    height: 100vh;
+    top: 0px;
+    left: 0px;
+    backdrop-filter: blur(2px);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.optionVote__button{
+
 }

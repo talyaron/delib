@@ -70,12 +70,14 @@ module.exports = {
         let groupId = id;
         getLastTimeEntered({ groupId }, vnode);
 
+        
+
     },
     onbeforeupdate: vnode => {
 
         const { id } = vnode.attrs;
         let groupId = id;
-
+        
 
 
         //check is admin
@@ -111,6 +113,7 @@ module.exports = {
 
         //get language
         vnode.state.language = get(store.groups,`[${groupId}].language`,'he')
+        vnode.state.add.description = get(store.groups,`[${groupId}].description`,'')
 
     },
 
@@ -126,7 +129,7 @@ module.exports = {
 
     },
     view: vnode => {
-
+       
 
             const {language} = vnode.state
 
@@ -186,6 +189,8 @@ module.exports = {
                             topic='קבוצה'
                             ids={{ groupId: vnode.attrs.id }}
                             title={vnode.state.groupName}
+                            description={vnode.state.add.description}
+                            language={vnode.state.language}
                             url={m.route.get()}
                         />
                     }

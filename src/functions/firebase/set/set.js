@@ -2,12 +2,13 @@ import m from 'mithril';
 import { set, get } from 'lodash';
 import { DB } from '../config';
 import store from '../../../data/store';
-import { concatenateDBPath, uniqueId, generateChatEntitiyId, createIds, getRandomColor } from '../../general';
+import { concatenateDBPath, uniqueId, generateChatEntitiyId, getRandomColor } from '../../general';
+import {subscribeUser} from './setChats';
 
 
 function createGroup(settings) {
     try {
-        const {creatorId, title, description, callForAction, language} = settings;
+        const { creatorId, title, description, callForAction, language } = settings;
         console.log(creatorId, title, description, callForAction, language)
         const groupId = uniqueId()
 
@@ -35,7 +36,7 @@ function createGroup(settings) {
                     .then(() => { console.info(`added the group to the groups the user owns`) })
                     .catch(e => { console.error(e) });
 
-                    subscribeUser({groupId, subscribe:false})
+                subscribeUser({ groupId, subscribe: false })
                 m.route.set(`/group/${groupId}`);
             })
             .catch(function (error) {
@@ -60,27 +61,27 @@ function registerGroup(groupId) {
 
     try {
 
-      
+
 
         let isUserRgisterdToGroup = get(store.user, `.groupsUserTryToRegister[${groupId}]`, false);
-      
+
         if (!isUserRgisterdToGroup) {
             // store.user.groupsUserTryToRegister[groupId] = true;
             set(store.user, `.groupsUserTryToRegister[${groupId}]`, true)
-           
+
             const waitForUser = setInterval(() => {
 
-            
+
 
                 if ({}.hasOwnProperty.call(store.user, 'uid')) {
 
                     clearInterval(waitForUser);
 
 
-                
+
                     if (!isUserRgisterdToGroup) {
 
-                    
+
 
                         store.groupsRegistered[groupId] = true;
 
@@ -96,7 +97,7 @@ function registerGroup(groupId) {
 
 
                         for (let prop in userObjTemp) {
-                            if (userObjTemp[prop] !== null && userObjTemp[prop] !== null) {
+                            if (userObjTemp[prop] !== null && userObjTemp[prop] !== undefined) {
                                 userObj[prop] = userObjTemp[prop]
                             }
                         }
@@ -113,7 +114,7 @@ function registerGroup(groupId) {
                 }
 
             }, 1000);
-        } 
+        }
     } catch (e) {
         console.error(e)
 
@@ -245,7 +246,7 @@ function setSubQuestion(ids, settings) {
                     })
             } else {
                 subQuestionRef.doc(subQuestionId).update({ title, processType, orderBy, groupId, questionId, subQuestionId, userHaveNavigation, showSubQuestion, proAgainstType })
-                    .then(() => { console.info(`updated subQuestion ${subQuestionId} to DB`); resolve(uid) })
+                    .then(() => { console.info(`updated subQuestion ${subQuestionId} to DB`); resolve(subQuestionId) })
                     .catch(e => {
                         console.error(e);
                         reject(undefined);
@@ -339,38 +340,46 @@ function setSubQuestionsOrder(groupId, questionId, subQuestionId, order) {
 function createOption(groupId, questionId, subQuestionId, type, creatorId, title, description, creatorName, subQuestionTitle, isVote = false) {
 
     const optionId = uniqueId();
+    try {
 
-    let optionRef = DB
-        .collection('groups')
-        .doc(groupId)
-        .collection('questions')
-        .doc(questionId)
-        .collection('subQuestions')
-        .doc(subQuestionId)
-        .collection('options');
 
-    optionRef.doc(optionId).set({
-        groupId,
-        questionId,
-        subQuestionId,
-        optionId,
-        id: optionId,
-        creatorId,
-        type,
-        title,
-        description,
-        creatorName,
-        subQuestionTitle,
-        time: firebase
-            .firestore
-            .FieldValue
-            .serverTimestamp(),
-        consensusPrecentage: 0,
-        isActive: true,
-        isVote
-    }).catch(function (error) {
-        console.error('Error adding document: ', error);
-    });
+        let optionRef = DB
+            .collection('groups')
+            .doc(groupId)
+            .collection('questions')
+            .doc(questionId)
+            .collection('subQuestions')
+            .doc(subQuestionId)
+            .collection('options');
+
+        optionRef.doc(optionId).set({
+            groupId,
+            questionId,
+            subQuestionId,
+            optionId,
+            id: optionId,
+            creatorId,
+            type,
+            title,
+            description,
+            creatorName,
+            subQuestionTitle,
+            time: firebase
+                .firestore
+                .FieldValue
+                .serverTimestamp(),
+            consensusPrecentage: 0,
+            isActive: true,
+            isVote
+        }).catch(function (error) {
+            console.error('Error adding document: ', error);
+        });
+
+        return optionId;
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
 }
 
 function voteOption(ids, settings) {
@@ -597,72 +606,7 @@ function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like) 
     }
 }
 
-function sendMessage({ groupId, questionId, subQuestionId, optionId, message, title, entity, topic, url, vnode }) {
-    try {
 
-        if (vnode.attrs.title === undefined) throw new Error(`No title of entity in vnode`)
-
-        let { displayName, photoURL, name, uid, userColor } = store.user;
-
-        if (!userColor) { userColor = 'teal' }
-
-        let ref = 'groups', location = {}
-        if (groupId != undefined) {
-            ref += `/${groupId}`;
-            location.groupId = groupId
-        } else {
-            throw 'No groupId was provdided'
-        }
-        if (questionId != undefined) {
-            ref += `/questions/${questionId}`
-            location.questionId = questionId
-        }
-        if (subQuestionId != undefined) {
-            ref += `/subQuestions/${subQuestionId}`;
-            location.subQuestionId = subQuestionId;
-        }
-        if (optionId != undefined) {
-            ref += `/options/${optionId}`;
-            location.optionId = optionId;
-        }
-
-
-        let ids = { groupId, questionId, subQuestionId, optionId }
-        ids = createIds(ids)
-
-
-        if (message) {
-
-            DB.doc(ref).collection('messages').add({
-                entityTitle: vnode.attrs.title,
-                location,
-                displayName,
-                photoURL,
-                name,
-                uid,
-                message,
-                title,
-                entity,
-                topic,
-                url,
-                ids,
-                userColor,
-                createdTime: firebase
-                    .firestore
-                    .FieldValue
-                    .serverTimestamp()
-            })
-                .then(() => { console.info('message saved correctly') })
-                .catch(err => {
-                    console.error(err)
-                })
-        }
-
-
-    } catch (err) {
-        console.error(err)
-    }
-}
 
 
 function setMessage(groupId, questionId, subQuestionId, optionId, creatorId, creatorName, message, groupName, questionName, optionName) {
@@ -902,66 +846,7 @@ function updateOption(vnode) {
         console.error(e)
     }
 }
-function subscribeUser(settings) {
-    try {
-      
-        const {  groupId, questionId, subQuestionId, optionId, subscribe } = settings;
 
-       
-        //build path for the enenties subscription collection
-        const subscriptionPath = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
-        let chatEntityId = generateChatEntitiyId({ groupId, questionId, subQuestionId, optionId });
-
-
-        const { uid, displayName, email, photoURL } = store.user;
-
-        if (subscribe === false) {
-            //if user is not subscribed then subscribe the user
-
-            DB
-                .doc(subscriptionPath)
-                .collection('subscribers')
-                .doc(uid)
-                .set({ user: { uid, displayName, email, photoURL } }) //add the user to subscribers
-                .then(() => {
-                    console.info('User subscribed succsefuly to entity');
-                    DB.collection('users').doc(uid)
-                        .collection('messages').doc(chatEntityId).set({  //add initial counter
-                            msgNumber: 0,
-                            msgLastSeen: 0,
-                            msgDifference: 0
-                        })
-                        .then(() => { console.log('user subscribed in messages') })
-                        .catch(e => {
-                            console.error( e)
-                        })
-                })
-                .catch(err => console.error(err))
-        } else {
-            DB
-                .doc(subscriptionPath)
-                .collection('subscribers')
-                .doc(uid)
-                .delete()
-                .then(() => {
-                    DB.collection('users').doc(uid)
-                        .collection('messages').doc(chatEntityId).delete().then(() => {
-                            console.info('User unsubscribed succsefuly from entity')
-                        })
-                        .then(() => { console.log('user unsubscribed in messages') })
-                        .catch(e => {
-                            console.error(e)
-                        })
-
-                })
-                .catch(err => console.error(err))
-        }
-
-    } catch (err) {
-        console.error(err)
-    }
-
-}
 
 function setChatLastEntrance(ids) {
     try {
@@ -985,19 +870,7 @@ function setChatLastEntrance(ids) {
 
 }
 
-function zeroChatFeedMessages(ids, isSubscribed = true) {
-    try {
-        if (isSubscribed) {
-            if (ids === undefined) throw new Error('No ids were in the message')
 
-            const path = generateChatEntitiyId(ids)
-
-            DB.collection('users').doc(store.user.uid).collection('messages').doc(path).set({ msgDifference: 0 }, { merge: true }).catch(e => console.error(e))
-        }
-    } catch (e) {
-        console.error(e)
-    }
-}
 
 function setNotifications(ids, isSubscribed) {
 
@@ -1038,16 +911,42 @@ function setNumberOfMessagesMark(ids, numberOfMessages = 0) {
     }
 }
 
+
+
+function dontShowPopAgain() {
+    try {
+        DB.collection('users').doc(store.user.uid).update({ stopRegistrationMessages: true })
+            .then(() => console.info('user will not recive pop messages again'))
+            .catch(e => console.error(e))
+    } catch (e) {
+        console.error(e)
+    }
+}
+
+function markUserSeenSuggestionsWizard() {
+    try {
+        DB.collection('users').doc(store.user.uid)
+            .update({ firstTimeOnSuggestions: false })
+            .then(() => { console.info('user seen wizared') })
+            .catch(e => console.error(e))
+    } catch (e) {
+        console.error(e)
+    }
+}
+
+
+
 function handleSubscription(vnode) {
 
     try {
 
         //path for subscription object
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
+        console.log(groupId, questionId, subQuestionId, optionId)
         const path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
 
         subscribeUser({
-            groupId, questionId, subQuestionId, optionId , subscribe: vnode.state.subscribed
+            groupId, questionId, subQuestionId, optionId, subscribe: vnode.state.subscribed
         })
 
         if (vnode.state.subscribed == false) {
@@ -1063,6 +962,7 @@ function handleSubscription(vnode) {
         console.error(e)
     }
 }
+  
 
 module.exports = {
     updateOption,
@@ -1087,17 +987,16 @@ module.exports = {
     updateSubItem,
     setLikeToSubItem,
     setLike,
-    sendMessage,
     setMessage,
     setSubAnswer,
     updateSubQuestionProcess,
     updateSubQuestionOrderBy,
     updateDoesUserHaveNavigation,
-    subscribeUser,
     setChatLastEntrance,
     setToFeedLastEntrance,
-    zeroChatFeedMessages,
     setNotifications,
     setNumberOfMessagesMark,
+    dontShowPopAgain,
+    markUserSeenSuggestionsWizard,
     handleSubscription
 };

@@ -8,17 +8,15 @@ module.exports = {
     view: vnode => {
         const { data, date, message, url, isNew, parentEntity, changeType ,changedEntity} = vnode.attrs.feedItem;
        
-        if (parentEntity) {
+       
             return (
                 <div class={isNew ? 'feedItem feedItem--new' : 'feedItem'} onclick={() => { m.route.set(url) }}>
 
-                    <h1>ב-{getEntityType(parentEntity.type)} {parentEntity.title} {getChangeType(changeType)} {getEntityType(changedEntity)} <span class='feedItem__title'>{data.title}</span></h1>
+                    <h1>{parentEntity? <span>ב-{getEntityType(parentEntity.type)} {parentEntity.title}</span>:null} {getChangeType(changeType)} {getEntityType(changedEntity)} <span class='feedItem__title'>{data.title}</span></h1>
                     <p>{timeParse(new Date(date.seconds*1000))}</p>
                 </div>
             )
-        } else {
-            return null
-        }
+       
     }
 }
 
