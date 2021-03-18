@@ -4,6 +4,15 @@ const SITE_DYNAMIC = 'site-dynamic-v1';
 
 const assets = [
     '/index.html',
+    '/?/chatfeed',
+    "/?/login",
+    "/?/logingoogle",
+    "/?/logout",
+    "/?/groups",
+    "/?/newgroup",
+    "/?/edit",
+    '/?/unauthorized',
+    "/?/feed",
     '/js/velocity.js',
     '/settings.js',
     '/img/new.svg',
@@ -41,18 +50,21 @@ self.addEventListener('activate', activationEvt => {
 
 self.addEventListener('fetch', ev => {
 
+    try {
 
-
-    ev.respondWith(
-        caches.match(ev.request)
-            .then(cacheRes => {
-                return cacheRes || fetch(ev.request)
-                .then(async fetchRes => {
-                    const cache = await caches.open(SITE_DYNAMIC);
-                    cache.put(ev.request.url, fetchRes.clone());
-                    return fetchRes;
+        ev.respondWith(
+            caches.match(ev.request)
+                .then(cacheRes => {
+                    return cacheRes || fetch(ev.request)
+                        .then(async fetchRes => {
+                            const cache = await caches.open(SITE_DYNAMIC);
+                            cache.put(ev.request.url, fetchRes.clone());
+                            return fetchRes;
+                        })
                 })
-            })
-    )
+        )
+    } catch (e) {
+        console.log(e)
+    }
 })
 

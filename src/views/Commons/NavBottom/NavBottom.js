@@ -3,7 +3,7 @@ import "./NavBottom.css";
 
 //functions
 import { setToFeedLastEntrance } from '../../../functions/firebase/set/set';
-import {setZeroChatCounter} from '../../../functions/firebase/set/setChats';
+import { setZeroChatCounter } from '../../../functions/firebase/set/setChats';
 
 //data
 import store from '../../../data/store'
@@ -14,13 +14,13 @@ module.exports = {
 
     vnode.state.feedLength = getNumberOfNewFeeds();
 
-
+   
   },
   oncreate: vnode => {
 
     const installBtn = vnode.dom.children.installBtn;
 
-   
+
 
 
 
@@ -51,7 +51,7 @@ module.exports = {
             <div class="navBottom__btnText">Feed</div>
           </div>
         </div>
-        <div class="navBottom__btn" onclick={() => {setZeroChatCounter(); m.route.set('/chatfeed') }}>
+        <div class="navBottom__btn" onclick={() => { setZeroChatCounter(); m.route.set('/chatfeed') }}>
           <div class="navBottom__btnInfo">
             {store.chatFeedCounter > 0 ?
               <div class='counter'>{store.chatFeedCounter}</div>
@@ -61,7 +61,7 @@ module.exports = {
             <div class="navBottom__btnText">Messages</div>
           </div>
         </div>
-        {showInstall ? <div class="navBottom__btn" id='installBtn' >
+        {store.deferredPrompt !== undefined ? <div class="navBottom__btn" id='installBtn'  onclick={handleInstall}>
           <div class="navBottom__btnInfo">
 
             <img src="img/addToHome.svg" alt="messafges" />
@@ -82,4 +82,27 @@ function getNumberOfNewFeeds() {
   const numberOfNewFeedItems = store.feed2.filter(feedItem => (feedItem.date.seconds) * 1000 > store.feed2Info.lastEntrance).length;
   if (numberOfNewFeedItems > 99) return 99;
   return numberOfNewFeedItems;
+}
+
+async function handleInstall(){
+  const deferredPrompt = store.deferredPrompt;
+
+  if(deferredPrompt !== undefined){
+    deferredPrompt.prompt();
+
+    const { outcome } = await deferredPrompt.userChoice;
+
+    deferredPrompt.prompt();
+    // Wait for the user to respond to the prompt
+    deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the A2HS prompt');
+        } else {
+          console.log('User dismissed the A2HS prompt');
+        }
+        store.deferredPrompt = null;
+        m.redraw()
+      });
+  }
+  
 }

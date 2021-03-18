@@ -265,7 +265,7 @@ module.exports = {
                     }
                     ]} />
                 < div
-                    class={store.user.uid == vnode.state.creatorId ? "fav fav__subQuestion fav--blink" : "hidden"}
+                    class={true ? "fav fav__subQuestion fav--blink" : "hidden"}
                     onclick={() => {
                         vnode.state.openAddPanel = true;
                         // vnode.state.modalSubQuestion = { isShow: true, new: true, numberOfSubquestions: vnode.state.subQuestions.length };

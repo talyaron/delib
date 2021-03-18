@@ -934,6 +934,36 @@ function markUserSeenSuggestionsWizard() {
     }
 }
 
+
+
+function handleSubscription(vnode) {
+
+    try {
+
+        //path for subscription object
+        const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
+        console.log(groupId, questionId, subQuestionId, optionId)
+        const path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
+
+        subscribeUser({
+            groupId, questionId, subQuestionId, optionId, subscribe: vnode.state.subscribed
+        })
+
+        if (vnode.state.subscribed == false) {
+
+            vnode.state.subscribed = true;
+            set(store.subscribe, `[${path}]`, true)
+        } else {
+
+            vnode.state.subscribed = false;
+            set(store.subscribe, `[${path}]`, false)
+        }
+    } catch (e) {
+        console.error(e)
+    }
+}
+  
+
 module.exports = {
     updateOption,
     addToFeed,
@@ -967,5 +997,6 @@ module.exports = {
     setNotifications,
     setNumberOfMessagesMark,
     dontShowPopAgain,
-    markUserSeenSuggestionsWizard
+    markUserSeenSuggestionsWizard,
+    handleSubscription
 };
