@@ -791,8 +791,6 @@ async function sendToSubscribers(info) {
     const { change, context, lisetnToEntity } = info;
     const { groupId, questionId, subQuestionId, optionId, consequenceId } = context.params;
 
-    console.log('........ optionId:  ', optionId)
-
 
     const DATA = change.after.data();
     const { before, after } = change;
@@ -849,7 +847,7 @@ async function sendToSubscribers(info) {
         .doc(subQuestionId)
 
 
-      url = message !== "deleted" ? `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}` : `/subquestions/${groupId}/${questionId}/${subQuestionId}`;
+      url = `/subquestions/${groupId}/${questionId}/${subQuestionId}/new`;
 
 
     } else if (lisetnToEntity === OPTION) {

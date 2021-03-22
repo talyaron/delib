@@ -27,18 +27,23 @@ import { listenToReactions } from '../../functions/firebase/get/getQuestions';
 import { get } from "lodash";
 
 let unsubscribe = () => { }, unsubscribeChat = () => { };
-let unsubscribeReactions = ()=>{}
+let unsubscribeReactions = () => { }
 
 module.exports = {
 
     oninit: vnode => {
 
+
         const { groupId, questionId, subQuestionId } = vnode.attrs;
+
+        const orderBy = getOrderByFromUrl(vnode);
+
+        console.log('sub question page', orderBy)
 
         const firstUrl = getFirstUrl();
 
         //get user before login to page
-        store.lastPage = `/${firstUrl}/${groupId}/${questionId}/${subQuestionId}`;
+        store.lastPage = `/${firstUrl}/${groupId}/${questionId}/${subQuestionId}/${orderBy}`;
         sessionStorage.setItem("lastPage", store.lastPage);
 
 
@@ -56,7 +61,7 @@ module.exports = {
 
 
         vnode.state = {
-            orderBy: "top",
+            orderBy: orderBy,
             options: [false],
             details: {
                 title: false,
@@ -82,7 +87,7 @@ module.exports = {
 
 
         listenToOptions(groupId, questionId, subQuestionId, 'top');
-        unsubscribeReactions = listenToReactions({ groupId, questionId, subQuestionId});
+        unsubscribeReactions = listenToReactions({ groupId, questionId, subQuestionId });
         registerGroup(groupId);
     },
     oncreate: vnode => {
@@ -239,16 +244,6 @@ module.exports = {
                                             <div>{lang[language].agreed}</div>
                                         </div>
 
-                                        {/* <div
-                                        class={vnode.state.details.orderBy == "message"
-                                            ? "footerButton footerButton--selected"
-                                            : "footerButton"}
-                                        onclick={() => {
-                                            vnode.state.details.orderBy = "message";
-                                        }}>
-                                        <img src='img/talk.svg' alt='order by last talks' />
-                                        <div>Talks</div>
-                                    </div> */}
                                     </div>
                                     {hasNevigation(vnode) && vnode.state.subPage === 'main' ? <NavBottom /> : null}
                                 </div> : null
@@ -334,4 +329,12 @@ function waitToCheckIfUserSeenSuggestionsWizard(vnode) {
         }
         count++
     }, 500)
+}
+
+function getOrderByFromUrl(vnode) {
+    debugger;
+    let { orderBy } = vnode.attrs;
+    if (orderBy === undefined) orderBy = 'top';
+    if (orderBy !== 'top' && orderBy !== 'new') orderBy = 'new';
+    return orderBy
 }

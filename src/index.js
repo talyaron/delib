@@ -98,6 +98,8 @@ import ChatFeed from './views/ChatFeed/ChatFeed';
 import OptionPage from './views/OptionPage/OptionPage';
 import FeedPage from './views/FeedPage/FeedPage';
 
+console.log(m.route.get());
+console.log('index v1')
 
 m.route(root, "/login", {
     "/login": Login,
@@ -112,6 +114,7 @@ m.route(root, "/login", {
     '/question-chat/:groupId/:questionId': Question,
     "/reactions/:groupId/:questionId":Reactions,
     "/questionEdit/:groupId/:questionId": QuestionEdit,
+    "/subquestions/:groupId/:questionId/:subQuestionId/:orderBy": SubQuestionsPage,
     "/subquestions/:groupId/:questionId/:subQuestionId": SubQuestionsPage,
     "/subquestions-chat/:groupId/:questionId/:subQuestionId": SubQuestionsPage,
     "/option/:groupId/:questionId/:subQuestionId/:optionId": OptionPage,
