@@ -41,9 +41,14 @@ module.exports = {
         console.log('sub question page', orderBy)
 
         const firstUrl = getFirstUrl();
-
-        //get user before login to page
-        store.lastPage = `/${firstUrl}/${groupId}/${questionId}/${subQuestionId}/${orderBy}`;
+        console.log(firstUrl)
+        debugger;
+        //get user before login to 
+        if (firstUrl === 'subquestions') {
+            store.lastPage = `/${firstUrl}/${groupId}/${questionId}/${subQuestionId}/${orderBy}`;
+        } else if (firstUrl === 'subquestions-chat') {
+            store.lastPage = `/${firstUrl}/${groupId}/${questionId}/${subQuestionId}`;
+        }
         sessionStorage.setItem("lastPage", store.lastPage);
 
 
@@ -332,7 +337,7 @@ function waitToCheckIfUserSeenSuggestionsWizard(vnode) {
 }
 
 function getOrderByFromUrl(vnode) {
-    
+
     let { orderBy } = vnode.attrs;
     if (orderBy === undefined) orderBy = 'top';
     if (orderBy !== 'top' && orderBy !== 'new') orderBy = 'new';

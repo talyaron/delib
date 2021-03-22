@@ -592,38 +592,38 @@ exports.sendPushForNewOptions = functions.firestore
 
   });
 
-exports.optionChatNotifications = functions.firestore
-  .document(
-    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/messages/{messageId}"
+// exports.optionChatNotifications = functions.firestore
+//   .document(
+//     "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/messages/{messageId}"
 
-  )
-  .onCreate((snap, context) => {
+//   )
+//   .onCreate((snap, context) => {
 
-    const { groupId, questionId, subQuestionId, optionId } = context.params;
-    const message = snap.data();
-
-
-
-    console.log('message:', message.message)
-
-    // send notification
+//     const { groupId, questionId, subQuestionId, optionId } = context.params;
+//     const message = snap.data();
 
 
-    const pathDBNotifications = `groups/${groupId}/questions/${questionId}/subQuestions/${subQuestionId}/options/${optionId}/notifications`
 
-    const payload = {
-      notification: {
-        title: `${message.name} אמר ${message.message}`,
-        body: `ב${message.topic}: ${message.entityTitle}`,
-        icon: "https://delib.tech/img/logo-192.png",
-        click_action: `https://delib.tech/?/option-chat/${groupId}/${questionId}/${subQuestionId}/${optionId}`,
-      },
-    };
+//     console.log('message:', message.message)
 
-    return notifiyUsers(payload, context.params, pathDBNotifications)
+//     // send notification
 
 
-  });
+//     const pathDBNotifications = `groups/${groupId}/questions/${questionId}/subQuestions/${subQuestionId}/options/${optionId}/notifications`
+
+//     const payload = {
+//       notification: {
+//         title: `${message.name} אמר ${message.message}`,
+//         body: `ב${message.topic}: ${message.entityTitle}`,
+//         icon: "https://delib.tech/img/logo-192.png",
+//         click_action: `https://delib.tech/?/option-chat/${groupId}/${questionId}/${subQuestionId}/${optionId}`,
+//       },
+//     };
+
+//     return notifiyUsers(payload, context.params, pathDBNotifications)
+
+
+//   });
 
 
 exports.subQuestionChatNotifications = functions.firestore
@@ -647,10 +647,10 @@ exports.subQuestionChatNotifications = functions.firestore
 
     const payload = {
       notification: {
-        title: `${message.name} אמר ${message.message}`,
-        body: `ב${message.topic}: ${message.entityTitle}`,
+        title: `${message.message}`,
+        body: `ב ${message.entityTitle}`,
         icon: "https://delib.tech/img/logo-192.png",
-        click_action: `https://delib.tech/?/subquestions-chat/${groupId}/${questionId}/${subQuestionId}`,
+        click_action: `https://delib.tech/?/subquestions-chat${groupId}/${questionId}/${subQuestionId}`,
       },
     };
 
@@ -1178,7 +1178,7 @@ function notifiyUsers(payload, ids, pathDB) {
     // go over all token given by users and see which user set a token for this
     // entity
     const path2 = generateCollectionPath({ groupId, questionId, subQuestionId, optionId })
-    console.log(`${path2}/notifications`)
+    
 
     return db
       .collection(pathDB)
@@ -1193,7 +1193,7 @@ function notifiyUsers(payload, ids, pathDB) {
 
             let token = userTokensObj[i].token
             if (userTokensObj[i].token) {
-              console.log(token)
+             
               admin.messaging().sendToDevice(token, payload);
             }
           }
