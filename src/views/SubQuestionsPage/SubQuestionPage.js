@@ -332,7 +332,7 @@ function waitToCheckIfUserSeenSuggestionsWizard(vnode) {
 }
 
 function getOrderByFromUrl(vnode) {
-    debugger;
+    
     let { orderBy } = vnode.attrs;
     if (orderBy === undefined) orderBy = 'top';
     if (orderBy !== 'top' && orderBy !== 'new') orderBy = 'new';

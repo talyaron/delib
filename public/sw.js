@@ -33,12 +33,12 @@ const assets = [
 
 self.addEventListener('install', installEvn => {
     console.info('sw has been installed')
-    const preCache = async () => {
-        const cache = await caches.open(SITE_STATIC);
-        console.info('cached')
-        return cache.addAll(assets);
-    };
-    installEvn.waitUntil(preCache());
+    // const preCache = async () => {
+    //     const cache = await caches.open(SITE_STATIC);
+    //     console.info('cached')
+    //     return cache.addAll(assets);
+    // };
+    // installEvn.waitUntil(preCache());
 
 })
 

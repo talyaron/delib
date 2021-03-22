@@ -569,17 +569,19 @@ exports.sendPushForNewOptions = functions.firestore
     const { groupId, questionId, subQuestionId, optionId } = context.params;
     const DATA = snap.data();
 
-    console.log('title:', DATA.title)
-
+    
     // send notification
 
     const pathForAction = concatenateURL({ groupId, questionId, subQuestionId, optionId }, 'option');
     const pathDBNotifications = `groups/${groupId}/questions/${questionId}/subQuestions/${subQuestionId}/notifications`
 
+    console.log('pathForAction:', pathForAction)
+
+
     const payload = {
       notification: {
-        title: `הצעה חדשה: ${DATA.title}`,
-        body: `${DATA.creatorName} מציע ש ${DATA.title} \nהיא תשובה טובה ל-\n ${DATA.subQuestionTitle}`,
+        title: `${DATA.title}` ,
+        body: `הצעה חדשה ב-${DATA.subQuestionTitle}`,
         icon: "https://delib.tech/img/logo-192.png",
         click_action: `https://delib.tech/?/${pathForAction}`,
       },
@@ -715,6 +717,41 @@ exports.groupChatNotifications = functions.firestore
         body: `ב${message.topic}: ${message.entityTitle}`,
         icon: "https://delib.tech/img/logo-192.png",
         click_action: `https://delib.tech/?/group-chat/${groupId}`,
+      },
+    };
+
+    return notifiyUsers(payload, context.params, pathDBNotifications)
+
+
+  });
+
+  // new options notification
+
+  exports.newOptionsNotifications = functions.firestore
+  .document(
+    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}"
+
+  )
+  .onCreate((snap, context) => {
+
+    const { groupId, questionId, subQuestionId} = context.params;
+    const option = snap.data();
+
+
+
+    console.log('new option title:', option.title)
+
+    // send notification
+
+
+    const pathDBNotifications = `groups/${groupId}/questions/${questionId}/subQuestions/${subQuestionId}`
+
+    const payload = {
+      notification: {
+        title: `${option.title}`,
+        body: `New option`,
+        icon: "https://delib.tech/img/logo-192.png",
+        click_action: `https://delib.tech/?/subquestions/${groupId}/${questionId}/${subQuestionId}/new`,
       },
     };
 
@@ -1231,14 +1268,14 @@ function concatenateURL(ids, level) {
         subscriptionPath = `subquestions/${groupId}/${questionId}/${subQuestionId}`;
         break;
       case 'option':
-        subscriptionPath = `option/${groupId}/${questionId}/${subQuestionId}/${optionId}`
+        subscriptionPath = `subquestions/${groupId}/${questionId}/${subQuestionId}/new`
         break;
       default:
         subscriptionPath = 'groups/';
         console.log(`entity ${level} was not found in switch`)
 
     }
-
+console.log('subscriptionPath',subscriptionPath)
     return subscriptionPath
 
 
