@@ -278,7 +278,7 @@ module.exports = {
                     vnode={vnode}
                     language={language}
                 />
-                {vnode.state.firstTimeOnSuggestions === true ?
+                {/* {vnode.state.firstTimeOnSuggestions === true ?
                     <div class='suggestionsWiz'>
                         <div class='suggestionsWiz__box'>
                             <h2>ברוכים הבאים לדליב</h2>
@@ -286,7 +286,7 @@ module.exports = {
                             <img src='/img/suggestions-wiz.gif' />
                             <button class='buttons' onclick={() => closeSuggestionsWizard(vnode)}>סגירה</button>
                         </div>
-                    </div> : null}
+                    </div> : null} */}
 
 
             </div >
