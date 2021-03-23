@@ -44,12 +44,12 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js')
         .then(registration => {
             console.info('sw.js was registerd');
-          
+
             registration.addEventListener('updatefound', () => {
                 // If updatefound is fired, it means that there's
                 // a new service worker being installed.
                 console.info('new service worker being installed')
-                var installingWorker = registration.installing;
+                const installingWorker = registration.installing;
                 console.info('A new service worker is being installed:',
                     installingWorker);
 
@@ -57,7 +57,7 @@ if ('serviceWorker' in navigator) {
                 // state via installingWorker.onstatechange
             });
         })
-        .catch( error=> {
+        .catch(error => {
             console.error('Service worker registration failed:', error);
         });
 } else {
@@ -67,15 +67,15 @@ if ('serviceWorker' in navigator) {
 window.addEventListener('beforeinstallprompt', (e) => {
     // Prevent Chrome 67 and earlier from automatically showing the prompt
     e.preventDefault();
-console.log('can install!')
-    console.log('beforeinstallprompt')
+    console.log('can install as an app')
+   
     // Stash the event so it can be triggered later.
     store.deferredPrompt = e;
     m.redraw();
-   
-   
-    
-  });
+
+
+
+});
 
 
 
@@ -112,7 +112,7 @@ m.route(root, "/login", {
     "/editgroup/:id": EditGroupPage,
     '/question/:groupId/:questionId': Question,
     '/question-chat/:groupId/:questionId': Question,
-    "/reactions/:groupId/:questionId":Reactions,
+    "/reactions/:groupId/:questionId": Reactions,
     "/questionEdit/:groupId/:questionId": QuestionEdit,
     "/subquestions-chat/:groupId/:questionId/:subQuestionId": SubQuestionsPage,
     "/subquestions/:groupId/:questionId/:subQuestionId/:orderBy": SubQuestionsPage,

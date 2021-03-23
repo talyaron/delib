@@ -33,12 +33,12 @@ const assets = [
 
 self.addEventListener('install', installEvn => {
     console.info('sw has been installed')
-    // const preCache = async () => {
-    //     const cache = await caches.open(SITE_STATIC);
-    //     console.info('cached')
-    //     return cache.addAll(assets);
-    // };
-    // installEvn.waitUntil(preCache());
+    const preCache = async () => {
+        const cache = await caches.open(SITE_STATIC);
+        console.info('cached')
+        return cache.addAll(assets);
+    };
+    installEvn.waitUntil(preCache());
 
 })
 
@@ -51,17 +51,17 @@ self.addEventListener('fetch', ev => {
 
     try {
 
-        // ev.respondWith(
-        //     caches.match(ev.request)
-        //         .then(cacheRes => {
-        //             return cacheRes || fetch(ev.request)
-        //                 .then(async fetchRes => {
-        //                     const cache = await caches.open(SITE_DYNAMIC);
-        //                     cache.put(ev.request.url, fetchRes.clone());
-        //                     return fetchRes;
-        //                 })
-        //         })
-        // )
+        ev.respondWith(
+            caches.match(ev.request)
+                .then(cacheRes => {
+                    return cacheRes || fetch(ev.request)
+                        .then(async fetchRes => {
+                            const cache = await caches.open(SITE_DYNAMIC);
+                            cache.put(ev.request.url, fetchRes.clone());
+                            return fetchRes;
+                        })
+                })
+        )
     } catch (e) {
         console.log(e)
     }

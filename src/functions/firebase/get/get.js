@@ -164,7 +164,11 @@ function listenToGroup(groupId) {
 
 
                     } else {
-                        throw new Error(`group ${groupId} do not exists`)
+                        
+                        DB.collection('users').doc(store.user.uid).collection('registerGroups').doc(groupId).delete().then(d=>console.info(d));
+                        
+
+                        throw new Error(`group ${groupId} do not exists. deleteing this group from user subscription`)
                     }
                 } catch (e) {
                     console.error(e.message)
