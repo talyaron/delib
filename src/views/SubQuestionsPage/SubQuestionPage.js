@@ -41,8 +41,7 @@ module.exports = {
         console.log('sub question page', orderBy)
 
         const firstUrl = getFirstUrl();
-        console.log(firstUrl)
-        debugger;
+       
         //get user before login to 
         if (firstUrl === 'subquestions') {
             store.lastPage = `/${firstUrl}/${groupId}/${questionId}/${subQuestionId}/${orderBy}`;

@@ -99,7 +99,7 @@ import OptionPage from './views/OptionPage/OptionPage';
 import FeedPage from './views/FeedPage/FeedPage';
 
 
-console.log('index v2:', m.route.get())
+console.log('index v5:', m.route.get())
 
 m.route(root, "/login", {
     "/login": Login,

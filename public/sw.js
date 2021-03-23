@@ -3,15 +3,8 @@ const SITE_DYNAMIC = 'site-dynamic-v1';
 
 
 const assets = [
-    '/?/chatfeed',
-    "/?/login",
-    "/?/logingoogle",
-    "/?/logout",
-    "/?/groups",
-    "/?/newgroup",
-    "/?/edit",
-    '/?/unauthorized',
-    "/?/feed",
+    'index.html',
+    '/dev.bundle.js',
     '/js/velocity.js',
     '/settings.js',
     '/img/new.svg',
@@ -50,7 +43,7 @@ self.addEventListener('activate', activationEvt => {
 self.addEventListener('fetch', ev => {
 
     try {
-
+        console.log('fetch...')
         ev.respondWith(
             caches.match(ev.request)
                 .then(cacheRes => {
