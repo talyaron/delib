@@ -4,7 +4,7 @@ import './Header.css';
 import { get } from 'lodash';
 
 //functions
-import { subscribeUser, setNotifications} from '../../../functions/firebase/set/setChats';
+import { subscribeUser, setNotifications } from '../../../functions/firebase/set/setChats';
 import { listenToSubscription, listenIfGetsMessages } from '../../../functions/firebase/get/get';
 import { subscribeToNotification } from '../../../functions/firebase/messaging';
 import { exitOut } from '../../../functions/animations';
@@ -107,14 +107,17 @@ module.exports = {
                     <div class='headerTitle'>
                         {vnode.attrs.title}
                     </div>
-                    {vnode.state.notifications ?
-                        <div class='notifications notifications--on' onclick={() => { handleNotifications(false, vnode) }}>
-                            <img src='img/notifications-on.svg' alt='notifications-on' />
-                        </div>
+                    {vnode.attrs.notifications !== false ?
+                        vnode.state.notifications ?
+                            <div class='notifications notifications--on' onclick={() => { handleNotifications(false, vnode) }}>
+                                <img src='img/notifications-on.svg' alt='notifications-on' />
+                            </div>
+                            :
+                            <div class='notifications notifications--off' onclick={() => { handleNotifications(true, vnode) }}>
+                                <img src='img/add_alert.svg' alt='notifications-off' />
+                            </div>
                         :
-                        <div class='notifications notifications--off' onclick={() => { handleNotifications(true, vnode) }}>
-                            <img src='img/add_alert.svg' alt='notifications-off' />
-                        </div>
+                        null
                     }
                     {vnode.attrs.showSubscribe == true ?
                         <div
@@ -177,7 +180,7 @@ function handleNotifications(setNotificationTo, vnode) {
 
 
     subscribeToNotification(ids, setNotificationTo);
-    subscribeUser({subscribe:!setNotificationTo, groupId, questionId, subQuestionId, optionId})
+    subscribeUser({ subscribe: !setNotificationTo, groupId, questionId, subQuestionId, optionId })
 
 
 }

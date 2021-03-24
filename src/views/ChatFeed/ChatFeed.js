@@ -15,7 +15,7 @@ module.exports = {
         const { ids } = vnode.attrs;
         return (
             <div class='page page-grid-feed'>
-               <Header title='התכתבויות' />
+               <Header title='התכתבויות' notifications={false} />
                 <div class='scroll'>
                     <div class='chatFeed__wrapper'>
                         {

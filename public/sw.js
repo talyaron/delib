@@ -1,6 +1,11 @@
 const SITE_STATIC = 'site-static';
 const SITE_DYNAMIC = 'site-dynamic-v1';
 
+console.dir(self)
+console.dir(navigator);
+navigator.setClientBadge(22)
+// navigator.setB
+
 
 const assets = [
     'index.html',

@@ -25,7 +25,7 @@ module.exports = {
      
         return (
             <div class='page page__grid'>
-                <Header title='הקבוצות שלי' topic='דליב' upLevelUrl={false} />
+                <Header title='הקבוצות שלי' topic='דליב' upLevelUrl={false} notifications={false} />
 
                 <div class='groupsWrapper' id='groupsWrapper'>
                     {store.userGroups[0] === false ?

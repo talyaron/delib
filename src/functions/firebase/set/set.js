@@ -3,7 +3,7 @@ import { set, get } from 'lodash';
 import { DB } from '../config';
 import store from '../../../data/store';
 import { concatenateDBPath, uniqueId, generateChatEntitiyId, getRandomColor } from '../../general';
-import {subscribeUser} from './setChats';
+import { subscribeUser } from './setChats';
 
 
 function createGroup(settings) {
@@ -48,12 +48,18 @@ function createGroup(settings) {
 }
 
 function updateGroup(vnode) {
-    DB
-        .collection('groups')
-        .doc(vnode.attrs.id)
-        .update({ title: vnode.state.title, description: vnode.state.description, callForAction: vnode.state.callForAction })
-        .then(() => { m.route.set(`/group/${vnode.attrs.id}`) })
-        .catch(err => { console.error(err) })
+    try {
+        console.log(vnode.state)
+
+        DB
+            .collection('groups')
+            .doc(vnode.attrs.id)
+            .update({ title: vnode.state.title, description: vnode.state.description, callForAction: vnode.state.callForAction||'' })
+            .then(() => { m.route.set(`/group/${vnode.attrs.id}`) })
+            .catch(err => { throw err })
+    } catch (e) {
+        console.error(e)
+    }
 }
 
 function registerGroup(groupId) {
@@ -962,7 +968,7 @@ function handleSubscription(vnode) {
         console.error(e)
     }
 }
-  
+
 
 module.exports = {
     updateOption,
