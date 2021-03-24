@@ -10,20 +10,19 @@ module.exports = {
 
     view: (vnode) => {
 
-        const language = vnode.attrs.language || 'he';
-        const entity = vnode.attrs.entity || 'option';
+        if (vnode.attrs.description) {
+            return (
+                <div class='explanation'>
 
-        return (
-            <div class='explanation'>
-                <h1>{lang[language][entity]}: {vnode.attrs.title}</h1>
-                <div>
-                    {vnode.attrs.description}
-                </div>
-                {/* <div class='qexplanation__footer'>
+                    <div>
+                        {vnode.attrs.description}
+                    </div>
+                    {/* <div class='qexplanation__footer'>
                     
                 </div> */}
-            </div>
-        )
+                </div>
+            )
+        }
     }
 }
 

@@ -12,18 +12,74 @@ header {
     z-index: 4;
 }
 
-.headerContainer {
+.header__nav {
     display: flex;
     justify-content: space-between;
 }
+.header__wrap{
+    display: flex;
+}
 
-.headerTitle {
-    width: 100%;
+.header__notifications{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media only screen and (min-width: 800px) {
+    .header__notifications{
+        margin-left: 100px;
+    }
+}
+
+.notifications{
+    border-radius: 20px;
+    width: 70px;
+    height: 30px;
+   
     display: flex;
     flex-direction: column;
     justify-content: center;
-    font-size: var(--size17);
+    text-align: center;
+    margin-left: 24px;
+    user-select: none;
+    cursor: pointer;
+    align-items: center;
 }
+
+.notifications img{
+    width: 24px;
+}
+
+.notifications--on{
+    background-color: var(--additional);
+}
+
+.notifications--off{
+  
+    background-color: var(--halfPrimary);
+   
+}
+
+.header__title{
+    display: flex;
+    padding: 5px 0px;
+    justify-content: center;
+
+}
+.header__title img{
+    margin: 0px 10px;
+}
+.header__title div{
+    font-size: 2rem;
+}
+
+@media only screen and (max-width: 800px) {
+    .header__title div{
+        font-size: 1.4rem;
+    }
+}
+
 
 
 .headerMessage {
@@ -79,26 +135,5 @@ header {
     font-size: 1rem;
 }
 
-.notifications{
-    border-radius: 20px;
-    width: 40px;
-    height: 40px;
-   
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    margin-left: 24px;
-    user-select: none;
-    cursor: pointer;
-}
 
-.notifications--on{
-    background-color: var(--additional);
-}
 
-.notifications--off{
-  
-    background-color: var(--halfPrimary);
-   
-}
