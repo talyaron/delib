@@ -1,29 +1,29 @@
-.explanation{
+.explanation {
     background: white;
     color: var(--gray0);
-   
     margin: 20px auto;
     padding: var(--regPadding);
     border-radius: var(--roundBorder);
     max-width: 600px;
     width: 90%;
-    overflow-y: auto;
     box-sizing: border-box;
+    box-shadow: (--mediumShadow);
 }
 
 
 
-.explanation>div{
+.explanation>div {
     color: var(--gray1);
-    
+
     margin-bottom: var(--regPadding);
     line-height: 1.8rem;
     max-height: 25vh;
     font-size: 1.5rem;
+    overflow-y: auto;
 }
 
 @media only screen and (max-width: 800px) {
-    .explanation>div{
+    .explanation>div {
         font-size: 1.3rem;
     }
 }

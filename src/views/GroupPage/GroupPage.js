@@ -1,9 +1,10 @@
 import m from 'mithril';
 import { get } from 'lodash';
 
-import { deep_value, setWrapperHeight } from '../../functions/general';
+// data
 import store from '../../data/store';
 import lang from '../../data/languages';
+import {GROUP} from '../../data/EntityTypes';
 
 
 //components
@@ -149,6 +150,7 @@ module.exports = {
                             showSubscribe={true}
                             language={language}
                             name={vnode.state.groupName}
+                            type={GROUP}
                         />
                         <NavTop
                             level={lang[language].groupTopics}

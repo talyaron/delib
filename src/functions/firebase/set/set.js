@@ -854,27 +854,6 @@ function updateOption(vnode) {
 }
 
 
-function setChatLastEntrance(ids) {
-    try {
-        const { groupId, questionId, subQuestionId, optionId, consequenceId } = ids;
-
-
-        let path = concatenateDBPath(groupId, questionId, subQuestionId, optionId, consequenceId);
-        const regex = new RegExp('/', 'gi')
-        path = path.replace(regex, '-')
-
-        if (path !== '-groups') {
-            DB.collection(`users`).doc(store.user.uid).collection('chatLastEnterence').doc(path)
-                .set({ lastTime: firebase.firestore.FieldValue.serverTimestamp() })
-                .catch(e => { console.error(e) })
-        } else {
-            throw new Error('couldnt find path to spesific chat (groupId, questionId, subQuestionId, optionId, consequenceId)', groupId, questionId, subQuestionId, optionId, consequenceId)
-        }
-    } catch (e) {
-        console.error(e)
-    }
-
-}
 
 
 
@@ -998,7 +977,6 @@ module.exports = {
     updateSubQuestionProcess,
     updateSubQuestionOrderBy,
     updateDoesUserHaveNavigation,
-    setChatLastEntrance,
     setToFeedLastEntrance,
     setNotifications,
     setNumberOfMessagesMark,

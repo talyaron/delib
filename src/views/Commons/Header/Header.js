@@ -3,6 +3,11 @@ import "regenerator-runtime/runtime.js";
 import './Header.css';
 import { get } from 'lodash';
 
+//model
+import lang from '../../../data/languages'
+import { GROUP, QUESTION, SUB_QUESTION, OPTION } from '../../../data/EntityTypes';
+
+
 //functions
 import { subscribeUser, setNotifications } from '../../../functions/firebase/set/setChats';
 import { listenToSubscription, listenIfGetsMessages } from '../../../functions/firebase/get/get';
@@ -14,9 +19,6 @@ import { Reference, concatenateDBPath, getEntityId, getUser } from '../../../fun
 
 //components
 import Aside from '../Aside/Aside';
-
-//model
-import lang from '../../../data/languages'
 
 
 let entityId = '';
@@ -96,7 +98,7 @@ module.exports = {
             <header id='headerContainer'>
                 <div class='header__title'>
 
-                    <img src='img/group-gray.svg' /><div>{name}</div>
+                    <img src={entityIcon(vnode)} /><div>{name}</div>
 
                 </div>
                 <div class='header__nav'>
@@ -242,4 +244,21 @@ function handleBack(e, vnode) {
     }
 
 
+}
+
+function entityIcon(vnode) {
+    const { type } = vnode.attrs;
+
+    switch (type) {
+        case GROUP:
+            return 'img/iconfinder_vector_881_17_3914264.svg';
+        case QUESTION:
+            return 'img/focus.svg';
+        case SUB_QUESTION:
+            return 'img/question.svg';
+        case OPTION:
+            return 'img/iconfinder__Arrows_circle_decision_direction_motion_options_7316445.svg'
+        default:
+            return 'img/logo-48px.png';
+    }
 }

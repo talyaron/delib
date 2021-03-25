@@ -5,6 +5,7 @@ import "./SubQuestionPage.css";
 import store from "../../data/store";
 import settings from "../../data/settings";
 import lang from '../../data/languages';
+import {SUB_QUESTION} from '../../data/EntityTypes';
 
 //components
 
@@ -161,13 +162,14 @@ module.exports = {
                         <div class='page__grid'>
                             <div class="page__header">
                                 <Header
-                                    title={lang[language].question}
+                                    name={lang[language].question}
                                     upLevelUrl={hasNevigation(vnode)}
                                     groupId={groupId}
                                     questionId={questionId}
                                     showSubscribe={false}
                                     subQuestionId={subQuestionId}
                                     language={language}
+                                    type={SUB_QUESTION}
                                 />
                                 <NavTop
                                     level={lang[language].solutions}

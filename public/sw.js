@@ -1,11 +1,6 @@
 const SITE_STATIC = 'site-static';
 const SITE_DYNAMIC = 'site-dynamic-v1';
 
-console.dir(self)
-console.dir(navigator);
-navigator.setClientBadge(22)
-// navigator.setB
-
 
 const assets = [
     'index.html',
@@ -30,18 +25,26 @@ const assets = [
 ]
 
 self.addEventListener('install', installEvn => {
-    console.info('sw has been installed')
-    const preCache = async () => {
-        const cache = await caches.open(SITE_STATIC);
-        console.info('cached')
-        return cache.addAll(assets);
-    };
-    installEvn.waitUntil(preCache());
+    try {
 
+        console.info('sw has been installed')
+        const preCache = async () => {
+            const cache = await caches.open(SITE_STATIC);
+            console.info('cached')
+            return cache.addAll(assets);
+        };
+        installEvn.waitUntil(preCache());
+    } catch (e) {
+        console.error(e)
+    }
 })
 
 self.addEventListener('activate', activationEvt => {
-    console.info('.........sw was activated', activationEvt);
+    try {
+        console.info('.........sw was activated', activationEvt);
+    } catch (e) {
+        console.error(e)
+    }
 
 })
 
@@ -57,6 +60,8 @@ self.addEventListener('fetch', ev => {
                             const cache = await caches.open(SITE_DYNAMIC);
                             cache.put(ev.request.url, fetchRes.clone());
                             return fetchRes;
+                        }).catch(e=>{
+                            console.error(e)
                         })
                 })
         )

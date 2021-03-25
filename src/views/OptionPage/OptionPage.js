@@ -4,6 +4,7 @@ import './OptionPage.css';
 //data
 import store from '../../data/store';
 import lang from '../../data/languages';
+import {OPTION} from '../../data/EntityTypes';
 
 //function
 import { get } from 'lodash';
@@ -134,12 +135,13 @@ module.exports = {
 
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
         const { option, subPage, consequences,language } = vnode.state;
-
+        
+console.log('type:',OPTION)
         return (
             <div id="page" class='page page__grid'>
                 <div class='page__header'>
                     <Header
-                        title="פתרון"
+                        name={option.title}
                         upLevelUrl={`/subquestions/${groupId}/${questionId}/${subQuestionId}`}
                         groupId={groupId}
                         questionId={questionId}
@@ -148,6 +150,7 @@ module.exports = {
                         showSubscribe={true}
                         subQuestionId={subQuestionId}
                         page={vnode}
+                        type={OPTION}
                     />
                     <NavTop
                         level={'בעד ונגד'}

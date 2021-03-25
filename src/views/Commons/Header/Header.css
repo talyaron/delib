@@ -69,6 +69,8 @@ header {
 }
 .header__title img{
     margin: 0px 10px;
+    height: 30px;
+    width: 30px;
 }
 .header__title div{
     font-size: 2rem;
@@ -123,6 +125,8 @@ header {
     padding: 0px 16px;
     color: var(--white);
     border-radius: 20px;
+    cursor: pointer;
+    user-select: none;
 }
 
 .setButton--activate{
