@@ -50,7 +50,7 @@ module.exports = {
 
         return (
             <div class='chat'>
-                <Explanation ids={ids} title={title} description={description} language={language} entity={entity} />
+               
                 <div class='chatWrapper'>
                     {
                         store.chat[path].map((message, index) => {

@@ -47,7 +47,7 @@
 
 .subQuestion__addOption{
     border-radius: 5px;
-    border: 2px solid white;
+    border: 2px solid var(--gray1);
     padding: 4px 20px;
     user-select: none;
     cursor: pointer;

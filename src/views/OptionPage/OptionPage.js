@@ -135,8 +135,7 @@ module.exports = {
 
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
         const { option, subPage, consequences,language } = vnode.state;
-        
-console.log('type:',OPTION)
+
         return (
             <div id="page" class='page page__grid'>
                 <div class='page__header'>

@@ -27,3 +27,9 @@
         font-size: 1.3rem;
     }
 }
+
+.explanation__footer {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}

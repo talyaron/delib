@@ -1,14 +1,15 @@
 import m from 'mithril';
 
 import store from '../../../data/store';
-import lang from '../../../data/languages'
 import './Explanation.css';
 
 
 
 module.exports = {
 
-    view: (vnode) => {
+    view: vnode => {
+       const {creatorId, groupId, questionId} = vnode.attrs;
+       console.log(questionId, creatorId, getUserId())
 
         if (vnode.attrs.description) {
             return (
@@ -17,9 +18,12 @@ module.exports = {
                     <div>
                         {vnode.attrs.description}
                     </div>
-                    {/* <div class='qexplanation__footer'>
-                    
-                </div> */}
+                    <div class='explanation__footer'>
+                        {creatorId === getUserId() && questionId !== undefined?
+                            <div class='buttons buttonOutlineGray buttons--small' onclick={()=>m.route.set(`/questionEdit/${groupId}/${questionId}`)}>עריכה</div>
+                            :null 
+                    }
+                    </div>
                 </div>
             )
         }

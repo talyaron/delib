@@ -162,11 +162,11 @@ module.exports = {
                         <div class='page__grid'>
                             <div class="page__header">
                                 <Header
-                                    name={lang[language].question}
+                                    name={vnode.state.details.title}
                                     upLevelUrl={hasNevigation(vnode)}
                                     groupId={groupId}
                                     questionId={questionId}
-                                    showSubscribe={false}
+                                    showSubscribe={true}
                                     subQuestionId={subQuestionId}
                                     language={language}
                                     type={SUB_QUESTION}

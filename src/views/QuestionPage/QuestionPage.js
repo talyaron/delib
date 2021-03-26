@@ -42,6 +42,7 @@ module.exports = {
 
         vnode.state = {
             title: deep_value(store.questions, `${groupId}.${questionId}.title`, 'כותרת השאלה'),
+            creatorId: deep_value(store.questions, `${groupId}.${questionId}.creatorId`, ''),
             addOption: false,
             callDB: true,
             subItems: {
@@ -122,6 +123,7 @@ module.exports = {
         const { groupId, questionId } = vnode.attrs;
 
         vnode.state.title = deep_value(store.questions, `${groupId}.${questionId}.title`, 'כותרת השאלה');
+        vnode.state.creatorId = deep_value(store.questions, `${groupId}.${questionId}.creatorId`, '');
         vnode.state.description = deep_value(store.questions, `${groupId}.${questionId}.description`, '');
         let subQuestions = get(store.subQuestions, `[${groupId}]`, [])
 
@@ -161,7 +163,7 @@ module.exports = {
 
     },
     view: vnode => {
-
+       
         const { language } = vnode.state;
 
         const { groupId, questionId } = vnode.attrs;
@@ -195,7 +197,7 @@ module.exports = {
                     <div class='question__main'>
 
                         <div class='wrapperSubQuestions' id='questionWrapperAll'>
-                            <Explanation description={vnode.state.description} />
+                            <Explanation description={vnode.state.description} creatorId={vnode.state.creatorId} questionId={questionId} groupId={groupId} />
                             <h1>שאלות </h1>
 
                             <div class='subQuestionsWrapper'>
