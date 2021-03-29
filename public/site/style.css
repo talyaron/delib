@@ -124,8 +124,8 @@ body {
 
 .title {
     font-size: var(--size17);
-    background-color: var(--primary);
-    color: white;
+    background-color: white;
+    color: var(--gray1);
     padding: 20px;
     border-radius: 0px 0px var(--roundBorder) var(--roundBorder);
     margin: 0px auto;

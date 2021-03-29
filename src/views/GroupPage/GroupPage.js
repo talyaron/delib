@@ -1,9 +1,10 @@
 import m from 'mithril';
 import { get } from 'lodash';
 
-import { deep_value, setWrapperHeight } from '../../functions/general';
+// data
 import store from '../../data/store';
 import lang from '../../data/languages';
+import {GROUP} from '../../data/EntityTypes';
 
 
 //components
@@ -11,6 +12,7 @@ import './GroupPage.css';
 import QuestionCard from './QuestionCard/QuestionCard';
 import Header from '../Commons/Header/Header';
 import NavBottom from '../Commons/NavBottom/NavBottom';
+import Explanation from '../Commons/Explanation/Explanation';
 import NavTop from '../Commons/NavTop/NavTop';
 import Chat from '../Commons/Chat/Chat';
 import Spinner from '../Commons/Spinner/Spinner';
@@ -147,6 +149,8 @@ module.exports = {
                             groupId={vnode.attrs.id}
                             showSubscribe={true}
                             language={language}
+                            name={vnode.state.groupName}
+                            type={GROUP}
                         />
                         <NavTop
                             level={lang[language].groupTopics}
@@ -163,7 +167,7 @@ module.exports = {
                     {vnode.state.subPage == 'main' ?
 
                         <div class='questionsWrapper' id='groupWrapper' style={`direction:${lang[language].dir}`}>
-                            <div class='title'>{lang[language].groupTitle}: {vnode.state.groupName}</div>
+                           <Explanation  description={vnode.state.add.description} />
                             <h1>{lang[language].groupTopics}</h1>
                             {vnode.state.questions[0] === false ?
                                 <Spinner />

@@ -582,8 +582,8 @@ exports.sendPushForNewOptions = functions.firestore
       notification: {
         title: `${DATA.title}` ,
         body: `הצעה חדשה ב-${DATA.subQuestionTitle}`,
-        icon: "https://delib.tech/img/logo-192.png",
-        click_action: `https://delib.tech/?/${pathForAction}`,
+        icon: "https://delib.tech/img/logo-72px.png",
+        click_action: `https://delib.tech/?/${pathForAction}`
       },
     };
 
@@ -615,7 +615,7 @@ exports.sendPushForNewOptions = functions.firestore
 //       notification: {
 //         title: `${message.name} אמר ${message.message}`,
 //         body: `ב${message.topic}: ${message.entityTitle}`,
-//         icon: "https://delib.tech/img/logo-192.png",
+//         icon: "https://delib.tech/img/logo-72px.png",
 //         click_action: `https://delib.tech/?/option-chat/${groupId}/${questionId}/${subQuestionId}/${optionId}`,
 //       },
 //     };
@@ -649,8 +649,8 @@ exports.subQuestionChatNotifications = functions.firestore
       notification: {
         title: `${message.message}`,
         body: `ב ${message.entityTitle}`,
-        icon: "https://delib.tech/img/logo-192.png",
-        click_action: `https://delib.tech/?/subquestions-chat${groupId}/${questionId}/${subQuestionId}`,
+        icon: "https://delib.tech/img/logo-72px.png",
+        click_action: `https://delib.tech/?/subquestions-chat${groupId}/${questionId}/${subQuestionId}`
       },
     };
 
@@ -682,8 +682,8 @@ exports.questionChatNotifications = functions.firestore
       notification: {
         title: `${message.name} אמר ${message.message}`,
         body: `ב${message.topic}: ${message.entityTitle}`,
-        icon: "https://delib.tech/img/logo-192.png",
-        click_action: `https://delib.tech/?/question-chat/${groupId}/${questionId}`,
+        icon: "https://delib.tech/img/logo-72px.png",
+        click_action: `https://delib.tech/?/question-chat/${groupId}/${questionId}`
       },
     };
 
@@ -715,8 +715,8 @@ exports.groupChatNotifications = functions.firestore
       notification: {
         title: `${message.name} אמר ${message.message}`,
         body: `ב${message.topic}: ${message.entityTitle}`,
-        icon: "https://delib.tech/img/logo-192.png",
-        click_action: `https://delib.tech/?/group-chat/${groupId}`,
+        icon: "https://delib.tech/img/logo-72px.png",
+        click_action: `https://delib.tech/?/group-chat/${groupId}`
       },
     };
 
@@ -750,8 +750,8 @@ exports.groupChatNotifications = functions.firestore
       notification: {
         title: `${option.title}`,
         body: `New option`,
-        icon: "https://delib.tech/img/logo-192.png",
-        click_action: `https://delib.tech/?/subquestions/${groupId}/${questionId}/${subQuestionId}/new`,
+        icon: "https://delib.tech/img/logo-72px.png",
+        click_action: `https://delib.tech/?/subquestions/${groupId}/${questionId}/${subQuestionId}/new`
       },
     };
 

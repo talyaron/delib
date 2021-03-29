@@ -9,9 +9,7 @@ import { storage } from '../../../functions/firebase/config'
 
 //data
 import store from '../../../data/store'
-import { concat } from 'lodash';
 
-let firstDescription = false
 
 module.exports = {
     oninit: async vnode => {
@@ -31,7 +29,7 @@ module.exports = {
      
         if (description !== undefined && vnode.state.description === '' ) {
             vnode.state.description = description;
-            // firstDescription = description
+          
         }
 
     },

@@ -2,13 +2,17 @@ import m from 'mithril';
 import { get } from 'lodash';
 import './QuestionPage.css';
 
+//model
+import store from '../../data/store';
+import lang from '../../data/languages'
+import { QUESTION } from '../../data/EntityTypes';
 
 //components
 
 import Header from '../Commons/Header/Header';
 import SubQuestionSolution from './SubQuestionsSolution/SubQuestionSolution';
 import Spinner from '../Commons/Spinner/Spinner';
-import Description from './Description/Description';
+import Explanation from '../Commons/Explanation/Explanation';
 import AlertsSetting from '../Commons/AlertsSetting/AlertsSetting';
 import NavBottom from '../Commons/NavBottom/NavBottom';
 import NavTop from '../Commons/NavTop/NavTop';
@@ -16,11 +20,9 @@ import Chat from '../Commons/Chat/Chat';
 import SubQuestionEditModal from './SubQuestionEditModal/SubQuestionEditModal';
 import AddPanel from './AddPanel/AddPanel';
 import VoteModal from './VoteModal/VoteModal';
-import Reactions from '../Commons/Reactions/Reactions'
 
-//model
-import store from '../../data/store';
-import lang from '../../data/languages';
+
+;
 //functions
 import { getQuestionDetails, getSubQuestion, getLastTimeEntered, listenToChat, listenToGroup } from '../../functions/firebase/get/get';
 import { registerGroup } from '../../functions/firebase/set/set';
@@ -40,6 +42,7 @@ module.exports = {
 
         vnode.state = {
             title: deep_value(store.questions, `${groupId}.${questionId}.title`, 'כותרת השאלה'),
+            creatorId: deep_value(store.questions, `${groupId}.${questionId}.creatorId`, ''),
             addOption: false,
             callDB: true,
             subItems: {
@@ -120,6 +123,7 @@ module.exports = {
         const { groupId, questionId } = vnode.attrs;
 
         vnode.state.title = deep_value(store.questions, `${groupId}.${questionId}.title`, 'כותרת השאלה');
+        vnode.state.creatorId = deep_value(store.questions, `${groupId}.${questionId}.creatorId`, '');
         vnode.state.description = deep_value(store.questions, `${groupId}.${questionId}.description`, '');
         let subQuestions = get(store.subQuestions, `[${groupId}]`, [])
 
@@ -159,7 +163,7 @@ module.exports = {
 
     },
     view: vnode => {
-
+       
         const { language } = vnode.state;
 
         const { groupId, questionId } = vnode.attrs;
@@ -170,17 +174,17 @@ module.exports = {
 
                 <div class='page__header'>
                     <Header
-                        topic='נושא'
-                        title='נושא'
+                        name={vnode.state.title}
                         upLevelUrl={`/group/${vnode.attrs.groupId}`}
                         groupId={vnode.attrs.groupId}
                         showSubscribe={true}
                         questionId={vnode.attrs.questionId}
+                        type={QUESTION}
                     />
                     <NavTop level={'שאלות'}
                         current={vnode.state.subPage}
                         chat={lang[language].chat}
-                        
+
                         pvs={vnode.state}
                         mainUrl={`/question/${groupId}/${questionId}`}
                         chatUrl={`/question-chat/${groupId}/${questionId}`}
@@ -191,17 +195,13 @@ module.exports = {
                 </div>
                 {vnode.state.subPage === 'main' ?
                     <div class='question__main'>
-                        <Description
-                            title={vnode.state.title}
-                            content={vnode.state.description}
-                            groupId={vnode.attrs.groupId}
-                            questionId={vnode.attrs.questionId}
-                            creatorId={vnode.state.creatorId}
-                        />
+
                         <div class='wrapperSubQuestions' id='questionWrapperAll'>
+                            <Explanation description={vnode.state.description} creatorId={vnode.state.creatorId} questionId={questionId} groupId={groupId} />
                             <h1>שאלות </h1>
+
                             <div class='subQuestionsWrapper'>
-                                
+
                                 {vnode.state.subQuestions.map((subQuestion, index) => {
 
                                     return (<SubQuestionSolution
@@ -248,7 +248,7 @@ module.exports = {
                     url={m.route.get()}
                 /> : null
                 }
-                
+
                 <div class='page__header'>
                     <NavBottom />
                 </div>
