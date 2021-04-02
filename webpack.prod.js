@@ -1,4 +1,5 @@
 const path = require('path');
+const WorkboxWebpackPlugin = require('workbox-webpack-plugin')
 
 module.exports = {
     entry: './src/index.js',
@@ -19,5 +20,12 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'public'),
         filename: 'prod.bundle.js'
-    }
+    },
+    plugins:[
+        new WorkboxWebpackPlugin.InjectManifest({
+            swSrc:'./src/sw.js',
+            swDest:'sw.js'
+        })
+    ]
+
 };

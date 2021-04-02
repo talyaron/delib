@@ -1,5 +1,5 @@
 const path = require('path');
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const WorkboxWebpackPlugin = require('workbox-webpack-plugin')
 
 
 module.exports = {
@@ -23,5 +23,11 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'public'),
         filename: 'dev.bundle.js'
-    }
+    },
+    plugins:[
+        new WorkboxWebpackPlugin.InjectManifest({
+            swSrc:'./src/sw.js',
+            swDest:'sw.js'
+        })
+    ]
 };
