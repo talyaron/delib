@@ -63,9 +63,6 @@ module.exports = {
 			await getUser();
 
 			vnode.state.subscribed = get(store.subscribe, `[${vnode.state.path}]`, false);
-
-
-
 		})();
 
 
@@ -94,14 +91,7 @@ module.exports = {
 							</div>
 								: null
 							}
-							<div
-								class='headerSetFeed'
-								onclick={e => {
-									e.stopPropagation();
-									handleSubscription(vnode);
-								}}>
-								{vnode.state.subscribed ? <div class='title__btnRegister title__btnRegister--unselect'>{lang[language].unfollow}</div> : <div class='title__btnRegister title__btnRegister--select'>{lang[language].follow}</div>}
-							</div>
+							
 						</div>
 					</div>
 					{processType !== 'votes'?<h3 class='subQuestion__question'>{lang[language].solutions}</h3>:null}

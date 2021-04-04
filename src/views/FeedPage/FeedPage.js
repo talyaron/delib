@@ -63,7 +63,7 @@ module.exports = {
 
         return(
             <div class='page page__grid'>
-                <Header title='חדשות' showSubscribe={false}/>
+                <Header name='דליב - עדכונים' showSubscribe={false} notifications={false}/>
                 <div class='feed__main' id='feed__main'>
                     {vnode.state.feed.map(feedItem=>{
                         return( <FeedItem feedItem={feedItem} key={feedItem.feedItemId}/>)

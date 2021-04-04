@@ -3,7 +3,7 @@ header {
     width: 100%;
     
     background: var(--white);
-    box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 1px 4px rgb(0 0 0 / 50%);
     padding: 10px 0px;
     color: var(--black);
     text-align: center;
@@ -12,18 +12,85 @@ header {
     z-index: 4;
 }
 
-.headerContainer {
+.header__nav {
     display: flex;
     justify-content: space-between;
 }
+.header__wrap{
+    display: flex;
+}
 
-.headerTitle {
-    width: 100%;
+.header__notifications{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media only screen and (min-width: 800px) {
+    .header__notifications{
+        margin-left: 100px;
+    }
+}
+
+.notifications{
+    border-radius: 20px;
+    width: 70px;
+    height: 30px;
+   
     display: flex;
     flex-direction: column;
     justify-content: center;
-    font-size: var(--size17);
+    text-align: center;
+    margin-left: 24px;
+    user-select: none;
+    cursor: pointer;
+    align-items: center;
 }
+
+.notifications img{
+    width: 24px;
+}
+
+.notifications--on{
+    background-color: var(--additional);
+}
+
+.notifications--off{
+  
+    background-color: var(--halfPrimary);
+   
+}
+
+.header__title{
+    display: flex;
+    padding: 5px 0px;
+    justify-content: center;
+
+}
+.header__title img{
+    margin: 0px 10px;
+    height: 30px;
+    width: 30px;
+}
+.header__title div{
+    font-size: 2rem;
+    max-height: 2.1rem;
+    max-width: 70vw;
+    overflow-y: hidden;
+    overflow-x: overlay;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    text-overflow: ellipsis;
+    margin-bottom: 10px;
+}
+
+@media only screen and (max-width: 800px) {
+    .header__title div{
+        font-size: 1.4rem;
+        max-height: 1.5rem;
+    }
+}
+
 
 
 .headerMessage {
@@ -67,6 +134,8 @@ header {
     padding: 0px 16px;
     color: var(--white);
     border-radius: 20px;
+    cursor: pointer;
+    user-select: none;
 }
 
 .setButton--activate{
@@ -79,26 +148,5 @@ header {
     font-size: 1rem;
 }
 
-.notifications{
-    border-radius: 20px;
-    width: 40px;
-    height: 40px;
-   
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    margin-left: 24px;
-    user-select: none;
-    cursor: pointer;
-}
 
-.notifications--on{
-    background-color: var(--additional);
-}
 
-.notifications--off{
-  
-    background-color: var(--halfPrimary);
-   
-}

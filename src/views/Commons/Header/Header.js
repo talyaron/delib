@@ -3,8 +3,13 @@ import "regenerator-runtime/runtime.js";
 import './Header.css';
 import { get } from 'lodash';
 
+//model
+import lang from '../../../data/languages'
+import { GROUP, QUESTION, SUB_QUESTION, OPTION } from '../../../data/EntityTypes';
+
+
 //functions
-import { subscribeUser, setNotifications} from '../../../functions/firebase/set/setChats';
+import { subscribeUser, setNotifications } from '../../../functions/firebase/set/setChats';
 import { listenToSubscription, listenIfGetsMessages } from '../../../functions/firebase/get/get';
 import { subscribeToNotification } from '../../../functions/firebase/messaging';
 import { exitOut } from '../../../functions/animations';
@@ -14,9 +19,6 @@ import { Reference, concatenateDBPath, getEntityId, getUser } from '../../../fun
 
 //components
 import Aside from '../Aside/Aside';
-
-//model
-import lang from '../../../data/languages'
 
 
 let entityId = '';
@@ -87,73 +89,68 @@ module.exports = {
 
     },
     view: (vnode) => {
-
+        const { name, notifications } = vnode.attrs
         vnode.state.isMenuOpen;
         const language = vnode.attrs.language || 'he';
 
         return (
 
             <header id='headerContainer'>
-                <div class='headerContainer'>
+                <div class='header__title'>
+
+                    <img src={entityIcon(vnode)} /><div>{name}</div>
+
+                </div>
+                <div class='header__nav'>
 
                     <img
-                        onclick={(e) => {
-                            e.stopPropagation();
-                            toggleMenu(vnode);
-                        }}
+                        onclick={(e) => toggleMenu(e, vnode)}
                         class='headerHamburger'
-                        src='img/hamburger.svg' alt='menu' />
-
-                    <div class='headerTitle'>
-                        {vnode.attrs.title}
+                        src='img/hamburger.svg' />
+                    <div class='header__wrap'>
+                        <div class='header__notifications'>
+                            {notifications !== false ?
+                                vnode.state.notifications ?
+                                    <div class='notifications notifications--on' onclick={() => { handleNotifications(false, vnode) }}>
+                                        <img src='img/notifications-on.svg' alt='notifications-on' />
+                                    </div>
+                                    :
+                                    <div class='notifications notifications--off' onclick={() => { handleNotifications(true, vnode) }}>
+                                        <img src='img/add_alert.svg' alt='notifications-off' />
+                                    </div>
+                                :
+                                null
+                            }
+                            {vnode.attrs.showSubscribe == true ?
+                                <div
+                                    class='headerSetFeed'
+                                    onclick={e => {
+                                        e.stopPropagation();
+                                        handleSubscription(vnode);
+                                    }}>
+                                    {vnode.state.subscribed ? <div class='setButton setButton--cancel'>{lang[language].unfollow}</div> : <div class='setButton setButton--activate'>{lang[language].follow}</div>}
+                                </div>
+                                :
+                                null
+                            }
+                        </div>
+                        {vnode.attrs.upLevelUrl
+                            ? <div
+                                class='headerBack'
+                                onclick={e => handleBack(e, vnode)}>
+                                <img src='img/back.svg' />
+                            </div>
+                            : <div class='headerEmptyBack' />
+                        }
                     </div>
-                    {vnode.state.notifications ?
-                        <div class='notifications notifications--on' onclick={() => { handleNotifications(false, vnode) }}>
-                            <img src='img/notifications-on.svg' alt='notifications-on' />
-                        </div>
-                        :
-                        <div class='notifications notifications--off' onclick={() => { handleNotifications(true, vnode) }}>
-                            <img src='img/add_alert.svg' alt='notifications-off' />
-                        </div>
-                    }
-                    {vnode.attrs.showSubscribe == true ?
-                        <div
-                            class='headerSetFeed'
-                            onclick={e => {
-                                e.stopPropagation();
-                                handleSubscription(vnode);
-                            }}>
-                            {vnode.state.subscribed ? <div class='setButton setButton--cancel'>{lang[language].unfollow}</div> : <div class='setButton setButton--activate'>{lang[language].follow}</div>}
-                        </div>
-                        :
-                        null
-                    }
-
-                    {vnode.attrs.upLevelUrl
-                        ? <div
-                            class='headerBack'
-                            onclick={(e) => {
-                                e.stopPropagation();
-                                if (vnode.attrs.page) {
-                                    const page = vnode.attrs.page.dom;
-
-                                    exitOut(page, vnode.attrs.upLevelUrl)
-                                } else {
-                                    m.route.set(vnode.attrs.upLevelUrl)
-                                }
-
-                            }}>
-                            <img src='img/back.svg' />
-                        </div>
-                        : <div class='headerEmptyBack' />
-                    }
                 </div>
                 {!vnode.attrs.option == undefined
                     ? <div class='chatOptionHeader'>
                         אופציה: {vnode.attrs.option}
                     </div>
-                    : <div />
+                    : null
                 }
+
                 <Aside isAdmin={vnode.attrs.isAdmin} editPageLink={vnode.attrs.editPageLink} isOpen={vnode.state.isMenuOpen} />
             </header>
 
@@ -177,7 +174,7 @@ function handleNotifications(setNotificationTo, vnode) {
 
 
     subscribeToNotification(ids, setNotificationTo);
-    subscribeUser({subscribe:!setNotificationTo, groupId, questionId, subQuestionId, optionId})
+    subscribeUser({ subscribe: !setNotificationTo, groupId, questionId, subQuestionId, optionId })
 
 
 }
@@ -201,8 +198,8 @@ function onNewMessageJumpCounter(vnode) {
 
 
 
-function toggleMenu(vnode) {
-
+function toggleMenu(e, vnode) {
+    e.stopPropagation();
     vnode.state.isMenuOpen = !vnode.state.isMenuOpen
 }
 
@@ -232,5 +229,36 @@ function handleSubscription(vnode) {
         }
     } catch (e) {
         console.error(e)
+    }
+}
+
+function handleBack(e, vnode) {
+
+    e.stopPropagation();
+    if (vnode.attrs.page) {
+        const page = vnode.attrs.page.dom;
+
+        exitOut(page, vnode.attrs.upLevelUrl)
+    } else {
+        m.route.set(vnode.attrs.upLevelUrl)
+    }
+
+
+}
+
+function entityIcon(vnode) {
+    const { type } = vnode.attrs;
+
+    switch (type) {
+        case GROUP:
+            return 'img/iconfinder_vector_881_17_3914264.svg';
+        case QUESTION:
+            return 'img/focus.svg';
+        case SUB_QUESTION:
+            return 'img/question.svg';
+        case OPTION:
+            return 'img/iconfinder__Arrows_circle_decision_direction_motion_options_7316445.svg'
+        default:
+            return 'img/logo-48px.png';
     }
 }

@@ -3,7 +3,7 @@ import { set, get } from 'lodash';
 import { DB } from '../config';
 import store from '../../../data/store';
 import { concatenateDBPath, uniqueId, generateChatEntitiyId, getRandomColor } from '../../general';
-import {subscribeUser} from './setChats';
+import { subscribeUser } from './setChats';
 
 
 function createGroup(settings) {
@@ -48,12 +48,18 @@ function createGroup(settings) {
 }
 
 function updateGroup(vnode) {
-    DB
-        .collection('groups')
-        .doc(vnode.attrs.id)
-        .update({ title: vnode.state.title, description: vnode.state.description, callForAction: vnode.state.callForAction })
-        .then(() => { m.route.set(`/group/${vnode.attrs.id}`) })
-        .catch(err => { console.error(err) })
+    try {
+        console.log(vnode.state)
+
+        DB
+            .collection('groups')
+            .doc(vnode.attrs.id)
+            .update({ title: vnode.state.title, description: vnode.state.description, callForAction: vnode.state.callForAction||'' })
+            .then(() => { m.route.set(`/group/${vnode.attrs.id}`) })
+            .catch(err => { throw err })
+    } catch (e) {
+        console.error(e)
+    }
 }
 
 function registerGroup(groupId) {
@@ -848,27 +854,6 @@ function updateOption(vnode) {
 }
 
 
-function setChatLastEntrance(ids) {
-    try {
-        const { groupId, questionId, subQuestionId, optionId, consequenceId } = ids;
-
-
-        let path = concatenateDBPath(groupId, questionId, subQuestionId, optionId, consequenceId);
-        const regex = new RegExp('/', 'gi')
-        path = path.replace(regex, '-')
-
-        if (path !== '-groups') {
-            DB.collection(`users`).doc(store.user.uid).collection('chatLastEnterence').doc(path)
-                .set({ lastTime: firebase.firestore.FieldValue.serverTimestamp() })
-                .catch(e => { console.error(e) })
-        } else {
-            throw new Error('couldnt find path to spesific chat (groupId, questionId, subQuestionId, optionId, consequenceId)', groupId, questionId, subQuestionId, optionId, consequenceId)
-        }
-    } catch (e) {
-        console.error(e)
-    }
-
-}
 
 
 
@@ -962,7 +947,7 @@ function handleSubscription(vnode) {
         console.error(e)
     }
 }
-  
+
 
 module.exports = {
     updateOption,
@@ -992,7 +977,6 @@ module.exports = {
     updateSubQuestionProcess,
     updateSubQuestionOrderBy,
     updateDoesUserHaveNavigation,
-    setChatLastEntrance,
     setToFeedLastEntrance,
     setNotifications,
     setNumberOfMessagesMark,

@@ -123,9 +123,10 @@ body {
 /*  --- title ---- */
 
 .title {
+    background-color: white;
+    color: var(--gray1);
     font-size: var(--size17);
-    background-color: var(--primary);
-    color: white;
+  
     padding: 20px;
     border-radius: 0px 0px var(--roundBorder) var(--roundBorder);
     margin: 0px auto;
@@ -337,7 +338,7 @@ body {
     justify-content: center;
     position: fixed;
     right: 6vw;
-    bottom: 6vh;
+    bottom: 11vh;
     border-radius: 50%;
     box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.5);
     user-select: none;
