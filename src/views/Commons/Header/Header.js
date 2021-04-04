@@ -106,7 +106,7 @@ module.exports = {
                     <img
                         onclick={(e) => toggleMenu(e, vnode)}
                         class='headerHamburger'
-                        src='img/hamburger.svg' />
+                        src='img/hamburger.svg' alt='menu' />
                     <div class='header__wrap'>
                         <div class='header__notifications'>
                             {notifications !== false ?
