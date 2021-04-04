@@ -102,7 +102,7 @@ module.exports = {
                             toggleMenu(vnode);
                         }}
                         class='headerHamburger'
-                        src='img/hamburger.svg' />
+                        src='img/hamburger.svg' alt='menu' />
 
                     <div class='headerTitle'>
                         {vnode.attrs.title}
