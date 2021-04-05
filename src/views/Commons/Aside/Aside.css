@@ -69,3 +69,8 @@ aside {
     }
 }
 
+.aside__version{
+    font-size: .8rem;
+    color:white;
+}
+

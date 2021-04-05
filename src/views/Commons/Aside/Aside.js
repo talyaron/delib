@@ -38,6 +38,7 @@ module.exports = {
             <aside id='aside' class={isOpen ? 'asideOpen' : 'asideClose'}>
                 <div class='topAside'>
                     <p>{store.user.name}</p>
+                    <p class='aside__version'>v. 3.0.2</p>
                 </div>
                 <div class='menuAside'>
                     {store.user.name ?

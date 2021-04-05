@@ -9,6 +9,34 @@
     top: 50%;
 }
 
+@media screen and (max-height: 700px) {
+    .optionEditBox {
+        top:65%
+    }
+    
+}
+
+@media screen and (max-height: 540px) {
+    .optionEditBox {
+        top:80%
+    }
+    
+}
+
+@media screen and (max-height: 400px) {
+    .optionEditBox {
+        top:105%
+    }
+    
+}
+
+@media screen and (max-height: 250px) {
+    .optionEditBox {
+        top:140%
+    }
+    
+}
+
 .optionEditBox:active {
     cursor: grabbing;
 }

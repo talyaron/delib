@@ -9,7 +9,6 @@ module.exports = {
 
     view: vnode => {
        const {creatorId, groupId, questionId} = vnode.attrs;
-       console.log(questionId, creatorId, getUserId())
 
         if (vnode.attrs.description) {
             return (
