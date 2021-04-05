@@ -34,16 +34,17 @@ function createGroup(settings) {
                     .collection("groupsOwned")
                     .doc(groupId).set({ id: groupId, date: new Date().getTime() })
                     .then(() => { console.info(`added the group to the groups the user owns`) })
-                    .catch(e => { console.error(e) });
+                    .catch(e => { console.error(e); sendError(e) });
 
                 subscribeUser({ groupId, subscribe: false })
                 m.route.set(`/group/${groupId}`);
             })
             .catch(function (error) {
                 console.error('Error adding document: ', error);
+                sendError(e)
             });
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e)
     }
 }
 
@@ -58,7 +59,7 @@ function updateGroup(vnode) {
             .then(() => { m.route.set(`/group/${vnode.attrs.id}`) })
             .catch(err => { throw err })
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e)
     }
 }
 
@@ -95,7 +96,7 @@ function registerGroup(groupId) {
                             .collection('registerGroups').doc(groupId)
                             .set({ register: true })
                             .then(() => { console.info('user registerd to group', groupId) })
-                            .catch(e => { console.error(e) })
+                            .catch(e => { console.error(e); sendError(e) })
 
                         //store data from use as member in the group
                         const { displayName, email, uid, name, photoURL, phoneNumber, isAnonymous } = store.user;
@@ -113,7 +114,7 @@ function registerGroup(groupId) {
                             .collection('members').doc(store.user.uid)
                             .set(userObj, { merge: true })
                             .then(() => { console.info('user is a member of group', groupId) })
-                            .catch(e => { console.error(e) })
+                            .catch(e => { console.error(e); sendError(e) })
                     } else {
                         console.info('user is already registered to', groupId)
                     }
@@ -122,7 +123,7 @@ function registerGroup(groupId) {
             }, 1000);
         }
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e)
 
     }
 }
@@ -143,7 +144,7 @@ function createQuestion(groupId, creatorId, title, description) {
             id: questionId
         })
         .catch(function (error) {
-            console.error('Error adding document: ', error);
+            console.error('Error adding document: ', error);sendError(e);
         });
 }
 
@@ -159,10 +160,10 @@ function updateQuestion(groupId, questionId, title, description, authorizationOb
                 console.info('writen succesufuly');
             })
             .catch(function (error) {
-                console.error('Error adding document: ', error);
+                console.error('Error adding document: ', error);sendError(e)
             });
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e)
     }
 }
 
@@ -181,12 +182,12 @@ function createSubQuestion(groupId, questionId, title, order) {
                 .set({ title, order, creator: store.user.uid, orderBy: 'top', subQuestionId, id: subQuestionId })
                 .then(() => { resolve(subQuestionId) })
                 .catch(function (error) {
-                    console.error('Error adding document: ', error);
+                    console.error('Error adding document: ', error);sendError(e)
                     reject(undefined)
                 });
         })
     } catch (e) {
-        console.error(e);
+        console.error(e); sendError(e);
         reject(undefined)
     }
 }
@@ -247,20 +248,20 @@ function setSubQuestion(ids, settings) {
                 subQuestionRef.doc(uid).set({ title, processType, orderBy, groupId, questionId, subQuestionId: uid, userHaveNavigation, showSubQuestion, order: numberOfSubquestions, proAgainstType, creator: store.user.uid })
                     .then(() => { console.info(`saved subQuestion ${uid} to DB`); resolve(uid) })
                     .catch(e => {
-                        console.error(e)
+                        console.error(e); sendError(e)
                         reject(undefined)
                     })
             } else {
                 subQuestionRef.doc(subQuestionId).update({ title, processType, orderBy, groupId, questionId, subQuestionId, userHaveNavigation, showSubQuestion, proAgainstType })
                     .then(() => { console.info(`updated subQuestion ${subQuestionId} to DB`); resolve(subQuestionId) })
                     .catch(e => {
-                        console.error(e);
+                        console.error(e); sendError(e);
                         reject(undefined);
                     })
             }
         })
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e)
     }
 
 
@@ -277,9 +278,9 @@ function deleteSubQuestion(groupId, questionId, subQuestionId) {
             .doc(subQuestionId)
             .update({ showSubQuestion: 'deleted' })
             .then(() => { console.info('SubQuestion was deleted (and styed in db as subQuestion', subQuestionId, ')') })
-            .catch(e => { console.error(e) })
+            .catch(e => { console.error(e); sendError(e) })
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e)
     }
 
 }
@@ -295,10 +296,10 @@ function updateDoesUserHaveNavigation(groupId, questionId, subQuestionId, userHa
             .doc(subQuestionId)
             .update({ userHaveNavigation })
             .catch(e => {
-                console.error(e)
+                console.error(e); sendError(e)
             });
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e)
     }
 
 }
@@ -318,7 +319,7 @@ function updateSubQuestionsOrder(groupId, questionId, newOrderArray) {
             console.info('writen succesufuly');
         })
         .catch(function (error) {
-            console.error('Error adding document: ', error);
+            console.error('Error adding document: ', error);sendError(e)
         });
 }
 
@@ -336,10 +337,10 @@ function setSubQuestionsOrder(groupId, questionId, subQuestionId, order) {
                 console.info(`writen to ${subQuestionId} succesufuly`);
             })
             .catch(function (error) {
-                console.error('Error adding document: ', error);
+                console.error('Error adding document: ', error);sendError(e)
             });
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e)
     }
 }
 
@@ -378,12 +379,12 @@ function createOption(groupId, questionId, subQuestionId, type, creatorId, title
             isActive: true,
             isVote
         }).catch(function (error) {
-            console.error('Error adding document: ', error);
+            console.error('Error adding document: ', error);sendError(e)
         });
 
         return optionId;
     } catch (e) {
-        console.error(e);
+        console.error(e); sendError(e);
         return false;
     }
 }
@@ -418,27 +419,27 @@ function voteOption(ids, settings) {
             optionRef.update(updateObj)
                 .then(() => { console.info(`Option ${optionId} was voted for`) })
                 .catch(e => {
-                    // console.error(e)
+                    // console.error(e); sendError(e)
 
                     let errRexExp = new RegExp('No document to update');
                     if (errRexExp.test(e.message)) {
                         optionRef.set(updateObj)
                             .then(() => { console.log(`A vote to option ${optionId} was added`) })
-                            .catch(e => { console.error(e) })
+                            .catch(e => { console.error(e); sendError(e) })
                     } else {
-                        console.error(e)
+                        console.error(e); sendError(e)
 
                     }
                 })
         } else {
             optionRef.delete()
                 .then(() => { console.info(`Option ${optionId} was deleted`) })
-                .catch(e => { console.error(e) })
+                .catch(e => { console.error(e); sendError(e) })
         }
 
 
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e)
     }
 }
 
@@ -483,9 +484,9 @@ function createConsequence(groupId, questionId, subQuestionId, optionId, creator
 
                 console.info('consequence', consequenceId, 'was saved')
             })
-            .catch(e => { console.error(e) })
+            .catch(e => { console.error(e); sendError(e) })
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e)
     }
 
 }
@@ -531,9 +532,9 @@ function voteConsequence(ids, truthiness, evaluation) {
                     .serverTimestamp()
             }, { merge: true })
             .then(() => { console.info('consequence', consequenceId, 'was voted') })
-            .catch(e => { console.error(e) })
+            .catch(e => { console.error(e); sendError(e) })
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e)
     }
 }
 
@@ -576,11 +577,11 @@ function updateOptionDescription(ids, description) {
                 console.info(`a description was updated on option ${optionId}`)
             })
             .catch(e => {
-                console.error(e)
+                console.error(e); sendError(e)
             })
 
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e)
     }
 }
 
@@ -605,10 +606,10 @@ function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like) 
             .doc(creatorId)
             .set({ like })
             .catch(function (error) {
-                console.error('Error adding document: ', error);
+                console.error('Error adding document: ', error);sendError(e)
             });
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e)
     }
 }
 
@@ -657,11 +658,11 @@ function setMessage(groupId, questionId, subQuestionId, optionId, creatorId, cre
                         .serverTimestamp()
                 })
                 .catch(e => {
-                    console.error(e)
+                    console.error(e); sendError(e)
                 })
         })
         .catch((error) => {
-            console.error('Error:', error);
+            console.error('Error:', error);sendError(e)
         });
 }
 
@@ -694,7 +695,7 @@ function createSubItem(subItemsType, groupId, questionId, creatorId, creatorName
         .add(addObj)
         .then((newItem) => { })
         .catch(function (error) {
-            console.error('Error adding document: ', error);
+            console.error('Error adding document: ', error);sendError(e)
         });
 }
 
@@ -720,7 +721,7 @@ function updateSubItem(subItemsType, groupId, questionId, subQuestionId, title, 
         .update(updateObj)
         .then((newOption) => { })
         .catch(function (error) {
-            console.error('Error updating document: ', error);
+            console.error('Error updating document: ', error);sendError(e)
         });
 }
 
@@ -770,7 +771,7 @@ function setSubAnswer(groupId, questionId, subQuestionId, creatorId, creatorName
         })
         .then((newLike) => { })
         .catch(function (error) {
-            console.error('Error adding document: ', error);
+            console.error('Error adding document: ', error);sendError(e)
         });
 }
 
@@ -794,7 +795,7 @@ function addToFeed(addRemove, pathArray, refString, collectionOrDoc) {
                 console.dir(store.subscribed);
             })
             .catch((error) => {
-                console.error('Error writing document: ', error);
+                console.error('Error writing document: ', error);sendError(e)
             });
     } else {
         DB
@@ -807,7 +808,7 @@ function addToFeed(addRemove, pathArray, refString, collectionOrDoc) {
                 delete store.subscribed[refString];
             })
             .catch(function (error) {
-                console.error('Error removing document: ', error);
+                console.error('Error removing document: ', error);sendError(e)
             });
     }
 }
@@ -846,10 +847,10 @@ function updateOption(vnode) {
 
             })
             .catch(e => {
-                console.error(e);
+                console.error(e); sendError(e);
             })
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e)
     }
 }
 
@@ -866,12 +867,12 @@ function setNotifications(ids, isSubscribed) {
         const path = `${concatenateDBPath(groupId, questionId, subQuestionId, optionId)}/notifications/${store.user.uid}`;
 
         if (isSubscribed) {
-            DB.doc(path).set({ username: store.user.name, email: store.user.email || null }).catch(e => { console.error(e) })
+            DB.doc(path).set({ username: store.user.name, email: store.user.email || null }).catch(e => { console.error(e); sendError(e) })
         } else {
-            DB.doc(path).delete().catch(e => { console.error(e) })
+            DB.doc(path).delete().catch(e => { console.error(e); sendError(e) })
         }
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e)
     }
 
 
@@ -889,10 +890,10 @@ function setNumberOfMessagesMark(ids, numberOfMessages = 0) {
             .collection('optionsRead')
             .doc(optionId)
             .set({ numberOfMessages })
-            .catch(e => { console.error(e) })
+            .catch(e => { console.error(e); sendError(e) })
 
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e)
     }
 }
 
@@ -902,9 +903,9 @@ function dontShowPopAgain() {
     try {
         DB.collection('users').doc(store.user.uid).update({ stopRegistrationMessages: true })
             .then(() => console.info('user will not recive pop messages again'))
-            .catch(e => console.error(e))
+            .catch(e =>{console.error(e); sendError(e);})
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e)
     }
 }
 
@@ -913,9 +914,9 @@ function markUserSeenSuggestionsWizard() {
         DB.collection('users').doc(store.user.uid)
             .update({ firstTimeOnSuggestions: false })
             .then(() => { console.info('user seen wizared') })
-            .catch(e => console.error(e))
+            .catch(e =>{console.error(e); sendError(e)})
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e)
     }
 }
 
@@ -944,7 +945,23 @@ function handleSubscription(vnode) {
             set(store.subscribe, `[${path}]`, false)
         }
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e)
+    }
+}
+
+function sendError(e){
+    try{
+    DB.collection('errors').add({
+        message:e.message, 
+        user:store.user, date:firebase
+        .firestore
+        .FieldValue
+        .serverTimestamp()})
+        .catch(e=>{
+            console.error(e); 
+        })
+    } catch(e){
+        console.error(e);
     }
 }
 
@@ -982,5 +999,6 @@ module.exports = {
     setNumberOfMessagesMark,
     dontShowPopAgain,
     markUserSeenSuggestionsWizard,
-    handleSubscription
+    handleSubscription,
+    sendError
 };

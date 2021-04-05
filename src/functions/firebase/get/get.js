@@ -5,6 +5,7 @@ import store, { consequencesTop } from "../../../data/store";
 //functions
 import { cond, constant, orderBy, set } from 'lodash';
 import { concatenateDBPath, setBrowserUniqueId, getEntityId } from '../../general'
+import { sendError } from '../set/set';
 
 var unsubscribe = {};
 
@@ -15,19 +16,19 @@ function getUser(uid) {
             .get()
             .then(userDB => {
                 if (userDB.exists) {
-                    let { stopRegistrationMessages, firstTimeOnSuggestions} = userDB.data()
+                    let { stopRegistrationMessages, firstTimeOnSuggestions } = userDB.data()
                     if (stopRegistrationMessages === undefined) stopRegistrationMessages = false;
 
                     store.user.stopRegistrationMessages = stopRegistrationMessages;
 
                     //check if user is first time on suggestions
-                    if(firstTimeOnSuggestions === undefined) store.user.firstTimeOnSuggestions = true;
+                    if (firstTimeOnSuggestions === undefined) store.user.firstTimeOnSuggestions = true;
 
                 }
             })
-            .catch(e=>{console.error(e)})
+            .catch(e => { console.error(e); sendError(e); })
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e);
     }
 }
 
@@ -59,7 +60,7 @@ function listenToUserGroups() {
                     listenToGroups(groupsOwnedDB);
                     m.redraw();
                 }, err => {
-                    console.error('On getUserGroups:', err.name, err.message)
+                    console.error('On getUserGroups:', err.name, err.message); sendError(err)
                 });
         }
     } catch (err) {
@@ -80,11 +81,11 @@ function listenToRegisterdGroups() {
 
                 listenToGroups(groupsDB);
             }, err => {
-                console.error('On listenToRegisterdGroups:', err.name, err.message)
+                console.error('On listenToRegisterdGroups:', err.name, err.message); sendError(e)
             })
         }
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e);
     }
 
 }
@@ -127,7 +128,7 @@ function listenToGroups(groupsDB) {
 
         });
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e);
     }
 }
 
@@ -140,47 +141,45 @@ function listenToGroup(groupId) {
 
 
             return DB.collection('groups').doc(groupId).onSnapshot(groupDB => {
-                try {
-                    if (groupDB.exists) {
-                        let groupIndex = store.userGroups.findIndex(group => group.id === groupId);
 
-                        if (store.userGroups[0] === false) store.userGroups.splice(0, 1);
+                if (groupDB.exists) {
+                    let groupIndex = store.userGroups.findIndex(group => group.id === groupId);
 
-                        let groupObj = groupDB.data();
-                        if (!{}.hasOwnProperty.call(groupObj, 'id')) {
-                            DB.collection('groups').doc(groupId).update({ id: groupId, groupId }).catch(e => console.error(e))
-                        }
-                        groupObj.id = groupObj.groupId = groupDB.id;
-                        if (groupIndex == -1) {
-                            store.userGroups.push(groupObj)
-                        } else {
-                            store.userGroups[groupIndex] = groupObj
-                        }
+                    if (store.userGroups[0] === false) store.userGroups.splice(0, 1);
 
-
-                        m.redraw();
-
-
-
-
-                    } else {
-                        
-                        DB.collection('users').doc(store.user.uid).collection('registerGroups').doc(groupId).delete().then(d=>console.info(d));
-                        
-
-                        throw new Error(`group ${groupId} do not exists. deleteing this group from user subscription`)
+                    let groupObj = groupDB.data();
+                    if (!{}.hasOwnProperty.call(groupObj, 'id')) {
+                        DB.collection('groups').doc(groupId).update({ id: groupId, groupId }).catch(e => { console.error(e); sendError(e) })
                     }
-                } catch (e) {
-                    console.error(e.message)
+                    groupObj.id = groupObj.groupId = groupDB.id;
+                    if (groupIndex == -1) {
+                        store.userGroups.push(groupObj)
+                    } else {
+                        store.userGroups[groupIndex] = groupObj
+                    }
+
+
+                    m.redraw();
+
+
+
+
+                } else {
+
+                    DB.collection('users').doc(store.user.uid).collection('registerGroups').doc(groupId).delete().then(d => console.info(d));
+
+
+                    throw new Error(`group ${groupId} do not exists. deleteing this group from user subscription`)
                 }
+
             }, err => {
-                console.error('On listenToGroup:', err.name, err.message)
+                console.error('On listenToGroup:', err.name, err.message); sendError(err)
             })
         } else {
             return () => { };
         }
     } catch (e) {
-        console.error(e);
+        console.error(e); sendError(e);;
     }
 
 }
@@ -199,9 +198,9 @@ function listenToGroupMembers(groupId) {
                 store.groupMembers[groupId] = members;
                 m.redraw();
 
-            }, e => { console.error(e) })
+            }, e => { console.error(e); sendError(e); })
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e);
         return () => { };
     }
 }
@@ -353,7 +352,7 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
         }
     } catch (e) {
 
-        console.error(e)
+        console.error(e); sendError(e);
     }
 }
 
@@ -380,7 +379,7 @@ function getSubQuestion(groupId, questionId, subQuestionId, isSingle) {
             }
         })
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e);
     }
 
 }
@@ -472,7 +471,7 @@ function listenToOptions(groupId, questionId, subQuestionId, order = 'top', isSi
             return () => { };
         }
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e);
     }
 
 }
@@ -494,13 +493,13 @@ function listenToUserLastReadOfOptionChat(optionId) {
                         store.optionNumberOfMessagesRead[optionId] = numberOfMessages;
                         m.redraw()
                     }
-                }, e => { console.error(e) })
+                }, e => { console.error(e); sendError(e); })
 
 
         }
 
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e);
     }
 }
 
@@ -534,11 +533,11 @@ function listenToOption(ids) {
 
                 m.redraw()
             }, e => {
-                console.error(e);
+                console.error(e); sendError(e);;
             })
 
     } catch (e) {
-        console.error(e);
+        console.error(e); sendError(e);;
     }
 }
 
@@ -593,7 +592,7 @@ function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId) 
         });
         return unsubscribe;
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e);
     }
 }
 
@@ -619,10 +618,10 @@ function listenToUserVote(vnode) {
                 m.redraw();
 
             }, e => {
-                console.error(e)
+                console.error(e); sendError(e);
             })
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e);
         return () => { };
     }
 }
@@ -657,7 +656,7 @@ function listenToConsequences(groupId, questionId, subQuestionId, optionId) {
             console.info(`Allredy listen to consequnces on option ${optionId}`);
         }
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e);
     }
 }
 
@@ -725,11 +724,11 @@ function getMyVotesOnConsequence(groupId, questionId, subQuestionId, optionId, c
                 return voteDB.data();
             })
             .catch(e => {
-                console.error(e)
+                console.error(e); sendError(e);
             })
 
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e);
     }
 
 }
@@ -1069,10 +1068,10 @@ function listenToChat(ids) {
 
 
             }, e => {
-                console.error(e)
+                console.error(e); sendError(e);
             })
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e);
     }
 }
 
@@ -1106,11 +1105,11 @@ function listenIfGetsMessages(ids) {
                 }
 
                 m.redraw();
-            }, e => { console.error(e) })
+            }, e => { console.error(e); sendError(e); })
 
         }
     } catch (e) {
-        console.error(e)
+        console.error(e); sendError(e);
     }
 
 }
@@ -1148,7 +1147,7 @@ function getLastTimeEntered(ids, vnode) {
 
 
     catch (e) {
-        console.error(e)
+        console.error(e); sendError(e);
     }
 }
 
