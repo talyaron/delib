@@ -17,22 +17,30 @@ import NavTop from '../Commons/NavTop/NavTop';
 import Chat from '../Commons/Chat/Chat';
 import Spinner from '../Commons/Spinner/Spinner';
 import AddPanel from '../Commons/AddPanel/AddPanel';
+import Headers from './Headers/Headers';
 
 
 //functions
 import { createQuestion, registerGroup } from '../../functions/firebase/set/set';
 import { getQuestions, listenToGroupDetails, listenToChat, getLastTimeEntered } from '../../functions/firebase/get/get';
+import { listenToGroupTitles } from '../../functions/firebase/get/getGroup';
 import { setLastPage, getIsChat, concatenateDBPath } from '../../functions/general';
 
 
+let unsubscruibeTitles = () => { }
 
 
 module.exports = {
 
     oninit: vnode => {
+        const { id } = vnode.attrs;
+        let groupId = id;
+        let afterLogin = true;
+
         setLastPage();
 
         if (store.user.uid == undefined) {
+            afterLogin = false
             m
                 .route
                 .set('/login');
@@ -55,14 +63,16 @@ module.exports = {
             unreadMessages: 0,
             lastTimeEntered: 0,
             language: 'he',
-            openAddPanel:false
+            openAddPanel: false
         }
 
 
 
         getQuestions('on', vnode.attrs.id, vnode);
         listenToGroupDetails(vnode.attrs.id, vnode);
-
+        if (afterLogin) {
+            unsubscruibeTitles = listenToGroupTitles(groupId);
+        }
 
         vnode.state.unsubscribe.chat = listenToChat({ groupId: vnode.attrs.id });
 
@@ -129,7 +139,7 @@ module.exports = {
 
         vnode.state.unsubscribe.chat();
 
-
+        unsubscruibeTitles();
 
     },
     view: vnode => {
@@ -144,26 +154,26 @@ module.exports = {
                 <div class='page__grid'>
                     <div class='page__header'>
                         <AddPanel isOpen={vsp.openAddPanel}
-                    vsp={vsp}
-                    buttonsObj={{
-                        title: 'הוספה',
-                        buttons: [
-                            {
-                                img: 'img/focus-white.svg',
-                                title: 'נושאים',
-                                alt: 'votes',
-                                class: 'addPanel__suggestions addPanel__images',
-                                fn: () => {  vsp.openAddPanel = false;toggleAddQuestion(vnode) }
-                            },
-                            {
-                                img: 'img/header-2-gray.png',
-                                title: 'כותרות',
-                                alt: 'add suggestions',
-                                class: 'addPanel__headers addPanel__images',
-                                fn: () => {  vsp.openAddPanel = false; }
-                            }
-                        ]
-                    }}/>
+                            vsp={vsp}
+                            buttonsObj={{
+                                title: 'הוספה',
+                                buttons: [
+                                    {
+                                        img: 'img/focus-white.svg',
+                                        title: 'נושאים',
+                                        alt: 'votes',
+                                        class: 'addPanel__suggestions addPanel__images',
+                                        fn: () => { vsp.openAddPanel = false; toggleAddQuestion(vnode) }
+                                    },
+                                    {
+                                        img: 'img/header-2-gray.png',
+                                        title: 'כותרות',
+                                        alt: 'add suggestions',
+                                        class: 'addPanel__headers addPanel__images',
+                                        fn: () => { vsp.openAddPanel = false; }
+                                    }
+                                ]
+                            }} />
                         <Header
                             upLevelUrl='/groups'
                             topic={lang[language].groupTitle}
@@ -192,6 +202,7 @@ module.exports = {
 
                         <div class='questionsWrapper' id='groupWrapper' style={`direction:${lang[language].dir}`}>
                             <Explanation description={vnode.state.add.description} />
+                            <Headers groupId={vnode.attrs.id} />
                             <h1>{lang[language].groupTopics}</h1>
                             {vnode.state.questions[0] === false ?
                                 <Spinner />

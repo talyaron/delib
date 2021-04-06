@@ -1,0 +1,18 @@
+.groupHeaders{
+    background-color: rgba(0, 0, 0, 0.397);
+    backdrop-filter: blur(7px);
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.groupHeaders__box{
+    background: white;
+}
