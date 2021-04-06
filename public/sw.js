@@ -1,5 +1,9 @@
-const SITE_STATIC = 'site-static';
-const SITE_DYNAMIC = 'site-dynamic-v1';
+
+const SITE_STATIC = 'site-static-v1';
+const SITE_DYNAMIC = 'site-dynamic-v2';
+
+const PREVIOUS_STATIC = 'site-static'
+const PREVIOUS_DYNAMIC = 'site-dynamic-v1'
 
 
 const assets = [
@@ -51,22 +55,68 @@ self.addEventListener('activate', activationEvt => {
 self.addEventListener('fetch', ev => {
 
     try {
-        console.log('fetch...')
-        ev.respondWith(
-            caches.match(ev.request)
-                .then(cacheRes => {
-                    return cacheRes || fetch(ev.request)
-                        .then(async fetchRes => {
-                            const cache = await caches.open(SITE_DYNAMIC);
-                            cache.put(ev.request.url, fetchRes.clone());
-                            return fetchRes;
-                        }).catch(e=>{
-                            console.error(e)
-                        })
-                })
-        )
+        updateDynamicly(ev);
     } catch (e) {
-        console.log(e)
+        console.error(e)
     }
 })
+
+function updateDynamicly(ev) {
+    try {
+
+        const request = ev.request.url;
+        const innerPageRegExp = /\?\//;
+
+        // if (!request.match(innerPageRegExp)) {
+        // if (true) {
+        //     ev.respondWith(caches.match(ev.request)
+        //         .then(function (response) {
+        //             return response || fetch(ev.request);
+        //         })
+        //         .catch(e => console.error(e))
+        //     );
+        // }
+
+        ev.respondWith(
+            caches.open(SITE_DYNAMIC)
+                .then(cache => cache.match(ev.request)
+                    .then(response => {
+
+                        return response || fetch(ev.request)
+                            .then(response => {
+                                cache.put(ev.request, response.clone()).catch(e=>{console.info(ev.request.url)});
+                                return response;
+                            }).catch(e => {
+                                console.log(ev.request.url)
+                                console.error(e)
+                            })
+                    }).catch(e => {
+                        console.log(ev.request.url)
+                        console.error(e)
+                    })
+                ).catch(e => {
+                    console.log(ev.request.url)
+                    console.error(e)
+                })
+        );
+    } catch (e) {
+        console.log(ev.request.url)
+        console.error(e)
+    }
+}
+
+deleteCache(PREVIOUS_DYNAMIC);
+deleteCache(PREVIOUS_STATIC);
+
+function deleteCache(cacheName) {
+    caches.delete(cacheName)
+        .then(wasDeleted => {
+            if (wasDeleted) {
+                console.info(`cache ${cacheName} was deteled`)
+            } else {
+                console.info(`cache ${cacheName} was not deteled`)
+            }
+        })
+        .catch(e => console.error(e));
+}
 
