@@ -4,7 +4,7 @@ import { get } from 'lodash';
 // data
 import store from '../../data/store';
 import lang from '../../data/languages';
-import {GROUP} from '../../data/EntityTypes';
+import { GROUP } from '../../data/EntityTypes';
 
 
 //components
@@ -16,6 +16,7 @@ import Explanation from '../Commons/Explanation/Explanation';
 import NavTop from '../Commons/NavTop/NavTop';
 import Chat from '../Commons/Chat/Chat';
 import Spinner from '../Commons/Spinner/Spinner';
+import AddPanel from '../Commons/AddPanel/AddPanel';
 
 
 //functions
@@ -53,7 +54,8 @@ module.exports = {
             groupName: get(store, 'groups[' + vnode.attrs.id + '].title', 'שם הקבוצה'),
             unreadMessages: 0,
             lastTimeEntered: 0,
-            language:'he'
+            language: 'he',
+            openAddPanel:false
         }
 
 
@@ -72,14 +74,14 @@ module.exports = {
         let groupId = id;
         getLastTimeEntered({ groupId }, vnode);
 
-        
+
 
     },
     onbeforeupdate: vnode => {
 
         const { id } = vnode.attrs;
         let groupId = id;
-        
+
 
 
         //check is admin
@@ -114,8 +116,8 @@ module.exports = {
         registerGroup(groupId)
 
         //get language
-        vnode.state.language = get(store.groups,`[${groupId}].language`,'he')
-        vnode.state.add.description = get(store.groups,`[${groupId}].description`,'')
+        vnode.state.language = get(store.groups, `[${groupId}].language`, 'he')
+        vnode.state.add.description = get(store.groups, `[${groupId}].description`, '')
 
     },
 
@@ -131,15 +133,37 @@ module.exports = {
 
     },
     view: vnode => {
-       
 
-            const {language} = vnode.state
+        const vsp = vnode.state;
+        const { language } = vsp
 
 
         return (
             <div class='page'>
+
                 <div class='page__grid'>
                     <div class='page__header'>
+                        <AddPanel isOpen={vsp.openAddPanel}
+                    vsp={vsp}
+                    buttonsObj={{
+                        title: 'הוספה',
+                        buttons: [
+                            {
+                                img: 'img/focus-white.svg',
+                                title: 'נושאים',
+                                alt: 'votes',
+                                class: 'addPanel__suggestions addPanel__images',
+                                fn: () => {  vsp.openAddPanel = false;toggleAddQuestion(vnode) }
+                            },
+                            {
+                                img: 'img/header-2.svg',
+                                title: 'כותרות',
+                                alt: 'add suggestions',
+                                class: 'addPanel__votes addPanel__images',
+                                fn: () => {  vsp.openAddPanel = false; }
+                            }
+                        ]
+                    }}/>
                         <Header
                             upLevelUrl='/groups'
                             topic={lang[language].groupTitle}
@@ -167,7 +191,7 @@ module.exports = {
                     {vnode.state.subPage == 'main' ?
 
                         <div class='questionsWrapper' id='groupWrapper' style={`direction:${lang[language].dir}`}>
-                           <Explanation  description={vnode.state.add.description} />
+                            <Explanation description={vnode.state.add.description} />
                             <h1>{lang[language].groupTopics}</h1>
                             {vnode.state.questions[0] === false ?
                                 <Spinner />
@@ -200,7 +224,7 @@ module.exports = {
                     }
                     <div class='page__footer'>
                         {vnode.state.subPage == 'main' ?
-                            <div class='fav' onclick={() => { toggleAddQuestion(vnode) }} >
+                            <div class='fav' onclick={() => { vnode.state.openAddPanel = true }} >
                                 <div>+</div>
                             </div>
                             : null

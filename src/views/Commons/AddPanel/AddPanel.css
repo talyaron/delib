@@ -82,3 +82,7 @@
     display: none; 
     bottom: 0px;
 }
+
+.addPanel__images img{
+    width: 36px;
+}
