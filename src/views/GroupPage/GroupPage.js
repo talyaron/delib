@@ -156,10 +156,10 @@ module.exports = {
                                 fn: () => {  vsp.openAddPanel = false;toggleAddQuestion(vnode) }
                             },
                             {
-                                img: 'img/header-2.svg',
+                                img: 'img/header-2-gray.png',
                                 title: 'כותרות',
                                 alt: 'add suggestions',
-                                class: 'addPanel__votes addPanel__images',
+                                class: 'addPanel__headers addPanel__images',
                                 fn: () => {  vsp.openAddPanel = false; }
                             }
                         ]
@@ -234,17 +234,17 @@ module.exports = {
                             vnode.state.addQuestion ?
                                 <div class='module'>
                                     <div class='moduleBox'>
-                                        <h2 class='moduleTitle'>הוספת שאלה</h2>
+                                        <h2 class='moduleTitle'>הוספת נושא</h2>
                                         <div class='moduleInputs'>
                                             <textarea
                                                 class='inputGeneral'
                                                 autofocus='true'
-                                                placeholder='כותרת השאלה'
+                                                placeholder='כותרת הנושא'
                                                 onkeyup={(e) => { vnode.state.add.title = e.target.value }}
                                             ></textarea>
                                             <textarea
                                                 class='inputGeneral'
-                                                placeholder='הסבר על השאלה'
+                                                placeholder='הסבר על הנושא'
                                                 onkeyup={(e) => { vnode.state.add.description = e.target.value }}
                                             ></textarea>
                                         </div>
