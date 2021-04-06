@@ -64,41 +64,41 @@ self.addEventListener('fetch', ev => {
 function updateDynamicly(ev) {
     try {
 
-        const request = ev.request.url;
-        const innerPageRegExp = /\?\//;
+        // const request = ev.request.url;
+        // const innerPageRegExp = /\?\//;
 
         // if (!request.match(innerPageRegExp)) {
         // if (true) {
-        //     ev.respondWith(caches.match(ev.request)
-        //         .then(function (response) {
-        //             return response || fetch(ev.request);
-        //         })
-        //         .catch(e => console.error(e))
-        //     );
+            ev.respondWith(caches.match(ev.request)
+                .then(function (response) {
+                    return response || fetch(ev.request);
+                })
+                .catch(e => console.error(e))
+            );
         // }
 
-        ev.respondWith(
-            caches.open(SITE_DYNAMIC)
-                .then(cache => cache.match(ev.request)
-                    .then(response => {
+        // ev.respondWith(
+        //     caches.open(SITE_DYNAMIC)
+        //         .then(cache => cache.match(ev.request)
+        //             .then(response => {
 
-                        return response || fetch(ev.request)
-                            .then(response => {
-                                cache.put(ev.request, response.clone()).catch(e=>{console.info(ev.request.url)});
-                                return response;
-                            }).catch(e => {
-                                console.log(ev.request.url)
-                                console.error(e)
-                            })
-                    }).catch(e => {
-                        console.log(ev.request.url)
-                        console.error(e)
-                    })
-                ).catch(e => {
-                    console.log(ev.request.url)
-                    console.error(e)
-                })
-        );
+        //                 return response || fetch(ev.request)
+        //                     .then(response => {
+        //                         cache.put(ev.request, response.clone()).catch(e=>{console.info(ev.request.url)});
+        //                         return response;
+        //                     }).catch(e => {
+        //                         console.log(ev.request.url)
+        //                         console.error(e)
+        //                     })
+        //             }).catch(e => {
+        //                 console.log(ev.request.url)
+        //                 console.error(e)
+        //             })
+        //         ).catch(e => {
+        //             console.log(ev.request.url)
+        //             console.error(e)
+        //         })
+        // );
     } catch (e) {
         console.log(ev.request.url)
         console.error(e)
