@@ -27,7 +27,15 @@
 .groupHeaders__title{
     display: flex;
     justify-content: space-between;
+   
 }
+.groupHeaders__title>div{
+    overflow-wrap: anywhere;
+    padding: 5px;
+    display: flex;
+    cursor: pointer;
+}
+
 .groupHeaders__title img{
     height: 24px;
 }

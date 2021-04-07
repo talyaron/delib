@@ -1,0 +1,13 @@
+.grpupSection {
+    background: white;
+}
+
+.grpupSection__header {
+   background: tomato;
+}
+
+.groupSection__wrapper{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+}

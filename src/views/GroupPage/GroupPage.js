@@ -18,6 +18,7 @@ import Chat from '../Commons/Chat/Chat';
 import Spinner from '../Commons/Spinner/Spinner';
 import AddPanel from '../Commons/AddPanel/AddPanel';
 import Headers from './Headers/Headers';
+import GroupSection from './GroupSection/GroupSection';
 
 
 //functions
@@ -64,7 +65,7 @@ module.exports = {
             lastTimeEntered: 0,
             language: 'he',
             openAddPanel: false,
-            openHeadersPanel:false
+            openHeadersPanel: false
         }
 
 
@@ -144,9 +145,10 @@ module.exports = {
 
     },
     view: vnode => {
-
+        const groupId = vnode.attrs.id
         const vsp = vnode.state;
-        const { language } = vsp
+        const { language } = vsp;
+        let titles = store.groupTitles[groupId] || [];
 
 
         return (
@@ -203,12 +205,15 @@ module.exports = {
 
                         <div class='questionsWrapper' id='groupWrapper' style={`direction:${lang[language].dir}`}>
                             <Explanation description={vnode.state.add.description} />
-                            {vnode.state.openHeadersPanel?<Headers groupId={vnode.attrs.id} vsp={vsp}/>:null}
+                            {vnode.state.openHeadersPanel ? <Headers groupId={vnode.attrs.id} vsp={vsp} /> : null}
                             <h1>{lang[language].groupTopics}</h1>
                             {vnode.state.questions[0] === false ?
                                 <Spinner />
                                 :
                                 <div class='questionsWrapper__inear'>
+                                     {titles.map(title=>{
+                                        return <GroupSection key={title.groupTitleId} title={title} questions={vnode.state.questions} groupId={vnode.attrs.id}/>
+                                    })}
                                     {vnode.state.questions.map((question, key) => {
 
                                         return (
@@ -219,6 +224,7 @@ module.exports = {
                                             />
                                         )
                                     })}
+                                   
                                 </div>
                             }
                         </div>

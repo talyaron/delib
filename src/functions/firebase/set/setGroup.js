@@ -60,3 +60,22 @@ export const  deleteGroupTitle = (groupId, groupTitleId)=>{
         
     }
 }
+
+export const editGroupTitle =(title, groupId, groupTitleId)=>{
+    try{
+        if (groupId === undefined ) throw new Error `no group groupTitleId`;
+        if (title === undefined ) throw new Error `no title in ${groupId}, ${groupTitleId}`;
+        if (groupTitleId === undefined) throw new Error`No groupTitleId at ${groupId}`;
+
+        DB
+            .collection('groups').doc(groupId)
+            .collection('titles').doc(groupTitleId)
+            .update({title})
+            .then(()=>console.log(`title ${groupTitleId} was updated in group ${groupId} `))
+            .catch(e => console.error(e))
+       
+    } catch (e) {
+        console.error(e)
+        
+    }
+}

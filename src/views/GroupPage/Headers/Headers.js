@@ -6,7 +6,7 @@ import store from '../../../data/store';
 
 //components
 import './Headers.css';
-
+import TopicHeader from './TopicHeader'
 
 
 //functions
@@ -60,12 +60,12 @@ module.exports = {
                         <hr></hr>
                         <div id='sortHeaders' class='groupHeaders__wrapper'>
                             {sortedTitles(titles, 'order').map((title, i) => <div
-                                class='grabbable groupHeaders__title'
+                                class='groupHeaders__title'
                                 data-order={title.order}
                                 data-id={title.groupTitleId}
                                 key={title.groupTitleId}>
-                                <img src='img/sortHandle.svg' class='titleHandle'/>
-                                <div>{title.title}</div>
+                                <img src='img/sortHandle.svg' class='titleHandle grabbable'/>
+                                <TopicHeader groupId={groupId} title={title.title} groupTitleId={title.groupTitleId}/>
                                 <img src='img/delete-lightgray.svg' onclick={()=>handleDelete(groupId, title.groupTitleId)}/>
                             </div>)}
                         </div>
@@ -94,7 +94,8 @@ function handleAddTitle(e, vnode) {
         const index = titles.findIndex(ttl => ttl.title === title)
 
         if (title && index === -1) {
-            setGroupTitles({ groupId }, title)
+            setGroupTitles({ groupId }, title);
+            e.target.reset()
         }
     } catch (e) {
         console.error(e)
