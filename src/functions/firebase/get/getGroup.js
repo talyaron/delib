@@ -20,18 +20,21 @@ export const listenToGroupTitles = groupId => {
             if (!{}.hasOwnProperty.call(store.groupTitles, groupId)) {
                 store.groupTitles[groupId] = []
             }
-           
+
             return DB
                 .collection('groups').doc(groupId)
                 .collection('titles')
                 .onSnapshot(titlesDB => {
-                  
+
                     const titles = []
                     titlesDB.forEach(titleDB => {
-                        titles.push(titleDB.data())
+                        const titleObj = titleDB.data();
+                        titleObj.groupTitleId = titleDB.id
+                        titles.push(titleObj)
                     });
                     store.groupTitles[groupId] = [...titles];
-                  
+                    console.log(titles)
+
                     m.redraw();
                 })
         } else {

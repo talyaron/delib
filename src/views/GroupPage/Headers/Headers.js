@@ -1,4 +1,5 @@
 import m from 'mithril';
+import Sortable from "sortablejs";
 
 import store from '../../../data/store';
 
@@ -10,6 +11,7 @@ import './Headers.css';
 
 //functions
 import { setGroupTitles } from '../../../functions/firebase/set/setGroup';
+import { reorderGroupTitle } from '../../../functions/firebase/set/setGroup';
 
 
 
@@ -20,9 +22,25 @@ module.exports = {
 
 
     },
-   
+    oncreate: vnode => {
+        const { groupId } = vnode.attrs;
+        let sortHeaders = document.getElementById("sortHeaders");
+
+        let sortHeadersObj = Sortable.create(sortHeaders, {
+            animation: 150,
+            onEnd: evt => {
+                //set order to DB
+                const elements = [...evt.target.children];
+
+                elements.map((elm, i) => {
+                   
+                    reorderGroupTitle(groupId, elm.dataset.id, i)
+                })
+            }
+        });
+    },
     view: vnode => {
-        const { groupId ,vsp} = vnode.attrs;
+        const { groupId, vsp } = vnode.attrs;
         let titles = store.groupTitles[groupId] || [];
 
 
@@ -39,9 +57,17 @@ module.exports = {
                         </datalist>
                         <input type="submit" class='buttons' value='הוספה' />
                         <hr></hr>
-                        {sortedTitles(titles, 'order').map((title, i) => <p key={i}>{title.title}</p>)}
+                        <div id='sortHeaders'>
+                            {sortedTitles(titles, 'order').map((title, i) => <p
+                                class='grabbable'
+                                data-order={title.order}
+                                data-id={title.groupTitleId}
+                                key={title.groupTitleId}>
+                                {title.title}
+                            </p>)}
+                        </div>
                         <hr />
-                        <div class='buttonsBox' onclick={()=>vsp.openHeadersPanel = false}>
+                        <div class='buttonsBox' onclick={() => vsp.openHeadersPanel = false}>
                             <div class='buttons buttonOutlineGray'>Close</div>
                         </div>
                     </form>
