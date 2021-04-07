@@ -8,11 +8,15 @@ import QuestionCard from '../QuestionCard/QuestionCard';
 module.exports = {
     view: vnode => {
         const { title, questions, groupId } = vnode.attrs;
-
-        const questionsTitle = questions.filter(question => question.section === title.title);
+        let questionsTitle = [];
+        if (title === false) {
+            questionsTitle = questions
+        } else {
+            questionsTitle = questions.filter(question => question.section === title.title);
+        }
         return (
             <div class='groupSection'>
-                <div class='grpupSection__header'>{title.title}</div>
+                <div class='grpupSection__header'>{title?title.title:'Unsorted'}</div>
                 <div class='groupSection__wrapper'>
                     {questionsTitle.map(question => {
                         return (<QuestionCard

@@ -9,7 +9,6 @@ import { GROUP } from '../../data/EntityTypes';
 
 //components
 import './GroupPage.css';
-import QuestionCard from './QuestionCard/QuestionCard';
 import Header from '../Commons/Header/Header';
 import NavBottom from '../Commons/NavBottom/NavBottom';
 import Explanation from '../Commons/Explanation/Explanation';
@@ -26,6 +25,7 @@ import { createQuestion, registerGroup } from '../../functions/firebase/set/set'
 import { getQuestions, listenToGroupDetails, listenToChat, getLastTimeEntered } from '../../functions/firebase/get/get';
 import { listenToGroupTitles } from '../../functions/firebase/get/getGroup';
 import { setLastPage, getIsChat, concatenateDBPath } from '../../functions/general';
+
 
 
 let unsubscruibeTitles = () => { }
@@ -211,20 +211,11 @@ module.exports = {
                                 <Spinner />
                                 :
                                 <div class='questionsWrapper__inear'>
-                                     {titles.map(title=>{
-                                        return <GroupSection key={title.groupTitleId} title={title} questions={vnode.state.questions} groupId={vnode.attrs.id}/>
+                                    {sortedTitles(titles, 'order').map(title => {
+                                        return <GroupSection key={title.groupTitleId} title={title} questions={vnode.state.questions} groupId={vnode.attrs.id} />
                                     })}
-                                    {vnode.state.questions.map((question, key) => {
+                                    <GroupSection title={false} questions={vnode.state.questions} groupId={vnode.attrs.id} />
 
-                                        return (
-                                            <QuestionCard
-                                                route={'/question/' + vnode.attrs.id + '/'}
-                                                question={question}
-                                                key={key}
-                                            />
-                                        )
-                                    })}
-                                   
                                 </div>
                             }
                         </div>
@@ -289,4 +280,24 @@ module.exports = {
 
 function toggleAddQuestion(vnode) {
     vnode.state.addQuestion = !vnode.state.addQuestion;
+}
+
+function sortedTitles(titles, sortBy) {
+    try {
+
+        if (!Array.isArray(titles)) throw new Error`titles is not array: ${JSON.stringify(titles)}`;
+        if (!sortBy) throw new Error`orderBy is empty`;
+
+        switch (sortBy) {
+            case 'order':
+                return titles.sort((a, b) => a.order - b.order);
+            default:
+                return titles
+        }
+
+    } catch (e) {
+        console.error(e)
+        return []
+    }
+
 }
