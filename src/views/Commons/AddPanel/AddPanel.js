@@ -16,7 +16,7 @@ module.exports = {
                     {
                         buttons.map((button, i) => {
                             return (
-                                <div onclick={() => button.fn()}>
+                                <div onclick={() => {vsp.openHeadersPanel = true; vsp.openAddPanel=false}}>
                                     <div class={button.class}>
                                         <img src={button.img} alt={button.alt} />
                                     </div>

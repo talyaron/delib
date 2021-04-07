@@ -15,25 +15,27 @@ export const listenToGroupTitles = groupId => {
         console.log('listenToGroupTitles', groupId)
         console.log(store.groupTitlesListen)
         if (!{}.hasOwnProperty.call(store.groupTitlesListen, groupId)) {
-           
+
             store.groupTitlesListen[groupId] = [];
             if (!{}.hasOwnProperty.call(store.groupTitles, groupId)) {
                 store.groupTitles[groupId] = []
             }
-
+           
             return DB
                 .collection('groups').doc(groupId)
                 .collection('titles')
                 .onSnapshot(titlesDB => {
-                   
+                  
+                    const titles = []
                     titlesDB.forEach(titleDB => {
-                        store.groupTitles[groupId].push(titleDB.data())
+                        titles.push(titleDB.data())
                     });
-
+                    store.groupTitles[groupId] = [...titles];
+                  
                     m.redraw();
                 })
         } else {
-           
+
             return () => { };
         }
     } catch (e) {

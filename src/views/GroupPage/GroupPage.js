@@ -63,7 +63,8 @@ module.exports = {
             unreadMessages: 0,
             lastTimeEntered: 0,
             language: 'he',
-            openAddPanel: false
+            openAddPanel: false,
+            openHeadersPanel:false
         }
 
 
@@ -202,7 +203,7 @@ module.exports = {
 
                         <div class='questionsWrapper' id='groupWrapper' style={`direction:${lang[language].dir}`}>
                             <Explanation description={vnode.state.add.description} />
-                            <Headers groupId={vnode.attrs.id} />
+                            {vnode.state.openHeadersPanel?<Headers groupId={vnode.attrs.id} vsp={vsp}/>:null}
                             <h1>{lang[language].groupTopics}</h1>
                             {vnode.state.questions[0] === false ?
                                 <Spinner />

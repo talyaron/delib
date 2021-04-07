@@ -20,11 +20,9 @@ module.exports = {
 
 
     },
-    onremove: vnode => {
-
-    },
+   
     view: vnode => {
-        const { groupId } = vnode.attrs;
+        const { groupId ,vsp} = vnode.attrs;
         let titles = store.groupTitles[groupId] || [];
 
 
@@ -41,7 +39,11 @@ module.exports = {
                         </datalist>
                         <input type="submit" class='buttons' value='הוספה' />
                         <hr></hr>
-                        {sortedTitles(titles, 'order').map((title,i)=><p key={i}>{title.title}</p>)}
+                        {sortedTitles(titles, 'order').map((title, i) => <p key={i}>{title.title}</p>)}
+                        <hr />
+                        <div class='buttonsBox' onclick={()=>vsp.openHeadersPanel = false}>
+                            <div class='buttons buttonOutlineGray'>Close</div>
+                        </div>
                     </form>
                 </div>
 
@@ -73,8 +75,8 @@ function handleAddTitle(e, vnode) {
 function sortedTitles(titles, sortBy) {
     try {
 
-        if(!Array.isArray(titles)) throw new Error `titles is not array: ${JSON.stringify(titles)}`;
-        if(!sortBy) throw new Error `orderBy is empty`;
+        if (!Array.isArray(titles)) throw new Error`titles is not array: ${JSON.stringify(titles)}`;
+        if (!sortBy) throw new Error`orderBy is empty`;
 
         switch (sortBy) {
             case 'order':
