@@ -18,3 +18,17 @@
     padding: 20px;
     border-radius: var(--roundBorder);
 }
+
+.groupHeaders__wrapper{
+    max-height: 40vh;
+    overflow-y: auto;
+}
+
+.groupHeaders__title{
+    display: flex;
+    justify-content: space-between;
+}
+.groupHeaders__title img{
+    height: 24px;
+}
+

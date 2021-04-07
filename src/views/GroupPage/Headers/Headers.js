@@ -10,7 +10,7 @@ import './Headers.css';
 
 
 //functions
-import { setGroupTitles } from '../../../functions/firebase/set/setGroup';
+import { setGroupTitles,deleteGroupTitle } from '../../../functions/firebase/set/setGroup';
 import { reorderGroupTitle } from '../../../functions/firebase/set/setGroup';
 
 
@@ -28,12 +28,13 @@ module.exports = {
 
         let sortHeadersObj = Sortable.create(sortHeaders, {
             animation: 150,
+            handle:'.titleHandle',
             onEnd: evt => {
                 //set order to DB
                 const elements = [...evt.target.children];
 
                 elements.map((elm, i) => {
-                   
+
                     reorderGroupTitle(groupId, elm.dataset.id, i)
                 })
             }
@@ -57,14 +58,16 @@ module.exports = {
                         </datalist>
                         <input type="submit" class='buttons' value='הוספה' />
                         <hr></hr>
-                        <div id='sortHeaders'>
-                            {sortedTitles(titles, 'order').map((title, i) => <p
-                                class='grabbable'
+                        <div id='sortHeaders' class='groupHeaders__wrapper'>
+                            {sortedTitles(titles, 'order').map((title, i) => <div
+                                class='grabbable groupHeaders__title'
                                 data-order={title.order}
                                 data-id={title.groupTitleId}
                                 key={title.groupTitleId}>
-                                {title.title}
-                            </p>)}
+                                <img src='img/sortHandle.svg' class='titleHandle'/>
+                                <div>{title.title}</div>
+                                <img src='img/delete-lightgray.svg' onclick={()=>handleDelete(groupId, title.groupTitleId)}/>
+                            </div>)}
                         </div>
                         <hr />
                         <div class='buttonsBox' onclick={() => vsp.openHeadersPanel = false}>
@@ -116,4 +119,19 @@ function sortedTitles(titles, sortBy) {
         return []
     }
 
+}
+
+function handleDelete(groupId, groupTitleId){
+    try{
+        if (groupId === undefined ) throw new Error `no group id`;
+        if (groupTitleId === undefined) throw new Error`No groupTitleId at ${groupId}`;
+
+        let isDelete = confirm('Are you sure you want to delete this title?')
+        if(isDelete){
+            deleteGroupTitle(groupId, groupTitleId)
+        }
+    } catch (e) {
+        console.error(e)
+        return []
+    }
 }
