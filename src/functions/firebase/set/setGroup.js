@@ -79,3 +79,15 @@ export const editGroupTitle =(title, groupId, groupTitleId)=>{
         
     }
 }
+
+export const updateGroupSection = ( groupId, questionId,section)=>  {
+    try{
+        DB
+        .collection('groups').doc(groupId)
+        .collection('questions').doc(questionId)
+        .update({section})
+        .catch(e=>console.error(e))
+    } catch(e){
+        console.error(e);
+    }
+}

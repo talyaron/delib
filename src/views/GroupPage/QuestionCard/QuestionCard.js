@@ -5,7 +5,7 @@ import "./QuestionCard.css";
 import store from "../../../data/store";
 
 //functions
-import {getRandomColor} from '../../../functions/general'
+import { getRandomColor } from '../../../functions/general'
 
 module.exports = {
   oninit: vnode => {
@@ -26,8 +26,11 @@ module.exports = {
         onclick={() => {
           m.route.set(vnode.attrs.route + vnode.attrs.question.id);
         }}
+        draggable={true}
+        id={vnode.attrs.question.id}
+        ondragstart={e=>handleSetId(e, vnode.attrs.question.id)}
       >
-        
+
         <div class='questionCard__info'>
           <h2>{vnode.attrs.question.title}</h2>
           <p>{vnode.attrs.question.description}</p>
@@ -47,4 +50,11 @@ function checkIfGroupOwnedByUser(vnode) {
       vnode.state.owned = true;
     }
   }
+}
+
+
+function handleSetId(e, id){
+  console.log('start', id)
+  e.dataTransfer.setData("text", id);
+  e.dataTransfer.effectAllowed = "move"
 }
