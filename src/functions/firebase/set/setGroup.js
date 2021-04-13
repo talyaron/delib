@@ -29,13 +29,13 @@ export const reorderGroupTitle = (groupId, groupTitleId, order) => {
         order = parseInt(order)
         console.log(groupTitleId, typeof order);
 
-        if ( typeof order !== 'number') throw new Error('order is not a number at ', groupTitleId);
+        if (typeof order !== 'number') throw new Error('order is not a number at ', groupTitleId);
 
         DB
             .collection('groups').doc(groupId)
             .collection('sections').doc(groupTitleId)
             .update({ order })
-            .then(()=>console.log(`title ${groupTitleId} was updated in group ${groupId} to ${order}`))
+            .then(() => console.log(`title ${groupTitleId} was updated in group ${groupId} to ${order}`))
             .catch(e => console.error(e))
 
     } catch (e) {
@@ -43,51 +43,65 @@ export const reorderGroupTitle = (groupId, groupTitleId, order) => {
     }
 }
 
-export const  deleteGroupTitle = (groupId, groupTitleId)=>{
-    try{
-        if (groupId === undefined ) throw new Error `no group groupTitleId`;
+export const deleteGroupTitle = (groupId, groupTitleId) => {
+    try {
+        if (groupId === undefined) throw new Error`no group groupTitleId`;
         if (groupTitleId === undefined) throw new Error`No groupTitleId at ${groupId}`;
 
         DB
             .collection('groups').doc(groupId)
             .collection('sections').doc(groupTitleId)
             .delete()
-            .then(()=>console.log(`title ${groupTitleId} was deleted in group ${groupId} `))
+            .then(() => console.log(`title ${groupTitleId} was deleted in group ${groupId} `))
             .catch(e => console.error(e))
-       
+
+        DB
+            .collection('groups').doc(groupId)
+            .collection('questions')
+            .where('section', '==', groupTitleId)
+            .get()
+            .then(questionsDB => {
+                questionsDB.forEach(questionDB => {
+                    DB.collection('groups').doc(groupId)
+                        .collection('questions').doc(questionDB.id)
+                        .update({section: firebase.firestore.FieldValue.delete()})
+                        .catch(e=>console.error(e))
+                })
+            })
+
     } catch (e) {
         console.error(e)
-        
+
     }
 }
 
-export const editGroupTitle =(title, groupId, groupTitleId)=>{
-    try{
-        if (groupId === undefined ) throw new Error `no group groupTitleId`;
-        if (title === undefined ) throw new Error `no title in ${groupId}, ${groupTitleId}`;
+export const editGroupTitle = (title, groupId, groupTitleId) => {
+    try {
+        if (groupId === undefined) throw new Error`no group groupTitleId`;
+        if (title === undefined) throw new Error`no title in ${groupId}, ${groupTitleId}`;
         if (groupTitleId === undefined) throw new Error`No groupTitleId at ${groupId}`;
 
         DB
             .collection('groups').doc(groupId)
             .collection('sections').doc(groupTitleId)
-            .update({title})
-            .then(()=>console.log(`title ${groupTitleId} was updated in group ${groupId} `))
+            .update({ title })
+            .then(() => console.log(`title ${groupTitleId} was updated in group ${groupId} `))
             .catch(e => console.error(e))
-       
+
     } catch (e) {
         console.error(e)
-        
+
     }
 }
 
-export const updateGroupSection = ( groupId, questionId,sectionId)=>  {
-    try{
+export const updateGroupSection = (groupId, questionId, sectionId) => {
+    try {
         DB
-        .collection('groups').doc(groupId)
-        .collection('questions').doc(questionId)
-        .update({section:sectionId})
-        .catch(e=>console.error(e))
-    } catch(e){
+            .collection('groups').doc(groupId)
+            .collection('questions').doc(questionId)
+            .update({ section: sectionId })
+            .catch(e => console.error(e))
+    } catch (e) {
         console.error(e);
     }
 }

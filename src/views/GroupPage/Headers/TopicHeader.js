@@ -16,17 +16,17 @@ module.exports = {
     },
     view: vnode => {
 
-        const { title, groupId, groupTitleId } = vnode.attrs;
+        const { section, groupId, groupTitleId } = vnode.attrs;
 
         if (!vnode.state.isEdit) {
-            return (<div ondblclick={() => { vnode.state.isEdit = true }} ontouchstart={()=>handleTouchStart(vnode)} ontouchend={()=>handleTouchEnd(vnode)}>{title}</div>)
+            return (<div ondblclick={() => { vnode.state.isEdit = true }} ontouchstart={()=>handleTouchStart(vnode)} ontouchend={()=>handleTouchEnd(vnode)}>{section}</div>)
         } else {
             return (
                 <div>
                     <div onclick={() => { vnode.state.isEdit = false; editGroupTitle(vnode.state.text, groupId, groupTitleId) }} class='buttons buttons--small'>
                         OK
                     </div>
-                    <input type='text' defaultValue={title} onkeyup={e => { vnode.state.text = e.target.value }} />
+                    <input type='text' defaultValue={section} onkeyup={e => { vnode.state.text = e.target.value }} />
                 </div>
             )
         }

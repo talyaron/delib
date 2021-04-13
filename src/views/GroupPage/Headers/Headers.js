@@ -10,7 +10,7 @@ import TopicHeader from './TopicHeader'
 
 
 //functions
-import { addGroupSection,deleteGroupTitle } from '../../../functions/firebase/set/setGroup';
+import { addGroupSection, deleteGroupTitle } from '../../../functions/firebase/set/setGroup';
 import { reorderGroupTitle } from '../../../functions/firebase/set/setGroup';
 
 
@@ -28,7 +28,7 @@ module.exports = {
 
         let sortHeadersObj = Sortable.create(sortHeaders, {
             animation: 150,
-            handle:'.titleHandle',
+            handle: '.titleHandle',
             onEnd: evt => {
                 //set order to DB
                 const elements = [...evt.target.children];
@@ -59,14 +59,14 @@ module.exports = {
                         <input type="submit" class='buttons' value='הוספה' />
                         <hr></hr>
                         <div id='sortHeaders' class='groupHeaders__wrapper'>
-                            {sortedTitles(sections, 'order').map((section, i) => <div
+                            {sortedTitles(sections, 'order').map(section => <div
                                 class='groupHeaders__title'
                                 data-order={section.order}
                                 data-id={section.groupTitleId}
                                 key={section.groupTitleId}>
-                                <img src='img/sortHandle.svg' class='titleHandle grabbable'/>
-                                <TopicHeader groupId={groupId} section={section.title} groupTitleId={section.groupTitleId}/>
-                                <img src='img/delete-lightgray.svg' onclick={()=>handleDelete(groupId, section.groupTitleId)}/>
+                                <img src='img/sortHandle.svg' class='titleHandle grabbable' />
+                                <TopicHeader groupId={groupId} section={section.title} groupTitleId={section.groupTitleId} />
+                                <img src='img/delete-lightgray.svg' onclick={() => handleDelete(groupId, section.groupTitleId)} />
                             </div>)}
                         </div>
                         <hr />
@@ -122,13 +122,13 @@ function sortedTitles(sections, sortBy) {
 
 }
 
-function handleDelete(groupId, groupTitleId){
-    try{
-        if (groupId === undefined ) throw new Error `no group id`;
+function handleDelete(groupId, groupTitleId) {
+    try {
+        if (groupId === undefined) throw new Error`no group id`;
         if (groupTitleId === undefined) throw new Error`No groupTitleId at ${groupId}`;
 
         let isDelete = confirm('Are you sure you want to delete this section?')
-        if(isDelete){
+        if (isDelete) {
             deleteGroupTitle(groupId, groupTitleId)
         }
     } catch (e) {
