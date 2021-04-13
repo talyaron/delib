@@ -31,25 +31,3 @@ module.exports = {
     }
 }
 
-
-// isOpen={vsp.openAddPanel}
-// vsp={vsp}
-// buttonsObj={{
-//     title: 'הוספת שאלות',
-//     buttons: [
-//         {
-//             img: 'img/votes.svg',
-//             title: 'הצבעה',
-//             alt: 'votes',
-//             class: 'addPanel__suggestions',
-//             fn: () => { vsp.openVote = true; vsp.openAddPanel = false }
-//         },
-//         {
-//             img: 'img/suggestions.svg',
-//             title: 'הצבעה',
-//             alt: 'add suggestions',
-//             class: 'addPanel__votes',
-//             fn: () => { vsp.modalSubQuestion = { isShow: true, new: true, numberOfSubquestions: vsp.subQuestions.length }; vsp.openAddPanel = false }
-//         }
-//     ]
-// }}

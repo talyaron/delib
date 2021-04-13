@@ -3,7 +3,7 @@ import m from 'mithril';
 import './GroupSection.css';
 
 //functions
-import {updateGroupSection} from '../../../functions/firebase/set/setGroup'
+import { updateGroupSection } from '../../../functions/firebase/set/setGroup'
 
 //components
 import QuestionCard from '../QuestionCard/QuestionCard';
@@ -15,11 +15,15 @@ module.exports = {
     view: vnode => {
         const { over } = vnode.state;
         const { title, questions, groupId } = vnode.attrs;
+        console.log(title)
         let questionsTitle = [];
         if (title === false) {
-            questionsTitle = questions
+            questionsTitle = questions.filter(question => question.section === undefined);
         } else {
-            questionsTitle = questions.filter(question => question.section === title.title);
+
+            questionsTitle = questions.filter(question => question.section === title.groupTitleId);
+            // questionsTitle = []
+
         }
         return (
             <div class={over ? 'groupSection groupSection--over' : 'groupSection'} ondragover={e => handleDragOver(e, vnode)} ondragleave={e => handleDragLeave(e, vnode)} ondrop={e => handleDrop(e, vnode)}>
@@ -48,15 +52,15 @@ function handleDragLeave(e, vnode) {
 
 function handleDrop(e, vnode) {
     try {
-        const {groupId,title} = vnode.attrs;
+        const { groupId, title } = vnode.attrs;
         const draggedId = e.dataTransfer.getData("text");
         console.log(draggedId);
 
-        console.log(vnode)
+        console.log(title)
 
         //move in DB to element
 
-        updateGroupSection(groupId, draggedId, title.title);
+        updateGroupSection(groupId, draggedId, title.groupTitleId);
         vnode.state.over = false;
 
     } catch (e) {

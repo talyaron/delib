@@ -80,12 +80,12 @@ export const editGroupTitle =(title, groupId, groupTitleId)=>{
     }
 }
 
-export const updateGroupSection = ( groupId, questionId,section)=>  {
+export const updateGroupSection = ( groupId, questionId,sectionId)=>  {
     try{
         DB
         .collection('groups').doc(groupId)
         .collection('questions').doc(questionId)
-        .update({section})
+        .update({section:sectionId})
         .catch(e=>console.error(e))
     } catch(e){
         console.error(e);
