@@ -148,15 +148,16 @@ function createQuestion(groupId, creatorId, title, description) {
         });
 }
 
-function updateQuestion(groupId, questionId, title, description, authorizationObj) {
+function updateQuestion(groupId, questionId, title, description) {
+    console.log(description)
     try {
         DB
             .collection('groups')
             .doc(groupId)
             .collection('questions')
             .doc(questionId)
-            .update({ title, description, authorization: authorizationObj })
-            .then((something) => {
+            .update({ title, description })
+            .then(() => {
                 console.info('writen succesufuly');
             })
             .catch(function (error) {

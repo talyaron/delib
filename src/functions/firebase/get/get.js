@@ -218,6 +218,7 @@ function getQuestions(onOff, groupId, vnode) {
                     if (questionDB.data().id) {
                         // set(store.questions, `[${groupId}][${questionDB.data().id}]`,
                         // questionDB.data())
+                        console.log(questionDB.data())
                         setStore(store.questions, groupId, questionDB.data().id, questionDB.data());
                     }
                 });

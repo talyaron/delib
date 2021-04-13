@@ -18,22 +18,23 @@ module.exports = {
   },
 
   view: vnode => {
+    const {id, title, description} = vnode.attrs.question
     return (
       <div
         class={
           vnode.state.owned ? "card questionCard questionOwned" : "card questionCard"
         }
         onclick={() => {
-          m.route.set(vnode.attrs.route + vnode.attrs.question.id);
+          m.route.set(vnode.attrs.route + id);
         }}
         draggable={true}
-        id={vnode.attrs.question.id}
-        ondragstart={e=>handleSetId(e, vnode.attrs.question.id)}
+        id={id}
+        ondragstart={e=>handleSetId(e, id)}
       >
 
         <div class='questionCard__info'>
-          <h2>{vnode.attrs.question.title}</h2>
-          <p>{vnode.attrs.question.description}</p>
+          <h2>{title}</h2>
+          <p>{description}</p>
         </div>
       </div>
     );
