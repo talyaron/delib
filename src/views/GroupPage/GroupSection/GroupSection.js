@@ -15,7 +15,7 @@ module.exports = {
     view: vnode => {
         const { over } = vnode.state;
         const { section, questions, groupId } = vnode.attrs;
-        console.log(section)
+       
         let questionsTitle = [];
         if (section === undefined) {
             questionsTitle = questions.filter(question => question.section === undefined);

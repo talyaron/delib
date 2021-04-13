@@ -42,7 +42,7 @@ module.exports = {
     },
     view: vnode => {
         const { groupId, vsp } = vnode.attrs;
-        let titles = store.groupSections[groupId] || [];
+        let sections = store.groupSections[groupId] || [];
 
 
         return (
@@ -50,23 +50,23 @@ module.exports = {
                 <div class='groupHeaders__box'>
                     <h1>חלוקה על פי כותרות</h1>
                     <form onsubmit={e => { handleAddSection(e, vnode) }}>
-                        <input list="titles" name="title" class='inputGeneral' placeholder='הוספת כותרת' />
-                        <datalist id="titles">
-                            {titles.map((title, i) => <option key={i} value={title.title} />)}
+                        <input list="sections" name="section" class='inputGeneral' placeholder='הוספת כותרת' />
+                        <datalist id="sections">
+                            {sections.map((section, i) => <option key={i} value={section.title} />)}
 
 
                         </datalist>
                         <input type="submit" class='buttons' value='הוספה' />
                         <hr></hr>
                         <div id='sortHeaders' class='groupHeaders__wrapper'>
-                            {sortedTitles(titles, 'order').map((title, i) => <div
+                            {sortedTitles(sections, 'order').map((section, i) => <div
                                 class='groupHeaders__title'
-                                data-order={title.order}
-                                data-id={title.groupTitleId}
-                                key={title.groupTitleId}>
+                                data-order={section.order}
+                                data-id={section.groupTitleId}
+                                key={section.groupTitleId}>
                                 <img src='img/sortHandle.svg' class='titleHandle grabbable'/>
-                                <TopicHeader groupId={groupId} title={title.title} groupTitleId={title.groupTitleId}/>
-                                <img src='img/delete-lightgray.svg' onclick={()=>handleDelete(groupId, title.groupTitleId)}/>
+                                <TopicHeader groupId={groupId} section={section.title} groupTitleId={section.groupTitleId}/>
+                                <img src='img/delete-lightgray.svg' onclick={()=>handleDelete(groupId, section.groupTitleId)}/>
                             </div>)}
                         </div>
                         <hr />
@@ -86,15 +86,15 @@ function handleAddSection(e, vnode) {
         const { groupId } = vnode.attrs;
         e.preventDefault();
 
-        let titles = store.groupSections[groupId] || [];
-        const title = e.target.children.title.value;
+        let sections = store.groupSections[groupId] || [];
+        const section = e.target.children.section.value;
 
-        //check that you dont have suc title so far, and that no such title exists
+        //check that you dont have suc section so far, and that no such section exists
 
-        const index = titles.findIndex(ttl => ttl.title === title)
+        const index = sections.findIndex(ttl => ttl.title === section)
 
-        if (title && index === -1) {
-            addGroupSection({ groupId }, title);
+        if (section && index === -1) {
+            addGroupSection({ groupId }, section);
             e.target.reset()
         }
     } catch (e) {
@@ -102,15 +102,15 @@ function handleAddSection(e, vnode) {
     }
 }
 
-function sortedTitles(titles, sortBy) {
+function sortedTitles(sections, sortBy) {
     try {
 
-        if (!Array.isArray(titles)) throw new Error`titles is not array: ${JSON.stringify(titles)}`;
+        if (!Array.isArray(sections)) throw new Error`sections is not array: ${JSON.stringify(sections)}`;
         if (!sortBy) throw new Error`orderBy is empty`;
 
         switch (sortBy) {
             case 'order':
-                return titles.sort((a, b) => a.order - b.order);
+                return sections.sort((a, b) => a.order - b.order);
             default:
                 return titles
         }
@@ -127,7 +127,7 @@ function handleDelete(groupId, groupTitleId){
         if (groupId === undefined ) throw new Error `no group id`;
         if (groupTitleId === undefined) throw new Error`No groupTitleId at ${groupId}`;
 
-        let isDelete = confirm('Are you sure you want to delete this title?')
+        let isDelete = confirm('Are you sure you want to delete this section?')
         if(isDelete){
             deleteGroupTitle(groupId, groupTitleId)
         }
