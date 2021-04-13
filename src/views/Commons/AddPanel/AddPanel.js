@@ -6,8 +6,10 @@ import './AddPanel.css'
 module.exports = {
     view: vnode => {
 
-        const { isOpen, vsp, buttonsObj } = vnode.attrs;
+        const { isOpen, vsp, buttonsObj} = vnode.attrs;
         const { title, buttons } = buttonsObj;
+        
+        
 
         return (
             <div class={isOpen ? 'addPanel addPanel--open' : 'addPanel addPanel--close'}>
@@ -16,7 +18,7 @@ module.exports = {
                     {
                         buttons.map((button, i) => {
                             return (
-                                <div onclick={() => {vsp.openHeadersPanel = true; vsp.openAddPanel=false}}>
+                                <div onclick={() => {button.onClickfn()}}>
                                     <div class={button.class}>
                                         <img src={button.img} alt={button.alt} />
                                     </div>

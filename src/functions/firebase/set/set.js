@@ -149,7 +149,7 @@ function createQuestion(groupId, creatorId, title, description) {
 }
 
 function updateQuestion(groupId, questionId, title, description) {
-    console.log(description)
+   
     try {
         DB
             .collection('groups')

@@ -129,7 +129,9 @@ module.exports = {
 
         //get language
         vnode.state.language = get(store.groups, `[${groupId}].language`, 'he')
-        vnode.state.add.description = get(store.groups, `[${groupId}].description`, '')
+        vnode.state.add.description = get(store.groups, `[${groupId}].description`, '');
+
+        console.log('vnode.state.addQuestion',vnode.state.addQuestion)
 
     },
 
@@ -166,14 +168,14 @@ module.exports = {
                                         title: 'נושאים',
                                         alt: 'votes',
                                         class: 'addPanel__suggestions addPanel__images',
-                                        fn: () => { vsp.openAddPanel = false; toggleAddQuestion(vnode) }
+                                        onClickfn: () => { vsp.openAddPanel = false; vsp.addQuestion = true }
                                     },
                                     {
                                         img: 'img/header-2-gray.png',
                                         title: 'כותרות',
                                         alt: 'add sections',
                                         class: 'addPanel__headers addPanel__images',
-                                        fn: () => { vsp.openAddPanel = false; }
+                                        onClickfn: () => { vsp.openAddPanel = false; vsp.openHeadersPanel = true}
                                     }
                                 ]
                             }} />
@@ -279,6 +281,7 @@ module.exports = {
 
 
 function toggleAddQuestion(vnode) {
+    console.log('toggle')
     vnode.state.addQuestion = !vnode.state.addQuestion;
 }
 
