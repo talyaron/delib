@@ -10,7 +10,7 @@ import TopicHeader from './TopicHeader'
 
 
 //functions
-import { setGroupTitles,deleteGroupTitle } from '../../../functions/firebase/set/setGroup';
+import { addGroupSection,deleteGroupTitle } from '../../../functions/firebase/set/setGroup';
 import { reorderGroupTitle } from '../../../functions/firebase/set/setGroup';
 
 
@@ -42,14 +42,14 @@ module.exports = {
     },
     view: vnode => {
         const { groupId, vsp } = vnode.attrs;
-        let titles = store.groupTitles[groupId] || [];
+        let titles = store.groupSections[groupId] || [];
 
 
         return (
             <div class='groupHeaders'>
                 <div class='groupHeaders__box'>
                     <h1>חלוקה על פי כותרות</h1>
-                    <form onsubmit={e => { handleAddTitle(e, vnode) }}>
+                    <form onsubmit={e => { handleAddSection(e, vnode) }}>
                         <input list="titles" name="title" class='inputGeneral' placeholder='הוספת כותרת' />
                         <datalist id="titles">
                             {titles.map((title, i) => <option key={i} value={title.title} />)}
@@ -81,12 +81,12 @@ module.exports = {
     }
 }
 
-function handleAddTitle(e, vnode) {
+function handleAddSection(e, vnode) {
     try {
         const { groupId } = vnode.attrs;
         e.preventDefault();
 
-        let titles = store.groupTitles[groupId] || [];
+        let titles = store.groupSections[groupId] || [];
         const title = e.target.children.title.value;
 
         //check that you dont have suc title so far, and that no such title exists
@@ -94,7 +94,7 @@ function handleAddTitle(e, vnode) {
         const index = titles.findIndex(ttl => ttl.title === title)
 
         if (title && index === -1) {
-            setGroupTitles({ groupId }, title);
+            addGroupSection({ groupId }, title);
             e.target.reset()
         }
     } catch (e) {

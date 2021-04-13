@@ -14,20 +14,20 @@ module.exports = {
     },
     view: vnode => {
         const { over } = vnode.state;
-        const { title, questions, groupId } = vnode.attrs;
-        console.log(title)
+        const { section, questions, groupId } = vnode.attrs;
+        console.log(section)
         let questionsTitle = [];
-        if (title === false) {
+        if (section === undefined) {
             questionsTitle = questions.filter(question => question.section === undefined);
         } else {
 
-            questionsTitle = questions.filter(question => question.section === title.groupTitleId);
+            questionsTitle = questions.filter(question => question.section === section.groupTitleId);
             // questionsTitle = []
 
         }
         return (
             <div class={over ? 'groupSection groupSection--over' : 'groupSection'} ondragover={e => handleDragOver(e, vnode)} ondragleave={e => handleDragLeave(e, vnode)} ondrop={e => handleDrop(e, vnode)}>
-                <h3 class='grpupSection__header'>{title ? title.title : 'Unsorted'}</h3>
+                <h3 class='grpupSection__header'>{section ? section.title : 'Unsorted'}</h3>
                 <div class='groupSection__wrapper'>
                     {questionsTitle.map(question => {
                         return (<QuestionCard
@@ -52,15 +52,15 @@ function handleDragLeave(e, vnode) {
 
 function handleDrop(e, vnode) {
     try {
-        const { groupId, title } = vnode.attrs;
+        const { groupId, section } = vnode.attrs;
         const draggedId = e.dataTransfer.getData("text");
-        console.log(draggedId);
+   
 
-        console.log(title)
+
 
         //move in DB to element
 
-        updateGroupSection(groupId, draggedId, title.groupTitleId);
+        updateGroupSection(groupId, draggedId, section.groupTitleId);
         vnode.state.over = false;
 
     } catch (e) {

@@ -23,7 +23,7 @@ import GroupSection from './GroupSection/GroupSection';
 //functions
 import { createQuestion, registerGroup } from '../../functions/firebase/set/set';
 import { getQuestions, listenToGroupDetails, listenToChat, getLastTimeEntered } from '../../functions/firebase/get/get';
-import { listenToGroupTitles } from '../../functions/firebase/get/getGroup';
+import { listenToGroupSections } from '../../functions/firebase/get/getGroup';
 import { setLastPage, getIsChat, concatenateDBPath } from '../../functions/general';
 
 
@@ -73,7 +73,7 @@ module.exports = {
         getQuestions('on', vnode.attrs.id, vnode);
         listenToGroupDetails(vnode.attrs.id, vnode);
         if (afterLogin) {
-            unsubscruibeTitles = listenToGroupTitles(groupId);
+            unsubscruibeTitles = listenToGroupSections(groupId);
         }
 
         vnode.state.unsubscribe.chat = listenToChat({ groupId: vnode.attrs.id });
@@ -148,7 +148,7 @@ module.exports = {
         const groupId = vnode.attrs.id
         const vsp = vnode.state;
         const { language } = vsp;
-        let titles = store.groupTitles[groupId] || [];
+        let titles = store.groupSections[groupId] || [];
 
 
         return (
@@ -171,7 +171,7 @@ module.exports = {
                                     {
                                         img: 'img/header-2-gray.png',
                                         title: 'כותרות',
-                                        alt: 'add suggestions',
+                                        alt: 'add sections',
                                         class: 'addPanel__headers addPanel__images',
                                         fn: () => { vsp.openAddPanel = false; }
                                     }
@@ -211,8 +211,8 @@ module.exports = {
                                 <Spinner />
                                 :
                                 <div class='questionsWrapper__inear'>
-                                    {sortedTitles(titles, 'order').map(title => {
-                                        return <GroupSection key={title.groupTitleId} title={title} questions={vnode.state.questions} groupId={vnode.attrs.id} />
+                                    {sortedTitles(titles, 'order').map(section => {
+                                        return <GroupSection key={section.groupTitleId} section={section} questions={vnode.state.questions} groupId={vnode.attrs.id} />
                                     })}
                                     <GroupSection title={false} questions={vnode.state.questions} groupId={vnode.attrs.id} />
 

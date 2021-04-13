@@ -7,33 +7,32 @@ import { cond, constant, orderBy, set } from 'lodash';
 import { concatenateDBPath, setBrowserUniqueId, getEntityId } from '../../general'
 import { sendError } from '../set/set';
 
-export const listenToGroupTitles = groupId => {
+export const listenToGroupSections = groupId => {
 
     try {
         if (groupId === undefined) throw new Error('group id is missing');
 
-        console.log('listenToGroupTitles', groupId)
-        console.log(store.groupTitlesListen)
-        if (!{}.hasOwnProperty.call(store.groupTitlesListen, groupId)) {
 
-            store.groupTitlesListen[groupId] = [];
-            if (!{}.hasOwnProperty.call(store.groupTitles, groupId)) {
-                store.groupTitles[groupId] = []
+        if (!{}.hasOwnProperty.call(store.groupSectionsListen, groupId)) {
+
+            store.groupSectionsListen[groupId] = [];
+            if (!{}.hasOwnProperty.call(store.groupSections, groupId)) {
+                store.groupSections[groupId] = []
             }
 
             return DB
                 .collection('groups').doc(groupId)
-                .collection('titles')
-                .onSnapshot(titlesDB => {
+                .collection('sections')
+                .onSnapshot(sectionsDB => {
 
-                    const titles = []
-                    titlesDB.forEach(titleDB => {
-                        const titleObj = titleDB.data();
-                        titleObj.groupTitleId = titleDB.id
-                        titles.push(titleObj)
+                    const sections = []
+                    sectionsDB.forEach(sectionDB => {
+                        const sectionObj = sectionDB.data();
+                        sectionObj.groupTitleId = sectionDB.id
+                        sections.push(sectionObj)
                     });
-                    store.groupTitles[groupId] = [...titles];
-                    console.log(titles)
+                    store.groupSections[groupId] = [...sections];
+                   
 
                     m.redraw();
                 })

@@ -3,7 +3,7 @@ import { set, get } from 'lodash';
 import { DB } from '../config';
 import store from '../../../data/store';
 
-export const setGroupTitles = (ids, title) => {
+export const addGroupSection = (ids, title) => {
     try {
         const { groupId } = ids;
         if (groupId === undefined) throw new Error('groupId is not defined');
@@ -11,7 +11,7 @@ export const setGroupTitles = (ids, title) => {
 
         DB
             .collection('groups').doc(groupId)
-            .collection('titles').add({ title, order: 100000 })
+            .collection('sections').add({ title, order: 100000 })
             .then(() => console.info('title', title, 'was saved to DB'))
             .catch(e => console.error(e))
     } catch (e) {
@@ -33,7 +33,7 @@ export const reorderGroupTitle = (groupId, groupTitleId, order) => {
 
         DB
             .collection('groups').doc(groupId)
-            .collection('titles').doc(groupTitleId)
+            .collection('sections').doc(groupTitleId)
             .update({ order })
             .then(()=>console.log(`title ${groupTitleId} was updated in group ${groupId} to ${order}`))
             .catch(e => console.error(e))
@@ -50,7 +50,7 @@ export const  deleteGroupTitle = (groupId, groupTitleId)=>{
 
         DB
             .collection('groups').doc(groupId)
-            .collection('titles').doc(groupTitleId)
+            .collection('sections').doc(groupTitleId)
             .delete()
             .then(()=>console.log(`title ${groupTitleId} was deleted in group ${groupId} `))
             .catch(e => console.error(e))
@@ -69,7 +69,7 @@ export const editGroupTitle =(title, groupId, groupTitleId)=>{
 
         DB
             .collection('groups').doc(groupId)
-            .collection('titles').doc(groupTitleId)
+            .collection('sections').doc(groupTitleId)
             .update({title})
             .then(()=>console.log(`title ${groupTitleId} was updated in group ${groupId} `))
             .catch(e => console.error(e))

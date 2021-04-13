@@ -31,8 +31,8 @@ var store = {
     registerGroupsListen: false,
     groupsUserTryToRegister: {},
     groupMembers: {}, //used to store members of groups. {groupId:[members]}
-    groupTitles:{}, //used to store group's titles {groupId:[titles]}
-    groupTitlesListen:{}, //listen to groups titles. {groupId:[titles]}
+    groupSections:{}, //used to store group's titles {groupId:[titles]}
+    groupSectionsListen:{}, //listen to groups titles. {groupId:[titles]}
     option: {}, //options information, stored in option:{optionId:{}}
     options: [],//options in a given question. stored as {subQuestionID:[options]} 
     optionsListen: {}, //used to store if there is a listner in subQuestion of option {subQuestionId:true}
