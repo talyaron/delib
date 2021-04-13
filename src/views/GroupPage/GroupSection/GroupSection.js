@@ -16,7 +16,7 @@ module.exports = {
         }
         return (
             <div class='groupSection'>
-                <div class='grpupSection__header'>{title?title.title:'Unsorted'}</div>
+                <h3 class='grpupSection__header'>{title?title.title:'Unsorted'}</h3>
                 <div class='groupSection__wrapper'>
                     {questionsTitle.map(question => {
                         return (<QuestionCard
