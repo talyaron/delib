@@ -207,7 +207,7 @@ module.exports = {
                     {vnode.state.subPage == 'main' ?
 
                         <div class='questionsWrapper' id='groupWrapper' style={`direction:${lang[language].dir}`}>
-                            <Explanation description={vnode.state.description} />
+                            <Explanation description={vnode.state.description} type='group' />
                             {vnode.state.openHeadersPanel ? <Headers groupId={vnode.attrs.id} vsp={vsp} /> : null}
                             <h1>{lang[language].groupTopics}</h1>
                             {vnode.state.questions[0] === false ?

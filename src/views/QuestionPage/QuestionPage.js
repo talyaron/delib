@@ -181,14 +181,14 @@ module.exports = {
                                 title: 'הצבעה',
                                 alt: 'votes',
                                 class: 'addPanel__suggestions',
-                                fn: () => { vsp.openVote = true; vsp.openAddPanel = false }
+                                onClickfn: () => { vsp.openVote = true; vsp.openAddPanel = false }
                             },
                             {
                                 img: 'img/suggestions.svg',
-                                title: 'הצבעה',
+                                title: 'הצעות',
                                 alt: 'add suggestions',
                                 class: 'addPanel__votes',
-                                fn: () => { vsp.modalSubQuestion = { isShow: true, new: true, numberOfSubquestions: vsp.subQuestions.length }; vsp.openAddPanel = false }
+                                onClickfn: () => { vsp.modalSubQuestion = { isShow: true, new: true, numberOfSubquestions: vsp.subQuestions.length }; vsp.openAddPanel = false }
                             }
                         ]
                     }} />
@@ -218,7 +218,7 @@ module.exports = {
                     <div class='question__main'>
 
                         <div class='wrapperSubQuestions' id='questionWrapperAll'>
-                            <Explanation description={vnode.state.description} creatorId={vnode.state.creatorId} questionId={questionId} groupId={groupId} />
+                            <Explanation description={vnode.state.description} creatorId={vnode.state.creatorId} questionId={questionId} groupId={groupId} type='question' />
                             <h1>שאלות </h1>
 
                             <div class='subQuestionsWrapper'>
