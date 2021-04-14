@@ -21,7 +21,8 @@ import GroupSection from './GroupSection/GroupSection';
 
 
 //functions
-import { createQuestion, registerGroup } from '../../functions/firebase/set/set';
+import {registerGroup } from '../../functions/firebase/set/set';
+import { createQuestion } from '../../functions/firebase/set/setQuestion';
 import { getQuestions, listenToGroupDetails, listenToChat, getLastTimeEntered } from '../../functions/firebase/get/get';
 import { listenToGroupSections } from '../../functions/firebase/get/getGroup';
 import { setLastPage, getIsChat, concatenateDBPath } from '../../functions/general';
@@ -54,6 +55,8 @@ module.exports = {
                 title: '',
                 description: ''
             },
+            title:'',
+            description:'',
             subPage: getIsChat() ? 'chat' : 'main',
             isAdmin: false,
             edit: true,
@@ -129,9 +132,7 @@ module.exports = {
 
         //get language
         vnode.state.language = get(store.groups, `[${groupId}].language`, 'he')
-        vnode.state.add.description = get(store.groups, `[${groupId}].description`, '');
-
-        console.log('vnode.state.addQuestion',vnode.state.addQuestion)
+        vnode.state.description = get(store.groups, `[${groupId}].description`, '');
 
     },
 
@@ -206,7 +207,7 @@ module.exports = {
                     {vnode.state.subPage == 'main' ?
 
                         <div class='questionsWrapper' id='groupWrapper' style={`direction:${lang[language].dir}`}>
-                            <Explanation description={vnode.state.add.description} />
+                            <Explanation description={vnode.state.description} />
                             {vnode.state.openHeadersPanel ? <Headers groupId={vnode.attrs.id} vsp={vsp} /> : null}
                             <h1>{lang[language].groupTopics}</h1>
                             {vnode.state.questions[0] === false ?
@@ -228,7 +229,7 @@ module.exports = {
                             topic='קבוצה'
                             ids={{ groupId: vnode.attrs.id }}
                             title={vnode.state.groupName}
-                            description={vnode.state.add.description}
+                            description={vnode.state.description}
                             language={vnode.state.language}
                             url={m.route.get()}
                         />
@@ -281,7 +282,6 @@ module.exports = {
 
 
 function toggleAddQuestion(vnode) {
-    console.log('toggle')
     vnode.state.addQuestion = !vnode.state.addQuestion;
 }
 

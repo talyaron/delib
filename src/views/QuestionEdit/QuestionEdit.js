@@ -3,11 +3,9 @@ import Sortable from "sortablejs";
 import { get } from 'lodash';
 
 import store from "../../data/store";
-import {getQuestionDetails} from "../../functions/firebase/get/get";
-import {
-  updateQuestion,
-  setSubQuestionsOrder
-} from "../../functions/firebase/set/set";
+import { getQuestionDetails } from "../../functions/firebase/get/get";
+import { updateQuestion } from '../../functions/firebase/set/setQuestion'
+import { setSubQuestionsOrder } from "../../functions/firebase/set/set";
 import { setWrapperHeight } from "../../functions/general";
 
 import "./QuestionEdit.css";
@@ -114,33 +112,33 @@ module.exports = {
                 <div> {vnode.state.title}</div>
               </div>
             ) : (
-                <div>
-                  <input
-                    type="text"
-                    value={vnode.state.title}
-                    class="questionIntroTitle"
-                    onkeyup={e => {
-                      updateField("title", e.target.value, vnode);
-                    }}
-                  />
-                  <div
-                    class="buttons questionIntroButton"
-                    onclick={e => {
-                      e.stopPropagation();
-                      vnode.state.editabels.title = false;
-                      updateQuestion(
-                        vnode.attrs.groupId,
-                        vnode.attrs.questionId,
-                        vnode.state.title,
-                        vnode.state.description,
-                        vnode.state.authorized
-                      );
-                    }}
-                  >
-                    שמירה
+              <div>
+                <input
+                  type="text"
+                  value={vnode.state.title}
+                  class="questionIntroTitle"
+                  onkeyup={e => {
+                    updateField("title", e.target.value, vnode);
+                  }}
+                />
+                <div
+                  class="buttons questionIntroButton"
+                  onclick={e => {
+                    e.stopPropagation();
+                    vnode.state.editabels.title = false;
+                    updateQuestion(
+                      vnode.attrs.groupId,
+                      vnode.attrs.questionId,
+                      vnode.state.title,
+                      vnode.state.description,
+                      vnode.state.authorized
+                    );
+                  }}
+                >
+                  שמירה
                 </div>
-                </div>
-              )}
+              </div>
+            )}
             {vnode.state.editabels.description ? (
               <div>
                 <textarea
@@ -167,17 +165,17 @@ module.exports = {
                 </div>
               </div>
             ) : (
-                <div
-                  class="questionIntroDescription"
-                  onclick={e => {
-                    e.stopPropagation();
-                    vnode.state.editabels.description = true;
-                  }}
-                >
-                  <div class="subTitleEdit">הסבר: </div>
-                  <div> {vnode.state.description}</div>
-                </div>
-              )}
+              <div
+                class="questionIntroDescription"
+                onclick={e => {
+                  e.stopPropagation();
+                  vnode.state.editabels.description = true;
+                }}
+              >
+                <div class="subTitleEdit">הסבר: </div>
+                <div> {vnode.state.description}</div>
+              </div>
+            )}
           </div>
           {/* <div class="questionAuthorization checkBoxes">
             <h2>מי רשאי להשתתף</h2>
@@ -240,10 +238,10 @@ module.exports = {
               />
             </div>
           ) : (
-              <div />
-            )
+            <div />
+          )
           }
-          
+
         </div>
       </div>
     );
