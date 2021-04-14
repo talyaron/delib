@@ -1,0 +1,17 @@
+.grpupSection {
+    background: white;
+}
+
+.grpupSection__header {
+   
+}
+
+.groupSection__wrapper{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+}
+
+.groupSection--over{
+    background-color: wheat;
+}

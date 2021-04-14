@@ -54,6 +54,10 @@
 .addPanel__votes{
     background: #ff8888;
 }
+.addPanel__headers{
+    background: white;
+    border: 2px solid darkgray;
+}
 
 .addPanel--open{
     animation: openAddPanel 300ms;
@@ -81,4 +85,8 @@
    
     display: none; 
     bottom: 0px;
+}
+
+.addPanel__images img{
+    width: 36px;
 }

@@ -1,0 +1,42 @@
+.groupHeaders{
+    background-color: rgba(0, 0, 0, 0.397);
+    backdrop-filter: blur(7px);
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.groupHeaders__box{
+    background: white;
+    padding: 20px;
+    border-radius: var(--roundBorder);
+}
+
+.groupHeaders__wrapper{
+    max-height: 40vh;
+    overflow-y: auto;
+}
+
+.groupHeaders__title{
+    display: flex;
+    justify-content: space-between;
+   
+}
+.groupHeaders__title>div{
+    overflow-wrap: anywhere;
+    padding: 5px;
+    display: flex;
+    cursor: pointer;
+}
+
+.groupHeaders__title img{
+    height: 24px;
+}
+

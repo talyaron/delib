@@ -18,7 +18,7 @@ import NavBottom from '../Commons/NavBottom/NavBottom';
 import NavTop from '../Commons/NavTop/NavTop';
 import Chat from '../Commons/Chat/Chat';
 import SubQuestionEditModal from './SubQuestionEditModal/SubQuestionEditModal';
-import AddPanel from './AddPanel/AddPanel';
+import AddPanel from '../Commons/AddPanel/AddPanel';
 import VoteModal from './VoteModal/VoteModal';
 
 
@@ -27,8 +27,7 @@ import VoteModal from './VoteModal/VoteModal';
 import { getQuestionDetails, getSubQuestion, getLastTimeEntered, listenToChat, listenToGroup } from '../../functions/firebase/get/get';
 import { registerGroup } from '../../functions/firebase/set/set';
 import { deep_value, getIsChat, concatenateDBPath, getLanguage } from '../../functions/general';
-import { cheackIfReactionExists } from '../../functions/firebase/get/getQuestions';
-import { createReactions } from '../../functions/firebase/set/setQuestions';
+
 
 
 
@@ -163,14 +162,36 @@ module.exports = {
 
     },
     view: vnode => {
-       
-        const { language } = vnode.state;
+
+        const vsp = vnode.state;
+        const { language } = vsp;
 
         const { groupId, questionId } = vnode.attrs;
 
         return (
             <div class='page page__grid'>
-                <AddPanel isOpen={vnode.state.openAddPanel} vsp={vnode.state} />
+                <AddPanel
+                    isOpen={vsp.openAddPanel}
+                    vsp={vsp}
+                    buttonsObj={{
+                        title: 'הוספת שאלות',
+                        buttons: [
+                            {
+                                img: 'img/votes.svg',
+                                title: 'הצבעה',
+                                alt: 'votes',
+                                class: 'addPanel__suggestions',
+                                onClickfn: () => { vsp.openVote = true; vsp.openAddPanel = false }
+                            },
+                            {
+                                img: 'img/suggestions.svg',
+                                title: 'הצעות',
+                                alt: 'add suggestions',
+                                class: 'addPanel__votes',
+                                onClickfn: () => { vsp.modalSubQuestion = { isShow: true, new: true, numberOfSubquestions: vsp.subQuestions.length }; vsp.openAddPanel = false }
+                            }
+                        ]
+                    }} />
 
                 <div class='page__header'>
                     <Header
@@ -197,7 +218,7 @@ module.exports = {
                     <div class='question__main'>
 
                         <div class='wrapperSubQuestions' id='questionWrapperAll'>
-                            <Explanation description={vnode.state.description} creatorId={vnode.state.creatorId} questionId={questionId} groupId={groupId} />
+                            <Explanation description={vnode.state.description} creatorId={vnode.state.creatorId} questionId={questionId} groupId={groupId} type='question' />
                             <h1>שאלות </h1>
 
                             <div class='subQuestionsWrapper'>

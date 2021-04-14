@@ -2,7 +2,7 @@ import m from 'mithril';
 import { set, get } from 'lodash';
 import { DB } from '../config';
 import store from '../../../data/store';
-import { concatenateDBPath, uniqueId, generateChatEntitiyId, getRandomColor } from '../../general';
+import { concatenateDBPath, uniqueId, getRandomColor } from '../../general';
 import { subscribeUser } from './setChats';
 
 
@@ -55,7 +55,7 @@ function updateGroup(vnode) {
         DB
             .collection('groups')
             .doc(vnode.attrs.id)
-            .update({ title: vnode.state.title, description: vnode.state.description, callForAction: vnode.state.callForAction||'' })
+            .update({ title: vnode.state.title, description: vnode.state.description, callForAction: vnode.state.callForAction || '' })
             .then(() => { m.route.set(`/group/${vnode.attrs.id}`) })
             .catch(err => { throw err })
     } catch (e) {
@@ -128,44 +128,7 @@ function registerGroup(groupId) {
     }
 }
 
-function createQuestion(groupId, creatorId, title, description) {
-    const questionId = uniqueId();
-    DB
-        .collection('groups')
-        .doc(groupId)
-        .collection('questions')
-        .doc(questionId)
-        .set({
-            title,
-            description,
-            time: new Date().getTime(),
-            creatorId,
-            questionId,
-            id: questionId
-        })
-        .catch(function (error) {
-            console.error('Error adding document: ', error);sendError(e);
-        });
-}
 
-function updateQuestion(groupId, questionId, title, description, authorizationObj) {
-    try {
-        DB
-            .collection('groups')
-            .doc(groupId)
-            .collection('questions')
-            .doc(questionId)
-            .update({ title, description, authorization: authorizationObj })
-            .then((something) => {
-                console.info('writen succesufuly');
-            })
-            .catch(function (error) {
-                console.error('Error adding document: ', error);sendError(e)
-            });
-    } catch (e) {
-        console.error(e); sendError(e)
-    }
-}
 
 function createSubQuestion(groupId, questionId, title, order) {
     try {
@@ -182,7 +145,7 @@ function createSubQuestion(groupId, questionId, title, order) {
                 .set({ title, order, creator: store.user.uid, orderBy: 'top', subQuestionId, id: subQuestionId })
                 .then(() => { resolve(subQuestionId) })
                 .catch(function (error) {
-                    console.error('Error adding document: ', error);sendError(e)
+                    console.error('Error adding document: ', error); sendError(e)
                     reject(undefined)
                 });
         })
@@ -319,7 +282,7 @@ function updateSubQuestionsOrder(groupId, questionId, newOrderArray) {
             console.info('writen succesufuly');
         })
         .catch(function (error) {
-            console.error('Error adding document: ', error);sendError(e)
+            console.error('Error adding document: ', error); sendError(e)
         });
 }
 
@@ -337,7 +300,7 @@ function setSubQuestionsOrder(groupId, questionId, subQuestionId, order) {
                 console.info(`writen to ${subQuestionId} succesufuly`);
             })
             .catch(function (error) {
-                console.error('Error adding document: ', error);sendError(e)
+                console.error('Error adding document: ', error); sendError(e)
             });
     } catch (e) {
         console.error(e); sendError(e)
@@ -379,7 +342,7 @@ function createOption(groupId, questionId, subQuestionId, type, creatorId, title
             isActive: true,
             isVote
         }).catch(function (error) {
-            console.error('Error adding document: ', error);sendError(e)
+            console.error('Error adding document: ', error); sendError(e)
         });
 
         return optionId;
@@ -606,7 +569,7 @@ function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like) 
             .doc(creatorId)
             .set({ like })
             .catch(function (error) {
-                console.error('Error adding document: ', error);sendError(e)
+                console.error('Error adding document: ', error); sendError(e)
             });
     } catch (e) {
         console.error(e); sendError(e)
@@ -662,7 +625,7 @@ function setMessage(groupId, questionId, subQuestionId, optionId, creatorId, cre
                 })
         })
         .catch((error) => {
-            console.error('Error:', error);sendError(e)
+            console.error('Error:', error); sendError(e)
         });
 }
 
@@ -695,7 +658,7 @@ function createSubItem(subItemsType, groupId, questionId, creatorId, creatorName
         .add(addObj)
         .then((newItem) => { })
         .catch(function (error) {
-            console.error('Error adding document: ', error);sendError(e)
+            console.error('Error adding document: ', error); sendError(e)
         });
 }
 
@@ -721,7 +684,7 @@ function updateSubItem(subItemsType, groupId, questionId, subQuestionId, title, 
         .update(updateObj)
         .then((newOption) => { })
         .catch(function (error) {
-            console.error('Error updating document: ', error);sendError(e)
+            console.error('Error updating document: ', error); sendError(e)
         });
 }
 
@@ -771,7 +734,7 @@ function setSubAnswer(groupId, questionId, subQuestionId, creatorId, creatorName
         })
         .then((newLike) => { })
         .catch(function (error) {
-            console.error('Error adding document: ', error);sendError(e)
+            console.error('Error adding document: ', error); sendError(e)
         });
 }
 
@@ -795,7 +758,7 @@ function addToFeed(addRemove, pathArray, refString, collectionOrDoc) {
                 console.dir(store.subscribed);
             })
             .catch((error) => {
-                console.error('Error writing document: ', error);sendError(e)
+                console.error('Error writing document: ', error); sendError(e)
             });
     } else {
         DB
@@ -808,7 +771,7 @@ function addToFeed(addRemove, pathArray, refString, collectionOrDoc) {
                 delete store.subscribed[refString];
             })
             .catch(function (error) {
-                console.error('Error removing document: ', error);sendError(e)
+                console.error('Error removing document: ', error); sendError(e)
             });
     }
 }
@@ -903,7 +866,7 @@ function dontShowPopAgain() {
     try {
         DB.collection('users').doc(store.user.uid).update({ stopRegistrationMessages: true })
             .then(() => console.info('user will not recive pop messages again'))
-            .catch(e =>{console.error(e); sendError(e);})
+            .catch(e => { console.error(e); sendError(e); })
     } catch (e) {
         console.error(e); sendError(e)
     }
@@ -914,7 +877,7 @@ function markUserSeenSuggestionsWizard() {
         DB.collection('users').doc(store.user.uid)
             .update({ firstTimeOnSuggestions: false })
             .then(() => { console.info('user seen wizared') })
-            .catch(e =>{console.error(e); sendError(e)})
+            .catch(e => { console.error(e); sendError(e) })
     } catch (e) {
         console.error(e); sendError(e)
     }
@@ -949,18 +912,19 @@ function handleSubscription(vnode) {
     }
 }
 
-function sendError(e){
-    try{
-    DB.collection('errors').add({
-        message:e.message, 
-        user:store.user, date:firebase
-        .firestore
-        .FieldValue
-        .serverTimestamp()})
-        .catch(e=>{
-            console.error(e); 
+function sendError(e) {
+    try {
+        DB.collection('errors').add({
+            message: e.message,
+            user: store.user, date: firebase
+                .firestore
+                .FieldValue
+                .serverTimestamp()
         })
-    } catch(e){
+            .catch(e => {
+                console.error(e);
+            })
+    } catch (e) {
         console.error(e);
     }
 }
@@ -972,8 +936,6 @@ module.exports = {
     createGroup,
     updateGroup,
     registerGroup,
-    createQuestion,
-    updateQuestion,
     createSubQuestion,
     updateSubQuestion,
     setSubQuestion,

@@ -4,34 +4,45 @@ import { get } from 'lodash';
 // data
 import store from '../../data/store';
 import lang from '../../data/languages';
-import {GROUP} from '../../data/EntityTypes';
+import { GROUP } from '../../data/EntityTypes';
 
 
 //components
 import './GroupPage.css';
-import QuestionCard from './QuestionCard/QuestionCard';
 import Header from '../Commons/Header/Header';
 import NavBottom from '../Commons/NavBottom/NavBottom';
 import Explanation from '../Commons/Explanation/Explanation';
 import NavTop from '../Commons/NavTop/NavTop';
 import Chat from '../Commons/Chat/Chat';
 import Spinner from '../Commons/Spinner/Spinner';
+import AddPanel from '../Commons/AddPanel/AddPanel';
+import Headers from './Headers/Headers';
+import GroupSection from './GroupSection/GroupSection';
 
 
 //functions
-import { createQuestion, registerGroup } from '../../functions/firebase/set/set';
+import {registerGroup } from '../../functions/firebase/set/set';
+import { createQuestion } from '../../functions/firebase/set/setQuestion';
 import { getQuestions, listenToGroupDetails, listenToChat, getLastTimeEntered } from '../../functions/firebase/get/get';
+import { listenToGroupSections } from '../../functions/firebase/get/getGroup';
 import { setLastPage, getIsChat, concatenateDBPath } from '../../functions/general';
 
 
+
+let unsubscruibeTitles = () => { }
 
 
 module.exports = {
 
     oninit: vnode => {
+        const { id } = vnode.attrs;
+        let groupId = id;
+        let afterLogin = true;
+
         setLastPage();
 
         if (store.user.uid == undefined) {
+            afterLogin = false
             m
                 .route
                 .set('/login');
@@ -44,6 +55,8 @@ module.exports = {
                 title: '',
                 description: ''
             },
+            title:'',
+            description:'',
             subPage: getIsChat() ? 'chat' : 'main',
             isAdmin: false,
             edit: true,
@@ -53,14 +66,18 @@ module.exports = {
             groupName: get(store, 'groups[' + vnode.attrs.id + '].title', 'שם הקבוצה'),
             unreadMessages: 0,
             lastTimeEntered: 0,
-            language:'he'
+            language: 'he',
+            openAddPanel: false,
+            openHeadersPanel: false
         }
 
 
 
         getQuestions('on', vnode.attrs.id, vnode);
         listenToGroupDetails(vnode.attrs.id, vnode);
-
+        if (afterLogin) {
+            unsubscruibeTitles = listenToGroupSections(groupId);
+        }
 
         vnode.state.unsubscribe.chat = listenToChat({ groupId: vnode.attrs.id });
 
@@ -72,14 +89,14 @@ module.exports = {
         let groupId = id;
         getLastTimeEntered({ groupId }, vnode);
 
-        
+
 
     },
     onbeforeupdate: vnode => {
 
         const { id } = vnode.attrs;
         let groupId = id;
-        
+
 
 
         //check is admin
@@ -114,8 +131,8 @@ module.exports = {
         registerGroup(groupId)
 
         //get language
-        vnode.state.language = get(store.groups,`[${groupId}].language`,'he')
-        vnode.state.add.description = get(store.groups,`[${groupId}].description`,'')
+        vnode.state.language = get(store.groups, `[${groupId}].language`, 'he')
+        vnode.state.description = get(store.groups, `[${groupId}].description`, '');
 
     },
 
@@ -127,19 +144,42 @@ module.exports = {
 
         vnode.state.unsubscribe.chat();
 
-
+        unsubscruibeTitles();
 
     },
     view: vnode => {
-       
-
-            const {language} = vnode.state
+        const groupId = vnode.attrs.id
+        const vsp = vnode.state;
+        const { language } = vsp;
+        let titles = store.groupSections[groupId] || [];
 
 
         return (
             <div class='page'>
+
                 <div class='page__grid'>
                     <div class='page__header'>
+                        <AddPanel isOpen={vsp.openAddPanel}
+                            vsp={vsp}
+                            buttonsObj={{
+                                title: 'הוספה',
+                                buttons: [
+                                    {
+                                        img: 'img/focus-white.svg',
+                                        title: 'נושאים',
+                                        alt: 'votes',
+                                        class: 'addPanel__suggestions addPanel__images',
+                                        onClickfn: () => { vsp.openAddPanel = false; vsp.addQuestion = true }
+                                    },
+                                    {
+                                        img: 'img/header-2-gray.png',
+                                        title: 'כותרות',
+                                        alt: 'add sections',
+                                        class: 'addPanel__headers addPanel__images',
+                                        onClickfn: () => { vsp.openAddPanel = false; vsp.openHeadersPanel = true}
+                                    }
+                                ]
+                            }} />
                         <Header
                             upLevelUrl='/groups'
                             topic={lang[language].groupTitle}
@@ -167,22 +207,18 @@ module.exports = {
                     {vnode.state.subPage == 'main' ?
 
                         <div class='questionsWrapper' id='groupWrapper' style={`direction:${lang[language].dir}`}>
-                           <Explanation  description={vnode.state.add.description} />
+                            <Explanation description={vnode.state.description} type='group' />
+                            {vnode.state.openHeadersPanel ? <Headers groupId={vnode.attrs.id} vsp={vsp} /> : null}
                             <h1>{lang[language].groupTopics}</h1>
                             {vnode.state.questions[0] === false ?
                                 <Spinner />
                                 :
                                 <div class='questionsWrapper__inear'>
-                                    {vnode.state.questions.map((question, key) => {
-
-                                        return (
-                                            <QuestionCard
-                                                route={'/question/' + vnode.attrs.id + '/'}
-                                                question={question}
-                                                key={key}
-                                            />
-                                        )
+                                    {sortedTitles(titles, 'order').map(section => {
+                                        return <GroupSection key={section.groupTitleId} section={section} questions={vnode.state.questions} groupId={vnode.attrs.id} />
                                     })}
+                                    <GroupSection title={false} questions={vnode.state.questions} groupId={vnode.attrs.id} />
+
                                 </div>
                             }
                         </div>
@@ -193,14 +229,14 @@ module.exports = {
                             topic='קבוצה'
                             ids={{ groupId: vnode.attrs.id }}
                             title={vnode.state.groupName}
-                            description={vnode.state.add.description}
+                            description={vnode.state.description}
                             language={vnode.state.language}
                             url={m.route.get()}
                         />
                     }
                     <div class='page__footer'>
                         {vnode.state.subPage == 'main' ?
-                            <div class='fav' onclick={() => { toggleAddQuestion(vnode) }} >
+                            <div class='fav' onclick={() => { vnode.state.openAddPanel = true }} >
                                 <div>+</div>
                             </div>
                             : null
@@ -210,17 +246,17 @@ module.exports = {
                             vnode.state.addQuestion ?
                                 <div class='module'>
                                     <div class='moduleBox'>
-                                        <h2 class='moduleTitle'>הוספת שאלה</h2>
+                                        <h2 class='moduleTitle'>הוספת נושא</h2>
                                         <div class='moduleInputs'>
                                             <textarea
                                                 class='inputGeneral'
                                                 autofocus='true'
-                                                placeholder='כותרת השאלה'
+                                                placeholder='כותרת הנושא'
                                                 onkeyup={(e) => { vnode.state.add.title = e.target.value }}
                                             ></textarea>
                                             <textarea
                                                 class='inputGeneral'
-                                                placeholder='הסבר על השאלה'
+                                                placeholder='הסבר על הנושא'
                                                 onkeyup={(e) => { vnode.state.add.description = e.target.value }}
                                             ></textarea>
                                         </div>
@@ -247,4 +283,24 @@ module.exports = {
 
 function toggleAddQuestion(vnode) {
     vnode.state.addQuestion = !vnode.state.addQuestion;
+}
+
+function sortedTitles(titles, sortBy) {
+    try {
+
+        if (!Array.isArray(titles)) throw new Error`titles is not array: ${JSON.stringify(titles)}`;
+        if (!sortBy) throw new Error`orderBy is empty`;
+
+        switch (sortBy) {
+            case 'order':
+                return titles.sort((a, b) => a.order - b.order);
+            default:
+                return titles
+        }
+
+    } catch (e) {
+        console.error(e)
+        return []
+    }
+
 }

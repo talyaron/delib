@@ -215,11 +215,7 @@ function getQuestions(onOff, groupId, vnode) {
             .orderBy("time", "desc")
             .onSnapshot(questionsDb => {
                 questionsDb.forEach(questionDB => {
-                    if (questionDB.data().id) {
-                        // set(store.questions, `[${groupId}][${questionDB.data().id}]`,
-                        // questionDB.data())
-                        setStore(store.questions, groupId, questionDB.data().id, questionDB.data());
-                    }
+                    if (questionDB.data().id) {  setStore(store.questions, groupId, questionDB.data().id, questionDB.data()); }
                 });
 
                 m.redraw();

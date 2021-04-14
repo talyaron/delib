@@ -8,7 +8,7 @@ import './Explanation.css';
 module.exports = {
 
     view: vnode => {
-       const {creatorId, groupId, questionId} = vnode.attrs;
+        const { creatorId, groupId, questionId } = vnode.attrs;
 
         if (vnode.attrs.description) {
             return (
@@ -18,14 +18,28 @@ module.exports = {
                         {vnode.attrs.description}
                     </div>
                     <div class='explanation__footer'>
-                        {creatorId === getUserId() && questionId !== undefined?
-                            <div class='buttons buttonOutlineGray buttons--small' onclick={()=>m.route.set(`/questionEdit/${groupId}/${questionId}`)}>עריכה</div>
-                            :null 
-                    }
+                        {switchButtons( vnode)}
                     </div>
                 </div>
             )
         }
+    }
+}
+
+function switchButtons( vnode) {
+    try {
+        const { creatorId, groupId, questionId, type } = vnode.attrs;
+        switch (type) {
+            case 'question':
+                return <div class='buttons buttonOutlineGray buttons--small' onclick={() => m.route.set(`/questionEdit/${groupId}/${questionId}`)}>עריכה</div>
+            case 'group':
+                return <div class='buttons buttonOutlineGray buttons--small'>עריכה</div>
+            default:
+                return null
+        }
+    } catch (e) {
+        console.error(e);
+        return null
     }
 }
 
