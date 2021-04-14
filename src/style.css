@@ -645,10 +645,6 @@ input[type=checkbox] {
     cursor: -webkit-grabbing;
 }
 
-.carousel{
-    display: grid;
-    grid-template-columns: repeat(3,33.33333vw);
-}
 
 /* scroll */
 
