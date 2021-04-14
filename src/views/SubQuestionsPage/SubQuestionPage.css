@@ -96,7 +96,7 @@
 
 .subQuestion__suggestions {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
@@ -120,54 +120,35 @@
     scroll-behavior: smooth;
 }
 
-@media only screen and (max-width: 1600px) {
-    .subQuestion__carousel {
-        width: 100vw;
-    }
 
-    .subQuestion__suggestions {
-
-        grid-template-columns: repeat(4, 33.3333vw);
-
-    }
-
-    .subQuestion__carousel>main {
-        width: 133.333vw;
-
-    }
-}
 
 @media only screen and (max-width: 1200px) {
-    .subQuestion__carousel {
-        width: 100vw;
-    }
+  
 
     .subQuestion__suggestions {
 
-        grid-template-columns: repeat(4, 50vw);
+        grid-template-columns: repeat(3, 50vw);
 
     }
 
     .subQuestion__carousel>main {
-        width: 200vw;
+        width: 150vw;
 
     }
 }
 
 
 @media only screen and (max-width: 800px) {
-    .subQuestion__carousel {
-        width: 100vw;
-    }
+   
 
     .subQuestion__suggestions {
 
-        grid-template-columns: repeat(4, 100vw);
+        grid-template-columns: repeat(3, 100vw);
 
     }
 
     .subQuestion__carousel>main {
-        width: 400vw;
+        width: 300vw;
 
     }
 }

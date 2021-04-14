@@ -173,7 +173,6 @@ module.exports = {
                                 />
                                 <NavTop
                                     level={lang[language].solutions}
-                                    paper={lang[language].paper}
                                     chat={lang[language].chat}
                                     reactions={lang[language].reactions}
                                     current={vnode.state.subPage}
@@ -186,7 +185,7 @@ module.exports = {
                                 />
                             </div>
                             <div style={`direction:${lang[language].dir}`} class='page__main subQuestion__carousel' id='subQuestion__carousel'>
-                                <main >
+                                <main ontouchstart={handleTouchStart} ontouchend={handleTouchStart} ontouchmove={handleTouchMove}>
                                     <div class='subQuestion__suggestions'>
                                         <div class='subQuestion__column'>
                                             <SubQuestion
@@ -235,25 +234,7 @@ module.exports = {
                                                 </div> : null
                                             }
                                         </div>
-                                        <div class='subQuestion__column'>
-                                            <SubQuestion
-                                                vsp={vnode.state}
-                                                question={vnode.state.details.title}
-                                                questionObj={vnode.state.details}
-                                                groupId={groupId}
-                                                questionId={questionId}
-                                                subQuestionId={subQuestionId}
-                                                orderBy={vnode.state.details.orderBy}
-                                                title={vnode.state.details.title}
-                                                subItems={vnode.state.details.options}
-                                                parentVnode={vnode}
-                                                info={settings.subItems.options}
-                                                processType={vnode.state.details.processType}
-                                                showSubscribe={true}
-                                                isAlone={true}
-                                                language={language}
-                                            />
-                                        </div>
+
 
                                         <Chat
                                             entity='subQuestion'
@@ -363,4 +344,56 @@ function getOrderByFromUrl(vnode) {
     if (orderBy === undefined) orderBy = 'top';
     if (orderBy !== 'top' && orderBy !== 'new') orderBy = 'new';
     return orderBy
+}
+let touchPointStart = 0, isMoving = false;
+function handleTouchStart(e) {
+
+    touchPointStart = e.touches[0].clientX;
+  
+}
+
+function handleTouchMove(e) {
+    const moveDistance = 5;
+    isMoving = true
+ 
+    const touchPoint = e.touches[0].clientX
+    if (touchPoint > touchPointStart + moveDistance) {
+     
+        scrollSides('right')
+    } else if (touchPoint < touchPointStart - moveDistance) {
+       
+        scrollSides('left')
+    }
+}
+
+function scrollSides(direction) {
+    if (isMoving) {
+        const carouselBox = document.querySelector('#subQuestion__carousel');
+        const carousel = document.querySelector('#subQuestion__carousel>main');
+
+        const carouselWidth = carousel.clientWidth;
+        const scrollX = -1 * ((1 / 3) * carouselWidth)
+
+        switch (direction) {
+            case 'left':
+                carouselBox.scrollBy({
+                    top: 0,
+                    left: -1*scrollX,
+                    behavior: 'smooth'
+                });
+                isMoving = false
+                break;
+            case 'right':
+                carouselBox.scrollBy({
+                    top: 0,
+                    left: scrollX,
+                    behavior: 'smooth'
+                });
+                isMoving = false
+            default:
+
+        }
+    }
+
+
 }
