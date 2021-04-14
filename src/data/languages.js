@@ -8,7 +8,7 @@ const lang={
         chat:'דיון',
         follow:'מעקב',
         unfollow:'לא לעקוב',
-        solutions:'פתרונות אפשריים',
+        solutions:'פתרונות',
         solution:'פתרון אפשרי',
         question:'שאלה',
         subQuestion:'שאלה',

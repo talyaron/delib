@@ -185,8 +185,8 @@ module.exports = {
                                     unreadMessages={vnode.state.unreadMessages}
                                 />
                             </div>
-                            <div style={`direction:${lang[language].dir}`} class='page__main subQuestion__carousel'>
-                                <main>
+                            <div style={`direction:${lang[language].dir}`} class='page__main subQuestion__carousel' id='subQuestion__carousel'>
+                                <main >
                                     <div class='subQuestion__suggestions'>
                                         <div class='subQuestion__column'>
                                             <SubQuestion
