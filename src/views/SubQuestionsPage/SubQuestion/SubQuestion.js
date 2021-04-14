@@ -79,11 +79,12 @@ module.exports = {
 		unsubscribeOptions();
 	},
 	view: (vnode) => {
-		const { question, vsp, processType, language } = vnode.attrs
+		const { question, vsp, processType, language } = vnode.attrs;
+
 		return (
 			<div class="subQuestionWrapper" id="optionsWrapper">
-				<div class={vnode.attrs.isAlone ? "subQuestionSection questionSection--alone" : "questionSection"} style={processType=== 'votes'?'display: flex; flex-direction: column;':null} >
-					<div class='title'>
+				{/* <div class={vnode.attrs.isAlone ? "subQuestionSection questionSection--alone" : "questionSection"} style={processType === 'votes' ? 'display: flex; flex-direction: column;' : null} > */}
+				{/* <div class='title'>
 						{lang[language].question}: {question}
 						<div class='subQuestion__addOptionWrapper'>
 							{processType !== 'votes' ? <div class='subQuestion__addOption' onclick={() => { vsp.showModal.isShow = true }}>
@@ -94,12 +95,12 @@ module.exports = {
 							
 						</div>
 					</div>
-					{processType !== 'votes'?<h3 class='subQuestion__question'>{lang[language].solutions}</h3>:null}
+					{processType !== 'votes'?<h3 class='subQuestion__question'>{lang[language].solutions}</h3>:null} */}
 
-					{switchProcess(vnode.state.processType, vnode)}
+				{switchProcess(vsp.processType, vnode)}
 
 
-				</div>
+				{/* </div> */}
 				<Modal
 					showModal={vnode.state.showModal.isShow}
 					whichModal={vnode.state.showModal.which}
@@ -108,7 +109,7 @@ module.exports = {
 					placeholderDescription={lang[language].description}
 					vnode={vnode}
 					language={language}
-					/>
+				/>
 			</div>
 		);
 	}
@@ -116,7 +117,7 @@ module.exports = {
 
 function addQuestion(vnode, type) {
 
-	const {language} = vnode.state;
+	const { language } = vnode.state;
 
 	vnode.attrs.parentVnode.state.showModal = {
 		subQuestionId: vnode.attrs.subQuestionId,

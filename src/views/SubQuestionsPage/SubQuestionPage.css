@@ -32,6 +32,7 @@
 
 .subQuestion__arrange{
     width: 100%;
+    height: 100%;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     position: relative;
@@ -94,4 +95,11 @@
     text-align: center;
     justify-content: center;
     font-size: 24px;
+}
+
+.subQuestion__suggestions{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: auto;
 }

@@ -1,5 +1,6 @@
 .reactionsMenu {
     display: flex;
+    height: var(--menuHeight);
 }
 
 .reactionsMenu__button {
@@ -12,6 +13,7 @@
     padding: 10px;
     cursor: pointer;
     user-select: none;
+    text-align: center;
 }
 
 .reactionsMenu__button:hover {

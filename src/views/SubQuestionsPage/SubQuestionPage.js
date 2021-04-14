@@ -5,7 +5,7 @@ import "./SubQuestionPage.css";
 import store from "../../data/store";
 import settings from "../../data/settings";
 import lang from '../../data/languages';
-import {SUB_QUESTION} from '../../data/EntityTypes';
+import { SUB_QUESTION } from '../../data/EntityTypes';
 
 //components
 
@@ -42,7 +42,7 @@ module.exports = {
         console.log('sub question page', orderBy)
 
         const firstUrl = getFirstUrl();
-       
+
         //get user before login to 
         if (firstUrl === 'subquestions') {
             store.lastPage = `/${firstUrl}/${groupId}/${questionId}/${subQuestionId}/${orderBy}`;
@@ -184,9 +184,9 @@ module.exports = {
                                     unreadMessages={vnode.state.unreadMessages}
                                 />
                             </div>
-                            <div style={`direction:${lang[language].dir}`} class='page__main'>
-                                {vnode.state.subPage === 'main' ?
+                            <div style={`direction:${lang[language].dir}`} class='page__main carousel'>
 
+                                <div class='subQuestion__suggestions'>
                                     <SubQuestion
                                         vsp={vnode.state}
                                         question={vnode.state.details.title}
@@ -203,57 +203,55 @@ module.exports = {
                                         showSubscribe={true}
                                         isAlone={true}
                                         language={language}
-                                    /> : null
-                                }
+                                    />
+                                    {vnode.state.subPage === 'main' && (vnode.state.details.processType === 'suggestions' || vnode.state.details.processType === undefined) ?
+                                        <div class='page__footer'>
+                                            <div class={hasNevigation(vnode) ? "subQuestion__arrange" : "subQuestion__arrange subQuestion__arrange--bottom"} id="questionFooter">
+                                                <div
+                                                    class={vnode.state.details.orderBy == "new"
+                                                        ? "footerButton footerButton--selected"
+                                                        : "footerButton"}
+                                                    onclick={() => {
+                                                        vnode.state.details.orderBy = "new";
+                                                    }}>
+                                                    <img src='img/new.svg' alt='order by newest' />
+                                                    <div>{lang[language].new}</div>
+                                                </div>
+                                                <div
+                                                    class={vnode.state.details.orderBy == "top"
+                                                        ? "footerButton footerButton--selected"
+                                                        : "footerButton"}
+                                                    onclick={() => {
+                                                        vnode.state.details.orderBy = "top";
+                                                    }}>
+                                                    <img src='img/agreed.svg' alt='order by most agreed' />
+                                                    <div>{lang[language].agreed}</div>
+                                                </div>
 
-                                {vnode.state.subPage === 'chat' ?
-                                    <Chat
-                                        entity='subQuestion'
-                                        topic='תת שאלה'
-                                        ids={{ groupId, questionId, subQuestionId }}
-                                        title={vnode.state.details.title}
-                                        url={m.route.get()}
-                                    /> : null
-                                }
-                                {vnode.state.subPage === 'reactions' ?
-                                    <Reactions
-                                        groupId={groupId}
-                                        questionId={questionId}
-                                        subQuestionId={subQuestionId}
-                                    /> : null
-                                }
+                                            </div>
+
+                                        </div> : null
+                                    }
+                                </div>
+
+                                <Chat
+                                    entity='subQuestion'
+                                    topic='תת שאלה'
+                                    ids={{ groupId, questionId, subQuestionId }}
+                                    title={vnode.state.details.title}
+                                    url={m.route.get()}
+                                />
+
+                                <Reactions
+                                    groupId={groupId}
+                                    questionId={questionId}
+                                    subQuestionId={subQuestionId}
+                                />
 
                             </div>
                             {/* ---------------- Footer -------------- */}
+                            {hasNevigation(vnode) && vnode.state.subPage === 'main' ? <NavBottom /> : null}
 
-                            {vnode.state.subPage === 'main' && (vnode.state.details.processType === 'suggestions' || vnode.state.details.processType === undefined) ?
-                                <div class='page__footer'>
-                                    <div class={hasNevigation(vnode) ? "subQuestion__arrange" : "subQuestion__arrange subQuestion__arrange--bottom"} id="questionFooter">
-                                        <div
-                                            class={vnode.state.details.orderBy == "new"
-                                                ? "footerButton footerButton--selected"
-                                                : "footerButton"}
-                                            onclick={() => {
-                                                vnode.state.details.orderBy = "new";
-                                            }}>
-                                            <img src='img/new.svg' alt='order by newest' />
-                                            <div>{lang[language].new}</div>
-                                        </div>
-                                        <div
-                                            class={vnode.state.details.orderBy == "top"
-                                                ? "footerButton footerButton--selected"
-                                                : "footerButton"}
-                                            onclick={() => {
-                                                vnode.state.details.orderBy = "top";
-                                            }}>
-                                            <img src='img/agreed.svg' alt='order by most agreed' />
-                                            <div>{lang[language].agreed}</div>
-                                        </div>
-
-                                    </div>
-                                    {hasNevigation(vnode) && vnode.state.subPage === 'main' ? <NavBottom /> : null}
-                                </div> : null
-                            }
 
 
 
