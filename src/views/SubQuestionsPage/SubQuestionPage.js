@@ -173,6 +173,7 @@ module.exports = {
                                 />
                                 <NavTop
                                     level={lang[language].solutions}
+                                    paper={lang[language].paper}
                                     chat={lang[language].chat}
                                     reactions={lang[language].reactions}
                                     current={vnode.state.subPage}

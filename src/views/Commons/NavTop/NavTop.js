@@ -9,7 +9,7 @@ import store from "../../../data/store";
 module.exports = {
 
     view: vnode => {
-        let { level, current, pvs, mainUrl, chatUrl, ids, isSubscribed, unreadMessages, chat, reactions,activeReactions} = vnode.attrs;
+        let { level, current, pvs, mainUrl, chatUrl, ids, isSubscribed, unreadMessages,paper, chat, reactions,activeReactions} = vnode.attrs;
         const {subQuestionId} = ids;
      
         return (
@@ -20,6 +20,12 @@ module.exports = {
                 >
                     {level}
                 </div>
+                {paper?<div
+                    class={current === 'paper' ? 'navTop__btn navTop__btn--selected' : 'navTop__btn'}
+                    onclick={() => { m.route.set(chatUrl); pvs.subPage = 'paper'; }}
+                >
+                    <div>{paper}</div>
+                </div>:null}
                 <div
                     class={current == 'chat' ? 'navTop__btn navTop__btn--selected' : 'navTop__btn'}
                     onclick={() => { m.route.set(chatUrl); pvs.subPage = 'chat'; setChatLastEntrance(ids); zeroChatFeedMessages(ids, isSubscribed && true) }}
