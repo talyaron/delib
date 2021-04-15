@@ -185,7 +185,7 @@ module.exports = {
                                 />
                             </div>
                             <div style={`direction:${lang[language].dir}`} class='page__main subQuestion__carousel' id='subQuestion__carousel'>
-                                <main ontouchstart={handleTouchStart} ontouchend={handleTouchStart} ontouchmove={handleTouchMove}>
+                                <main ontouchstart={handleTouchStart} ontouchend={handleTouchStart} ontouchmove={e => handleTouchMove(e, vnode)}>
                                     <div class='subQuestion__suggestions'>
                                         <div class='subQuestion__column'>
                                             <SubQuestion
@@ -285,16 +285,6 @@ module.exports = {
                     vnode={vnode}
                     language={language}
                 />
-                {/* {vnode.state.firstTimeOnSuggestions === true ?
-                    <div class='suggestionsWiz'>
-                        <div class='suggestionsWiz__box'>
-                            <h2>ברוכים הבאים לדליב</h2>
-                            <h2>כך תוכלו להציע רעיונות ולהצביע</h2>
-                            <img src='/img/suggestions-wiz.gif' />
-                            <button class='buttons' onclick={() => closeSuggestionsWizard(vnode)}>סגירה</button>
-                        </div>
-                    </div> : null} */}
-
 
             </div >
         );
@@ -316,10 +306,7 @@ function hasNevigation(vnode) {
     }
 }
 
-function closeSuggestionsWizard(vnode) {
-    markUserSeenSuggestionsWizard();
-    vnode.state.firstTimeOnSuggestions = false;
-}
+
 
 
 function waitToCheckIfUserSeenSuggestionsWizard(vnode) {
@@ -345,29 +332,47 @@ function getOrderByFromUrl(vnode) {
     if (orderBy !== 'top' && orderBy !== 'new') orderBy = 'new';
     return orderBy
 }
-let touchPointStart = 0, isMoving = false;
+let touchPointStart = 0, touchPointStartY=0,  isMoving = false;
 function handleTouchStart(e) {
+    try {
+        isMoving = true;
+        if (e.touches[0]) {
+            touchPointStart = e.touches[0].clientX;
+            touchPointStartY = e.touches[0].clientY;
+        }
+    } catch (e) {
+        console.error(e)
+    }
 
-    touchPointStart = e.touches[0].clientX;
-  
 }
 
-function handleTouchMove(e) {
-    const moveDistance = 5;
-    isMoving = true
- 
-    const touchPoint = e.touches[0].clientX
-    if (touchPoint > touchPointStart + moveDistance) {
-     
-        scrollSides('right')
-    } else if (touchPoint < touchPointStart - moveDistance) {
+
+function handleTouchMove(e, vnode) {
+    try {
+        const moveDistance = 10;
+
+        const touchPoint = e.touches[0].clientX
+        const touchPointY = e.touches[0].clientY;
+        const distanceY = Math.abs(touchPointStartY - touchPointY);
+        const distanceX = Math.abs(touchPointStart-touchPointY)
        
-        scrollSides('left')
+        if ((touchPoint > touchPointStart + moveDistance) && isMoving && distanceY<distanceX ) {
+
+            isMoving = false;
+            scrollSides('right', vnode)
+        } else if ((touchPoint < touchPointStart - moveDistance)&& isMoving && distanceY<distanceX) {
+
+            isMoving = false;
+            scrollSides('left', vnode)
+        }
+    } catch (e) {
+        console.error(e)
     }
 }
 
-function scrollSides(direction) {
-    if (isMoving) {
+function scrollSides(direction, vnode) {
+    try {
+
         const carouselBox = document.querySelector('#subQuestion__carousel');
         const carousel = document.querySelector('#subQuestion__carousel>main');
 
@@ -378,7 +383,7 @@ function scrollSides(direction) {
             case 'left':
                 carouselBox.scrollBy({
                     top: 0,
-                    left: -1*scrollX,
+                    left: -1 * scrollX,
                     behavior: 'smooth'
                 });
                 isMoving = false
@@ -393,6 +398,18 @@ function scrollSides(direction) {
             default:
 
         }
+
+        setTimeout(() => {
+            const scrollPortion = -1 * (carouselBox.scrollLeft / carouselWidth);
+
+            if (scrollPortion < 0.2) vnode.state.subPage = 'main'
+            else if (scrollPortion > 0.2 && scrollPortion < 0.5) vnode.state.subPage = 'chat'
+            else if (scrollPortion > 0.5) vnode.state.subPage = 'reactions'
+
+        }, 500)
+
+    } catch (e) {
+        console.error(e)
     }
 
 
