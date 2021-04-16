@@ -1,3 +1,4 @@
+import Mithril from "mithril";
 import m from 'mithril';
 import './NavTop.css';
 
@@ -15,21 +16,20 @@ module.exports = {
             <div class='navTop'>
                 <div
                     class={current == 'main' ? 'navTop__btn navTop__btn--selected' : 'navTop__btn'}
-                    onclick={() => {  pvs.subPage = 'main';scrollCarousel(0) }}
+                    onclick={() => { m.route.set(mainUrl); pvs.subPage = 'main' }}
                 >
                     {level}
                 </div>
-               
                 <div
                     class={current == 'chat' ? 'navTop__btn navTop__btn--selected' : 'navTop__btn'}
-                    onclick={() => {  pvs.subPage = 'chat'; setChatLastEntrance(ids);scrollCarousel(1); zeroChatFeedMessages(ids, isSubscribed && true) }}
+                    onclick={() => { m.route.set(chatUrl); pvs.subPage = 'chat'; setChatLastEntrance(ids); zeroChatFeedMessages(ids, isSubscribed && true) }}
                 >
                     <div>{chat}</div>
                     {unreadMessages ? <div class='counter'>{unreadMessages}</div> : null}
                 </div>
                 {reactions?<div
                     class={current == 'reactions' ? 'navTop__btn navTop__btn--selected' : 'navTop__btn'}
-                    onclick={() => { console.log('dfsdfsdsdd'); pvs.subPage = 'reactions';scrollCarousel(2) }}
+                    onclick={() => { m.route.set(chatUrl); pvs.subPage = 'reactions'; }}
                 >
                     <div>{reactions}{store.reactionsNumber[subQuestionId]?<div class='counter'>{store.reactionsNumber[subQuestionId]}</div>:null}</div>
                     {activeReactions ? <div class='counter'>{activeReactions}</div> : null}
@@ -37,21 +37,4 @@ module.exports = {
             </div>
         )
     }
-}
-
-function scrollCarousel(position){
-   
-    const carouselBox = document.querySelector('#subQuestion__carousel');
-    const carousel = document.querySelector('#subQuestion__carousel>main');
-   
-    const carouselWidth = carousel.clientWidth;
-    const scrollX = -1*((position/3)*carouselWidth)
- 
-    carouselBox.scrollTo({
-        top: 0,
-        left: scrollX,
-        behavior: 'smooth'
-      });
-
-   
 }
