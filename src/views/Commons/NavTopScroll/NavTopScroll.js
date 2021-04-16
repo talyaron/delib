@@ -1,5 +1,5 @@
 import m from 'mithril';
-import './NavTop.css';
+import './NavTopScroll.css';
 
 //functions
 import { zeroChatFeedMessages, setChatLastEntrance } from '../../../functions/firebase/set/setChats';
