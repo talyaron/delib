@@ -14,7 +14,7 @@ import Modal from "../Commons/Modal/Modal";
 import Spinner from "../Commons/Spinner/Spinner";
 import Header from '../Commons/Header/Header';
 import NavBottom from '../Commons/NavBottom/NavBottom';
-import NavTop from '../Commons/NavTop/NavTop';
+import NavScrollTop from '../Commons/NavScrollTop/NavScrollTop';
 import Chat from '../Commons/Chat/Chat';
 import Reactions from '../Commons/Reactions/Reactions';
 
@@ -171,7 +171,7 @@ module.exports = {
                                     language={language}
                                     type={SUB_QUESTION}
                                 />
-                                <NavTop
+                                <NavScrollTop
                                     level={lang[language].solutions}
                                     chat={lang[language].chat}
                                     reactions={lang[language].reactions}
