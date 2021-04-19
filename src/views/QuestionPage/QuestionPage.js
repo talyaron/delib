@@ -15,11 +15,12 @@ import Spinner from '../Commons/Spinner/Spinner';
 import Explanation from '../Commons/Explanation/Explanation';
 import AlertsSetting from '../Commons/AlertsSetting/AlertsSetting';
 import NavBottom from '../Commons/NavBottom/NavBottom';
-import NavTop from '../Commons/NavTop/NavTop';
+import NavTopScroll from '../Commons/NavTopScroll/NavTopScroll';
 import Chat from '../Commons/Chat/Chat';
 import SubQuestionEditModal from './SubQuestionEditModal/SubQuestionEditModal';
 import AddPanel from '../Commons/AddPanel/AddPanel';
 import VoteModal from './VoteModal/VoteModal';
+import Document from './Document/Document';
 
 
 ;
@@ -168,6 +169,15 @@ module.exports = {
 
         const { groupId, questionId } = vnode.attrs;
 
+        const pages = [
+            { page: 'main', title: 'נושאים', onClickFn: () => { vnode.state.subPage = 'main' } },
+            { page: 'document', title: 'מסמך מסכם', onClickFn: () => { vnode.state.subPage = 'document' } },
+            { page: 'chat', title: lang[language].chat, counter: vnode.state.unreadMessages, onClickFn: () => { vnode.state.subPage = 'chat' } }
+
+        ]
+
+
+
         return (
             <div class='page page__grid'>
                 <AddPanel
@@ -202,73 +212,76 @@ module.exports = {
                         questionId={vnode.attrs.questionId}
                         type={QUESTION}
                     />
-                    <NavTop level={'שאלות'}
+                    <NavTopScroll level={'שאלות'}
+                        pages={pages}
                         current={vnode.state.subPage}
-                        chat={lang[language].chat}
+
 
                         pvs={vnode.state}
                         mainUrl={`/question/${groupId}/${questionId}`}
                         chatUrl={`/question-chat/${groupId}/${questionId}`}
                         ids={{ groupId, questionId }}
-                        unreadMessages={vnode.state.unreadMessages} />
+                    />
 
 
                 </div>
-                {vnode.state.subPage === 'main' ?
-                    <div class='question__main'>
 
-                        <div class='wrapperSubQuestions' id='questionWrapperAll'>
-                            <Explanation description={vnode.state.description} creatorId={vnode.state.creatorId} questionId={questionId} groupId={groupId} type='question' />
-                            <h1>שאלות </h1>
+                <div class='question__carousel carousel' >
+                    <main>
+                        {vnode.state.title === 'כותרת השאלה' ?
+                            <Spinner /> :
+                            <div class='wrapperSubQuestions' id='questionWrapperAll'>
+                                <Explanation description={vnode.state.description} creatorId={vnode.state.creatorId} questionId={questionId} groupId={groupId} type='question' />
+                                <h1>שאלות </h1>
 
-                            <div class='subQuestionsWrapper'>
+                                <div class='subQuestionsWrapper'>
 
-                                {vnode.state.subQuestions.map((subQuestion, index) => {
+                                    {vnode.state.subQuestions.map((subQuestion, index) => {
 
-                                    return (<SubQuestionSolution
-                                        key={subQuestion.id}
-                                        creator={subQuestion.creator}
-                                        groupId={vnode.attrs.groupId}
-                                        questionId={vnode.attrs.questionId}
-                                        subQuestionId={subQuestion.id}
-                                        orderBy={subQuestion.orderBy}
-                                        title={subQuestion.title}
-                                        subItems={vnode.state.subItems.options}
-                                        parentVnode={vnode}
-                                        info={settings.subItems.options}
-                                        processType={subQuestion.processType}
-                                        userHaveNavigation={subQuestion.userHaveNavigation}
-                                        proAgainstType={subQuestion.proAgainstType}
-                                        showSubQuestion={subQuestion.showSubQuestion}
-                                        numberOfSubquestions={vnode.state.subQuestions.length}
-                                        isAlone={false}
-                                        pvs={vnode.state}
-                                    />)
+                                        return (<SubQuestionSolution
+                                            key={subQuestion.id}
+                                            creator={subQuestion.creator}
+                                            groupId={vnode.attrs.groupId}
+                                            questionId={vnode.attrs.questionId}
+                                            subQuestionId={subQuestion.id}
+                                            orderBy={subQuestion.orderBy}
+                                            title={subQuestion.title}
+                                            subItems={vnode.state.subItems.options}
+                                            parentVnode={vnode}
+                                            info={settings.subItems.options}
+                                            processType={subQuestion.processType}
+                                            userHaveNavigation={subQuestion.userHaveNavigation}
+                                            proAgainstType={subQuestion.proAgainstType}
+                                            showSubQuestion={subQuestion.showSubQuestion}
+                                            numberOfSubquestions={vnode.state.subQuestions.length}
+                                            isAlone={false}
+                                            pvs={vnode.state}
+                                        />)
 
-                                })
-                                }
+                                    })
+                                    }
+                                </div>
+
                             </div>
 
-                        </div>
 
-                        {vnode.state.title === 'כותרת השאלה'
-                            ? <Spinner />
-                            : <div />
                         }
+                        <Document />
 
-                    </div>
-                    : null
-                }
-                {vnode.state.subPage === 'chat' ? <Chat
-                    entity='question'
-                    topic='שאלה'
-                    ids={{ groupId: vnode.attrs.groupId, questionId: vnode.attrs.questionId }}
-                    title={vnode.state.title}
-                    description={vnode.state.description}
-                    language={vnode.state.language}
-                    url={m.route.get()}
-                /> : null
-                }
+                        <Chat
+                            entity='question'
+                            topic='שאלה'
+                            ids={{ groupId: vnode.attrs.groupId, questionId: vnode.attrs.questionId }}
+                            title={vnode.state.title}
+                            description={vnode.state.description}
+                            language={vnode.state.language}
+                            url={m.route.get()}
+                        />
+
+
+                    </main>
+                </div>
+
 
                 <div class='page__header'>
                     <NavBottom />

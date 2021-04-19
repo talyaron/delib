@@ -21,8 +21,8 @@ import Reactions from '../Commons/Reactions/Reactions';
 
 //functions
 import { getSubQuestion, listenToGroupDetails, listenToChat, listenToOptions, getLastTimeEntered } from "../../functions/firebase/get/get";
-import { registerGroup, markUserSeenSuggestionsWizard } from '../../functions/firebase/set/set';
-import { getIsChat, concatenateDBPath, getFirstUrl, getUser } from '../../functions/general';
+import { registerGroup} from '../../functions/firebase/set/set';
+import { getIsChat, concatenateDBPath, getFirstUrl } from '../../functions/general';
 import { listenToReactions } from '../../functions/firebase/get/getQuestions';
 
 import { get } from "lodash";
@@ -143,7 +143,7 @@ module.exports = {
 
 
     },
-    onremove: vnode => {
+    onremove: () => {
 
         unsubscribe();
         unsubscribeChat();
@@ -184,7 +184,7 @@ module.exports = {
                                     unreadMessages={vnode.state.unreadMessages}
                                 />
                             </div>
-                            <div style={`direction:${lang[language].dir}`} class='page__main subQuestion__carousel' id='subQuestion__carousel'>
+                            <div style={`direction:${lang[language].dir}`} class='page__main subQuestion__carousel carousel' id='subQuestion__carousel'>
                                 <main ontouchstart={handleTouchStart} ontouchend={handleTouchStart} ontouchmove={e => handleTouchMove(e, vnode)}>
                                     <div class='subQuestion__suggestions'>
                                         <div class='subQuestion__column'>
