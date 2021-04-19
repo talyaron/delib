@@ -21,7 +21,7 @@ import Reactions from '../Commons/Reactions/Reactions';
 
 //functions
 import { getSubQuestion, listenToGroupDetails, listenToChat, listenToOptions, getLastTimeEntered } from "../../functions/firebase/get/get";
-import { registerGroup} from '../../functions/firebase/set/set';
+import { registerGroup } from '../../functions/firebase/set/set';
 import { getIsChat, concatenateDBPath, getFirstUrl } from '../../functions/general';
 import { listenToReactions } from '../../functions/firebase/get/getQuestions';
 
@@ -87,7 +87,13 @@ module.exports = {
             unreadMessages: 0,
             lastTimeEntered: 0,
             language: 'he',
-            firstTimeOnSuggestions: false
+            firstTimeOnSuggestions: false,
+            pages: [
+                { page: 'main', title: 'אפשרויות' },
+                { page: 'chat', title: 'שיחה', counter: vnode.state.unreadMessages },
+                { page: 'reactions', title: 'תגובות' },
+
+            ]
         }
 
 
@@ -153,7 +159,7 @@ module.exports = {
     view: vnode => {
 
         const { groupId, questionId, subQuestionId } = vnode.attrs;
-        const { language } = vnode.state;
+        const { language, pages } = vnode.state;
 
         return (
             <div class='page zoomOutEnter' id='page'>
@@ -172,9 +178,8 @@ module.exports = {
                                     type={SUB_QUESTION}
                                 />
                                 <NavTopScroll
+                                    pages={pages}
                                     level={lang[language].solutions}
-                                    chat={lang[language].chat}
-                                    reactions={lang[language].reactions}
                                     current={vnode.state.subPage}
                                     pvs={vnode.state}
                                     mainUrl={`/subquestions/${groupId}/${questionId}/${subQuestionId}`}
@@ -332,7 +337,7 @@ function getOrderByFromUrl(vnode) {
     if (orderBy !== 'top' && orderBy !== 'new') orderBy = 'new';
     return orderBy
 }
-let touchPointStart = 0, touchPointStartY=0,  isMoving = false;
+let touchPointStart = 0, touchPointStartY = 0, isMoving = false;
 function handleTouchStart(e) {
     try {
         isMoving = true;
@@ -354,13 +359,13 @@ function handleTouchMove(e, vnode) {
         const touchPoint = e.touches[0].clientX
         const touchPointY = e.touches[0].clientY;
         const distanceY = Math.abs(touchPointStartY - touchPointY);
-        const distanceX = Math.abs(touchPointStart-touchPointY)
-       
-        if ((touchPoint > touchPointStart + moveDistance) && isMoving && distanceY<distanceX ) {
+        const distanceX = Math.abs(touchPointStart - touchPointY)
+
+        if ((touchPoint > touchPointStart + moveDistance) && isMoving && distanceY < distanceX) {
 
             isMoving = false;
             scrollSides('right', vnode)
-        } else if ((touchPoint < touchPointStart - moveDistance)&& isMoving && distanceY<distanceX) {
+        } else if ((touchPoint < touchPointStart - moveDistance) && isMoving && distanceY < distanceX) {
 
             isMoving = false;
             scrollSides('left', vnode)

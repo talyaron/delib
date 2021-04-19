@@ -86,7 +86,13 @@ module.exports = {
             subPage: getIsChat() ? 'chat' : 'main',
             unreadMessages: 0,
             lastTimeEntered: 0,
-            language: 'he'
+            language: 'he',
+            pages:[
+                { page: 'main', title: 'נושאים' },
+                { page: 'document', title: 'מסמך מסכם' },
+                { page: 'chat', title: 'שיחה', counter: vnode.state.unreadMessages }
+    
+            ]
         }
 
         //get user before login to page
@@ -109,6 +115,8 @@ module.exports = {
 
         registerGroup(groupId);
         listenToGroup(groupId);
+
+        
 
     },
     oncreate: vnode => {
@@ -166,15 +174,12 @@ module.exports = {
 
         const vsp = vnode.state;
         const { language } = vsp;
-
+        const {pages} = vnode.state;
         const { groupId, questionId } = vnode.attrs;
 
-        const pages = [
-            { page: 'main', title: 'נושאים', onClickFn: () => { vnode.state.subPage = 'main' } },
-            { page: 'document', title: 'מסמך מסכם', onClickFn: () => { vnode.state.subPage = 'document' } },
-            { page: 'chat', title: lang[language].chat, counter: vnode.state.unreadMessages, onClickFn: () => { vnode.state.subPage = 'chat' } }
-
-        ]
+        console.log(pages)
+console.log(vnode)
+        
 
 
 
