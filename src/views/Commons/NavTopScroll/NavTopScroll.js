@@ -29,7 +29,7 @@ module.exports = {
                 </div>
                 {reactions?<div
                     class={current == 'reactions' ? 'navTop__btn navTop__btn--selected' : 'navTop__btn'}
-                    onclick={() => { console.log('dfsdfsdsdd'); pvs.subPage = 'reactions';scrollCarousel(2) }}
+                    onclick={() => {  pvs.subPage = 'reactions';scrollCarousel(2) }}
                 >
                     <div>{reactions}{store.reactionsNumber[subQuestionId]?<div class='counter'>{store.reactionsNumber[subQuestionId]}</div>:null}</div>
                     {activeReactions ? <div class='counter'>{activeReactions}</div> : null}
