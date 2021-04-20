@@ -62,10 +62,6 @@ module.exports = {
             subAnswers: {}, //used to set sub answers to each sub question
             subAnswersUnsb: {}, //used to unsubscribe
             modalSubQuestion: { isShow: false, new: true },
-            showModal: {
-                isShow: false,
-                which: 'subQuestion'
-            },
             openAddPanel: false,
             openVote: false,
             unsbscribe: {
@@ -83,6 +79,7 @@ module.exports = {
                 which: 'subQuestion',
                 subQuestionId: ''
             },
+            showFav:true,
             subPage: getIsChat() ? 'chat' : 'main',
             unreadMessages: 0,
             lastTimeEntered: 0,
@@ -304,9 +301,10 @@ console.log(vnode)
                     }
                     ]} />
                 < div
-                    class={true ? "fav fav__subQuestion fav--blink" : "hidden"}
+                    class={vnode.state.showFav && vnode.state.subPage==='main'? "fav fav__subQuestion fav--blink" : "hidden"}
                     onclick={() => {
                         vnode.state.openAddPanel = true;
+                        vnode.state.showFav = false
                         // vnode.state.modalSubQuestion = { isShow: true, new: true, numberOfSubquestions: vnode.state.subQuestions.length };
                     }}>
                     <div>

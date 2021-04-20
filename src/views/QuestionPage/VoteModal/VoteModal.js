@@ -49,7 +49,7 @@ module.exports = {
                         {vnode.state.newVote ? <NewQuestion vsp={vnode.state} /> : <ExisitingQuestion />}
                         <div class='buttonsBox'>
                             <div 
-                            onclick={()=>{vsp.openVote = false}}
+                            onclick={()=>{vsp.showFav=true; vsp.openVote = false}}
                             class='buttons buttons--cancel'>ביטול</div>
                             <div 
                             onclick={()=>{handleSubmit(vnode); vsp.openVote = false}}
@@ -79,7 +79,7 @@ function handleName(e, vnode){
 async function handleSubmit(vnode){
     if(vnode.state.hasName){
         const {title, options} = vnode.state;
-
+        const {vsp} = vnode.attrs;
         const {groupId, questionId} = vnode.attrs.ids;
 
       //create subQuestion
@@ -90,5 +90,7 @@ async function handleSubmit(vnode){
             createOption(groupId, questionId, subQuestionId, 'votes', store.user.uid, option.title, '', '', title, true)
           }
       })
+
+      vsp.showFav=true; 
     }
 }
