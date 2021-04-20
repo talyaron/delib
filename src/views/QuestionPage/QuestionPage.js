@@ -285,7 +285,7 @@ console.log(vnode)
                 </div>
 
 
-                <div class='page__header'>
+                <div class='page__footer'>
                     <NavBottom />
                 </div>
                 <AlertsSetting
