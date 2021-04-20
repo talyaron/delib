@@ -14,15 +14,15 @@ import Modal from "../Commons/Modal/Modal";
 import Spinner from "../Commons/Spinner/Spinner";
 import Header from '../Commons/Header/Header';
 import NavBottom from '../Commons/NavBottom/NavBottom';
-import NavTop from '../Commons/NavTop/NavTop';
+import NavTopScroll from '../Commons/NavTopScroll/NavTopScroll';
 import Chat from '../Commons/Chat/Chat';
 import Reactions from '../Commons/Reactions/Reactions';
 
 
 //functions
 import { getSubQuestion, listenToGroupDetails, listenToChat, listenToOptions, getLastTimeEntered } from "../../functions/firebase/get/get";
-import { registerGroup, markUserSeenSuggestionsWizard } from '../../functions/firebase/set/set';
-import { getIsChat, concatenateDBPath, getFirstUrl, getUser } from '../../functions/general';
+import { registerGroup } from '../../functions/firebase/set/set';
+import { getIsChat, concatenateDBPath, getFirstUrl } from '../../functions/general';
 import { listenToReactions } from '../../functions/firebase/get/getQuestions';
 
 import { get } from "lodash";
@@ -87,7 +87,13 @@ module.exports = {
             unreadMessages: 0,
             lastTimeEntered: 0,
             language: 'he',
-            firstTimeOnSuggestions: false
+            firstTimeOnSuggestions: false,
+            pages: [
+                { page: 'main', title: 'אפשרויות' },
+                { page: 'chat', title: 'שיחה', counter: vnode.state.unreadMessages },
+                { page: 'reactions', title: 'תגובות' },
+
+            ]
         }
 
 
@@ -143,7 +149,7 @@ module.exports = {
 
 
     },
-    onremove: vnode => {
+    onremove: () => {
 
         unsubscribe();
         unsubscribeChat();
@@ -153,7 +159,7 @@ module.exports = {
     view: vnode => {
 
         const { groupId, questionId, subQuestionId } = vnode.attrs;
-        const { language } = vnode.state;
+        const { language, pages } = vnode.state;
 
         return (
             <div class='page zoomOutEnter' id='page'>
@@ -171,10 +177,9 @@ module.exports = {
                                     language={language}
                                     type={SUB_QUESTION}
                                 />
-                                <NavTop
+                                <NavTopScroll
+                                    pages={pages}
                                     level={lang[language].solutions}
-                                    chat={lang[language].chat}
-                                    reactions={lang[language].reactions}
                                     current={vnode.state.subPage}
                                     pvs={vnode.state}
                                     mainUrl={`/subquestions/${groupId}/${questionId}/${subQuestionId}`}
@@ -184,7 +189,7 @@ module.exports = {
                                     unreadMessages={vnode.state.unreadMessages}
                                 />
                             </div>
-                            <div style={`direction:${lang[language].dir}`} class='page__main subQuestion__carousel' id='subQuestion__carousel'>
+                            <div style={`direction:${lang[language].dir}`} class='page__main subQuestion__carousel carousel' id='subQuestion__carousel'>
                                 <main ontouchstart={handleTouchStart} ontouchend={handleTouchStart} ontouchmove={e => handleTouchMove(e, vnode)}>
                                     <div class='subQuestion__suggestions'>
                                         <div class='subQuestion__column'>
@@ -332,7 +337,7 @@ function getOrderByFromUrl(vnode) {
     if (orderBy !== 'top' && orderBy !== 'new') orderBy = 'new';
     return orderBy
 }
-let touchPointStart = 0, touchPointStartY=0,  isMoving = false;
+let touchPointStart = 0, touchPointStartY = 0, isMoving = false;
 function handleTouchStart(e) {
     try {
         isMoving = true;
@@ -354,13 +359,13 @@ function handleTouchMove(e, vnode) {
         const touchPoint = e.touches[0].clientX
         const touchPointY = e.touches[0].clientY;
         const distanceY = Math.abs(touchPointStartY - touchPointY);
-        const distanceX = Math.abs(touchPointStart-touchPointY)
-       
-        if ((touchPoint > touchPointStart + moveDistance) && isMoving && distanceY<distanceX ) {
+        const distanceX = Math.abs(touchPointStart - touchPointY)
+
+        if ((touchPoint > touchPointStart + moveDistance) && isMoving && distanceY < distanceX) {
 
             isMoving = false;
             scrollSides('right', vnode)
-        } else if ((touchPoint < touchPointStart - moveDistance)&& isMoving && distanceY<distanceX) {
+        } else if ((touchPoint < touchPointStart - moveDistance) && isMoving && distanceY < distanceX) {
 
             isMoving = false;
             scrollSides('left', vnode)
