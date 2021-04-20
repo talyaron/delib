@@ -8,32 +8,35 @@ import './Explanation.css';
 module.exports = {
 
     view: vnode => {
-        const { creatorId, groupId, questionId } = vnode.attrs;
+        const { description } = vnode.attrs;
 
-        if (vnode.attrs.description) {
-            return (
-                <div class='explanation'>
 
-                    <div>
-                        {vnode.attrs.description}
-                    </div>
-                    <div class='explanation__footer'>
-                        {switchButtons( vnode)}
-                    </div>
+
+        return (
+            <div class='explanation'>
+
+                <div>
+                    {description?description:<span>אנא רשמו הסבר על הקבוצה</span>}
                 </div>
-            )
-        }
+                <div class='explanation__footer'>
+                    {switchButtons(vnode)}
+                </div>
+            </div>
+        )
+
     }
 }
 
-function switchButtons( vnode) {
+function switchButtons(vnode) {
     try {
-        const { creatorId, groupId, questionId, type } = vnode.attrs;
+        const { creatorId, type, ids } = vnode.attrs;
+        const { groupId, questionId } = ids;
+        console.log(vnode.attrs)
         switch (type) {
             case 'question':
                 return <div class='buttons buttonOutlineGray buttons--small' onclick={() => m.route.set(`/questionEdit/${groupId}/${questionId}`)}>עריכה</div>
             case 'group':
-                return <div class='buttons buttonOutlineGray buttons--small'>עריכה</div>
+                return <div class='buttons buttonOutlineGray buttons--small' onclick={() => m.route.set(`/editgroup/${groupId}`)}>עריכה</div>
             default:
                 return null
         }

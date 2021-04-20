@@ -18,8 +18,9 @@
     background-position: center;
 }
 .groupCard__info{
-    width: auto;
     margin-right: 10px;
+    overflow-y: auto;
+    width: 100%;
 }
 .groupCard__info h2{
     font-size: var(--size15);

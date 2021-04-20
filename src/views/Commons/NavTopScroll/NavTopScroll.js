@@ -10,11 +10,11 @@ module.exports = {
     view: vnode => {
         let { pages, level, current, pvs, mainUrl, chatUrl, ids, isSubscribed, unreadMessages, chat, reactions, activeReactions } = vnode.attrs;
         const { questionId, subQuestionId } = ids;
-        console.log(pages)
+       
         return (
             <div class='navTop'>
                 {pages.map((page, i) => {
-                    console.log(page.page, page.title, i)
+                   
                     return (
                         <div
                             key={i}

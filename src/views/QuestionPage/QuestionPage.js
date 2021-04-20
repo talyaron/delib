@@ -236,7 +236,7 @@ console.log(vnode)
                         {vnode.state.title === 'כותרת השאלה' ?
                             <Spinner /> :
                             <div class='wrapperSubQuestions' id='questionWrapperAll'>
-                                <Explanation description={vnode.state.description} creatorId={vnode.state.creatorId} questionId={questionId} groupId={groupId} type='question' />
+                                <Explanation description={vnode.state.description} creatorId={vnode.state.creatorId} ids={{groupId, questionId}} type='question' />
                                 <h1>שאלות </h1>
 
                                 <div class='subQuestionsWrapper'>
