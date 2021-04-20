@@ -59,11 +59,11 @@ module.exports = {
                 }
                 {creatorId === store.user.uid ?
                     <div class='buttonsBox'>
-                        {vnode.state.edit ? <div class='buttons buttonOutlineWhite' onclick={() => { vnode.state.addVideo = true }}>הוספת וידאו</div> : null}
-                        <div class='buttons buttonOutlineWhite' onclick={() => { handleEditSave(vnode) }}>
+                        {vnode.state.edit ? <div class='buttons buttonOutlineGray' onclick={() => { vnode.state.addVideo = true }}>הוספת וידאו</div> : null}
+                        <div class='buttons buttonOutlineGray' onclick={() => { handleEditSave(vnode) }}>
                             {vnode.state.edit ? 'שמירה' : 'עריכה'}
                         </div>
-                        {vnode.state.edit ? <div class='buttons buttonOutlineWhite' onclick={()=>{vnode.state.addPicture = true}}>הוספת תמונה</div> : null}
+                        {vnode.state.edit ? <div class='buttons buttonOutlineGray' onclick={()=>{vnode.state.addPicture = true}}>הוספת תמונה</div> : null}
                     </div>
                     : null
 
