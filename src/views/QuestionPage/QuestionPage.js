@@ -122,7 +122,7 @@ module.exports = {
         getLastTimeEntered({ groupId, questionId }, vnode);
 
         
-        
+        //change carousel size according to window size
         window.addEventListener('resize',()=>{
             document.querySelector('#carousel__main').style.gridTemplateColumns = `${cssForCarousel(vnode)}`
         })

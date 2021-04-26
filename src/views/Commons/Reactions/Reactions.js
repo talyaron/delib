@@ -36,11 +36,11 @@ module.exports = {
 
 
     view: (vnode) => {
-        const { groupId, questionId, subQuestionId } = vnode.attrs;
+        const { groupId, questionId, subQuestionId,carouselColumn } = vnode.attrs;
         const reactions = store.reactions[subQuestionId] || [];
 
         return (
-            <div class='reactions'>
+            <div class={carouselColumn?'carousel__col reactions':'reactions'}>
 
                 <ReactionsBars reactions={vnode.state.reactions} ids={{ groupId, questionId, subQuestionId }} />
                 <ReactionsMenu ids={{ groupId, questionId, subQuestionId }} reactions={vnode.state.reactions} />

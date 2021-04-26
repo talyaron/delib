@@ -24,6 +24,7 @@ import { getSubQuestion, listenToGroupDetails, listenToChat, listenToOptions, ge
 import { registerGroup } from '../../functions/firebase/set/set';
 import { getIsChat, concatenateDBPath, getFirstUrl } from '../../functions/general';
 import { listenToReactions } from '../../functions/firebase/get/getQuestions';
+import { cssForCarousel } from '../../functions/carousel';
 
 import { get } from "lodash";
 
@@ -114,6 +115,10 @@ module.exports = {
 
         getLastTimeEntered({ groupId, questionId, subQuestionId }, vnode);
 
+        //change carousel size according to window size
+        window.addEventListener('resize', () => {
+            document.querySelector('#carousel__main').style.gridTemplateColumns = `${cssForCarousel(vnode)}`
+        })
 
     },
     onbeforeupdate: vnode => {
@@ -162,7 +167,7 @@ module.exports = {
         const { language, pages } = vnode.state;
 
         return (
-            <div class='page zoomOutEnter' id='page'>
+            <div class='page' id='page'>
                 {vnode.state.details.title
                     ? (
                         <div class='page__grid'>
@@ -189,72 +194,77 @@ module.exports = {
                                     unreadMessages={vnode.state.unreadMessages}
                                 />
                             </div>
-                            <div style={`direction:${lang[language].dir}`} class='page__main subQuestion__carousel carousel' id='subQuestion__carousel'>
-                                <main ontouchstart={handleTouchStart} ontouchend={handleTouchStart} ontouchmove={e => handleTouchMove(e, vnode)}>
-                                    <div class='subQuestion__suggestions'>
-                                        <div class='subQuestion__column'>
-                                            <SubQuestion
-                                                vsp={vnode.state}
-                                                question={vnode.state.details.title}
-                                                questionObj={vnode.state.details}
-                                                groupId={groupId}
-                                                questionId={questionId}
-                                                subQuestionId={subQuestionId}
-                                                orderBy={vnode.state.details.orderBy}
-                                                title={vnode.state.details.title}
-                                                subItems={vnode.state.details.options}
-                                                parentVnode={vnode}
-                                                info={settings.subItems.options}
-                                                processType={vnode.state.details.processType}
-                                                showSubscribe={true}
-                                                isAlone={true}
-                                                language={language}
-                                            />
-                                            {(vnode.state.details.processType === 'suggestions' || vnode.state.details.processType === undefined) ?
-                                                <div class='page__footer'>
-                                                    <div class={hasNevigation(vnode) ? "subQuestion__arrange" : "subQuestion__arrange subQuestion__arrange--bottom"} id="questionFooter">
-                                                        <div
-                                                            class={vnode.state.details.orderBy == "new"
-                                                                ? "footerButton footerButton--selected"
-                                                                : "footerButton"}
-                                                            onclick={() => {
-                                                                vnode.state.details.orderBy = "new";
-                                                            }}>
-                                                            <img src='img/new.svg' alt='order by newest' />
-                                                            <div>{lang[language].new}</div>
-                                                        </div>
-                                                        <div
-                                                            class={vnode.state.details.orderBy == "top"
-                                                                ? "footerButton footerButton--selected"
-                                                                : "footerButton"}
-                                                            onclick={() => {
-                                                                vnode.state.details.orderBy = "top";
-                                                            }}>
-                                                            <img src='img/agreed.svg' alt='order by most agreed' />
-                                                            <div>{lang[language].agreed}</div>
-                                                        </div>
-
-                                                    </div>
-
-                                                </div> : null
-                                            }
-                                        </div>
+                            <div style={`direction:${lang[language].dir}`} class='carousel'>
+                                <main ontouchstart={handleTouchStart} ontouchend={handleTouchStart} ontouchmove={e => handleTouchMove(e, vnode)} style={`grid-template-columns:${cssForCarousel(vnode)};`} id='carousel__main'>
 
 
-                                        <Chat
-                                            entity='subQuestion'
-                                            topic='תת שאלה'
-                                            ids={{ groupId, questionId, subQuestionId }}
-                                            title={vnode.state.details.title}
-                                            url={m.route.get()}
-                                        />
-
-                                        <Reactions
+                                    <div class='carousel__col'>
+                                        <SubQuestion
+                                            vsp={vnode.state}
+                                            question={vnode.state.details.title}
+                                            questionObj={vnode.state.details}
                                             groupId={groupId}
                                             questionId={questionId}
                                             subQuestionId={subQuestionId}
+                                            orderBy={vnode.state.details.orderBy}
+                                            title={vnode.state.details.title}
+                                            subItems={vnode.state.details.options}
+                                            parentVnode={vnode}
+                                            info={settings.subItems.options}
+                                            processType={vnode.state.details.processType}
+                                            showSubscribe={true}
+                                            isAlone={true}
+                                            language={language}
                                         />
+                                        {(vnode.state.details.processType === 'suggestions' || vnode.state.details.processType === undefined) ?
+                                            <div class='page__footer'>
+                                                <div class={hasNevigation(vnode) ? "subQuestion__arrange" : "subQuestion__arrange subQuestion__arrange--bottom"} id="questionFooter">
+                                                    <div
+                                                        class={vnode.state.details.orderBy == "new"
+                                                            ? "footerButton footerButton--selected"
+                                                            : "footerButton"}
+                                                        onclick={() => {
+                                                            vnode.state.details.orderBy = "new";
+                                                        }}>
+                                                        <img src='img/new.svg' alt='order by newest' />
+                                                        <div>{lang[language].new}</div>
+                                                    </div>
+                                                    <div
+                                                        class={vnode.state.details.orderBy == "top"
+                                                            ? "footerButton footerButton--selected"
+                                                            : "footerButton"}
+                                                        onclick={() => {
+                                                            vnode.state.details.orderBy = "top";
+                                                        }}>
+                                                        <img src='img/agreed.svg' alt='order by most agreed' />
+                                                        <div>{lang[language].agreed}</div>
+                                                    </div>
+
+                                                </div>
+
+                                            </div> : null
+                                        }
                                     </div>
+
+
+                                    <Chat
+                                        carouselColumn={true}
+                                        entity='question'
+                                        entity='subQuestion'
+                                        topic='תת שאלה'
+                                        ids={{ groupId, questionId, subQuestionId }}
+                                        title={vnode.state.details.title}
+                                        url={m.route.get()}
+                                    />
+
+                                    <Reactions
+                                        carouselColumn={true}
+                                        entity='question'
+                                        groupId={groupId}
+                                        questionId={questionId}
+                                        subQuestionId={subQuestionId}
+                                    />
+
                                 </main>
                             </div>
                             {/* ---------------- Footer -------------- */}
