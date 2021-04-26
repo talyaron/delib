@@ -1,41 +1,60 @@
-html, body{
+html,
+body {
     margin: 0px;
     width: 100vw;
     height: 100vh;
 }
 
-.page{
+.page {
     display: grid;
-   grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto 1fr auto;
     height: 100vh;
     width: 100vw;
-    
+
 }
 
-.carousel{
+.carousel {
     display: grid;
     grid-template-columns: repeat(5, 20vw);
     width: 100vw;
     overflow-x: auto;
-   
+
+}
+@media only screen and (max-width: 2000px) {
+    .carousel {
+        grid-template-columns: repeat(5, 25vw);
+    }
 }
 
-@media only screen and (max-width: 600px)  {
-    .carousel{
+@media only screen and (max-width: 1600px) {
+    .carousel {
+        grid-template-columns: repeat(5, 33.33vw);
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .carousel {
+        grid-template-columns: repeat(5, 50vw);
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .carousel {
         grid-template-columns: repeat(5, 100vw);
     }
 }
 
-.carousel__col{
-   display: flex;
-   flex-direction: column;
-   overflow-y: auto;
-}
-
-.wrapper{
+.carousel__col {
+    display: flex;
+    flex-direction: column;
     overflow-y: auto;
 }
-.card{
+
+.wrapper {
+    overflow-y: auto;
+}
+
+.card {
     width: 80%;
     height: 120px;
     border-radius: 10px;
@@ -43,29 +62,33 @@ html, body{
     margin: 5px auto;
 }
 
-.center{
+.center {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-.header, footer{
+.header,
+footer {
     height: 100px;
     width: 100vw;
 }
 
-.sort{
+.sort {
     display: flex;
     width: 100$;
 }
-.sort>*{
-    flex:1
+
+.sort>* {
+    flex: 1
 }
-.btn{
+
+.btn {
     background-color: wheat;
     height: 40px;
 }
-.btn:hover{
+
+.btn:hover {
     background-color: rgb(219, 191, 138);
 }

@@ -28,27 +28,7 @@ module.exports = {
                         </div>
                     )
                 })}
-                {/* <div
-                    class={current == 'main' ? 'navTop__btn navTop__btn--selected' : 'navTop__btn'}
-                    onclick={() => {  pvs.subPage = 'main';scrollCarousel(0) }}
-                >
-                    {level}
-                </div>
-               
-                <div
-                    class={current == 'chat' ? 'navTop__btn navTop__btn--selected' : 'navTop__btn'}
-                    onclick={() => {  pvs.subPage = 'chat'; setChatLastEntrance(ids);scrollCarousel(1); zeroChatFeedMessages(ids, isSubscribed && true) }}
-                >
-                    <div>{chat}</div>
-                    {unreadMessages ? <div class='counter'>{unreadMessages}</div> : null}
-                </div>
-                {reactions?<div
-                    class={current == 'reactions' ? 'navTop__btn navTop__btn--selected' : 'navTop__btn'}
-                    onclick={() => {  pvs.subPage = 'reactions';scrollCarousel(2) }}
-                >
-                    <div>{reactions}{store.reactionsNumber[subQuestionId]?<div class='counter'>{store.reactionsNumber[subQuestionId]}</div>:null}</div>
-                    {activeReactions ? <div class='counter'>{activeReactions}</div> : null}
-                </div>:null} */}
+                
             </div>
         )
     }

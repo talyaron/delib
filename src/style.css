@@ -649,8 +649,11 @@ input[type=checkbox] {
 
   /* Carousel */
 .carousel{
+    display: grid;
+    grid-template-columns: repeat(5, 20vw);
     width: 100vw;
-    overflow-x: hidden;
+    overflow-x:hidden;
+
 }  
 
 .carousel>main {

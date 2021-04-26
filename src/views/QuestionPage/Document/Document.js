@@ -3,9 +3,10 @@ import './Document.css'
 
 module.exports = {
 
-    view: () => {
+    view: vnode => {
+        const {carouselColumn} = vnode.attrs;
 
-        return (<div>Document</div>)
+        return (<div class={carouselColumn?'carousel__col':''}>Document</div>)
     }
 
 }

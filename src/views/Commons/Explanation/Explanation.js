@@ -31,7 +31,7 @@ function switchButtons(vnode) {
     try {
         const { creatorId, type, ids } = vnode.attrs;
         const { groupId, questionId } = ids;
-        console.log(vnode.attrs)
+     
         switch (type) {
             case 'question':
                 return <div class='buttons buttonOutlineGray buttons--small' onclick={() => m.route.set(`/questionEdit/${groupId}/${questionId}`)}>עריכה</div>
