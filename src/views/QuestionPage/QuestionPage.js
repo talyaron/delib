@@ -121,9 +121,9 @@ module.exports = {
         const { groupId, questionId } = vnode.attrs;
         getLastTimeEntered({ groupId, questionId }, vnode);
 
-        
+
         //change carousel size according to window size
-        window.addEventListener('resize',()=>{
+        window.addEventListener('resize', () => {
             document.querySelector('#carousel__main').style.gridTemplateColumns = `${cssForCarousel(vnode)}`
         })
     },
@@ -180,7 +180,7 @@ module.exports = {
         const { pages } = vnode.state;
         const { groupId, questionId } = vnode.attrs;
 
-       
+
         return (
             <div class='page page__grid'>
                 <AddPanel
@@ -240,7 +240,7 @@ module.exports = {
 
                                     <div class='subQuestionsWrapper'>
 
-                                        {vnode.state.subQuestions.map((subQuestion, index) => {
+                                        {documentSubQuestions(vnode.state.subQuestions, false).map(subQuestion => {
 
                                             return (<SubQuestionSolution
                                                 key={subQuestion.id}
@@ -271,7 +271,12 @@ module.exports = {
 
                             }
                         </div>
-                        <Document carouselColumn={true} />
+                        <Document
+                            carouselColumn={true}
+                            groupId={vnode.attrs.groupId}
+                            questionId={vnode.attrs.questionId}
+                            subQuestions={documentSubQuestions(vnode.state.subQuestions, true)}
+                        />
 
                         <Chat
                             carouselColumn={true}
@@ -341,6 +346,20 @@ function orderBy(order, vnode) {
         .unsubscribeOptions();
     vnode.state.unsubscribeOptions = getSubQuestion('on', vnode.attrs.groupId, vnode.attrs.questionId, order);
     vnode.state.orderBy = order
+}
+
+function documentSubQuestions(subQuestions, inDoc) {
+    try {
+        if (inDoc) {
+            return subQuestions.filter(subQuestion => subQuestion.inDoc === true)
+        } else {
+            return subQuestions.filter(subQuestion => subQuestion.inDoc === undefined)
+        }
+    } catch (e) {
+        console.error(e);
+        return [];
+    }
+
 }
 
 
