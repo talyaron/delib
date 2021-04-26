@@ -120,6 +120,12 @@ module.exports = {
 
         const { groupId, questionId } = vnode.attrs;
         getLastTimeEntered({ groupId, questionId }, vnode);
+
+        
+        
+        window.addEventListener('resize',()=>{
+            document.querySelector('#carousel__main').style.gridTemplateColumns = `${cssForCarousel(vnode)}`
+        })
     },
     onbeforeupdate: vnode => {
 
@@ -224,7 +230,7 @@ module.exports = {
                 </div>
 
                 <div class='carousel' >
-                    <main style={`grid-template-columns:${cssForCarousel(vnode)};`}>
+                    <main style={`grid-template-columns:${cssForCarousel(vnode)};`} id='carousel__main'>
                         <div class='carousel__col'>
                             {vnode.state.title === 'כותרת השאלה' ?
                                 <Spinner /> :

@@ -3,7 +3,7 @@ export const cssForCarousel = (vnode) => {
         const { pages } = vnode.state;
         if (!pages) throw 'no vnode.state.pages on page';
         const numberOfPages = pages.length;
-        const minimalColWidth = 360;
+        const minimalColWidth = 550;
         const screenWidth = window.innerWidth;
        
         let pagesPerScreen = Math.floor(screenWidth / minimalColWidth);
@@ -12,7 +12,7 @@ export const cssForCarousel = (vnode) => {
 
         const colWidth = 100 / pagesPerScreen;
 
-
+console.log('pagesPerScreen',pagesPerScreen)
         return `repeat(${numberOfPages}, ${colWidth}vw)`
     } catch (e) {
         console.error(e);
