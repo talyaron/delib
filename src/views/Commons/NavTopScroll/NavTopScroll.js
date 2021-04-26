@@ -19,7 +19,7 @@ module.exports = {
                         <div
                             key={i}
                             class={isSelected(current, page) ? 'navTop__btn navTop__btn--selected' : 'navTop__btn'}
-                            onclick={() => { pvs.subPage = page.page; scrollCarousel(i) }}
+                            onclick={() => { pvs.subPage = page.page; scrollCarousel(pages,i) }}
                         >
                             <div>
                                 {page.title}
@@ -34,14 +34,14 @@ module.exports = {
     }
 }
 
-function scrollCarousel(position) {
+function scrollCarousel(pages, position) {
 
     const carouselBox = document.querySelector('.carousel');
     const carousel = document.querySelector('.carousel>main');
 
     const carouselWidth = carousel.clientWidth;
-    const scrollX = -1 * ((position / 3) * carouselWidth)
-
+    const scrollX = -1 * ((position / pages.length) * carouselWidth);
+   
     carouselBox.scrollTo({
         top: 0,
         left: scrollX,
