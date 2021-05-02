@@ -22,7 +22,7 @@ export const listenToTopOption = (ids, type = 'consensusPrecentage') => {
                 .onSnapshot(optionsDB => {
                     optionsDB.forEach(optionDB => {
                         if (optionDB.exists) {
-                            console.log(optionDB.data())
+                       
                             store.selectedOption[subQuestionId] = optionDB.data();
                         }
                     })

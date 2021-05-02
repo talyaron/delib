@@ -1,0 +1,15 @@
+.documentCard {
+    background-color: var(--white);
+    padding: var(--regPadding);
+    cursor: pointer;
+    user-select: none;
+}
+.documentCard h1{
+    color: var(--gray0);
+    font-size: var(--size16);
+}
+
+.documentCard p{
+    color: var(--gray1);
+    font-size: var(--size13);
+}
