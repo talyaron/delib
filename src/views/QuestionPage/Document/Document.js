@@ -2,17 +2,24 @@ import m from 'mithril';
 import Sortable from "sortablejs";
 import './Document.css'
 
+import { get } from 'lodash';
+
+//modal
+import store from '../../../data/store';
+
 //functions
 import { updateSubQuestionToDoc, reorderSubQuestionsInDocument } from '../../../functions/firebase/set/setSubQuestions';
-import {listenToSentences} from '../../../functions/firebase/get/getDocument';
+import { listenToSentences } from '../../../functions/firebase/get/getDocument';
 
 //components
-import DocumentCard from './DocumentCard/DocumentCard'
+import DocumentCard from './DocumentCard/DocumentCard';
+import Sentence from './Sentence/Sentence';
 
 module.exports = {
     oninit: vnode => {
-        vnode.state = { over: false, sortable: false, docElements:[] }
-        listenToSentences()
+        const { groupId, questionId } = vnode.attrs;
+        vnode.state = { over: false, sortable: false, docElements: [] }
+        listenToSentences({ groupId, questionId })
     },
     oncreate: vnode => {
         const { groupId, questionId } = vnode.attrs;
@@ -29,26 +36,28 @@ module.exports = {
                 const elements = [...evt.target.children];
 
                 elements.map((elm, i) => {
+                    console.dir(elm.dataset.id)
 
-                    reorderSubQuestionsInDocument({ groupId, questionId, subQuestionId: elm.dataset.id }, i)
+                    reorderSubQuestionsInDocument({ groupId, questionId, elmId: elm.dataset.id, type: elm.dataset.type }, i)
                 });
                 vnode.state.sortable = false
             }
         });
     },
-    onbeforeupdate:vnode=>{
+    onbeforeupdate: vnode => {
         const { subQuestions, questionId } = vnode.attrs;
-        const sentences = get(store.document,`[${questionId}]`,[])
-        const tmpElements = [...subQuestions, ...sentences];
-        
-        vnode.state.docElements = tmpElements.sort((a, b)=>a.order - b.order)
+        const sentences = get(store.documents, `[${questionId}]`, [])
+        let tmpElements = [...subQuestions, ...sentences];
+
+
+        vnode.state.docElements = concatinateSubQuestionsAndSentences(tmpElements)
 
     },
     view: vnode => {
         const { carouselColumn, groupId, questionId } = vnode.attrs;
         const { over } = vnode.state;
 
-       
+
 
         return (<div class={carouselColumn ? 'carousel__col document' : 'document'}
             ondragover={e => handleDragOver(e, vnode)}
@@ -57,13 +66,17 @@ module.exports = {
             <div class={over ? 'document__main document__main--over' : 'document__main'}>
                 Document
                 <div class='document__wrapper' id='document__wrapper'>
-                    {vnode.state.docElements.map((subQuestion, index) => {
-                        return (
-                            <div>
-                                <h1>Hi</h1>
-                                <DocumentCard key={subQuestion.subQuestionId} subQuestion={subQuestion} groupId={groupId} questionId={questionId} subQuestionId={subQuestion.subQuestionId} />
-                            </div>
-                        )
+                    {vnode.state.docElements.map((elm, index) => {
+                        const id = elm.subQuestionId || elm.sentenceId;
+
+                        if ('subQuestionId' in elm) return <DocumentCard key={id} subQuestion={elm} groupId={groupId} questionId={questionId} subQuestionId={elm.subQuestionId} order={index} />
+                        else return <Sentence key={id} sentence={elm} groupId={groupId} questionId={questionId} order={index} />
+
+
+
+
+
+
                     })}
                 </div>
             </div>
@@ -97,4 +110,39 @@ function handleDrop(e, vnode) {
     } catch (e) {
         console.error(e)
     }
+}
+
+function concatinateSubQuestionsAndSentences(elements) {
+
+    elements = elements.sort((a, b) => a.order - b.order);
+    let previus = 'sentence-undfined';
+
+    let concatElms = [];
+    let count = 0;
+    elements.forEach(elm => {
+
+
+        if ('subQuestionId' in elm) {
+
+
+            if (previus === 'sentence-undfined') {
+                concatElms.push({ type: 'none', text: '', order: count, sentenceId: false });
+            }
+
+            concatElms.push(elm);
+            previus = 'sentence-undfined'
+
+
+        } else {
+
+
+            previus = 'sentence'
+            concatElms.push(elm);
+
+
+        }
+        count++;
+    })
+
+    return concatElms;
 }

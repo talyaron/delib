@@ -18,14 +18,17 @@ export const listenToSentences = (ids) => {
                 .onSnapshot(sentencesDB => {
                     const tmpSentences = []
                     sentencesDB.forEach(sentenceDB => {
-                        let x = {a:1, b:2}
-                        let y = {...x}
-                        console.log(y)
-                        // tmpSentences.push({ ...sentenceDB.data(), sentenceId: sentenceDB.id })
+                        const sentenceObj = sentenceDB.data();
+                        sentenceObj.sentenceId = sentenceDB.id;
+
+                        tmpSentences.push(sentenceObj)
                     })
 
                     console.log(tmpSentences)
+                    store.documents[questionId] = tmpSentences;
+                    m.redraw();
                 })
+
         }
 
 

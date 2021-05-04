@@ -27,24 +27,39 @@ export const updateSubQuestionToDoc = (ids) => {
 }
 
 export const reorderSubQuestionsInDocument = (ids, newOrder) => {
-    const { groupId, questionId, subQuestionId } = ids;
+    const { groupId, questionId, elmId, type } = ids;
+
+    console.log(type)
 
     try {
 
-
-        DB
+        const questionRef = DB
             .collection('groups')
             .doc(groupId)
             .collection('questions')
             .doc(questionId)
-            .collection('subQuestions')
-            .doc(subQuestionId)
-            .update({ orderInDoc: newOrder, inDoc: true })
-            // .then(() => console.info('subquestion', subQuestionId, ' order was updated to', newOrder))
-            .catch(function (error) {
-                console.error('Error updating subquestion', subQuestionId, error)
 
-            });
+        if (type === 'subQuestion') {
+            questionRef.collection('subQuestions')
+                .doc(elmId)
+                .update({ order: newOrder, inDoc: true })
+                .then(() => console.info('subquestion', elmId, ' order was updated to', newOrder))
+                .catch(function (error) {
+                    console.error('Error updating subquestion', subQuestionId, error)
+
+                });
+        } else if (type === 'sentence') {
+            questionRef.collection('document')
+                .doc(elmId)
+                .update({ order: newOrder, inDoc: true })
+                .then(() => console.info('sentence', elmId, ' order was updated to', newOrder))
+                .catch(function (error) {
+                    console.error('Error updating subquestion', subQuestionId, error)
+
+                });
+        }
+
+
 
     } catch (e) {
         console.error(e)

@@ -334,7 +334,8 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
 
                     subQuestionsDB.forEach(subQuestionDB => {
                         let subQuestionObj = subQuestionDB.data();
-                        subQuestionObj.id = subQuestionDB.id;
+                        subQuestionObj.subQuestionId = subQuestionObj.id = subQuestionDB.id;
+                         
 
                         subQuestionsArray.push(subQuestionObj);
                         subQuestionsObj[subQuestionObj.id] = {};

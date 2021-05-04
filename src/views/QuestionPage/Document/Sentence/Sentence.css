@@ -1,0 +1,20 @@
+.sentence{
+    background-color: var(--white);
+    padding: var(--regPadding);
+    cursor: pointer;
+    user-select: none;
+    display: grid;
+    grid-template-columns: 30px auto;
+    grid-gap: 10px;
+}
+
+.sentence__add{
+    color: var(--gray3);
+    font-size: small;
+}
+
+.sentence input{
+    height: var(--size21);
+    width: 100%;
+    border: 1px solid var(--gray2);
+}
