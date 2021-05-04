@@ -22,12 +22,14 @@ module.exports = {
 
 
         return (
-            <div class='documentCard'
-                data-id={subQuestionId}
-
-            >
+            <div class='documentCard' data-id={subQuestionId}>
+                <div class='documentCard__handle'>
+                    <img src='img/sortHandle.svg' alt='sort sub question'/>
+                </div>
+                <div class='documentCard__main'>
                 <h1>{subQuestion.title}</h1>
                 <p>{option.title}</p>
+                </div>
             </div>
         )
     }

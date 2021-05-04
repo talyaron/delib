@@ -64,7 +64,8 @@ var store = {
     subQuestions: {}, //sotred {subQuestionId:{data}}
     subQuestionsListners: {}, //check to see if listner was allready activates
     editEntity: false,
-
+    documents:{}, //store documents in format {questionId:[sentences obj]} 
+    documentListen:{}, //listen to documents
     push: []
 }
 
