@@ -11,7 +11,16 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loader: 'babel-loader'
+                loader: 'babel-loader',
+                options: {
+                    presets: ['@babel/preset-env'],
+                    plugins: [
+                        ["@babel/plugin-transform-react-jsx", {
+                            "pragma": "m",
+                            "pragmaFrag": "'['"
+                        }]
+                    ]
+                }
             },
             {
                 test: /\.css$/,
@@ -24,4 +33,6 @@ module.exports = {
         path: path.resolve(__dirname, 'public'),
         filename: 'dev.bundle.js'
     }
+  
+    
 };
