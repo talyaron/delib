@@ -117,8 +117,13 @@ module.exports = {
 
         //change carousel size according to window size
         window.addEventListener('resize', () => {
-            document.querySelector('#carousel__main').style.gridTemplateColumns = `${cssForCarousel(vnode)}`
+            document.querySelector('#carousel__main').style.gridTemplateColumns = `${cssForCarousel(vnode)}`;
+            setCarouselHeight();
         })
+
+
+
+        setCarouselHeight();
 
     },
     onbeforeupdate: vnode => {
@@ -168,116 +173,114 @@ module.exports = {
 
         return (
             <div class='page' id='page'>
-                {vnode.state.details.title
-                    ? (
-                        <div class='page__grid'>
-                            <div class="page__header">
-                                <Header
-                                    name={vnode.state.details.title}
-                                    upLevelUrl={hasNevigation(vnode)}
+
+                <div class='page__grid'>
+                    <div class="page__header">
+                        <Header
+                            name={vnode.state.details.title}
+                            upLevelUrl={hasNevigation(vnode)}
+                            groupId={groupId}
+                            questionId={questionId}
+                            showSubscribe={true}
+                            subQuestionId={subQuestionId}
+                            language={language}
+                            type={SUB_QUESTION}
+                        />
+                        <NavTopScroll
+                            pages={pages}
+                            level={lang[language].solutions}
+                            current={vnode.state.subPage}
+                            pvs={vnode.state}
+                            mainUrl={`/subquestions/${groupId}/${questionId}/${subQuestionId}`}
+                            chatUrl={`/subquestions-chat/${groupId}/${questionId}/${subQuestionId}`}
+                            ids={{ groupId, questionId, subQuestionId }}
+                            isSubscribed={vnode.state.subscribed}
+                            unreadMessages={vnode.state.unreadMessages}
+                        />
+                    </div>
+                    <div style={`direction:${lang[language].dir}`} class='carousel'>
+                        <main ontouchstart={handleTouchStart} ontouchend={handleTouchStart} ontouchmove={e => handleTouchMove(e, vnode)} style={`grid-template-columns:${cssForCarousel(vnode)};`} id='carousel__main'>
+
+
+                            <div class='carousel__col subQuations__col'>
+                                <SubQuestion
+                                    vsp={vnode.state}
+                                    question={vnode.state.details.title}
+                                    questionObj={vnode.state.details}
                                     groupId={groupId}
                                     questionId={questionId}
-                                    showSubscribe={true}
                                     subQuestionId={subQuestionId}
+                                    orderBy={vnode.state.details.orderBy}
+                                    title={vnode.state.details.title}
+                                    subItems={vnode.state.details.options}
+                                    parentVnode={vnode}
+                                    info={settings.subItems.options}
+                                    processType={vnode.state.details.processType}
+                                    showSubscribe={true}
+                                    isAlone={true}
                                     language={language}
-                                    type={SUB_QUESTION}
                                 />
-                                <NavTopScroll
-                                    pages={pages}
-                                    level={lang[language].solutions}
-                                    current={vnode.state.subPage}
-                                    pvs={vnode.state}
-                                    mainUrl={`/subquestions/${groupId}/${questionId}/${subQuestionId}`}
-                                    chatUrl={`/subquestions-chat/${groupId}/${questionId}/${subQuestionId}`}
-                                    ids={{ groupId, questionId, subQuestionId }}
-                                    isSubscribed={vnode.state.subscribed}
-                                    unreadMessages={vnode.state.unreadMessages}
-                                />
+                                {(vnode.state.details.processType === 'suggestions' || vnode.state.details.processType === undefined) ?
+                                    <div class='page__footer'>
+                                        <div class={hasNevigation(vnode) ? "subQuestion__arrange" : "subQuestion__arrange subQuestion__arrange--bottom"} id="questionFooter">
+                                            <div
+                                                class={vnode.state.details.orderBy == "new"
+                                                    ? "footerButton footerButton--selected"
+                                                    : "footerButton"}
+                                                onclick={() => {
+                                                    vnode.state.details.orderBy = "new";
+                                                }}>
+                                                <img src='img/new.svg' alt='order by newest' />
+                                                <div>{lang[language].new}</div>
+                                            </div>
+                                            <div
+                                                class={vnode.state.details.orderBy == "top"
+                                                    ? "footerButton footerButton--selected"
+                                                    : "footerButton"}
+                                                onclick={() => {
+                                                    vnode.state.details.orderBy = "top";
+                                                }}>
+                                                <img src='img/agreed.svg' alt='order by most agreed' />
+                                                <div>{lang[language].agreed}</div>
+                                            </div>
+
+                                        </div>
+
+                                    </div> : null
+                                }
                             </div>
-                            <div style={`direction:${lang[language].dir}`} class='carousel'>
-                                <main ontouchstart={handleTouchStart} ontouchend={handleTouchStart} ontouchmove={e => handleTouchMove(e, vnode)} style={`grid-template-columns:${cssForCarousel(vnode)};`} id='carousel__main'>
 
 
-                                    <div class='carousel__col subQuations__col'>
-                                        <SubQuestion
-                                            vsp={vnode.state}
-                                            question={vnode.state.details.title}
-                                            questionObj={vnode.state.details}
-                                            groupId={groupId}
-                                            questionId={questionId}
-                                            subQuestionId={subQuestionId}
-                                            orderBy={vnode.state.details.orderBy}
-                                            title={vnode.state.details.title}
-                                            subItems={vnode.state.details.options}
-                                            parentVnode={vnode}
-                                            info={settings.subItems.options}
-                                            processType={vnode.state.details.processType}
-                                            showSubscribe={true}
-                                            isAlone={true}
-                                            language={language}
-                                        />
-                                        {(vnode.state.details.processType === 'suggestions' || vnode.state.details.processType === undefined) ?
-                                            <div class='page__footer'>
-                                                <div class={hasNevigation(vnode) ? "subQuestion__arrange" : "subQuestion__arrange subQuestion__arrange--bottom"} id="questionFooter">
-                                                    <div
-                                                        class={vnode.state.details.orderBy == "new"
-                                                            ? "footerButton footerButton--selected"
-                                                            : "footerButton"}
-                                                        onclick={() => {
-                                                            vnode.state.details.orderBy = "new";
-                                                        }}>
-                                                        <img src='img/new.svg' alt='order by newest' />
-                                                        <div>{lang[language].new}</div>
-                                                    </div>
-                                                    <div
-                                                        class={vnode.state.details.orderBy == "top"
-                                                            ? "footerButton footerButton--selected"
-                                                            : "footerButton"}
-                                                        onclick={() => {
-                                                            vnode.state.details.orderBy = "top";
-                                                        }}>
-                                                        <img src='img/agreed.svg' alt='order by most agreed' />
-                                                        <div>{lang[language].agreed}</div>
-                                                    </div>
+                            <Chat
+                                carouselColumn={true}
+                                entity='question'
+                                entity='subQuestion'
+                                topic='תת שאלה'
+                                ids={{ groupId, questionId, subQuestionId }}
+                                title={vnode.state.details.title}
+                                url={m.route.get()}
+                            />
 
-                                                </div>
+                            <Reactions
+                                carouselColumn={true}
+                                entity='question'
+                                groupId={groupId}
+                                questionId={questionId}
+                                subQuestionId={subQuestionId}
+                            />
 
-                                            </div> : null
-                                        }
-                                    </div>
-
-
-                                    <Chat
-                                        carouselColumn={true}
-                                        entity='question'
-                                        entity='subQuestion'
-                                        topic='תת שאלה'
-                                        ids={{ groupId, questionId, subQuestionId }}
-                                        title={vnode.state.details.title}
-                                        url={m.route.get()}
-                                    />
-
-                                    <Reactions
-                                        carouselColumn={true}
-                                        entity='question'
-                                        groupId={groupId}
-                                        questionId={questionId}
-                                        subQuestionId={subQuestionId}
-                                    />
-
-                                </main>
-                            </div>
-                            {/* ---------------- Footer -------------- */}
-                            {hasNevigation(vnode) ? <NavBottom /> : null}
+                        </main>
+                    </div>
+                    {/* ---------------- Footer -------------- */}
+                    {hasNevigation(vnode) ? <NavBottom /> : null}
 
 
 
 
-                        </div>
+                </div>
 
-                    )
-                    : (<Spinner />)
-                }
+                )
+
                 {
                     (vnode.state.details.processType === 'suggestions' || vnode.state.details.processType === undefined) ?
                         < div
@@ -428,4 +431,25 @@ function scrollSides(direction, vnode) {
     }
 
 
+}
+
+function setCarouselHeight() {
+    try {
+        console.log('sdgsdgsdgd')
+        const headerHeight = document.querySelector('.page__header').clientHeight;
+        const navbottomHeight = document.querySelector('.navBottom').clientHeight;
+        const carousel = document.querySelector('.carousel');
+
+
+
+        const colHeight = `${window.innerHeight - headerHeight - navbottomHeight}px`;
+        const columns = document.querySelectorAll('.carousel__col');
+        columns.forEach(col => {
+            col.style.height = colHeight
+        })
+
+        carousel.style.height = colHeight;
+    } catch (e) {
+        console.error(e)
+    }
 }
