@@ -36,7 +36,6 @@ export const updateSentence = ({ groupId, questionId, sentenceId, text, type, or
 
         const userObj = JSON.parse(JSON.stringify(store.user));
 
-        console.log(sentenceId)
         if (sentenceId === false) {
             createSentence({ groupId, questionId }, text, type, order);
         } else {

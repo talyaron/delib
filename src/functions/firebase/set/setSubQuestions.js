@@ -5,9 +5,6 @@ export const updateSubQuestionToDoc = (ids, inDoc=true) => {
     try {
         const { groupId, questionId, subQuestionId } = ids;
 
-        console.log(groupId, questionId, subQuestionId)
-
-
         DB
             .collection('groups')
             .doc(groupId)

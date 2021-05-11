@@ -188,7 +188,7 @@ module.exports = {
                 ) : (
                     <input
                       type="text"
-                      value={vnode.state.title}
+                      defaultValue={vnode.state.title}
                       onkeyup={(e) => {
                         vnode.state.title = e.target.value;
                       }}
@@ -223,7 +223,7 @@ module.exports = {
                   })
                 ) : (
                     <textarea
-                      value={vnode.state.description}
+                      defaultValue={vnode.state.description}
                       onkeyup={(e) => {
                         vnode.state.description = e.target.value;
                       }}

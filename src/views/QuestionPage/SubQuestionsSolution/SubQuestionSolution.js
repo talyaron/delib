@@ -194,7 +194,7 @@ function iconType(vnode) {
 }
 
 function handleSetId(e, id) {
-	console.log('start', id)
+
 	e.dataTransfer.setData("text", id);
 	e.dataTransfer.effectAllowed = "move"
 }

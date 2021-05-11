@@ -380,10 +380,8 @@ function handleDrop(e, vnode) {
 
 
         const { groupId, questionId } = vnode.attrs;
-        console.log(e.target)
+       
         const subQuestionId = e.dataTransfer.getData("text");
-
-        console.log('back to main', subQuestionId)
 
         //move in DB to main
 
