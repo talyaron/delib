@@ -18,12 +18,13 @@ module.exports = {
         )
 
         function addDocElement(type) {
+            
             try {
                 const { groupId, questionId } = vnode.attrs;
                 
                 if (type !== PARAGRAPH && type !== HEADER) throw new Error('not a correct type');
                 
-                createSentence({ groupId, questionId }, 'משפט חדש', 'type', -1);
+                createSentence({ groupId, questionId }, 'משפט חדש', type, -1);
             } catch (e) {
                 console.info(type)
                 console.error(e)

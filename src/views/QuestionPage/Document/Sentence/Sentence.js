@@ -2,7 +2,7 @@ import m from 'mithril';
 import { get } from 'lodash';
 import './Sentence.css';
 
-import {HEADER, PARAGRAPH} from './sentenceTypes';
+import { HEADER, PARAGRAPH } from './sentenceTypes';
 
 //function
 import { updateSentence } from '../../../../functions/firebase/set/setDocument';
@@ -17,10 +17,10 @@ module.exports = {
         const { order } = vnode.attrs;
 
 
-console.log('type:', type)
+        console.log('type:', type)
 
         return (
-            <div class='sentence' data-id={sentenceId} data-type='sentence'>
+            <div class={`sentence ${ sentenceClass(type)}`} data-id={sentenceId} data-type='sentence'>
                 <div class='documentCard__handle'>
                     <img src='img/sortHandle.svg' alt='sort sub question' />
                 </div>
@@ -37,8 +37,8 @@ console.log('type:', type)
             if (!text && !vnode.state.isEdit) {
                 return (<p class='sentence__add' onclick={() => { vnode.state.isEdit = true }}>{'add'}</p>)
             }
-            if(vnode.state.isEdit){
-                return(<input type='text' defaultValue={text} placeholder='enter text' onkeyup={e => handleInput(e, vnode)} />)
+            if (vnode.state.isEdit) {
+                return (<input type='text' defaultValue={text} placeholder='enter text' onkeyup={e => handleInput(e, vnode)} />)
             }
 
             return (<input type='text' defaultValue={text} placeholder='enter text' onkeyup={e => handleInput(e, vnode)} />)
@@ -49,7 +49,7 @@ console.log('type:', type)
 
 
 function handleInput(e, vnode) {
-    const { groupId, questionId, order   } = vnode.attrs;
+    const { groupId, questionId, order } = vnode.attrs;
     console.log('order:', order)
     const { sentenceId } = vnode.attrs.sentence;
     console.log(e.key)
@@ -58,4 +58,20 @@ function handleInput(e, vnode) {
         vnode.state.isEdit = false;
     }
 
+}
+
+function sentenceClass(type) {
+   
+    try {
+        switch (type) {
+            case HEADER:
+                return 'sentence__header';
+            case PARAGRAPH:
+                return 'sentence__paragraph';
+            default:
+                return '';
+        }
+    } catch (e) {
+        console.error(e)
+    }
 }

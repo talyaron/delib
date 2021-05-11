@@ -8,6 +8,10 @@
     grid-gap: 10px;
 }
 
+.sentence__header{
+    
+}
+
 .sentence__add{
     color: var(--gray3);
     font-size: small;
