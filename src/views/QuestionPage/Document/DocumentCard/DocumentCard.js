@@ -22,7 +22,7 @@ module.exports = {
         const descriptionParagraphs = changeTextToArray(option.description);
 
         return (
-            <div class='documentCard' data-id={subQuestionId} data-type='subQuestion' onclick={() => { m.route.set(concatenateURL(groupId, questionId, subQuestionId)) }}>
+            <div class='documentCard' id={subQuestionId} ondragstart={e => handleSetId(e, subQuestionId)} data-id={subQuestionId} data-type='subQuestion' onclick={() => { m.route.set(concatenateURL(groupId, questionId, subQuestionId)) }} draggable={true}>
                 <div class='documentCard__handle'>
                     <img src='img/sortHandle.svg' alt='sort sub question'/>
                 </div>
@@ -42,6 +42,13 @@ module.exports = {
             </div>
         )
     }
+}
+
+
+function handleSetId(e, id) {
+	console.log('start', id)
+	e.dataTransfer.setData("text", id);
+	e.dataTransfer.effectAllowed = "move"
 }
 
 

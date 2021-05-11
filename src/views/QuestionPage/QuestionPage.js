@@ -27,6 +27,7 @@ import Document from './Document/Document';
 //functions
 import { getQuestionDetails, getSubQuestion, getLastTimeEntered, listenToChat, listenToGroup } from '../../functions/firebase/get/get';
 import { registerGroup } from '../../functions/firebase/set/set';
+import { updateSubQuestionToDoc } from '../../functions/firebase/set/setSubQuestions';
 import { deep_value, getIsChat, concatenateDBPath, getLanguage } from '../../functions/general';
 import { cssForCarousel } from '../../functions/carousel';
 
@@ -89,7 +90,8 @@ module.exports = {
                 { page: 'document', title: 'מסמך מסכם' },
                 { page: 'chat', title: 'שיחה', counter: vnode.state.unreadMessages }
 
-            ]
+            ],
+            over: false
         }
 
         //get user before login to page
@@ -231,7 +233,9 @@ module.exports = {
 
                 <div class='carousel' >
                     <main style={`grid-template-columns:${cssForCarousel(vnode)};`} id='carousel__main'>
-                        <div class='carousel__col'>
+                        <div class={vnode.state.over ? `carousel__col document__main--over` : `carousel__col`} ondragover={e => handleDragOver(e, vnode)}
+                            ondragleave={e => handleDragLeave(e, vnode)}
+                            ondrop={e => handleDrop(e, vnode)}>
                             {vnode.state.title === 'כותרת השאלה' ?
                                 <Spinner /> :
                                 <div class='wrapperSubQuestions' id='questionWrapperAll'>
@@ -353,7 +357,7 @@ function documentSubQuestions(subQuestions, inDoc) {
         if (inDoc) {
             return subQuestions.filter(subQuestion => subQuestion.inDoc === true)
         } else {
-            return subQuestions.filter(subQuestion => subQuestion.inDoc === undefined)
+            return subQuestions.filter(subQuestion => subQuestion.inDoc === undefined || subQuestion.inDoc === false)
         }
     } catch (e) {
         console.error(e);
@@ -361,6 +365,37 @@ function documentSubQuestions(subQuestions, inDoc) {
     }
 
 }
+
+function handleDragOver(e, vnode) {
+    e.preventDefault();
+    vnode.state.over = true
+}
+
+function handleDragLeave(e, vnode) {
+    vnode.state.over = false
+}
+
+function handleDrop(e, vnode) {
+    try {
+
+
+        const { groupId, questionId } = vnode.attrs;
+        console.log(e.target)
+        const subQuestionId = e.dataTransfer.getData("text");
+
+        console.log('back to main', subQuestionId)
+
+        //move in DB to main
+
+        updateSubQuestionToDoc({ groupId, questionId, subQuestionId }, false);
+
+        vnode.state.over = false;
+
+    } catch (e) {
+        console.error(e)
+    }
+}
+
 
 
 

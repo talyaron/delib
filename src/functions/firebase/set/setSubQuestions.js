@@ -1,9 +1,11 @@
 import { DB } from '../config';
 import store from '../../../data/store';
 
-export const updateSubQuestionToDoc = (ids) => {
+export const updateSubQuestionToDoc = (ids, inDoc=true) => {
     try {
         const { groupId, questionId, subQuestionId } = ids;
+
+        console.log(groupId, questionId, subQuestionId)
 
 
         DB
@@ -13,7 +15,7 @@ export const updateSubQuestionToDoc = (ids) => {
             .doc(questionId)
             .collection('subQuestions')
             .doc(subQuestionId)
-            .update({ inDoc: true })
+            .update({ inDoc })
             // .then(() => console.info('subquestion', subQuestionId, 'was updated'))
             .catch(function (error) {
                 console.error('Error updating subquestion', subQuestionId, error)
@@ -29,7 +31,7 @@ export const updateSubQuestionToDoc = (ids) => {
 export const reorderSubQuestionsInDocument = (ids, newOrder) => {
     const { groupId, questionId, elmId, type } = ids;
 
-    console.log(type)
+  
 
     try {
 
