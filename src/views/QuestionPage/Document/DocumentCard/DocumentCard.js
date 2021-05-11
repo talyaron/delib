@@ -7,7 +7,7 @@ import store from '../../../../data/store';
 
 //functions
 import { listenToTopOption } from '../../../../functions/firebase/get/getOptions';
-import { concatenateURL } from '../../../../functions/general';
+import { concatenateURL,changeTextToArray,convertParagraphsToVisual } from '../../../../functions/general';
 
 module.exports = {
     oninit: vnode => {
@@ -19,7 +19,7 @@ module.exports = {
         const {groupId, questionId, subQuestionId, subQuestion } = vnode.attrs;
 
         const option = get(store.selectedOption, `[${subQuestion.subQuestionId}]`, { title: 'אין עדיין תשובה' })
-
+        const descriptionParagraphs = changeTextToArray(option.description);
 
         return (
             <div class='documentCard' data-id={subQuestionId} data-type='subQuestion' onclick={() => { m.route.set(concatenateURL(groupId, questionId, subQuestionId)) }}>
@@ -29,6 +29,15 @@ module.exports = {
                 <div class='documentCard__main'>
                 <h1>{subQuestion.title}</h1>
                 <p>{option.title}</p>
+                <div class='description__text'  >
+                        {
+                            descriptionParagraphs.map((paragaph, index) => {
+
+                                return (convertParagraphsToVisual(paragaph, index))
+                            })
+                        }
+
+                    </div>
                 </div>
             </div>
         )

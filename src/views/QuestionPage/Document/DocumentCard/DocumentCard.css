@@ -8,13 +8,13 @@
     grid-gap: 10px;
 }
 .documentCard h1{
-    color: var(--gray0);
-    font-size: var(--size16);
+    color: var(--gray2);
+    font-size: var(--size11);
 }
 
 .documentCard p{
-    color: var(--gray1);
-    font-size: var(--size13);
+    color: var(--gray0);
+    font-size: var(--size15);
 }
 
 .documentCard__handle{

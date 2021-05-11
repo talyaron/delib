@@ -65,7 +65,7 @@ module.exports = {
             ondragleave={e => handleDragLeave(e, vnode)}
             ondrop={e => handleDrop(e, vnode)}>
             <div class={over ? 'document__main document__main--over' : 'document__main'}>
-                <DocMenu groupId={groupId} questionId={questionId}/>
+                <DocMenu groupId={groupId} questionId={questionId} />
                 <div class='document__wrapper' id='document__wrapper'>
                     {vnode.state.docElements.map((elm, index) => {
                         const id = elm.subQuestionId || elm.sentenceId;
@@ -116,34 +116,6 @@ function handleDrop(e, vnode) {
 function concatinateSubQuestionsAndSentences(elements) {
 
     elements = elements.sort((a, b) => a.order - b.order);
-    let previus = 'sentence-undfined';
-
-    let concatElms = [];
-    let count = 0;
-    elements.forEach(elm => {
-
-
-        if ('subQuestionId' in elm) {
-
-
-            if (previus === 'sentence-undfined') {
-                concatElms.push({ type: 'none', text: '', order: count, sentenceId: false });
-            }
-
-            concatElms.push(elm);
-            previus = 'sentence-undfined'
-
-
-        } else {
-
-
-            previus = 'sentence'
-            concatElms.push(elm);
-
-
-        }
-        count++;
-    })
-
-    return concatElms;
+   
+    return elements;
 }
