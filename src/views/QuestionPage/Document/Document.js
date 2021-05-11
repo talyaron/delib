@@ -65,7 +65,7 @@ module.exports = {
             ondragleave={e => handleDragLeave(e, vnode)}
             ondrop={e => handleDrop(e, vnode)}>
             <div class={over ? 'document__main document__main--over' : 'document__main'}>
-                <DocMenu />
+                <DocMenu groupId={groupId} questionId={questionId}/>
                 <div class='document__wrapper' id='document__wrapper'>
                     {vnode.state.docElements.map((elm, index) => {
                         const id = elm.subQuestionId || elm.sentenceId;

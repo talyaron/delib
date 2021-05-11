@@ -2,6 +2,8 @@ import m from 'mithril';
 import { get } from 'lodash';
 import './Sentence.css';
 
+import {HEADER, PARAGRAPH} from './sentenceTypes';
+
 //function
 import { updateSentence } from '../../../../functions/firebase/set/setDocument';
 
@@ -11,11 +13,11 @@ module.exports = {
         vnode.state = { isEdit: false }
     },
     view: vnode => {
-        const { text, sentenceId } = vnode.attrs.sentence;
+        const { text, sentenceId, type } = vnode.attrs.sentence;
         const { order } = vnode.attrs;
 
 
-
+console.log('type:', type)
 
         return (
             <div class='sentence' data-id={sentenceId} data-type='sentence'>
