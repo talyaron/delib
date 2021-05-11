@@ -16,9 +16,6 @@ module.exports = {
         const { text, sentenceId, type } = vnode.attrs.sentence;
         const { order } = vnode.attrs;
 
-
-        console.log('type:', type)
-
         return (
             <div class={`sentence ${sentenceClass(type)}`} data-id={sentenceId} data-type='sentence'>
                 <div class='documentCard__handle'>
@@ -32,7 +29,7 @@ module.exports = {
 
         function switchEdit() {
             if (text && !vnode.state.isEdit) {
-                return (<h2 onclick={() => { console.log('click'); vnode.state.isEdit = true }}>{text}</h2>)
+                return (<h2 onclick={() => {vnode.state.isEdit = true }}>{text}</h2>)
             }
             if (!text && !vnode.state.isEdit) {
                 return (<p class='sentence__add' onclick={() => { vnode.state.isEdit = true }}>{'add'}</p>)
@@ -63,9 +60,9 @@ module.exports = {
 
 function handleInput(e, vnode) {
     const { groupId, questionId, order } = vnode.attrs;
-    console.log('order:', order)
+   
     const { sentenceId, type } = vnode.attrs.sentence;
-    console.log(e.key)
+    
     if (e.key === 'Enter') {
         updateSentence({ groupId, questionId, sentenceId, text: e.target.value, type, order });
         vnode.state.isEdit = false;

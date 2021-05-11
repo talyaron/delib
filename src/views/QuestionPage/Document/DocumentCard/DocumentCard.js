@@ -16,13 +16,13 @@ module.exports = {
     },
 
     view: vnode => {
-        const { subQuestionId, subQuestion, order } = vnode.attrs;
+        const {groupId, questionId, subQuestionId, subQuestion } = vnode.attrs;
 
         const option = get(store.selectedOption, `[${subQuestion.subQuestionId}]`, { title: 'אין עדיין תשובה' })
 
 
         return (
-            <div class='documentCard' data-id={subQuestionId} data-type='subQuestion'>
+            <div class='documentCard' data-id={subQuestionId} data-type='subQuestion' onclick={() => { m.route.set(concatenateURL(groupId, questionId, subQuestionId)) }}>
                 <div class='documentCard__handle'>
                     <img src='img/sortHandle.svg' alt='sort sub question'/>
                 </div>
