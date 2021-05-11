@@ -31,7 +31,7 @@
   "dependencies": {
     "async-each": "^1.0.3",
     "chokidar": "^3.5.1",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "mithril": "^1.1.7",
     "path-dirname": "^1.0.2",
     "regenerator-runtime": "^0.13.7",
