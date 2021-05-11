@@ -1,20 +1,36 @@
 .sentence{
     background-color: var(--white);
-    padding: var(--regPadding);
+    padding:0px var(--regPadding);
     cursor: pointer;
     user-select: none;
     display: grid;
     grid-template-columns: 30px auto;
     grid-gap: 10px;
 }
-
 .sentence__header{
-    
+    padding: 2px var(--regPadding);
+}
+.sentence__header h2{
+   
+    font-size: var(--size17);
+    margin: 4px 0px;
+}
+.sentence__paragraph{
+    padding: 0px var(--regPadding);
+}
+
+.sentence__paragraph h2{
+   
+    color: var(--gray0);
+    font-size: var(--size13);
 }
 
 .sentence__add{
     color: var(--gray3);
     font-size: small;
+}
+.sentence__edit{
+    display: flex;
 }
 
 .sentence input{

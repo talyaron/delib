@@ -5,7 +5,7 @@ import './Sentence.css';
 import { HEADER, PARAGRAPH } from './sentenceTypes';
 
 //function
-import { updateSentence } from '../../../../functions/firebase/set/setDocument';
+import { updateSentence, deleteSentence } from '../../../../functions/firebase/set/setDocument';
 
 
 module.exports = {
@@ -20,7 +20,7 @@ module.exports = {
         console.log('type:', type)
 
         return (
-            <div class={`sentence ${ sentenceClass(type)}`} data-id={sentenceId} data-type='sentence'>
+            <div class={`sentence ${sentenceClass(type)}`} data-id={sentenceId} data-type='sentence'>
                 <div class='documentCard__handle'>
                     <img src='img/sortHandle.svg' alt='sort sub question' />
                 </div>
@@ -32,16 +32,29 @@ module.exports = {
 
         function switchEdit() {
             if (text && !vnode.state.isEdit) {
-                return (<h2 onclick={() => { console.log('click'); vnode.state.isEdit = true }}>{text} {order}</h2>)
+                return (<h2 onclick={() => { console.log('click'); vnode.state.isEdit = true }}>{text}</h2>)
             }
             if (!text && !vnode.state.isEdit) {
                 return (<p class='sentence__add' onclick={() => { vnode.state.isEdit = true }}>{'add'}</p>)
             }
             if (vnode.state.isEdit) {
-                return (<input type='text' defaultValue={text} placeholder='enter text' onkeyup={e => handleInput(e, vnode)} />)
+                return (
+                    <div class='sentence__edit'>
+                        <input type='text' defaultValue={text} placeholder='enter text' onkeyup={e => handleInput(e, vnode)} />
+                        <img src='img/delete-lightgray.svg' alt='delete sentence' onclick={handleDeleteSentence} />
+                    </div>
+                )
             }
 
             return (<input type='text' defaultValue={text} placeholder='enter text' onkeyup={e => handleInput(e, vnode)} />)
+        }
+
+        function handleDeleteSentence() {
+
+            const { groupId, questionId } = vnode.attrs;
+            const { sentenceId } = vnode.attrs.sentence;
+        
+            deleteSentence({ groupId, questionId, sentenceId })
         }
     }
 }
@@ -51,17 +64,20 @@ module.exports = {
 function handleInput(e, vnode) {
     const { groupId, questionId, order } = vnode.attrs;
     console.log('order:', order)
-    const { sentenceId } = vnode.attrs.sentence;
+    const { sentenceId, type } = vnode.attrs.sentence;
     console.log(e.key)
     if (e.key === 'Enter') {
-        updateSentence({ groupId, questionId, sentenceId, text: e.target.value, type: 'header', order });
+        updateSentence({ groupId, questionId, sentenceId, text: e.target.value, type, order });
         vnode.state.isEdit = false;
     }
-
 }
 
+
+
+
+
 function sentenceClass(type) {
-   
+
     try {
         switch (type) {
             case HEADER:

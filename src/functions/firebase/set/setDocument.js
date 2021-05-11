@@ -56,3 +56,19 @@ export const updateSentence = ({ groupId, questionId, sentenceId, text, type, or
     }
 
 }
+
+export const deleteSentence = ids => {
+    const {groupId, questionId, sentenceId} = ids;
+
+    try{
+        DB
+        .collection('groups').doc(groupId)
+        .collection('questions').doc(questionId)
+        .collection('document').doc(sentenceId)
+        .delete()
+        .then(()=>console.info(`sentence ${sentenceId} was deleted`))
+        .catch(e=>console.error(e))
+    } catch(e){
+        console.error(e)
+    }
+}
