@@ -53,7 +53,7 @@ module.exports = {
       title: vnode.attrs.title,
       description: vnode.attrs.description,
     };
-    console.log('listen to option.....', optionId)
+  
     listenToTopConsequences({ groupId, questionId, subQuestionId, optionId })
   },
   onbeforeupdate: (vnode) => {

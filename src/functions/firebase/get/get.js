@@ -659,7 +659,6 @@ function listenToConsequences(groupId, questionId, subQuestionId, optionId) {
 
 function listenToTopConsequences(ids) {
 
-    console.log('listenToTopConsequences')
 
     try {
         const { groupId, questionId, subQuestionId, optionId } = ids;
@@ -672,7 +671,6 @@ function listenToTopConsequences(ids) {
         if (!{}.hasOwnProperty.call(store.consequencesTopListen, optionId)) {
             store.consequencesTopListen[optionId] = true;
             store.consequencesTop[optionId] = [];
-            console.log('listen to option top:', optionId)
             
             
             DB

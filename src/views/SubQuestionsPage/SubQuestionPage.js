@@ -198,7 +198,7 @@ module.exports = {
                                 <main ontouchstart={handleTouchStart} ontouchend={handleTouchStart} ontouchmove={e => handleTouchMove(e, vnode)} style={`grid-template-columns:${cssForCarousel(vnode)};`} id='carousel__main'>
 
 
-                                    <div class='carousel__col'>
+                                    <div class='carousel__col subQuations__col'>
                                         <SubQuestion
                                             vsp={vnode.state}
                                             question={vnode.state.details.title}
