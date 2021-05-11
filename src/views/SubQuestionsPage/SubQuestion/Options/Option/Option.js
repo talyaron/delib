@@ -53,7 +53,7 @@ module.exports = {
       title: vnode.attrs.title,
       description: vnode.attrs.description,
     };
-
+    console.log('listen to option.....', optionId)
     listenToTopConsequences({ groupId, questionId, subQuestionId, optionId })
   },
   onbeforeupdate: (vnode) => {
@@ -100,6 +100,7 @@ module.exports = {
     }
   },
   onupdate: (vnode) => {
+
 
     const { optionId } = vnode.attrs.ids;
 
@@ -186,35 +187,35 @@ module.exports = {
                 {!vnode.state.isEdit ? (
                   <span>{vnode.attrs.title}</span>
                 ) : (
-                    <input
-                      type="text"
-                      defaultValue={vnode.state.title}
-                      onkeyup={(e) => {
-                        vnode.state.title = e.target.value;
-                      }}
-                    />
-                  )}
+                  <input
+                    type="text"
+                    defaultValue={vnode.state.title}
+                    onkeyup={(e) => {
+                      vnode.state.title = e.target.value;
+                    }}
+                  />
+                )}
               </div>
               {!vnode.state.isEdit ? (
                 <div class="optionCard__creator">
                   {vnode.state.creatorName}
                 </div>
               ) : (
-                  <div class="optionCard__creator">
-                    <input
-                      type="checkbox"
-                      defaultChecked={vnode.state.isNamed}
-                      onchange={(e) => {
-                        isAnonymous(e, vnode);
-                      }}
-                    />
-                    {vnode.state.isNamed ? (
-                      <span>{vnode.state.creatorName}</span>
-                    ) : (
-                        <span>אנונימי/ת</span>
-                      )}
-                  </div>
-                )}
+                <div class="optionCard__creator">
+                  <input
+                    type="checkbox"
+                    defaultChecked={vnode.state.isNamed}
+                    onchange={(e) => {
+                      isAnonymous(e, vnode);
+                    }}
+                  />
+                  {vnode.state.isNamed ? (
+                    <span>{vnode.state.creatorName}</span>
+                  ) : (
+                    <span>אנונימי/ת</span>
+                  )}
+                </div>
+              )}
 
               <div class={isImgRegExp.test(description) ? "option__card__description--image" : "option__card__description"} onclick={() => { if (!vnode.state.isEdit) { m.route.set(`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) } }}>
                 {!vnode.state.isEdit ? (
@@ -222,13 +223,13 @@ module.exports = {
                     return (convertParagraphsToVisual(paragraph, index))
                   })
                 ) : (
-                    <textarea
-                      defaultValue={vnode.state.description}
-                      onkeyup={(e) => {
-                        vnode.state.description = e.target.value;
-                      }}
-                    />
-                  )}
+                  <textarea
+                    defaultValue={vnode.state.description}
+                    onkeyup={(e) => {
+                      vnode.state.description = e.target.value;
+                    }}
+                  />
+                )}
               </div>
               {/* {vnode.state.more.text.length > 0 ? (
                 <div>
@@ -305,7 +306,7 @@ module.exports = {
           {/* options information panel */}
           <hr></hr>
           {consequencesTop.length > 0 ?
-            <div onclick={() => { enterIn(document.getElementById('page'),`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) }}  >
+            <div onclick={() => { enterIn(document.getElementById('page'), `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) }}  >
               {consequencesTop.map(consequence => {
 
                 return (<ConsequenceTop consequence={consequence} ids={{ groupId, questionId, subQuestionId, optionId }} key={consequence.consequenceId} />)
@@ -314,7 +315,7 @@ module.exports = {
               }
             </div>
             :
-            <div class='consequences__tip' onclick={() => { enterIn(document.getElementById('page'),`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) }}>יש לכם טענות בעד ונגד ההצעה?</div>
+            <div class='consequences__tip' onclick={() => { enterIn(document.getElementById('page'), `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) }}>יש לכם טענות בעד ונגד ההצעה?</div>
           }
           <hr></hr>
           <div class="optionCard__info">
@@ -350,19 +351,19 @@ module.exports = {
                   {!vnode.state.isEdit ? (
                     <img src="img/edit.svg" />
                   ) : (
-                      <div
-                        class="buttons editOptionBtn"
-                        onclick={() => {
-                          updateOption(vnode);
-                        }}
-                      >
-                        אישור
-                      </div>
-                    )}
+                    <div
+                      class="buttons editOptionBtn"
+                      onclick={() => {
+                        updateOption(vnode);
+                      }}
+                    >
+                      אישור
+                    </div>
+                  )}
                 </div>
               ) : (
-                  <div />
-                )}
+                <div />
+              )}
             </div>
             {vnode.attrs.creatorId == store.user.uid || vnode.state.admin == store.user.uid ?
               <div class="optionCard__infoItem" onclick={() => handleHide(vnode)}>

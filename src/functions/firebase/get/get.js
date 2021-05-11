@@ -215,7 +215,7 @@ function getQuestions(onOff, groupId, vnode) {
             .orderBy("time", "desc")
             .onSnapshot(questionsDb => {
                 questionsDb.forEach(questionDB => {
-                    if (questionDB.data().id) {  setStore(store.questions, groupId, questionDB.data().id, questionDB.data()); }
+                    if (questionDB.data().id) { setStore(store.questions, groupId, questionDB.data().id, questionDB.data()); }
                 });
 
                 m.redraw();
@@ -335,7 +335,7 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
                     subQuestionsDB.forEach(subQuestionDB => {
                         let subQuestionObj = subQuestionDB.data();
                         subQuestionObj.subQuestionId = subQuestionObj.id = subQuestionDB.id;
-                         
+
 
                         subQuestionsArray.push(subQuestionObj);
                         subQuestionsObj[subQuestionObj.id] = {};
@@ -659,6 +659,8 @@ function listenToConsequences(groupId, questionId, subQuestionId, optionId) {
 
 function listenToTopConsequences(ids) {
 
+    console.log('listenToTopConsequences')
+
     try {
         const { groupId, questionId, subQuestionId, optionId } = ids;
 
@@ -669,8 +671,10 @@ function listenToTopConsequences(ids) {
 
         if (!{}.hasOwnProperty.call(store.consequencesTopListen, optionId)) {
             store.consequencesTopListen[optionId] = true;
-            store.consequencesTop[optionId] = []
-
+            store.consequencesTop[optionId] = [];
+            console.log('listen to option top:', optionId)
+            
+            
             DB
                 .collection('groups')
                 .doc(groupId)
@@ -682,14 +686,14 @@ function listenToTopConsequences(ids) {
                 .doc(optionId)
                 .collection('consequences')
                 .orderBy('totalWeightAbs', 'desc')
-                .limit(3)
+                .limit(1)
                 .onSnapshot(consequencesDB => {
                     let consequences = [];
                     consequencesDB.forEach(consequenceDB => {
-                        consequences.push(consequenceDB.data())
+                        store.consequencesTop[optionId] = [consequenceDB.data()]
                     })
 
-                    store.consequencesTop[optionId] = consequences;
+
 
                     m.redraw();
                 })
