@@ -126,8 +126,15 @@ module.exports = {
 
         //change carousel size according to window size
         window.addEventListener('resize', () => {
-            document.querySelector('#carousel__main').style.gridTemplateColumns = `${cssForCarousel(vnode)}`
+            document.querySelector('#carousel__main').style.gridTemplateColumns = `${cssForCarousel(vnode)}`;
+
+            setCarouselHeight();
         })
+
+        setCarouselHeight();
+
+
+
     },
     onbeforeupdate: vnode => {
 
@@ -156,6 +163,9 @@ module.exports = {
 
         //get language
         vnode.state.language = getLanguage(groupId);
+
+
+
 
     },
 
@@ -380,7 +390,7 @@ function handleDrop(e, vnode) {
 
 
         const { groupId, questionId } = vnode.attrs;
-       
+
         const subQuestionId = e.dataTransfer.getData("text");
 
         //move in DB to main
@@ -394,6 +404,19 @@ function handleDrop(e, vnode) {
     }
 }
 
+function setCarouselHeight() {
+    const header = document.querySelector('.page__header');
+    const navbottom = document.querySelector('.navBottom');
+    const carousel = document.querySelector('.carousel');
+
+    const colHeight = `${window.innerHeight - header.clientHeight - navbottom.clientHeight}px`;
+    const columns = document.querySelectorAll('.carousel__col');
+    columns.forEach(col => {
+        col.style.height = colHeight
+    })
+
+    carousel.style.height = colHeight;
+}
 
 
 

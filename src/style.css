@@ -653,8 +653,14 @@ input[type=checkbox] {
     grid-template-columns: repeat(5, 20vw);
     width: 100vw;
     overflow-x:hidden;
+    overflow-y: hidden;
 
 }  
+
+.carousel__col{
+    height: 100%;
+    
+}
 
 .carousel>main {
     width: 100vw;
@@ -662,6 +668,7 @@ input[type=checkbox] {
     scroll-behavior: smooth;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+   
 }
 
 /* carousel scroll */
