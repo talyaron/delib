@@ -82,8 +82,10 @@ exports.totalVotes = functions.firestore
         if (optionDoc.data().totalVoters !== undefined) {
           let totalVoters = optionDoc.data().totalVoters;
 
-          // old method consensusPrecentage = totalVotes / totalVoters; consensus with
-          // respect to group size
+          // old method consensusPrecentage = totalVotes / totalVoters; 
+          
+          
+          //consensus with respect to group size
           consensusPrecentage =
             (totalVotes / totalVoters) * (Math.log(totalVoters) / Math.log(10));
         }
