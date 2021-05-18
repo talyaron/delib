@@ -25,7 +25,7 @@ module.exports = {
                     <img src='img/send-24px.svg' alt='send' />
                 </button>
                 <textarea
-                    value={vnode.state.message}
+                    defaultValue={vnode.state.message}
                     onkeyup={e => {
 
                         vnode.state.message = e.target.value
