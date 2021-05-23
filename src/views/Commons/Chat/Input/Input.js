@@ -34,6 +34,7 @@ module.exports = {
                         if (e.key === 'Enter' && e.shiftKey === false && e.target.value.replace(/\s/g, '').length>0) {
 
                             handleSend({ title, entity, topic, url, groupId, questionId, subQuestionId, optionId, user: store.user, message: vnode.state.message, vnode })
+                            e.target.value='';
                         }
                     }}>
 

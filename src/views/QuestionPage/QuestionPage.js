@@ -243,7 +243,7 @@ module.exports = {
 
                 <div class='carousel' >
                     <main style={`grid-template-columns:${cssForCarousel(vnode)};`} id='carousel__main'>
-                        <div class={vnode.state.over ? `carousel__col document__main--over` : `carousel__col`} ondragover={e => handleDragOver(e, vnode)}
+                        <div class={vnode.state.over ? `carousel__col document__main--over` : `carousel__col`} style={'overflow-y:auto'} ondragover={e => handleDragOver(e, vnode)}
                             ondragleave={e => handleDragLeave(e, vnode)}
                             ondrop={e => handleDrop(e, vnode)}>
                             {vnode.state.title === 'כותרת השאלה' ?
