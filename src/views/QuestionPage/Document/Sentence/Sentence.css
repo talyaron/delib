@@ -33,7 +33,7 @@
     display: flex;
 }
 
-.sentence input{
+.sentence textarea{
     height: var(--size21);
     width: 100%;
     border: 1px solid var(--gray2);

@@ -43,7 +43,7 @@ module.exports = {
             <div class='title'>
                 <h1>פתרון אפשרי: {title}</h1>
                 {vnode.state.edit ?
-                    <textarea class='inputGeneral' defaultValue={description} onkeyup={e => handleEditDescription(e, vnode)} id={`optionDescription${optionId}`} />
+                    <textarea class='inputs inputGeneral input__description' defaultValue={description} onkeyup={e => handleEditDescription(e, vnode)} id={`optionDescription${optionId}`} />
                     :
                     <div class='description__text'  >
                         {

@@ -1044,11 +1044,16 @@ function listenToChat(ids) {
 
 
                         if (!(path in store.chat)) { store.chat[path] = [] }
-                        store.chat[path].push(change.doc.data());
+                        const messageObj = change.doc.data();
+                        messageObj.messageId = change.doc.id;
+                        store.chat[path].push(messageObj);
                         store.chatLastRead = change.doc.data().createdTime;
                         store.chatMessegesNotRead[path]++;
 
 
+                    } else if(change.type === 'removed'){
+                        console.log('removed',change.doc.id )
+                        store.chat[path] = store.chat[path].filter(msg=>msg.messageId !== change.doc.id);
                     }
 
                 })

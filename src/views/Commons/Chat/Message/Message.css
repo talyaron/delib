@@ -52,6 +52,13 @@
     padding: 12px;
     font-size: var(--size15);
     line-height: 1.9rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.message__text img{
+    cursor: pointer;
+    user-select: none;
 }
 
 .message--me .message__text{

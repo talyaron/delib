@@ -37,13 +37,13 @@ module.exports = {
             if (vnode.state.isEdit) {
                 return (
                     <div class='sentence__edit'>
-                        <input type='text' defaultValue={text} placeholder='enter text' onkeyup={e => handleInput(e, vnode)} />
+                        <textarea defaultValue={text} placeholder='enter text' onkeyup={e => handleInput(e, vnode)} />
                         <img src='img/delete-lightgray.svg' alt='delete sentence' onclick={handleDeleteSentence} />
                     </div>
                 )
             }
 
-            return (<input type='text' defaultValue={text} placeholder='enter text' onkeyup={e => handleInput(e, vnode)} />)
+            return (<textarea defaultValue={text} placeholder='enter text' onkeyup={e => handleInput(e, vnode)} />)
         }
 
         function handleDeleteSentence() {
