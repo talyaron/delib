@@ -1,5 +1,6 @@
 .document{
     background-color: white;
+    overflow-y: auto;
 }
 
 .document__main{

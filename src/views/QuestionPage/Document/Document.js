@@ -63,7 +63,9 @@ module.exports = {
         return (<div class={carouselColumn ? 'carousel__col document' : 'document'}
             ondragover={e => handleDragOver(e, vnode)}
             ondragleave={e => handleDragLeave(e, vnode)}
-            ondrop={e => handleDrop(e, vnode)}>
+            ondrop={e => handleDrop(e, vnode)}
+            >
+
             <div class={over ? 'document__main document__main--over' : 'document__main'}>
                 <DocMenu groupId={groupId} questionId={questionId} />
                 <div class='document__wrapper' id='document__wrapper'>
