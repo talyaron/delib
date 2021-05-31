@@ -8,8 +8,11 @@
     grid-gap: 10px;
 }
 .documentCard h1{
-    color: var(--gray2);
-    font-size: var(--size11);
+    color: var(--white);
+    font-size: var(--size15);
+    background: var(--halfPrimary);
+    border-radius: 100px;
+    padding: 5px 10px;
 }
 
 .documentCard p{
