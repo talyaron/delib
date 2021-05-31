@@ -20,7 +20,7 @@ export const listenToTopOption = (ids, type = 'consensusPrecentage') => {
                 .collection("subQuestions")
                 .doc(subQuestionId)
                 .collection("options")
-                .orderBy(type, 'asc')
+                .orderBy(type, 'desc')
                 .limit(1)
                 .onSnapshot(optionsDB => {
                     optionsDB.forEach(optionDB => {

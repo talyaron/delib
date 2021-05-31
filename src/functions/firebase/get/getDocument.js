@@ -24,7 +24,7 @@ export const listenToSentences = (ids) => {
                         tmpSentences.push(sentenceObj)
                     })
 
-                    console.log(tmpSentences)
+                  
                     store.documents[questionId] = tmpSentences;
                     m.redraw();
                 })
