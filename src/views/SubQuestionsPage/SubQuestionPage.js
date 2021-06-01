@@ -279,8 +279,6 @@ module.exports = {
 
                 </div>
 
-                )
-
                 {
                     (vnode.state.details.processType === 'suggestions' || vnode.state.details.processType === undefined) ?
                         < div
@@ -442,13 +440,13 @@ function setCarouselHeight() {
 
 
 
-        const colHeight = `${window.innerHeight - headerHeight - navbottomHeight}px`;
+        const colHeight = `${window.innerHeight - headerHeight - navbottomHeight - 5}px`;
         const columns = document.querySelectorAll('.carousel__col');
         columns.forEach(col => {
             col.style.height = colHeight
         })
 
-        carousel.style.height = colHeight;
+        carousel.style.height = colHeight - 5;
     } catch (e) {
         console.error(e)
     }
