@@ -440,7 +440,7 @@ function setCarouselHeight() {
 
 
 
-        const colHeight = `${window.innerHeight - headerHeight - navbottomHeight - 5}px`;
+        const colHeight = `${window.innerHeight - headerHeight - navbottomHeight}px`;
         const columns = document.querySelectorAll('.carousel__col');
         columns.forEach(col => {
             col.style.height = colHeight

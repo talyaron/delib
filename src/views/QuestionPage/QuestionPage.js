@@ -409,13 +409,13 @@ function setCarouselHeight() {
     const navbottom = document.querySelector('.navBottom');
     const carousel = document.querySelector('.carousel');
 
-    const colHeight = `${window.innerHeight - header.clientHeight - navbottom.clientHeight - 5}px`;
+    const colHeight = `${window.innerHeight - header.clientHeight - navbottom.clientHeight}px`;
     const columns = document.querySelectorAll('.carousel__col');
     columns.forEach(col => {
         col.style.height = colHeight
     })
-console.log('colHeight -5',colHeight -5)
-    carousel.style.height = colHeight -5;
+console.log('colHeight -5',colHeight)
+    carousel.style.height = colHeight;
 }
 
 
