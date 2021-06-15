@@ -414,7 +414,7 @@ function setCarouselHeight() {
     columns.forEach(col => {
         col.style.height = colHeight
     })
-console.log('colHeight -5',colHeight)
+
     carousel.style.height = colHeight;
 }
 

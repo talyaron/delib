@@ -9,7 +9,7 @@ import { subscribeUser } from './setChats';
 function createGroup(settings) {
     try {
         const { creatorId, title, description, callForAction, language } = settings;
-        console.log(creatorId, title, description, callForAction, language)
+     
         const groupId = uniqueId()
 
         DB
@@ -50,7 +50,7 @@ function createGroup(settings) {
 
 function updateGroup(vnode) {
     try {
-        console.log(vnode.state)
+       
 
         DB
             .collection('groups')
@@ -387,7 +387,7 @@ function voteOption(ids, settings) {
                     let errRexExp = new RegExp('No document to update');
                     if (errRexExp.test(e.message)) {
                         optionRef.set(updateObj)
-                            .then(() => { console.log(`A vote to option ${optionId} was added`) })
+                            .then(() => { console.info(`A vote to option ${optionId} was added`) })
                             .catch(e => { console.error(e); sendError(e) })
                     } else {
                         console.error(e); sendError(e)
@@ -690,7 +690,7 @@ function updateSubItem(subItemsType, groupId, questionId, subQuestionId, title, 
 
 function setLikeToSubItem(subItemsType, groupId, questionId, subQuestionId, creatorId, isUp) {
 
-    console.log(subItemsType, groupId, questionId, subQuestionId)
+ 
     let subQuestionRef = DB
         .collection('groups')
         .doc(groupId)
@@ -891,7 +891,7 @@ function handleSubscription(vnode) {
 
         //path for subscription object
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
-        console.log(groupId, questionId, subQuestionId, optionId)
+   
         const path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
 
         subscribeUser({
