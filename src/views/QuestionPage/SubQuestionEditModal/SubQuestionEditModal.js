@@ -11,17 +11,18 @@ import {
 import settings from "../../../data/settings";
 
 //components
-import SuggestionsQuestionEdit from './SuggestionsQuestionEdit/SuggestionsQuestioEdit'
+import SuggestionsQuestionEdit from './SuggestionsQuestionEdit/SuggestionsQuestioEdit';
+import ParallelOptionsEdit from './ParallelOptionsEdit/ParallelOptionsEdit';
 
 
 module.exports = {
   oninit: vnode => {
     const { subQuestion, pvs } = vnode.attrs;
- 
+
     const { modalSubQuestion } = pvs;
 
     let { title, showSubQuestion, userHaveNavigation, proAgainstType } = modalSubQuestion;
-   
+
 
     if (userHaveNavigation === undefined) { userHaveNavigation = true };
     if (showSubQuestion == undefined) { showSubQuestion = true };
@@ -34,7 +35,8 @@ module.exports = {
       showSubQuestion: showSubQuestion,
       userHaveNavigation: userHaveNavigation,
       proAgainstType: proAgainstType || 'superSimple',
-     
+      processType: 'suggestions'
+
 
     };
   },
@@ -42,7 +44,7 @@ module.exports = {
 
     const { pvs } = vnode.attrs;
     const { modalSubQuestion } = pvs;
-    const { subQuestionId, orderBy, processType, showSubQuestion } = modalSubQuestion;
+    const { subQuestionId, orderBy, processType } = modalSubQuestion;
     const { proAgainstType } = vnode.state;
 
 
@@ -87,6 +89,7 @@ module.exports = {
                 id='processType'
                 name='processType'
                 class='inputGeneral'
+                onchange={handleTypeChange}
               >
 
                 {settings.processesArr.map((process, index) => {
@@ -106,7 +109,8 @@ module.exports = {
                 })}
               </select>
             </div>
-            <SuggestionsQuestionEdit orderBy={orderBy} proAgainstType={proAgainstType}/>
+            {vnode.state.processType === 'suggestions' ? <SuggestionsQuestionEdit orderBy={orderBy} proAgainstType={proAgainstType} /> : null}
+            {vnode.state.processType === 'parallel options' ? <ParallelOptionsEdit /> : null}
             <div class='subQuestionEdit__settings'>
               <div>
                 <input type='checkbox' name='show' checked={vnode.state.showSubQuestion == 'userSee'} id='showSubQuestion'
@@ -125,14 +129,19 @@ module.exports = {
 
             >
               שמירה
-          </button>
+            </button>
 
-            <div class="buttons buttons--cancel optionEditButton" onclick={() => {pvs.showFav=true; pvs.modalSubQuestion.isShow = false }}>Cancel</div>
+            <div class="buttons buttons--cancel optionEditButton" onclick={() => { pvs.showFav = true; pvs.modalSubQuestion.isShow = false }}>Cancel</div>
           </div>
         </form>
 
       </div>
     );
+
+    function handleTypeChange(ev) {
+      console.log(ev.target.value);
+      vnode.state.processType = ev.target.value;
+    }
   }
 };
 
@@ -143,20 +152,25 @@ function handleSubmit(e, vnode) {
     let elms = e.target.elements;
     const { subQuestion, pvs, pva } = vnode.attrs;
 
-
+    console.log(elms)
+    for (let i of elms) {
+      console.log(i.name, i.value)
+    }
 
     const title = elms.title.value;
     const processType = elms.processType.value;
-    const orderBy = elms.orderBy.value;
-    const userHaveNavigation = vnode.state.userHaveNavigation;
-    const proAgainstType = elms.proAgainstType.value;
-    let showSubQuestion = vnode.state.showSubQuestion;
+    const orderBy = ('orderBy' in elms) ? elms.orderBy.value : false;
+    const proAgainstType = ('proAgainstType' in elms) ? elms.proAgainstType.value : false;
+    const cutoff = ('cutoff' in elms) ? elms.cutoff.value : false;
 
+    const userHaveNavigation = vnode.state.userHaveNavigation;
+    let showSubQuestion = vnode.state.showSubQuestion;
+   
 
     const { groupId, questionId } = pva;
     const { numberOfSubquestions, subQuestionId } = subQuestion;
 
-    setSubQuestion({ groupId, questionId, subQuestionId }, { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions, proAgainstType });
+    setSubQuestion({ groupId, questionId, subQuestionId }, { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions, proAgainstType,cutoff });
 
     //hide modal
     pvs.modalSubQuestion.isShow = false;

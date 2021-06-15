@@ -1,0 +1,16 @@
+.editselectors {
+
+    &__range {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        text-align: center;
+    
+        & input {
+            width: 80%;
+        }
+    }
+    &__subExplanation{
+        text-align: center;
+    }
+}

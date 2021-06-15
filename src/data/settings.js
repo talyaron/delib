@@ -89,11 +89,13 @@ var settings = {
     },
     processes: {
         suggestions: 'suggestions',
-        votes: 'votes'
+        votes: 'votes',
+        parallelOptions:'parallelOptions'
     },
     processesArr: [
         'suggestions',
-        'votes'
+        'votes',
+        'parallel options'
     ]
 }
 

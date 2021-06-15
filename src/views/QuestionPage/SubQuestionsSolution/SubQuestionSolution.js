@@ -27,7 +27,7 @@ module.exports = {
 
 		const { groupId, questionId, subQuestionId } = vnode.attrs;
 
-		listenToTopOption({groupId, questionId, subQuestionId});
+		listenToTopOption({ groupId, questionId, subQuestionId });
 	},
 	onremove: (vnode) => {
 
@@ -35,11 +35,11 @@ module.exports = {
 	view: vnode => {
 
 
-		const { groupId, questionId, subQuestionId, title, creator, showSubQuestion} = vnode.attrs;
+		const { groupId, questionId, subQuestionId, title, creator, showSubQuestion } = vnode.attrs;
 
 
-		
-		const option = get(store.selectedOption, `[${subQuestionId}]`, {title:'אין עדיין תשובה'})
+
+		const option = get(store.selectedOption, `[${subQuestionId}]`, { title: 'אין עדיין תשובה' })
 
 		if (option !== undefined) {
 			return (
@@ -68,7 +68,7 @@ module.exports = {
 						</div>
 						<div>
 							<img src='img/consensus.svg' alt='counsesnsus' />
-							<div>{Math.floor(option.consensusPrecentage * 100)}%</div>
+							<div>{isNaN(option.consensusPrecentage)? <div> -- </div> : <div>{Math.floor(option.consensusPrecentage * 100)}%</div>}</div>
 						</div>
 
 					</div>
@@ -183,13 +183,17 @@ function handleEditSubQuestion(e, vnode) {
 function iconType(vnode) {
 	const { processType } = vnode.attrs;
 
-	if (processType === 'votes') {
-		return (<img src='img/votesDarkGray.svg' alt='votes' />)
-	}
-	else if (processType === 'suggestions') {
-		return (<img src='img/suggestionsDarkGray.svg' alt='suggestions' />)
-	} else {
-		return (<img src='' alt='unknowen process' />)
+	switch (processType) {
+		case 'votes':
+			return (<img src='img/votesDarkGray.svg' alt='votes' />);
+		case 'suggestions':
+			return (<img src='img/suggestionsDarkGray.svg' alt='suggestions' />);
+		case 'parallel options':
+			return (<img src='img/lines.svg' alt='votes' />);
+		default:
+			return (<img src='img/question.svg' alt='unknowen process' />)
+
+
 	}
 }
 

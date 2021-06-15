@@ -9,7 +9,7 @@ import { subscribeUser } from './setChats';
 function createGroup(settings) {
     try {
         const { creatorId, title, description, callForAction, language } = settings;
-     
+
         const groupId = uniqueId()
 
         DB
@@ -50,7 +50,7 @@ function createGroup(settings) {
 
 function updateGroup(vnode) {
     try {
-       
+
 
         DB
             .collection('groups')
@@ -189,9 +189,11 @@ function updateSubQuestionOrderBy(groupId, questionId, subQuestionId, orderBy) {
 }
 
 function setSubQuestion(ids, settings) {
-    try {
-        return new Promise((resolve, reject) => {
-            const { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions, proAgainstType } = settings;
+
+    return new Promise((resolve, reject) => {
+        try {
+            console.log('saving........')
+            const { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions, proAgainstType, cutoff } = settings;
             const { groupId, questionId, subQuestionId } = ids;
 
 
@@ -208,24 +210,26 @@ function setSubQuestion(ids, settings) {
                 //new subQuestion
                 const uid = uniqueId()
 
-                subQuestionRef.doc(uid).set({ title, processType, orderBy, groupId, questionId, subQuestionId: uid, userHaveNavigation, showSubQuestion, order: numberOfSubquestions, proAgainstType, creator: store.user.uid })
+                subQuestionRef.doc(uid).set({ title, processType, orderBy, groupId, questionId, subQuestionId: uid, userHaveNavigation, showSubQuestion, order: numberOfSubquestions, proAgainstType, creator: store.user.uid, cutoff })
                     .then(() => { console.info(`saved subQuestion ${uid} to DB`); resolve(uid) })
                     .catch(e => {
                         console.error(e); sendError(e)
                         reject(undefined)
                     })
             } else {
-                subQuestionRef.doc(subQuestionId).update({ title, processType, orderBy, groupId, questionId, subQuestionId, userHaveNavigation, showSubQuestion, proAgainstType })
+                subQuestionRef.doc(subQuestionId).update({ title, processType, orderBy, groupId, questionId, subQuestionId, userHaveNavigation, showSubQuestion, proAgainstType, cutoff })
                     .then(() => { console.info(`updated subQuestion ${subQuestionId} to DB`); resolve(subQuestionId) })
                     .catch(e => {
                         console.error(e); sendError(e);
                         reject(undefined);
                     })
             }
-        })
-    } catch (e) {
-        console.error(e); sendError(e)
-    }
+        } catch (e) {
+            console.error(e); sendError(e);
+            reject(undefined)
+        }
+    })
+
 
 
 
@@ -690,7 +694,7 @@ function updateSubItem(subItemsType, groupId, questionId, subQuestionId, title, 
 
 function setLikeToSubItem(subItemsType, groupId, questionId, subQuestionId, creatorId, isUp) {
 
- 
+
     let subQuestionRef = DB
         .collection('groups')
         .doc(groupId)
@@ -891,7 +895,7 @@ function handleSubscription(vnode) {
 
         //path for subscription object
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs;
-   
+
         const path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
 
         subscribeUser({
