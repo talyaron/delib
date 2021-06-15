@@ -7,6 +7,7 @@ import './SubQuestion.css';
 import Options from './Options/Options';
 import Votes from './Votes/Votes';
 import Modal from '../../Commons/Modal/Modal';
+import ParallelOptions from './ParallelOptions/ParallelOptions'
 
 //model
 import store from '../../../data/store';
@@ -83,19 +84,7 @@ module.exports = {
 
 		return (
 			<div class="subQuestionWrapper" id="optionsWrapper">
-				{/* <div class={vnode.attrs.isAlone ? "subQuestionSection questionSection--alone" : "questionSection"} style={processType === 'votes' ? 'display: flex; flex-direction: column;' : null} > */}
-				{/* <div class='title'>
-						{lang[language].question}: {question}
-						<div class='subQuestion__addOptionWrapper'>
-							{processType !== 'votes' ? <div class='subQuestion__addOption' onclick={() => { vsp.showModal.isShow = true }}>
-								{lang[language].addSolution}
-							</div>
-								: null
-							}
-							
-						</div>
-					</div>
-					{processType !== 'votes'?<h3 class='subQuestion__question'>{lang[language].solutions}</h3>:null} */}
+			
 
 				{switchProcess(vsp.processType, vnode)}
 
@@ -147,6 +136,13 @@ function switchProcess(type, vnode) {
 			);
 		case 'votes':
 			return <Votes ids={{ groupId, questionId, subQuestionId }} options={options} question={questionObj} />;
+		case "parallel options":
+			return <ParallelOptions
+				groupId={groupId}
+				questionId={questionId}
+				subQuestionId={subQuestionId}
+				options={options}
+				isAlone={isAlone} />
 		default:
 			return (
 				<Options

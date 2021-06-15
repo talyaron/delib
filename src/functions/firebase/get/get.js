@@ -418,6 +418,7 @@ function listenToOptions(groupId, questionId, subQuestionId, order = 'top', isSi
                 .orderBy(orderBy, "desc")
                 .limit(limit)
                 .onSnapshot(optionsDB => {
+                    console.log('listenToOptions')
                     let optionsArray = [];
                     optionsDB.forEach(optionDB => {
 
@@ -485,6 +486,7 @@ function listenToUserLastReadOfOptionChat(optionId) {
                 .collection('optionsRead')
                 .doc(optionId)
                 .onSnapshot(optionListenDB => {
+                    console.log('listenToUserLastReadOfOptionChat')
                     if (optionListenDB.exists) {
                         const numberOfMessages = optionListenDB.data().numberOfMessages || 0;
                         store.optionNumberOfMessagesRead[optionId] = numberOfMessages;
@@ -522,6 +524,7 @@ function listenToOption(ids) {
             .collection("options")
             .doc(optionId)
             .onSnapshot(optionDB => {
+                console.log('listen ot option')
                 let optionObj = optionDB.data();
 
                 optionObj.optionId = optionDB.data().optionId;

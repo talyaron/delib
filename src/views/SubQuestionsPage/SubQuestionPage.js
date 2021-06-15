@@ -40,7 +40,7 @@ module.exports = {
 
         const orderBy = getOrderByFromUrl(vnode);
 
-        console.log('sub question page', orderBy)
+    
 
         const firstUrl = getFirstUrl();
 
@@ -152,7 +152,7 @@ module.exports = {
 
     },
     onupdate: vnode => {
-
+     
 
         vnode.state.subscribed = get(store.subscribe, `[${vnode.state.path}]`, false);
 
@@ -280,7 +280,7 @@ module.exports = {
                 </div>
 
                 {
-                    (vnode.state.details.processType === 'suggestions' || vnode.state.details.processType === undefined) ?
+                    (vnode.state.details.processType === 'suggestions' || vnode.state.details.processType === 'parallel options' || vnode.state.details.processType === undefined) ?
                         < div
                             class="fav fav__subQuestion fav--blink"
                             onclick={() => {
@@ -433,7 +433,7 @@ function scrollSides(direction, vnode) {
 
 function setCarouselHeight() {
     try {
-        console.log('sdgsdgsdgd')
+   
         const headerHeight = document.querySelector('.page__header').clientHeight;
         const navbottomHeight = document.querySelector('.navBottom').clientHeight;
         const carousel = document.querySelector('.carousel');

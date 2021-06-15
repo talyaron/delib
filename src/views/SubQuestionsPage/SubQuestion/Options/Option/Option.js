@@ -101,7 +101,7 @@ module.exports = {
   },
   onupdate: (vnode) => {
 
-
+console.log('option update')
     const { optionId } = vnode.attrs.ids;
 
 

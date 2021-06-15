@@ -1,78 +1,196 @@
 "use strict";
 
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 var _mithril = _interopRequireDefault(require("mithril"));
 
 var _config = require("../config");
 
-var _store = _interopRequireDefault(require("../../../data/store"));
+var _store = _interopRequireWildcard(require("../../../data/store"));
 
 var _lodash = require("lodash");
 
 var _general = require("../../general");
+
+var _set = require("../set/set");
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 //functions
 var unsubscribe = {};
 
-function getUserGroups(onOff, userId) {
+function getUser(uid) {
   try {
-    if (onOff == "on") {
-      try {
-        _config.DB.collection("users").doc(userId).collection("groupsOwned").onSnapshot(function (groupsOwnedDB) {
-          //unsubsribe from previous listeners
-          for (var i in unsubscribe) {
-            unsubscribe[i]();
-          }
+    _config.DB.collection('users').doc(uid).get().then(function (userDB) {
+      if (userDB.exists) {
+        var _userDB$data = userDB.data(),
+            stopRegistrationMessages = _userDB$data.stopRegistrationMessages,
+            firstTimeOnSuggestions = _userDB$data.firstTimeOnSuggestions;
 
-          unsubscribe = {};
-          var groupsNumber = groupsOwnedDB.size;
-          var count = 0;
-          var groupsObj = {},
-              groupsArray = [];
-          groupsOwnedDB.forEach(function (groupOwnedDB) {
-            //listen a group and update...
-            unsubscribe[groupOwnedDB.data().id] = _config.DB.collection("groups").doc(groupOwnedDB.data().id).onSnapshot(function (groupDB) {
-              var tempObj = groupDB.data();
-              tempObj.id = groupOwnedDB.id;
-              groupsObj[groupOwnedDB.data().id] = tempObj;
-              count++;
+        if (stopRegistrationMessages === undefined) stopRegistrationMessages = false;
+        _store["default"].user.stopRegistrationMessages = stopRegistrationMessages; //check if user is first time on suggestions
 
-              if (count == groupsNumber) {
-                //first update
-                for (var _i in groupsObj) {
-                  groupsArray.push(groupsObj[_i]);
-                }
-
-                _store["default"].userGroups = groupsArray;
-
-                _mithril["default"].redraw();
-              } else if (count > groupsNumber) {
-                //net updates after initial update search in array and replace
-                var indexOfGroup = _store["default"].userGroups.findIndex(function (group) {
-                  return group.id === tempObj.id;
-                });
-
-                _store["default"].userGroups[indexOfGroup] = tempObj;
-
-                _mithril["default"].redraw();
-              }
-            });
-          });
-        }, function (err) {
-          console.error('On getUserGroups:', err.name, err.message);
-        });
-      } catch (err) {
-        console.error(err);
+        if (firstTimeOnSuggestions === undefined) _store["default"].user.firstTimeOnSuggestions = true;
       }
-    } else {
-      //turn off listeners
-      for (var i in unsubscribe) {
-        unsubscribe[i]();
-      }
+    })["catch"](function (e) {
+      console.error(e);
+      (0, _set.sendError)(e);
+    });
+  } catch (e) {
+    console.error(e);
+    (0, _set.sendError)(e);
+  }
+}
+
+function listenToUserGroups() {
+  try {
+    if (!{}.hasOwnProperty.call(_store["default"].user, 'uid')) throw new Error('Cant listen to user groups, because user do not have uid');
+
+    if (_store["default"].userGroupsListen === false) {
+      _store["default"].userGroupsListen = true;
+
+      _config.DB.collection("users").doc(_store["default"].user.uid).collection("groupsOwned").onSnapshot(function (groupsOwnedDB) {
+        setTimeout(function () {
+          if (_store["default"].userGroups[0] === false) _store["default"].userGroups.splice(0, 1);
+
+          _mithril["default"].redraw();
+        }, 500);
+        listenToGroups(groupsOwnedDB);
+
+        _mithril["default"].redraw();
+      }, function (err) {
+        console.error('On getUserGroups:', err.name, err.message);
+        (0, _set.sendError)(err);
+      });
     }
   } catch (err) {
     console.error(err);
+  }
+}
+
+function listenToRegisterdGroups() {
+  try {
+    if ({}.hasOwnProperty.call(_store["default"].user, 'uid') && _store["default"].registerGroupsListen === false) {
+      _store["default"].registerGroupsListen = true;
+
+      _config.DB.collection('users').doc(_store["default"].user.uid).collection('registerGroups').onSnapshot(function (groupsDB) {
+        listenToGroups(groupsDB);
+      }, function (err) {
+        console.error('On listenToRegisterdGroups:', err.name, err.message);
+        (0, _set.sendError)(e);
+      });
+    }
+  } catch (e) {
+    console.error(e);
+    (0, _set.sendError)(e);
+  }
+}
+
+function listenToGroups(groupsDB) {
+  try {
+    groupsDB.docChanges().forEach(function (change) {
+      if (change.type === "added") {
+        //subscribe to group and listen
+        _store["default"].userGroupsListners[change.doc.id] = listenToGroup(change.doc.id);
+      } else if (change.type === "removed") {
+        //remove from dom
+        var groupIndex = _store["default"].userGroups.findIndex(function (group) {
+          return group.id === change.doc.id;
+        });
+
+        if (groupIndex > -1) {
+          _store["default"].userGroups.splice(groupIndex, 1);
+        } //unsubscribe to group
+
+
+        _store["default"].userGroupsListners[change.doc.id]();
+
+        delete _store["default"].userGroupListen[change.doc.id];
+      }
+
+      _mithril["default"].redraw();
+    });
+  } catch (e) {
+    console.error(e);
+    (0, _set.sendError)(e);
+  }
+}
+
+function listenToGroup(groupId) {
+  try {
+    if (!{}.hasOwnProperty.call(_store["default"].userGroupsListners, groupId)) {
+      _store["default"].userGroupListen[groupId] = true;
+      return _config.DB.collection('groups').doc(groupId).onSnapshot(function (groupDB) {
+        if (groupDB.exists) {
+          var groupIndex = _store["default"].userGroups.findIndex(function (group) {
+            return group.id === groupId;
+          });
+
+          if (_store["default"].userGroups[0] === false) _store["default"].userGroups.splice(0, 1);
+          var groupObj = groupDB.data();
+
+          if (!{}.hasOwnProperty.call(groupObj, 'id')) {
+            _config.DB.collection('groups').doc(groupId).update({
+              id: groupId,
+              groupId: groupId
+            })["catch"](function (e) {
+              console.error(e);
+              (0, _set.sendError)(e);
+            });
+          }
+
+          groupObj.id = groupObj.groupId = groupDB.id;
+
+          if (groupIndex == -1) {
+            _store["default"].userGroups.push(groupObj);
+          } else {
+            _store["default"].userGroups[groupIndex] = groupObj;
+          }
+
+          _mithril["default"].redraw();
+        } else {
+          _config.DB.collection('users').doc(_store["default"].user.uid).collection('registerGroups').doc(groupId)["delete"]().then(function (d) {
+            return console.info(d);
+          });
+
+          throw new Error("group ".concat(groupId, " do not exists. deleteing this group from user subscription"));
+        }
+      }, function (err) {
+        console.error('On listenToGroup:', err.name, err.message);
+        (0, _set.sendError)(err);
+      });
+    } else {
+      return function () {};
+    }
+  } catch (e) {
+    console.error(e);
+    (0, _set.sendError)(e);
+    ;
+  }
+}
+
+function listenToGroupMembers(groupId) {
+  try {
+    return _config.DB.collection('groups').doc(groupId).collection('members').onSnapshot(function (membersDB) {
+      var members = [];
+      membersDB.forEach(function (memberDB) {
+        members.push(memberDB.data());
+      });
+      _store["default"].groupMembers[groupId] = members;
+
+      _mithril["default"].redraw();
+    }, function (e) {
+      console.error(e);
+      (0, _set.sendError)(e);
+    });
+  } catch (e) {
+    console.error(e);
+    (0, _set.sendError)(e);
+    return function () {};
   }
 }
 
@@ -81,8 +199,6 @@ function getQuestions(onOff, groupId, vnode) {
     vnode.state.unsubscribe = _config.DB.collection("groups").doc(groupId).collection("questions").orderBy("time", "desc").onSnapshot(function (questionsDb) {
       questionsDb.forEach(function (questionDB) {
         if (questionDB.data().id) {
-          // set(store.questions, `[${groupId}][${questionDB.data().id}]`,
-          // questionDB.data())
           setStore(_store["default"].questions, groupId, questionDB.data().id, questionDB.data());
         }
       });
@@ -105,17 +221,26 @@ function setStore(obj, groupId, questionId, data) {
 
 function listenToGroupDetails(groupId, vnode) {
   try {
-    return _config.DB.collection("groups").doc(groupId).onSnapshot(function (groupDB) {
-      _store["default"].groups[groupId] = groupDB.data();
+    if (typeof groupId !== 'string') {
+      console.info(groupId);
+      throw new Error(' groupId is not a string');
+    }
 
-      _mithril["default"].redraw();
-    }, function (err) {
-      console.error("At listenToGroupDetails: ".concat(err.name, ", ").concat(err.message));
+    if (!{}.hasOwnProperty.call(_store["default"].groupListen, groupId)) {
+      _store["default"].groupListen[groupId] = true;
 
-      if (err.message === 'Missing or insufficient permissions.') {
-        _mithril["default"].route.set('/unauthorized');
-      }
-    });
+      _config.DB.collection("groups").doc(groupId).onSnapshot(function (groupDB) {
+        _store["default"].groups[groupId] = groupDB.data();
+
+        _mithril["default"].redraw();
+      }, function (err) {
+        console.error("At listenToGroupDetails: ".concat(err.name, ", ").concat(err.message));
+
+        if (err.message === 'Missing or insufficient permissions.') {
+          _mithril["default"].route.set('/unauthorized');
+        }
+      });
+    }
   } catch (err) {
     console.error(err);
   }
@@ -133,30 +258,59 @@ function getQuestionDetails(groupId, questionId, vnode) {
       vnode.state.authorized = questionDB.data().authorization;
     }
 
+    listenSubQuestions(groupId, questionId, vnode);
+
     _mithril["default"].redraw();
   });
 
   return unsubscribe;
 }
 
-function getSubQuestions(groupId, questionId, vnode) {
+function listenSubQuestions(groupId, questionId, vnode) {
   var getSubOptions = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
-  var subQuestionRef = _config.DB.collection("groups").doc(groupId).collection("questions").doc(questionId).collection("subQuestions");
+  try {
+    //listen only once
+    if (!{}.hasOwnProperty.call(_store["default"].subQuestionsListners, questionId)) {
+      _store["default"].subQuestionsListners[questionId] = {
+        listen: true
+      };
 
-  return subQuestionRef.orderBy("order", "asc").get().then(function (subQuestionsDB) {
-    var subQuestionsArray = [];
-    var subQuestionsObj = {};
-    subQuestionsDB.forEach(function (subQuestionDB) {
-      var subQuestionObj = subQuestionDB.data();
-      subQuestionObj.id = subQuestionDB.id;
-      subQuestionsArray.push(subQuestionObj);
-      subQuestionsObj[subQuestionObj.id] = {};
-    });
-    vnode.state.subQuestions = subQuestionsArray;
+      if (!{}.hasOwnProperty.call(vnode.state, 'creatorId')) {
+        throw new Error('No creatorId in vnode at listenSubQuestions');
+      }
 
-    _mithril["default"].redraw();
-  });
+      var term, search; // sub question seen by the admin are diffrenet then subquestions seen by yhe simple user
+
+      if (vnode.state.creatorId != _store["default"].user.uid) {
+        //simple user view
+        term = '==';
+        search = 'userSee';
+      } else {
+        //admin view
+        term = '!=';
+        search = 'deleted';
+      }
+
+      _config.DB.collection("groups").doc(groupId).collection("questions").doc(questionId).collection("subQuestions") // .where('showSubQuestion', term, search)
+      .onSnapshot(function (subQuestionsDB) {
+        var subQuestionsArray = [];
+        var subQuestionsObj = {};
+        subQuestionsDB.forEach(function (subQuestionDB) {
+          var subQuestionObj = subQuestionDB.data();
+          subQuestionObj.subQuestionId = subQuestionObj.id = subQuestionDB.id;
+          subQuestionsArray.push(subQuestionObj);
+          subQuestionsObj[subQuestionObj.id] = {};
+        });
+        _store["default"].subQuestions[groupId] = subQuestionsArray;
+
+        _mithril["default"].redraw();
+      });
+    }
+  } catch (e) {
+    console.error(e);
+    (0, _set.sendError)(e);
+  }
 }
 
 function getSubQuestion(groupId, questionId, subQuestionId, isSingle) {
@@ -170,10 +324,13 @@ function getSubQuestion(groupId, questionId, subQuestionId, isSingle) {
         _mithril["default"].redraw();
       } else {
         console.error("subQuestion ".concat(groupId, "/").concat(questionId, "/").concat(subQuestionId, " dont exists "));
+
+        _mithril["default"].route.set("question/".concat(groupId, "/").concat(questionId));
       }
     });
   } catch (e) {
     console.error(e);
+    (0, _set.sendError)(e);
   }
 }
 
@@ -181,68 +338,104 @@ function listenToOptions(groupId, questionId, subQuestionId) {
   var order = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'top';
   var isSingle = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
 
-  var optionsRef = _config.DB.collection("groups").doc(groupId).collection("questions").doc(questionId).collection("subQuestions").doc(subQuestionId).collection("options");
+  try {
+    if (!{}.hasOwnProperty.call(_store["default"].optionsListen, subQuestionId)) {
+      //signal that this questionId options are listend to
+      _store["default"].optionsListen[subQuestionId] = true;
 
-  var orderBy = "time";
+      var optionsRef = _config.DB.collection("groups").doc(groupId).collection("questions").doc(questionId).collection("subQuestions").doc(subQuestionId).collection("options");
 
-  switch (order) {
-    case "new":
-      orderBy = "time";
-      break;
+      var _orderBy = "time";
 
-    case "top":
-      orderBy = "consensusPrecentage";
-      break;
+      switch (order) {
+        case "new":
+          _orderBy = "time";
+          break;
 
-    default:
-      orderBy = "time";
-  }
+        case "top":
+          _orderBy = "consensusPrecentage";
+          break;
 
-  var limit = 100;
-
-  if (isSingle === true) {
-    limit = 1;
-  }
-
-  return optionsRef.orderBy(orderBy, "desc").limit(limit).onSnapshot(function (optionsDB) {
-    var optionsArray = [];
-    optionsDB.forEach(function (optionDB) {
-      //this is a patch TODO: change all data to query of active or not active options
-      if (optionDB.data().isActive == null || optionDB.data().isActive == true) {
-        var optionObj = optionDB.data();
-        optionObj.id = optionObj.optionId = optionDB.id; //the preferd syntax is 'optionId' and not id, but we left the old 'id' for backward compatability purpose (Tal Yaron)
-
-        optionObj.subQuestionId = subQuestionId; //get before position Align for animation
-
-        var elm = document.getElementById(optionObj.id);
-
-        if (elm) {
-          _store["default"].optionsLoc[optionObj.id] = {
-            offsetTop: elm.offsetTop,
-            offsetLeft: elm.offsetLeft,
-            toAnimate: true,
-            "new": false
-          };
-        } else {
-          _store["default"].optionsLoc[optionObj.id] = {
-            offsetTop: 0,
-            offsetLeft: 0,
-            toAnimate: false,
-            "new": true
-          };
-        }
-
-        optionsArray.push(optionObj);
-      } else {
-        console.info(optionDB.data().id, 'is not active');
+        default:
+          _orderBy = "time";
       }
 
-      ;
-    });
-    (0, _lodash.set)(_store["default"], "options[".concat(subQuestionId, "]"), optionsArray); //add or update or delete an option
+      var limit = 100; // if (isSingle === true) {
+      //     limit = 1
+      // }
 
-    _mithril["default"].redraw();
-  });
+      return optionsRef.orderBy(_orderBy, "desc").limit(limit).onSnapshot(function (optionsDB) {
+        console.log('listenToOptions');
+        var optionsArray = [];
+        optionsDB.forEach(function (optionDB) {
+          //see how many message the user read (from total mesaages of option). use this to calculate hoem namy messages the user didn't read.
+          listenToUserLastReadOfOptionChat(optionDB.data().optionId); //this is a patch TODO: change all data to query of active or not active options
+
+          if (optionDB.data().isActive == null || optionDB.data().isActive == true) {
+            var optionObj = optionDB.data();
+            optionObj.id = optionObj.optionId = optionDB.id; //the preferd syntax is 'optionId' and not id, but we left the old 'id' for backward compatability purpose (Tal Yaron)
+
+            optionObj.subQuestionId = subQuestionId; //get before position Align for animation
+
+            var elm = document.getElementById(optionObj.id);
+
+            if (elm) {
+              _store["default"].optionsLoc[optionObj.id] = {
+                offsetTop: elm.offsetTop,
+                offsetLeft: elm.offsetLeft,
+                toAnimate: true,
+                "new": false
+              };
+            } else {
+              _store["default"].optionsLoc[optionObj.id] = {
+                offsetTop: 0,
+                offsetLeft: 0,
+                toAnimate: false,
+                "new": true
+              };
+            }
+
+            optionsArray.push(optionObj);
+          } else {
+            console.info(optionDB.data().id, 'is not active');
+          }
+
+          ;
+        });
+        (0, _lodash.set)(_store["default"], "options[".concat(subQuestionId, "]"), optionsArray); //add or update or delete an option
+
+        _mithril["default"].redraw();
+      });
+    } else {
+      return function () {};
+    }
+  } catch (e) {
+    console.error(e);
+    (0, _set.sendError)(e);
+  }
+}
+
+function listenToUserLastReadOfOptionChat(optionId) {
+  try {
+    if (!{}.hasOwnProperty.call(_store["default"].optionNumberOfMessagesRead, optionId)) {
+      _config.DB.collection('users').doc(_store["default"].user.uid).collection('optionsRead').doc(optionId).onSnapshot(function (optionListenDB) {
+        console.log('listenToUserLastReadOfOptionChat');
+
+        if (optionListenDB.exists) {
+          var numberOfMessages = optionListenDB.data().numberOfMessages || 0;
+          _store["default"].optionNumberOfMessagesRead[optionId] = numberOfMessages;
+
+          _mithril["default"].redraw();
+        }
+      }, function (e) {
+        console.error(e);
+        (0, _set.sendError)(e);
+      });
+    }
+  } catch (e) {
+    console.error(e);
+    (0, _set.sendError)(e);
+  }
 }
 
 function listenToOption(ids) {
@@ -256,15 +449,21 @@ function listenToOption(ids) {
     if (subQuestionId === undefined) throw new Error('missing subQuestionId');
     if (optionId === undefined) throw new Error('missing optionId');
     return _config.DB.collection("groups").doc(groupId).collection("questions").doc(questionId).collection("subQuestions").doc(subQuestionId).collection("options").doc(optionId).onSnapshot(function (optionDB) {
+      console.log('listen ot option');
       var optionObj = optionDB.data();
-      optionObj.optionId = optionDB.data().id;
+      optionObj.optionId = optionDB.data().optionId;
       (0, _lodash.set)(_store["default"], "option[".concat(optionId, "]"), optionObj);
 
       _mithril["default"].redraw();
+    }, function (e) {
+      console.error(e);
+      (0, _set.sendError)(e);
+      ;
     });
-   
   } catch (e) {
     console.error(e);
+    (0, _set.sendError)(e);
+    ;
   }
 }
 
@@ -280,18 +479,117 @@ function getOptionDetails(groupId, questionId, subQuestionId, optionId, vnode) {
 }
 
 function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId) {
-  var voteRef = _config.DB.collection("groups").doc(groupId).collection("questions").doc(questionId).collection("subQuestions").doc(subQuestionId).collection("options").doc(optionId).collection("likes").doc(creatorId);
+  try {
+    if (groupId === undefined || questionId === undefined || subQuestionId === undefined || optionId === undefined || creatorId === undefined) throw new Error("One of the Ids groupId, questionId, subQuestionId, optionId, creatorId is missing", groupId, questionId, subQuestionId, optionId, creatorId);
 
-  var unsubscribe = voteRef.onSnapshot(function (voteDB) {
-    if (voteDB.exists) {
-      _store["default"].optionsVotes[optionId] = voteDB.data().like;
+    var voteRef = _config.DB.collection("groups").doc(groupId).collection("questions").doc(questionId).collection("subQuestions").doc(subQuestionId).collection("options").doc(optionId).collection("likes").doc(creatorId);
+
+    var _unsubscribe = voteRef.onSnapshot(function (voteDB) {
+      if (voteDB.exists) {
+        _store["default"].optionsVotes[optionId] = voteDB.data().like;
+      } else {
+        _store["default"].optionsVotes[optionId] = 0;
+      }
+
+      _mithril["default"].redraw();
+    });
+
+    return _unsubscribe;
+  } catch (e) {
+    console.error(e);
+    (0, _set.sendError)(e);
+  }
+}
+
+function listenToUserVote(vnode) {
+  try {
+    var _vnode$attrs$ids = vnode.attrs.ids,
+        groupId = _vnode$attrs$ids.groupId,
+        questionId = _vnode$attrs$ids.questionId,
+        subQuestionId = _vnode$attrs$ids.subQuestionId;
+    return _config.DB.collection("groups").doc(groupId).collection("questions").doc(questionId).collection("subQuestions").doc(subQuestionId).collection('votes').doc(_store["default"].user.uid).onSnapshot(function (voteDB) {
+      if (!voteDB.exists) {
+        vnode.state.optionVoted = false;
+      } else {
+        vnode.state.optionVoted = voteDB.data().optionVoted;
+      }
+
+      _mithril["default"].redraw();
+    }, function (e) {
+      console.error(e);
+      (0, _set.sendError)(e);
+    });
+  } catch (e) {
+    console.error(e);
+    (0, _set.sendError)(e);
+    return function () {};
+  }
+}
+
+function listenToConsequences(groupId, questionId, subQuestionId, optionId) {
+  try {
+    if (!{}.hasOwnProperty.call(_store["default"].consequencesListen, optionId)) {
+      _store["default"].consequencesListen[optionId] = true;
+
+      _config.DB.collection('groups').doc(groupId).collection('questions').doc(questionId).collection('subQuestions').doc(subQuestionId).collection('options').doc(optionId).collection('consequences').onSnapshot(function (consequencesDB) {
+        var consequences = [];
+        consequencesDB.forEach(function (consequenceDB) {
+          consequences.push(consequenceDB.data());
+        });
+        _store["default"].consequences[optionId] = consequences;
+
+        _mithril["default"].redraw();
+      });
     } else {
-      _store["default"].optionsVotes[optionId] = 0;
+      console.info("Allredy listen to consequnces on option ".concat(optionId));
     }
+  } catch (e) {
+    console.error(e);
+    (0, _set.sendError)(e);
+  }
+}
 
-    _mithril["default"].redraw();
-  });
-  return unsubscribe;
+function listenToTopConsequences(ids) {
+  try {
+    var groupId = ids.groupId,
+        questionId = ids.questionId,
+        subQuestionId = ids.subQuestionId,
+        optionId = ids.optionId;
+    if (groupId === undefined) throw new Error('groupId is missing in listenToTopConsequences');
+    if (questionId === undefined) throw new Error('questionId is missing in listenToTopConsequences');
+    if (subQuestionId === undefined) throw new Error('subQuestionId is missing in listenToTopConsequences');
+    if (optionId === undefined) throw new Error('optionId is missing in listenToTopConsequences');
+
+    if (!{}.hasOwnProperty.call(_store["default"].consequencesTopListen, optionId)) {
+      _store["default"].consequencesTopListen[optionId] = true;
+      _store["default"].consequencesTop[optionId] = [];
+
+      _config.DB.collection('groups').doc(groupId).collection('questions').doc(questionId).collection('subQuestions').doc(subQuestionId).collection('options').doc(optionId).collection('consequences').orderBy('totalWeightAbs', 'desc').limit(1).onSnapshot(function (consequencesDB) {
+        var consequences = [];
+        consequencesDB.forEach(function (consequenceDB) {
+          _store["default"].consequencesTop[optionId] = [consequenceDB.data()];
+        });
+
+        _mithril["default"].redraw();
+      });
+    }
+  } catch (e) {
+    console.error;
+  }
+}
+
+function getMyVotesOnConsequence(groupId, questionId, subQuestionId, optionId, consequenceId) {
+  try {
+    return _config.DB.collection('groups').doc(groupId).collection('questions').doc(questionId).collection('subQuestions').doc(subQuestionId).collection('options').doc(optionId).collection('consequences').doc(consequenceId).collection('voters').doc(_store["default"].user.uid).get().then(function (voteDB) {
+      return voteDB.data();
+    })["catch"](function (e) {
+      console.error(e);
+      (0, _set.sendError)(e);
+    });
+  } catch (e) {
+    console.error(e);
+    (0, _set.sendError)(e);
+  }
 }
 
 function getSubAnswers(groupId, questionId, subQuestionId, vnode) {
@@ -491,29 +789,6 @@ function listenToFeedLastEntrance() {
 // }
 
 
-function listenToChatFeed() {
-  try {
-    if (_store["default"].listen.chatFeed == false) {
-      _config.DB.collection('users').doc(_store["default"].user.uid).collection('chat').orderBy("date", "asc").onSnapshot(function (chatDB) {
-        var unreadMessagesCouner = 0;
-        var messages = [];
-        chatDB.forEach(function (newMessageDB) {
-          messages.push(newMessageDB.data());
-          unreadMessagesCouner += newMessageDB.data().msgDifference;
-        });
-        _store["default"].chatFeed = messages;
-        _store["default"].chatFeedCounter = unreadMessagesCouner;
-
-        _mithril["default"].redraw();
-      });
-
-      _store["default"].listen.chatFeed = true;
-    }
-  } catch (e) {
-    console.error(e);
-  }
-}
-
 function listenToChat(ids) {
   try {
     var groupId = ids.groupId,
@@ -522,7 +797,7 @@ function listenToChat(ids) {
         optionId = ids.optionId;
     if (groupId === undefined) throw new Error('No group id in the ids');
     var path = (0, _general.concatenateDBPath)(groupId, questionId, subQuestionId, optionId);
-    var chatPath = path + '/chat';
+    var chatPath = path + '/messages';
     var lastRead = new Date('2020-01-01');
 
     if (!(path in _store["default"].chatLastRead)) {
@@ -532,6 +807,10 @@ function listenToChat(ids) {
       lastRead = _store["default"].chatLastRead[path];
     }
 
+    if (!(path in _store["default"].chatMessegesNotRead)) {
+      _store["default"].chatMessegesNotRead[path] = 0;
+    }
+
     return _config.DB.collection(chatPath).where('createdTime', '>', lastRead).orderBy('createdTime', 'desc').limit(100).onSnapshot(function (messagesDB) {
       messagesDB.docChanges().forEach(function (change) {
         if (change.type === "added") {
@@ -539,9 +818,18 @@ function listenToChat(ids) {
             _store["default"].chat[path] = [];
           }
 
-          _store["default"].chat[path].push(change.doc.data());
+          var messageObj = change.doc.data();
+          messageObj.messageId = change.doc.id;
+
+          _store["default"].chat[path].push(messageObj);
 
           _store["default"].chatLastRead = change.doc.data().createdTime;
+          _store["default"].chatMessegesNotRead[path]++;
+        } else if (change.type === 'removed') {
+          console.log('removed', change.doc.id);
+          _store["default"].chat[path] = _store["default"].chat[path].filter(function (msg) {
+            return msg.messageId !== change.doc.id;
+          });
         }
       });
       _store["default"].chat[path] = _store["default"].chat[path].sort(function (a, b) {
@@ -561,22 +849,98 @@ function listenToChat(ids) {
       _mithril["default"].redraw();
     }, function (e) {
       console.error(e);
+      (0, _set.sendError)(e);
     });
   } catch (e) {
     console.error(e);
+    (0, _set.sendError)(e);
+  }
+}
+
+function listenIfGetsMessages(ids) {
+  try {
+    var groupId = ids.groupId,
+        questionId = ids.questionId,
+        subQuestionId = ids.subQuestionId,
+        optionId = ids.optionId;
+    var entityId = (0, _general.getEntityId)(ids); //activate listening only once
+
+    if (!{}.hasOwnProperty.call(_store["default"].listenToMessages, entityId)) {
+      var browserUniqueId = (0, _general.setBrowserUniqueId)();
+      var dbPath = "".concat((0, _general.concatenateDBPath)(groupId, questionId, subQuestionId, optionId), "/notifications/").concat(_store["default"].user.uid);
+
+      _config.DB.doc(dbPath).onSnapshot(function (tokensDB) {
+        if (tokensDB.exists) {
+          if (tokensDB.data()[browserUniqueId] === undefined) {
+            _store["default"].listenToMessages[entityId] = false;
+          } else {
+            _store["default"].listenToMessages[entityId] = true;
+          }
+        } else {
+          _store["default"].listenToMessages[entityId] = false;
+        }
+
+        _mithril["default"].redraw();
+      }, function (e) {
+        console.error(e);
+        (0, _set.sendError)(e);
+      });
+    }
+  } catch (e) {
+    console.error(e);
+    (0, _set.sendError)(e);
+  }
+}
+
+function getLastTimeEntered(ids, vnode) {
+  try {
+    var groupId = ids.groupId,
+        questionId = ids.questionId,
+        subQuestionId = ids.subQuestionId,
+        optionId = ids.optionId,
+        consequenceId = ids.consequenceId;
+    var path = (0, _general.concatenateDBPath)(groupId, questionId, subQuestionId, optionId, consequenceId);
+    var regex = new RegExp('/', 'gi');
+    path = path.replace(regex, '-');
+
+    if (path !== '-groups') {
+      _config.DB.collection("users").doc(_store["default"].user.uid).collection('chatLastEnterence').doc(path).get().then(function (time) {
+        if (time.data() !== undefined) {
+          vnode.state.lastTimeEntered = time.data().lastTime.seconds;
+
+          _mithril["default"].redraw();
+        } else {
+          vnode.state.lastTimeEntered = 0;
+        }
+      });
+    } else {
+      vnode.state.unreadMessages = 0;
+      throw new Error('couldnt find path to spesific chat (groupId, questionId, subQuestionId, optionId, consequenceId)', groupId, questionId, subQuestionId, optionId, consequenceId);
+    }
+  } catch (e) {
+    console.error(e);
+    (0, _set.sendError)(e);
   }
 }
 
 module.exports = {
-  getUserGroups: getUserGroups,
+  getUser: getUser,
+  listenToUserGroups: listenToUserGroups,
+  listenToRegisterdGroups: listenToRegisterdGroups,
   getQuestions: getQuestions,
   listenToGroupDetails: listenToGroupDetails,
+  listenToGroupMembers: listenToGroupMembers,
+  listenToGroup: listenToGroup,
   getQuestionDetails: getQuestionDetails,
-  getSubQuestions: getSubQuestions,
+  listenSubQuestions: listenSubQuestions,
   getSubQuestion: getSubQuestion,
   listenToOptions: listenToOptions,
   listenToOption: listenToOption,
+  listenToConsequences: listenToConsequences,
+  listenToTopConsequences: listenToTopConsequences,
+  getMyVotesOnConsequence: getMyVotesOnConsequence,
   getOptionVote: getOptionVote,
+  listenToUserVote: listenToUserVote,
   getSubItems: getSubItems,
   getSubItemLikes: getSubItemLikes,
   getSubItemUserLike: getSubItemUserLike,
@@ -585,7 +949,8 @@ module.exports = {
   getMessages: getMessages,
   listenToFeed: listenToFeed,
   listenToChat: listenToChat,
-  listenToChatFeed: listenToChatFeed,
   listenToFeedLastEntrance: listenToFeedLastEntrance,
-  listenToSubscription: listenToSubscription
+  listenToSubscription: listenToSubscription,
+  listenIfGetsMessages: listenIfGetsMessages,
+  getLastTimeEntered: getLastTimeEntered
 };
