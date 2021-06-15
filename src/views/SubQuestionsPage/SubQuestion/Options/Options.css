@@ -2,7 +2,7 @@
     /* overflow-y: auto; */
      position: relative;
      max-height: 70vh;
-     margin-bottom: 200px;
+     margin-bottom: 100px;
      height: 100%;
 }
 
@@ -13,7 +13,7 @@
 .optionsWrapperInner{
     max-width: 600px;
     width: 100%;
-    padding: 10px;
+    padding: 10px 10px 100px 10px;
     box-sizing: border-box;
     margin: auto;
 }

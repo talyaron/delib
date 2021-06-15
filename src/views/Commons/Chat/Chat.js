@@ -38,7 +38,7 @@ module.exports = {
     },
     view: vnode => {
 
-        const { ids, title, description, entity, language, topic, url } = vnode.attrs;
+        const { ids, title, description, entity, language, topic, url,carouselColumn } = vnode.attrs;
         const { groupId, questionId, subQuestionId, optionId } = ids;
 
 
@@ -49,7 +49,7 @@ module.exports = {
        
 
         return (
-            <div class='chat'>
+            <div class={carouselColumn?'carousel__col chat':'chat'}>
                
                 <div class='chatWrapper'>
                     {

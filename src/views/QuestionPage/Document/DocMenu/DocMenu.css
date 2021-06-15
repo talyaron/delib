@@ -1,0 +1,23 @@
+.docMenu{
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    background-color: white;
+    box-shadow: 0px 1px 3px rgb(0 0 0 / 50%);
+    margin-bottom: 15px;
+}
+
+.docMenu>div{
+    width:30px;
+    height: 30px;
+    margin: 5px;
+    border-radius: 6px;
+    background-color: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.docMenu>div:hover, .docMenu>div:active{
+    background-color: rgb(218, 218, 218);   
+}

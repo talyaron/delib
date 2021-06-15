@@ -40,6 +40,8 @@ var store = {
     optionsLoc: {}, //options location. used for animations
     optionsDetails: {}, //vote on options by user
     optionNumberOfMessagesRead: {}, //store how many messages in option chat, the user has read.
+    selectedOption:{}, // store the selected option of subquestion stored as: {subQuestionId:option}
+    selectedOptionListen:{},
     consequences: {}, //store consequnces in theis format: {optionId:[]}
     consequencesListen: {}, //use to store if listen to consequences on spesific option
     consequencesTop: {}, //used to store top consequnces for an option format {optionId:[consequences]}
@@ -62,7 +64,8 @@ var store = {
     subQuestions: {}, //sotred {subQuestionId:{data}}
     subQuestionsListners: {}, //check to see if listner was allready activates
     editEntity: false,
-
+    documents:{}, //store documents in format {questionId:[sentences obj]} 
+    documentListen:{}, //listen to documents
     push: []
 }
 

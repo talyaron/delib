@@ -13,7 +13,7 @@ import store from '../../../data/store';
 import { EntityModel } from '../../../data/dataTypes';
 
 //functions
-import { listenToOptions, listenToGroupDetails } from '../../../functions/firebase/get/get';
+import { listenToTopOption } from '../../../functions/firebase/get/getOptions';
 
 import { concatenateURL } from '../../../functions/general';
 import { get } from 'lodash';
@@ -25,28 +25,25 @@ let subQuestionObj;
 module.exports = {
 	oninit: (vnode) => {
 
+		const { groupId, questionId, subQuestionId } = vnode.attrs;
 
-
-		const va = vnode.attrs;
-
-
-		listenToOptions(va.groupId, va.questionId, va.subQuestionId, 'top', true);
+		listenToTopOption({groupId, questionId, subQuestionId});
 	},
 	onremove: (vnode) => {
 
 	},
 	view: vnode => {
+
+
+		const { groupId, questionId, subQuestionId, title, creator, showSubQuestion} = vnode.attrs;
+
+
 		
-
-		const { groupId, questionId, subQuestionId, title, creator, showSubQuestion, processType } = vnode.attrs;
-
-
-		const options = get(store, `options[${vnode.attrs.subQuestionId}]`, []);
-		const option = options.sort((b, a) => a.consensusPrecentage - b.consensusPrecentage)[0]
+		const option = get(store.selectedOption, `[${subQuestionId}]`, {title:'אין עדיין תשובה'})
 
 		if (option !== undefined) {
 			return (
-				<div class='subQuestionSolution' id={subQuestionId} style={showSubQuestion === 'hidden' ? 'opacity:0.6;' : 'opacity: 1;'} onclick={() => { m.route.set(concatenateURL(groupId, questionId, subQuestionId)) }}>
+				<div class='subQuestionSolution' ondragstart={e => handleSetId(e, subQuestionId)} draggable={true} id={subQuestionId} style={showSubQuestion === 'hidden' ? 'opacity:0.6;' : 'opacity: 1;'} onclick={() => { m.route.set(concatenateURL(groupId, questionId, subQuestionId)) }}>
 					<div class='subQuestionSolution__header'>
 						<div class='subQuestionSolution__text'>
 							<h1>{title}</h1>
@@ -194,4 +191,10 @@ function iconType(vnode) {
 	} else {
 		return (<img src='' alt='unknowen process' />)
 	}
+}
+
+function handleSetId(e, id) {
+
+	e.dataTransfer.setData("text", id);
+	e.dataTransfer.effectAllowed = "move"
 }

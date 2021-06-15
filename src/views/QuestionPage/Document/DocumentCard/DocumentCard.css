@@ -1,0 +1,28 @@
+.documentCard {
+    background-color: var(--white);
+    padding: var(--regPadding);
+    cursor: pointer;
+    user-select: none;
+    display: grid;
+    grid-template-columns: 30px auto;
+    grid-gap: 10px;
+}
+.documentCard h1{
+    color: var(--white);
+    font-size: var(--size15);
+    background: var(--halfPrimary);
+    border-radius: 100px;
+    padding: 5px 10px;
+}
+
+.documentCard p{
+    color: var(--gray0);
+    font-size: var(--size15);
+}
+
+.documentCard__handle{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

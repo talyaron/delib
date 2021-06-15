@@ -52,9 +52,10 @@ module.exports = {
                     {vnode.attrs.isAdmin ?
                         <div onclick={(e) => { editPage(e, vnode) }}>עריכת הדף</div>
                         :
-                        <div />
+                        null
                     }
                     <div><a href='http://delib.org'>המכון לדמוקרטיה דיונית</a></div>
+                    <div><a href='mailto:tal.yaron@gmail.com'>tal.yaron@gmail.com</a></div>
                     <div>תודות</div>
                 </div>
             </aside>

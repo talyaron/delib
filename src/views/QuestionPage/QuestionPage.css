@@ -18,7 +18,9 @@
     padding: 10px;
     text-align: center;
 }
-.question__main{
+.question__carousel{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     overflow-y: auto;
 }
 .wrapperSubQuestions {
@@ -96,11 +98,11 @@
 
 .subQuestionsWrapper{
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(1, 1fr);
     gap: 10px;
 }
 
-.subQuestionsWrapper >h1{
+/* .subQuestionsWrapper >h1{
     font-size: var(--size15);
 }
 
@@ -123,7 +125,7 @@
      
         grid-template-columns: repeat(1, 1fr);
     }
-}
+} */
 
 .question__reactions{
     width: 100%;

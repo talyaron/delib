@@ -5,7 +5,7 @@
     box-shadow: var(--mediumShadow);
     padding: var(--regPadding);
     box-sizing: border-box;
-    cursor: pointer;
+    cursor:grab;
     user-select: none;
 }
 

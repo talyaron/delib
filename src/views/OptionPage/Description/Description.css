@@ -70,3 +70,8 @@
     width: 95%;
     margin-bottom: 20px;
 }
+
+.input__description{
+    width: -webkit-fill-available;
+    min-height: 200px;
+}

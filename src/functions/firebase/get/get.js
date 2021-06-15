@@ -215,7 +215,7 @@ function getQuestions(onOff, groupId, vnode) {
             .orderBy("time", "desc")
             .onSnapshot(questionsDb => {
                 questionsDb.forEach(questionDB => {
-                    if (questionDB.data().id) {  setStore(store.questions, groupId, questionDB.data().id, questionDB.data()); }
+                    if (questionDB.data().id) { setStore(store.questions, groupId, questionDB.data().id, questionDB.data()); }
                 });
 
                 m.redraw();
@@ -334,7 +334,8 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
 
                     subQuestionsDB.forEach(subQuestionDB => {
                         let subQuestionObj = subQuestionDB.data();
-                        subQuestionObj.id = subQuestionDB.id;
+                        subQuestionObj.subQuestionId = subQuestionObj.id = subQuestionDB.id;
+
 
                         subQuestionsArray.push(subQuestionObj);
                         subQuestionsObj[subQuestionObj.id] = {};
@@ -658,6 +659,7 @@ function listenToConsequences(groupId, questionId, subQuestionId, optionId) {
 
 function listenToTopConsequences(ids) {
 
+
     try {
         const { groupId, questionId, subQuestionId, optionId } = ids;
 
@@ -668,8 +670,9 @@ function listenToTopConsequences(ids) {
 
         if (!{}.hasOwnProperty.call(store.consequencesTopListen, optionId)) {
             store.consequencesTopListen[optionId] = true;
-            store.consequencesTop[optionId] = []
-
+            store.consequencesTop[optionId] = [];
+            
+            
             DB
                 .collection('groups')
                 .doc(groupId)
@@ -681,14 +684,14 @@ function listenToTopConsequences(ids) {
                 .doc(optionId)
                 .collection('consequences')
                 .orderBy('totalWeightAbs', 'desc')
-                .limit(3)
+                .limit(1)
                 .onSnapshot(consequencesDB => {
                     let consequences = [];
                     consequencesDB.forEach(consequenceDB => {
-                        consequences.push(consequenceDB.data())
+                        store.consequencesTop[optionId] = [consequenceDB.data()]
                     })
 
-                    store.consequencesTop[optionId] = consequences;
+
 
                     m.redraw();
                 })
@@ -1041,11 +1044,16 @@ function listenToChat(ids) {
 
 
                         if (!(path in store.chat)) { store.chat[path] = [] }
-                        store.chat[path].push(change.doc.data());
+                        const messageObj = change.doc.data();
+                        messageObj.messageId = change.doc.id;
+                        store.chat[path].push(messageObj);
                         store.chatLastRead = change.doc.data().createdTime;
                         store.chatMessegesNotRead[path]++;
 
 
+                    } else if(change.type === 'removed'){
+                        console.log('removed',change.doc.id )
+                        store.chat[path] = store.chat[path].filter(msg=>msg.messageId !== change.doc.id);
                     }
 
                 })

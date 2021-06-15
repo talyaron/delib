@@ -176,7 +176,7 @@ module.exports = {
               שמירה
           </button>
 
-            <div class="buttons buttons--cancel optionEditButton" onclick={() => { pvs.modalSubQuestion.isShow = false }}>Cancel</div>
+            <div class="buttons buttons--cancel optionEditButton" onclick={() => {pvs.showFav=true; pvs.modalSubQuestion.isShow = false }}>Cancel</div>
           </div>
         </form>
 
@@ -208,7 +208,8 @@ function handleSubmit(e, vnode) {
     setSubQuestion({ groupId, questionId, subQuestionId }, { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions, proAgainstType:'superSimple' });
 
     //hide modal
-    pvs.modalSubQuestion.isShow = false
+    pvs.modalSubQuestion.isShow = false;
+    pvs.showFav = true;
   } catch (e) {
     console.error(e)
   }

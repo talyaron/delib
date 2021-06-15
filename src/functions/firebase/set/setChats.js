@@ -2,16 +2,17 @@ import m from "mithril";
 import { DB } from "../config";
 import store from "../../../data/store";
 
-import {createIds,concatenateDBPath,generateChatEntitiyId} from '../../general'
+import { createIds, concatenateDBPath, generateChatEntitiyId } from '../../general'
 
-export function sendMessage({ groupId, questionId, subQuestionId, optionId, message, title, entity, topic, url, vnode, group }) {
+export function sendMessage({ groupId, questionId, subQuestionId, optionId, message, title, entity, topic, url, vnode, group, toDelete, messageId }) {
     try {
+        if (toDelete == undefined) {
+            if (vnode.attrs.title === undefined) throw new Error(`No title of entity in vnode`);
+        }
 
-        if (vnode.attrs.title === undefined) throw new Error(`No title of entity in vnode`)
+       
 
-        let { displayName, photoURL, name, uid, userColor } = store.user;
-
-        if (!userColor) { userColor = 'teal' }
+      
 
         let ref = 'groups', location = {}
         if (groupId != undefined) {
@@ -37,9 +38,12 @@ export function sendMessage({ groupId, questionId, subQuestionId, optionId, mess
         let ids = { groupId, questionId, subQuestionId, optionId }
         ids = createIds(ids)
 
-        if(!group) group = {};
+        if (!group) group = {};
 
         if (message) {
+
+            let { displayName, photoURL, name, uid, userColor } = store.user;
+            if (!userColor) { userColor = 'teal' }
 
             DB.doc(ref).collection('messages').add({
                 entityTitle: vnode.attrs.title,
@@ -61,7 +65,14 @@ export function sendMessage({ groupId, questionId, subQuestionId, optionId, mess
                     .FieldValue
                     .serverTimestamp()
             })
-                .then(() => { console.info('message saved correctly') })
+
+        }
+
+        if (toDelete && messageId) {
+            DB.doc(ref).collection('messages')
+                .doc(messageId)
+                .delete()
+                .then(() => { console.info('message deleted') })
                 .catch(err => {
                     console.error(err)
                 })
@@ -73,16 +84,16 @@ export function sendMessage({ groupId, questionId, subQuestionId, optionId, mess
     }
 }
 
-export function setZeroChatCounter(){
-    try{
+export function setZeroChatCounter() {
+    try {
         DB
-        .collection('users').doc(store.user.uid)
-        .collection('messagesCounter').doc('counter')
-        .set({messages:0})
-        .catch(e=>{
-            console.error(e)
-        })
-    }catch(e){
+            .collection('users').doc(store.user.uid)
+            .collection('messagesCounter').doc('counter')
+            .set({ messages: 0 })
+            .catch(e => {
+                console.error(e)
+            })
+    } catch (e) {
         console.error(e)
     }
 }

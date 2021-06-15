@@ -1,0 +1,13 @@
+.document{
+    background-color: white;
+    overflow-y: auto;
+}
+
+.document__main{
+    width: 100%;
+    height: 100%;
+}
+
+.document__main--over{
+    background-color: wheat;
+}

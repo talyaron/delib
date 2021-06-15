@@ -25,7 +25,7 @@ module.exports = {
                     <img src='img/send-24px.svg' alt='send' />
                 </button>
                 <textarea
-                    value={vnode.state.message}
+                    defaultValue={vnode.state.message}
                     onkeyup={e => {
 
                         vnode.state.message = e.target.value
@@ -34,6 +34,7 @@ module.exports = {
                         if (e.key === 'Enter' && e.shiftKey === false && e.target.value.replace(/\s/g, '').length>0) {
 
                             handleSend({ title, entity, topic, url, groupId, questionId, subQuestionId, optionId, user: store.user, message: vnode.state.message, vnode })
+                            e.target.value='';
                         }
                     }}>
 

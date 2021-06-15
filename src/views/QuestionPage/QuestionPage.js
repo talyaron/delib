@@ -15,19 +15,21 @@ import Spinner from '../Commons/Spinner/Spinner';
 import Explanation from '../Commons/Explanation/Explanation';
 import AlertsSetting from '../Commons/AlertsSetting/AlertsSetting';
 import NavBottom from '../Commons/NavBottom/NavBottom';
-import NavTop from '../Commons/NavTop/NavTop';
+import NavTopScroll from '../Commons/NavTopScroll/NavTopScroll';
 import Chat from '../Commons/Chat/Chat';
 import SubQuestionEditModal from './SubQuestionEditModal/SubQuestionEditModal';
 import AddPanel from '../Commons/AddPanel/AddPanel';
 import VoteModal from './VoteModal/VoteModal';
+import Document from './Document/Document';
 
 
 ;
 //functions
 import { getQuestionDetails, getSubQuestion, getLastTimeEntered, listenToChat, listenToGroup } from '../../functions/firebase/get/get';
 import { registerGroup } from '../../functions/firebase/set/set';
+import { updateSubQuestionToDoc } from '../../functions/firebase/set/setSubQuestions';
 import { deep_value, getIsChat, concatenateDBPath, getLanguage } from '../../functions/general';
-
+import { cssForCarousel } from '../../functions/carousel';
 
 
 
@@ -61,10 +63,6 @@ module.exports = {
             subAnswers: {}, //used to set sub answers to each sub question
             subAnswersUnsb: {}, //used to unsubscribe
             modalSubQuestion: { isShow: false, new: true },
-            showModal: {
-                isShow: false,
-                which: 'subQuestion'
-            },
             openAddPanel: false,
             openVote: false,
             unsbscribe: {
@@ -82,10 +80,18 @@ module.exports = {
                 which: 'subQuestion',
                 subQuestionId: ''
             },
+            showFav: true,
             subPage: getIsChat() ? 'chat' : 'main',
             unreadMessages: 0,
             lastTimeEntered: 0,
-            language: 'he'
+            language: 'he',
+            pages: [
+                { page: 'main', title: 'נושאים' },
+                { page: 'document', title: 'מסמך מסכם' },
+                { page: 'chat', title: 'שיחה', counter: vnode.state.unreadMessages }
+
+            ],
+            over: false
         }
 
         //get user before login to page
@@ -109,11 +115,26 @@ module.exports = {
         registerGroup(groupId);
         listenToGroup(groupId);
 
+
+
     },
     oncreate: vnode => {
 
         const { groupId, questionId } = vnode.attrs;
         getLastTimeEntered({ groupId, questionId }, vnode);
+
+
+        //change carousel size according to window size
+        window.addEventListener('resize', () => {
+            document.querySelector('#carousel__main').style.gridTemplateColumns = `${cssForCarousel(vnode)}`;
+
+            setCarouselHeight();
+        })
+
+        setCarouselHeight();
+
+
+
     },
     onbeforeupdate: vnode => {
 
@@ -143,6 +164,9 @@ module.exports = {
         //get language
         vnode.state.language = getLanguage(groupId);
 
+
+
+
     },
 
     onremove: vnode => {
@@ -165,8 +189,9 @@ module.exports = {
 
         const vsp = vnode.state;
         const { language } = vsp;
-
+        const { pages } = vnode.state;
         const { groupId, questionId } = vnode.attrs;
+
 
         return (
             <div class='page page__grid'>
@@ -202,75 +227,88 @@ module.exports = {
                         questionId={vnode.attrs.questionId}
                         type={QUESTION}
                     />
-                    <NavTop level={'שאלות'}
+                    <NavTopScroll level={'שאלות'}
+                        pages={pages}
                         current={vnode.state.subPage}
-                        chat={lang[language].chat}
+
 
                         pvs={vnode.state}
                         mainUrl={`/question/${groupId}/${questionId}`}
                         chatUrl={`/question-chat/${groupId}/${questionId}`}
                         ids={{ groupId, questionId }}
-                        unreadMessages={vnode.state.unreadMessages} />
+                    />
 
 
                 </div>
-                {vnode.state.subPage === 'main' ?
-                    <div class='question__main'>
 
-                        <div class='wrapperSubQuestions' id='questionWrapperAll'>
-                            <Explanation description={vnode.state.description} creatorId={vnode.state.creatorId} questionId={questionId} groupId={groupId} type='question' />
-                            <h1>שאלות </h1>
+                <div class='carousel' >
+                    <main style={`grid-template-columns:${cssForCarousel(vnode)};`} id='carousel__main'>
+                        <div class={vnode.state.over ? `carousel__col document__main--over` : `carousel__col`} style={'overflow-y:auto'} ondragover={e => handleDragOver(e, vnode)}
+                            ondragleave={e => handleDragLeave(e, vnode)}
+                            ondrop={e => handleDrop(e, vnode)}>
+                            {vnode.state.title === 'כותרת השאלה' ?
+                                <Spinner /> :
+                                <div class='wrapperSubQuestions' id='questionWrapperAll'>
+                                    <Explanation description={vnode.state.description} creatorId={vnode.state.creatorId} ids={{ groupId, questionId }} type='question' />
+                                    <h1>שאלות </h1>
 
-                            <div class='subQuestionsWrapper'>
+                                    <div class='subQuestionsWrapper'>
 
-                                {vnode.state.subQuestions.map((subQuestion, index) => {
+                                        {documentSubQuestions(vnode.state.subQuestions, false).map(subQuestion => {
 
-                                    return (<SubQuestionSolution
-                                        key={subQuestion.id}
-                                        creator={subQuestion.creator}
-                                        groupId={vnode.attrs.groupId}
-                                        questionId={vnode.attrs.questionId}
-                                        subQuestionId={subQuestion.id}
-                                        orderBy={subQuestion.orderBy}
-                                        title={subQuestion.title}
-                                        subItems={vnode.state.subItems.options}
-                                        parentVnode={vnode}
-                                        info={settings.subItems.options}
-                                        processType={subQuestion.processType}
-                                        userHaveNavigation={subQuestion.userHaveNavigation}
-                                        proAgainstType={subQuestion.proAgainstType}
-                                        showSubQuestion={subQuestion.showSubQuestion}
-                                        numberOfSubquestions={vnode.state.subQuestions.length}
-                                        isAlone={false}
-                                        pvs={vnode.state}
-                                    />)
+                                            return (<SubQuestionSolution
+                                                key={subQuestion.id}
+                                                creator={subQuestion.creator}
+                                                groupId={vnode.attrs.groupId}
+                                                questionId={vnode.attrs.questionId}
+                                                subQuestionId={subQuestion.id}
+                                                orderBy={subQuestion.orderBy}
+                                                title={subQuestion.title}
+                                                subItems={vnode.state.subItems.options}
+                                                parentVnode={vnode}
+                                                info={settings.subItems.options}
+                                                processType={subQuestion.processType}
+                                                userHaveNavigation={subQuestion.userHaveNavigation}
+                                                proAgainstType={subQuestion.proAgainstType}
+                                                showSubQuestion={subQuestion.showSubQuestion}
+                                                numberOfSubquestions={vnode.state.subQuestions.length}
+                                                isAlone={false}
+                                                pvs={vnode.state}
+                                            />)
 
-                                })
-                                }
-                            </div>
+                                        })
+                                        }
+                                    </div>
 
+                                </div>
+
+
+                            }
                         </div>
+                        <Document
+                            carouselColumn={true}
+                            groupId={vnode.attrs.groupId}
+                            questionId={vnode.attrs.questionId}
+                            subQuestions={documentSubQuestions(vnode.state.subQuestions, true)}
+                        />
 
-                        {vnode.state.title === 'כותרת השאלה'
-                            ? <Spinner />
-                            : <div />
-                        }
+                        <Chat
+                            carouselColumn={true}
+                            entity='question'
+                            topic='שאלה'
+                            ids={{ groupId: vnode.attrs.groupId, questionId: vnode.attrs.questionId }}
+                            title={vnode.state.title}
+                            description={vnode.state.description}
+                            language={vnode.state.language}
+                            url={m.route.get()}
+                        />
 
-                    </div>
-                    : null
-                }
-                {vnode.state.subPage === 'chat' ? <Chat
-                    entity='question'
-                    topic='שאלה'
-                    ids={{ groupId: vnode.attrs.groupId, questionId: vnode.attrs.questionId }}
-                    title={vnode.state.title}
-                    description={vnode.state.description}
-                    language={vnode.state.language}
-                    url={m.route.get()}
-                /> : null
-                }
 
-                <div class='page__header'>
+                    </main>
+                </div>
+
+
+                <div class='page__footer'>
                     <NavBottom />
                 </div>
                 <AlertsSetting
@@ -286,9 +324,10 @@ module.exports = {
                     }
                     ]} />
                 < div
-                    class={true ? "fav fav__subQuestion fav--blink" : "hidden"}
+                    class={vnode.state.showFav && vnode.state.subPage === 'main' ? "fav fav__subQuestion fav--blink" : "hidden"}
                     onclick={() => {
                         vnode.state.openAddPanel = true;
+                        vnode.state.showFav = false
                         // vnode.state.modalSubQuestion = { isShow: true, new: true, numberOfSubquestions: vnode.state.subQuestions.length };
                     }}>
                     <div>
@@ -322,5 +361,63 @@ function orderBy(order, vnode) {
     vnode.state.unsubscribeOptions = getSubQuestion('on', vnode.attrs.groupId, vnode.attrs.questionId, order);
     vnode.state.orderBy = order
 }
+
+function documentSubQuestions(subQuestions, inDoc) {
+    try {
+        if (inDoc) {
+            return subQuestions.filter(subQuestion => subQuestion.inDoc === true)
+        } else {
+            return subQuestions.filter(subQuestion => subQuestion.inDoc === undefined || subQuestion.inDoc === false)
+        }
+    } catch (e) {
+        console.error(e);
+        return [];
+    }
+
+}
+
+function handleDragOver(e, vnode) {
+    e.preventDefault();
+    vnode.state.over = true
+}
+
+function handleDragLeave(e, vnode) {
+    vnode.state.over = false
+}
+
+function handleDrop(e, vnode) {
+    try {
+
+
+        const { groupId, questionId } = vnode.attrs;
+
+        const subQuestionId = e.dataTransfer.getData("text");
+
+        //move in DB to main
+
+        updateSubQuestionToDoc({ groupId, questionId, subQuestionId }, false);
+
+        vnode.state.over = false;
+
+    } catch (e) {
+        console.error(e)
+    }
+}
+
+function setCarouselHeight() {
+    const header = document.querySelector('.page__header');
+    const navbottom = document.querySelector('.navBottom');
+    const carousel = document.querySelector('.carousel');
+
+    const colHeight = `${window.innerHeight - header.clientHeight - navbottom.clientHeight}px`;
+    const columns = document.querySelectorAll('.carousel__col');
+    columns.forEach(col => {
+        col.style.height = colHeight
+    })
+console.log('colHeight -5',colHeight)
+    carousel.style.height = colHeight;
+}
+
+
 
 
