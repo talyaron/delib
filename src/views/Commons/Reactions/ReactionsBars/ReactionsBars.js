@@ -25,8 +25,8 @@ module.exports = {
     oncreate: vnode => {
         redraw = setInterval(() => {
             updateBars(vnode)
-           
-        }, 500)
+           console.warn('updating bars ... need to change to better mechanism');
+        }, 3000)
     },
     onbeforeupdate: vnode => {
 
@@ -57,12 +57,13 @@ module.exports = {
 }
 
 function updateBars(vnode) {
+    // TODO: improve update bar that they will be get down after click
     const { subQuestionId } = vnode.attrs.ids;
     const { reactions } = vnode.attrs;
   
     let reactionsArr = store.reactions[subQuestionId] || [];
   
-    const currentDate = (new Date().getTime() / 1000) - 60;
+    const currentDate = (new Date().getTime() / 1000) - 15;
 
     let count = 0;
 
