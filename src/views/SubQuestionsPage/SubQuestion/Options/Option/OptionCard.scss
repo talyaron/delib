@@ -11,43 +11,89 @@
     width: 100%;
     margin: 10px 0px;
 
+    hr {
+        border: 1px solid #0000000d;
+        width: 100%;
+    }
+
+    &__main {
+        display: grid;
+        grid-template-columns: 60px auto 60px;
+        padding: 12px 0px;
+    }
+
+    &__vote {
+        background: var(--secondary);
+        border-radius: 20px;
+        padding: 6px;
+        display: flex;
+        width: 30px;
+        min-height: 30px;
+        margin: 10px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__info {
+
+        display: flex;
+        justify-content: center;
+    }
+
+    &__infoItem {
+        display: flex;
+        align-items: center;
+
+        >* {
+            margin: 0px 5px;
+        }
+
+    }
+
+    &__description {
+        width: 100%;
+
+        overflow-y: auto;
+        cursor: pointer;
+        user-select: none;
+        max-height: 250px;
+
+        >textarea {
+            width: 95%;
+            height: 5rem;
+            resize: none;
+            box-shadow: inset -2px 2px 4px #00000077;
+            border-radius: 5px;
+            padding: 2px;
+            border: none;
+        }
+
+        >p {
+            margin: 4px 0px;
+        }
+
+        &--image {
+            height: fit-content;
+            max-height: 40vh;
+            overflow-y: auto;
+
+            img {
+                max-width: 100%;
+            }
+        }
+    }
+
+    &__creator {
+        color: var(--accent);
+        font-size: var(--size13);
+
+    }
 
 }
 
-.optionCard__main {
-    display: grid;
-    grid-template-columns: 60px auto 60px;
-    padding: 12px 0px;
-}
 
 
-.optionCard__vote {
-    background: var(--secondary);
-    border-radius: 20px;
-    padding: 6px;
-    display: flex;
-    width: 30px;
-    min-height: 30px;
-    margin: 10px;
-    justify-content: center;
-    align-items: center;
-}
-
-.optionCard__info {
-
-    display: flex;
-    justify-content: center;
-}
-
-.optionCard__infoItem{
-    display: flex;
-    align-items: center;
-}
-.optionCard__infoItem>*{
-    margin:0px 5px;
-}
-
-.optionCard__info>* {
+.optionCard__infoItem .optionCard__info>* {
     margin: 10px 14px;
 }
 
@@ -61,10 +107,7 @@
     }
 }
 
-.optionCard hr {
-    border: 1px solid #0000000d;
-    width: 100%;
-}
+
 
 .cardTitle>input {
     width: 95%;
@@ -74,44 +117,11 @@
     border: none;
 }
 
-.option__card__description {
-    width: 100%;
-   
-    overflow-y: auto;
-    cursor: pointer;
-    user-select: none;
-    max-height: 250px;
-}
-.option__card__description>p{
-    margin: 4px 0px;
-}
-
-.option__card__description>textarea {
-    width: 95%;
-    height: 5rem;
-    resize: none;
-    box-shadow: inset -2px 2px 4px #00000077;
-    border-radius: 5px;
-    padding: 2px;
-    border: none;
-}
-
-.option__card__description--image{
-    height: fit-content;
-    max-height: 40vh;
-    overflow-y: auto;
-}
-
-.option__card__description--image img{
-    max-width: 100%;
-}
-
-
 
 .optionContent {
 
     padding: 5px;
-   
+
 }
 
 
@@ -170,13 +180,15 @@
     color: var(--textRegular);
     margin-top: 8px;
     border-top: 0.5px solid #d2d2d2;
+
+    >div {
+        display: flex;
+        align-items: center;
+        padding: 2px 20px;
+    }
 }
 
-.optionInfo>div {
-    display: flex;
-    align-items: center;
-    padding: 2px 20px;
-}
+
 
 .optionChat {
     cursor: pointer;
@@ -189,20 +201,16 @@
     color: white !important;
 }
 
-.optionCard__creator {
-    color: var(--accent);
-    font-size: var(--size13);
 
-}
 
-.option__consequnces{
+.option__consequnces {
     padding: var(--regPadding);
     cursor: pointer;
     user-select: none;
 }
 
 
-.consequences__tip{
+.consequences__tip {
     color: var(--gray1);
     padding: 0px var(--regPadding);
 }

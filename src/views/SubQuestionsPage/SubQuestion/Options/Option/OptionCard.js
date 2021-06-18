@@ -1,7 +1,7 @@
 import m from "mithril";
 import { get } from 'lodash';
 
-import "./Option.css";
+import "./dist/OptionCard.css";
 
 //data
 import store, { consequencesTop } from "../../../../../data/store";
@@ -18,8 +18,8 @@ import { getOptionVote, listenToTopConsequences } from "../../../../../functions
 
 //components
 import ConsequenceTop from './ConsequenceTop/ConsequenceTop';
-import OptionLike from './OptionLike';
-import OptionDislike from './OptionDislike';
+import OptionLike from './Evaluate';
+
 
 module.exports = {
   oninit: (vnode) => {
@@ -55,7 +55,7 @@ module.exports = {
       title: vnode.attrs.title,
       description: vnode.attrs.description,
     };
-  
+
     listenToTopConsequences({ groupId, questionId, subQuestionId, optionId })
   },
   onbeforeupdate: (vnode) => {
@@ -103,7 +103,7 @@ module.exports = {
   },
   onupdate: (vnode) => {
 
-console.log('option update')
+
     const { optionId } = vnode.attrs.ids;
 
 
@@ -173,7 +173,7 @@ console.log('option update')
           key={vnode.attrs.key}
         >
           <div class="optionCard__main">
-            <OptionLike vp={vnode} />
+            <OptionLike vp={vnode} evaluationType='like' />
             <div class="optionContent">
               <div class="cardTitle">
                 {!vnode.state.isEdit ? (
@@ -209,7 +209,7 @@ console.log('option update')
                 </div>
               )}
 
-              <div class={isImgRegExp.test(description) ? "option__card__description--image" : "option__card__description"} onclick={() => { if (!vnode.state.isEdit) { m.route.set(`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) } }}>
+              <div class={isImgRegExp.test(description) ? "optionCard__description--image" : "optionCard__description"} onclick={() => { if (!vnode.state.isEdit) { m.route.set(`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`) } }}>
                 {!vnode.state.isEdit ? (
                   descriptionParagraphs.map((paragraph, index) => {
                     return (convertParagraphsToVisual(paragraph, index))
@@ -281,7 +281,7 @@ console.log('option update')
                   </div>
                 )} */}
             </div>
-            <OptionDislike vp={vnode} />
+            <OptionLike vp={vnode} evaluationType={'dislike'} />
           </div>
           {/* options information panel */}
           <hr></hr>

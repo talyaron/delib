@@ -3,7 +3,7 @@ import './Options.css';
 import lang from '../../../../data/languages';
 
 //components
-import Option from './Option/Option';
+import Option from './Option/OptionCard';
 
 
 module.exports = {
