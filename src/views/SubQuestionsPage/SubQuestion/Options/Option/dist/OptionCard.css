@@ -32,7 +32,8 @@
 }
 .optionCard__info {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
+  padding: 10px 0px;
 }
 .optionCard__infoItem {
   display: flex;

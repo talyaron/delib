@@ -4,6 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = void 0;
+
+var _evaluationTypes = require("./evaluationTypes");
+
 var settings = {
   pages: {
     groups: {
@@ -98,7 +101,7 @@ var settings = {
     votes: 'votes',
     parallelOptions: 'parallelOptions'
   },
-  processesArr: ['suggestions', 'votes', 'parallel options']
+  processesArr: ['suggestions', 'votes', _evaluationTypes.PARALLEL_OPTIONS]
 };
 var _default = settings;
 exports["default"] = _default;

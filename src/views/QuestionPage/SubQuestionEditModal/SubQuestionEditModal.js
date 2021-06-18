@@ -9,6 +9,7 @@ import {
 
 //model
 import settings from "../../../data/settings";
+import {PARALLEL_OPTIONS} from '../../../data/evaluationTypes';
 
 //components
 import SuggestionsQuestionEdit from './SuggestionsQuestionEdit/SuggestionsQuestioEdit';
@@ -110,7 +111,7 @@ module.exports = {
               </select>
             </div>
             {vnode.state.processType === 'suggestions' ? <SuggestionsQuestionEdit orderBy={orderBy} proAgainstType={proAgainstType} /> : null}
-            {vnode.state.processType === 'parallel options' ? <ParallelOptionsEdit /> : null}
+            {vnode.state.processType === PARALLEL_OPTIONS ? <ParallelOptionsEdit /> : null}
             <div class='subQuestionEdit__settings'>
               <div>
                 <input type='checkbox' name='show' checked={vnode.state.showSubQuestion == 'userSee'} id='showSubQuestion'

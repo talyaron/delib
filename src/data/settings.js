@@ -1,3 +1,5 @@
+import {PARALLEL_OPTIONS} from './evaluationTypes' 
+
 var settings = {
     pages: {
         groups: {
@@ -95,7 +97,7 @@ var settings = {
     processesArr: [
         'suggestions',
         'votes',
-        'parallel options'
+        PARALLEL_OPTIONS
     ]
 }
 

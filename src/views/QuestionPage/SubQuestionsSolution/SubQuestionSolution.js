@@ -11,6 +11,7 @@ import Modal from '../../Commons/Modal/Modal';
 import settings from '../../../data/settings';
 import store from '../../../data/store';
 import { EntityModel } from '../../../data/dataTypes';
+import{PARALLEL_OPTIONS} from '../../../data/evaluationTypes';
 
 //functions
 import { listenToTopOption } from '../../../functions/firebase/get/getOptions';
@@ -188,7 +189,7 @@ function iconType(vnode) {
 			return (<img class='subQuestionSolution__icon' src='img/votesDarkGray.svg' alt='votes' />);
 		case 'suggestions':
 			return (<img class='subQuestionSolution__icon' src='img/suggestionsDarkGray.svg' alt='suggestions' />);
-		case 'parallel options':
+		case PARALLEL_OPTIONS:
 			return (<img class='subQuestionSolution__icon' src='img/lines.svg' alt='votes' />);
 		default:
 			return (<img class='subQuestionSolution__icon' src='img/question.svg' alt='unknowen process' />)

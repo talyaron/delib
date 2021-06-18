@@ -5,6 +5,7 @@ import "./dist/OptionCard.css";
 
 //data
 import store, { consequencesTop } from "../../../../../data/store";
+import {CONFIRM, LIKE, DISLIKE} from '../../../../../data/evaluationTypes';
 
 //functions
 import { changeTextToArray, convertParagraphsToVisual } from '../../../../../functions/general';
@@ -173,7 +174,7 @@ module.exports = {
           key={vnode.attrs.key}
         >
           <div class="optionCard__main">
-            <OptionLike vp={vnode} evaluationType='like' />
+            <OptionLike vp={vnode} evaluationType={LIKE} />
             <div class="optionContent">
               <div class="cardTitle">
                 {!vnode.state.isEdit ? (
@@ -281,7 +282,7 @@ module.exports = {
                   </div>
                 )} */}
             </div>
-            <OptionLike vp={vnode} evaluationType={'dislike'} />
+            <OptionLike vp={vnode} evaluationType={DISLIKE} />
           </div>
           {/* options information panel */}
           <hr></hr>

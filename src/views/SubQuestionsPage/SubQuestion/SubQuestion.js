@@ -12,6 +12,7 @@ import ParallelOptions from './ParallelOptions/ParallelOptions'
 //model
 import store from '../../../data/store';
 import lang from '../../../data/languages';
+import {PARALLEL_OPTIONS} from '../../../data/evaluationTypes';
 
 
 //functions
@@ -136,7 +137,7 @@ function switchProcess(type, vnode) {
 			);
 		case 'votes':
 			return <Votes ids={{ groupId, questionId, subQuestionId }} options={options} question={questionObj} />;
-		case "parallel options":
+		case PARALLEL_OPTIONS:
 			return <Options
 				groupId={groupId}
 				questionId={questionId}

@@ -1,4 +1,9 @@
 import m from 'mithril';
+
+//model
+import {CONFIRM, LIKE, DISLIKE} from '../../../../../data/evaluationTypes';
+
+//functions
 import { setSelection } from './OptionCard';
 
 module.exports = {
@@ -24,21 +29,21 @@ module.exports = {
         function evaluate(type) {
             try {
                 switch (type) {
-                    case 'like':
+                    case LIKE:
                         return {
                             btnClass: vp.state.up ? "optionCard__vote optionSelcetUp" : "optionCard__vote",
                             imgClass: vp.state.up ? "voteUp" : "",
                             imgSrc: vp.state.up ? "img/voteUpWhite.svg" : "img/voteUp.svg",
                             setSelection: 'up'
                         }
-                    case 'dislike':
+                    case DISLIKE:
                         return {
                             btnClass: vp.state.down ? "optionCard__vote optionSelcetDown" : "optionCard__vote",
                             imgClass: vp.state.down ? "voteDown" : "",
                             imgSrc: vp.state.down ? "img/voteDownWhite.svg" : "img/voteDown.svg",
                             setSelection: 'down'
                         }
-                    case 'confirm':
+                    case CONFIRM:
                         return {
                             btnClass: vp.state.up ? "optionCard__vote optionSelcetUp" : "optionCard__vote",
                             imgClass: vp.state.up ? "voteUp" : "",

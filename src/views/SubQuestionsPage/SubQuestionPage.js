@@ -6,6 +6,7 @@ import store from "../../data/store";
 import settings from "../../data/settings";
 import lang from '../../data/languages';
 import { SUB_QUESTION } from '../../data/EntityTypes';
+import {PARALLEL_OPTIONS} from '../../data/evaluationTypes';
 
 //components
 
@@ -280,7 +281,7 @@ module.exports = {
                 </div>
 
                 {
-                    (vnode.state.details.processType === 'suggestions' || vnode.state.details.processType === 'parallel options' || vnode.state.details.processType === undefined) ?
+                    (vnode.state.details.processType === 'suggestions' || vnode.state.details.processType === PARALLEL_OPTIONS || vnode.state.details.processType === undefined) ?
                         < div
                             class="fav fav__subQuestion fav--blink"
                             onclick={() => {
