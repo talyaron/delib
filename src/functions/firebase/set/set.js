@@ -192,8 +192,10 @@ function setSubQuestion(ids, settings) {
 
     return new Promise((resolve, reject) => {
         try {
-            console.log('saving........')
-            const { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions, proAgainstType, cutoff } = settings;
+         
+            const { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions, proAgainstType } = settings;
+            let {cutoff} = settings;
+            if(!cutoff) cutoff = false;
             const { groupId, questionId, subQuestionId } = ids;
 
 
@@ -382,8 +384,9 @@ function voteOption(ids, settings) {
             }
         }
 
+
         if (addVote) {
-            optionRef.update(updateObj)
+            optionRef.set(updateObj, {margin:true})
                 .then(() => { console.info(`Option ${optionId} was voted for`) })
                 .catch(e => {
                     // console.error(e); sendError(e)
@@ -392,9 +395,9 @@ function voteOption(ids, settings) {
                     if (errRexExp.test(e.message)) {
                         optionRef.set(updateObj)
                             .then(() => { console.info(`A vote to option ${optionId} was added`) })
-                            .catch(e => { console.error(e); sendError(e) })
+                            .catch(e => { console.error(e) })
                     } else {
-                        console.error(e); sendError(e)
+                        console.error(e); 
 
                     }
                 })

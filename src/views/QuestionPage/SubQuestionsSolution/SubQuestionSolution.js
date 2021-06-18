@@ -185,13 +185,13 @@ function iconType(vnode) {
 
 	switch (processType) {
 		case 'votes':
-			return (<img src='img/votesDarkGray.svg' alt='votes' />);
+			return (<img class='subQuestionSolution__icon' src='img/votesDarkGray.svg' alt='votes' />);
 		case 'suggestions':
-			return (<img src='img/suggestionsDarkGray.svg' alt='suggestions' />);
+			return (<img class='subQuestionSolution__icon' src='img/suggestionsDarkGray.svg' alt='suggestions' />);
 		case 'parallel options':
-			return (<img src='img/lines.svg' alt='votes' />);
+			return (<img class='subQuestionSolution__icon' src='img/lines.svg' alt='votes' />);
 		default:
-			return (<img src='img/question.svg' alt='unknowen process' />)
+			return (<img class='subQuestionSolution__icon' src='img/question.svg' alt='unknowen process' />)
 
 
 	}

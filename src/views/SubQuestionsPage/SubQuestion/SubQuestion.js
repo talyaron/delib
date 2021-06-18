@@ -84,7 +84,7 @@ module.exports = {
 
 		return (
 			<div class="subQuestionWrapper" id="optionsWrapper">
-			
+
 
 				{switchProcess(vsp.processType, vnode)}
 
@@ -137,12 +137,14 @@ function switchProcess(type, vnode) {
 		case 'votes':
 			return <Votes ids={{ groupId, questionId, subQuestionId }} options={options} question={questionObj} />;
 		case "parallel options":
-			return <ParallelOptions
+			return <Options
 				groupId={groupId}
 				questionId={questionId}
 				subQuestionId={subQuestionId}
 				options={options}
-				isAlone={isAlone} />
+				isAlone={isAlone}
+				type={processType}
+			/>
 		default:
 			return (
 				<Options

@@ -15,7 +15,6 @@ export const createSentence = (ids, text, type, order = 1000) => {
             .collection('groups').doc(groupId)
             .collection('questions').doc(questionId)
             .collection('document').add({ text, type, order, creator: userObj })
-            .then(() => console.info('sentence was saved to db'))
             .catch(e => console.error(e))
 
 
@@ -44,7 +43,6 @@ export const updateSentence = ({ groupId, questionId, sentenceId, text, type, or
                 .collection('questions').doc(questionId)
                 .collection('document').doc(sentenceId)
                 .update({ text, type, order })
-                .then(() => console.info('sentence was updated to db'))
                 .catch(e => console.error(e))
         }
 
@@ -65,7 +63,6 @@ export const deleteSentence = ids => {
         .collection('questions').doc(questionId)
         .collection('document').doc(sentenceId)
         .delete()
-        .then(()=>console.info(`sentence ${sentenceId} was deleted`))
         .catch(e=>console.error(e))
     } catch(e){
         console.error(e)

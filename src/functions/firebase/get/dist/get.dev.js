@@ -339,6 +339,8 @@ function listenToOptions(groupId, questionId, subQuestionId) {
   var isSingle = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
 
   try {
+    console.log(groupId, questionId, subQuestionId, order, isSingle);
+
     if (!{}.hasOwnProperty.call(_store["default"].optionsListen, subQuestionId)) {
       //signal that this questionId options are listend to
       _store["default"].optionsListen[subQuestionId] = true;

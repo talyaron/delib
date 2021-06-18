@@ -139,7 +139,7 @@ module.exports = {
     );
 
     function handleTypeChange(ev) {
-      console.log(ev.target.value);
+    
       vnode.state.processType = ev.target.value;
     }
   }
@@ -151,11 +151,6 @@ function handleSubmit(e, vnode) {
 
     let elms = e.target.elements;
     const { subQuestion, pvs, pva } = vnode.attrs;
-
-    console.log(elms)
-    for (let i of elms) {
-      console.log(i.name, i.value)
-    }
 
     const title = elms.title.value;
     const processType = elms.processType.value;

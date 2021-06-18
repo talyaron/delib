@@ -364,6 +364,7 @@ function voteOption(ids, settings) {
         questionId = ids.questionId,
         subQuestionId = ids.subQuestionId,
         optionId = ids.optionId;
+    console.log(groupId, questionId, subQuestionId, optionId);
     var addVote = settings.addVote;
 
     var optionRef = _config.DB.collection('groups').doc(groupId).collection('questions').doc(questionId).collection('subQuestions').doc(subQuestionId).collection('votes').doc(_store["default"].user.uid);
@@ -376,6 +377,7 @@ function voteOption(ids, settings) {
         photoURL: _store["default"].user.photoURL || ""
       }
     };
+    console.log(updateObj);
 
     if (addVote) {
       optionRef.update(updateObj).then(function () {
@@ -389,11 +391,9 @@ function voteOption(ids, settings) {
             console.info("A vote to option ".concat(optionId, " was added"));
           })["catch"](function (e) {
             console.error(e);
-            sendError(e);
           });
         } else {
           console.error(e);
-          sendError(e);
         }
       });
     } else {

@@ -383,7 +383,7 @@ function getSubQuestion(groupId, questionId, subQuestionId, isSingle) {
 
 function listenToOptions(groupId, questionId, subQuestionId, order = 'top', isSingle = false) {
     try {
-
+console.log(groupId, questionId, subQuestionId, order, isSingle)
         if (!{}.hasOwnProperty.call(store.optionsListen, subQuestionId)) {
             //signal that this questionId options are listend to
             store.optionsListen[subQuestionId] = true;

@@ -18,6 +18,8 @@ import { getOptionVote, listenToTopConsequences } from "../../../../../functions
 
 //components
 import ConsequenceTop from './ConsequenceTop/ConsequenceTop';
+import OptionLike from './OptionLike';
+import OptionDislike from './OptionDislike';
 
 module.exports = {
   oninit: (vnode) => {
@@ -171,17 +173,7 @@ console.log('option update')
           key={vnode.attrs.key}
         >
           <div class="optionCard__main">
-            <div
-              class={vnode.state.up ? "optionCard__vote optionSelcetUp" : "optionCard__vote"}
-              onclick={() => {
-                setSelection("up", vnode);
-              }}
-            >
-              <img
-                class={vnode.state.up ? "voteUp" : ""}
-                src={vnode.state.up ? "img/voteUpWhite.svg" : "img/voteUp.svg"}
-              />
-            </div>
+            <OptionLike vp={vnode} />
             <div class="optionContent">
               <div class="cardTitle">
                 {!vnode.state.isEdit ? (
@@ -289,19 +281,7 @@ console.log('option update')
                   </div>
                 )} */}
             </div>
-            <div
-              class={
-                vnode.state.down ? "optionCard__vote optionSelcetDown" : "optionCard__vote"
-              }
-              onclick={() => {
-                setSelection("down", vnode);
-              }}
-            >
-              <img
-                class={vnode.state.down ? "voteDown" : ""}
-                src={vnode.state.down ? "img/voteDownWhite.svg" : "img/voteDown.svg"}
-              />
-            </div>
+            <OptionDislike vp={vnode} />
           </div>
           {/* options information panel */}
           <hr></hr>
@@ -380,7 +360,7 @@ console.log('option update')
   },
 };
 
-function setSelection(upDown, vnode) {
+export function setSelection(upDown, vnode) {
 
   const { groupId, questionId, subQuestionId, optionId } = vnode.attrs.ids;
 

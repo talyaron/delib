@@ -34,6 +34,7 @@ module.exports = {
 
     },
     onremove:()=>{
+        console.log('stop interval')
         clearInterval(redraw)
     },
     view: (vnode) => {
