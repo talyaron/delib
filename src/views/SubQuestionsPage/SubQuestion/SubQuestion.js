@@ -7,7 +7,7 @@ import './SubQuestion.css';
 import Options from './Options/Options';
 import Votes from './Votes/Votes';
 import Modal from '../../Commons/Modal/Modal';
-import ParallelOptions from './ParallelOptions/ParallelOptions'
+
 
 //model
 import store from '../../../data/store';
