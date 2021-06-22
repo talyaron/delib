@@ -1,5 +1,6 @@
 //ranking methods
-export const PARALLEL_OPTIONS = "parallel options"
+export const PARALLEL_OPTIONS = "parallel options";
+export const SUGGESTIONS = 'suggestions';
 
 //evaluation
 export const CONFIRM = 'confirm';

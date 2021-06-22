@@ -4,6 +4,7 @@ import { DB } from '../config';
 import store from '../../../data/store';
 import { concatenateDBPath, uniqueId, getRandomColor } from '../../general';
 import { subscribeUser } from './setChats';
+import { SUGGESTIONS, PARALLEL_OPTIONS } from '../../../data/evaluationTypes'
 
 
 function createGroup(settings) {
@@ -192,10 +193,10 @@ function setSubQuestion(ids, settings) {
 
     return new Promise((resolve, reject) => {
         try {
-         
+
             const { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions, proAgainstType } = settings;
-            let {cutoff} = settings;
-            if(!cutoff) cutoff = false;
+            let { cutoff } = settings;
+            if (!cutoff) cutoff = false;
             const { groupId, questionId, subQuestionId } = ids;
 
 
@@ -386,7 +387,7 @@ function voteOption(ids, settings) {
 
 
         if (addVote) {
-            optionRef.set(updateObj, {margin:true})
+            optionRef.set(updateObj, { margin: true })
                 .then(() => { console.info(`Option ${optionId} was voted for`) })
                 .catch(e => {
                     // console.error(e); sendError(e)
@@ -397,7 +398,7 @@ function voteOption(ids, settings) {
                             .then(() => { console.info(`A vote to option ${optionId} was added`) })
                             .catch(e => { console.error(e) })
                     } else {
-                        console.error(e); 
+                        console.error(e);
 
                     }
                 })
@@ -555,7 +556,7 @@ function updateOptionDescription(ids, description) {
     }
 }
 
-function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like, processType = '') {
+function setLike(groupId, questionId, subQuestionId, optionId, creatorId, evauluation, processType = SUGGESTIONS) {
 
 
     try {
@@ -563,7 +564,9 @@ function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like, 
 
         if (groupId === undefined || questionId === undefined || subQuestionId === undefined || optionId === undefined || creatorId === undefined) throw new Error("One of the Ids groupId, questionId, subQuestionId, optionId, creatorId is missing", groupId, questionId, subQuestionId, optionId, creatorId)
 
-        DB
+
+
+        const evaluateRef = DB
             .collection('groups')
             .doc(groupId)
             .collection('questions')
@@ -572,12 +575,22 @@ function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like, 
             .doc(subQuestionId)
             .collection('options')
             .doc(optionId)
-            .collection('likes')
+
+        if (processType === SUGGESTIONS) {
+            evaluateRef.collection('likes')
+                .doc(creatorId)
+                .set({ like:evauluation })
+                .catch(function (error) {
+                    console.error('Error adding document: ', error); 
+                });
+        } else if (processType === PARALLEL_OPTIONS) {
+            evaluateRef.collection('confirms')
             .doc(creatorId)
-            .set({ like })
+            .set({ confirm:evauluation })
             .catch(function (error) {
-                console.error('Error adding document: ', error); sendError(e)
+                console.error('Error adding document: ', error); 
             });
+        }
     } catch (e) {
         console.error(e); sendError(e)
     }

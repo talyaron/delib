@@ -12,6 +12,8 @@ var _general = require("../../general");
 
 var _setChats = require("./setChats");
 
+var _evaluationTypes = require("../../../data/evaluationTypes");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -513,18 +515,27 @@ function updateOptionDescription(ids, description) {
   }
 }
 
-function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like) {
-  var processType = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : '';
+function setLike(groupId, questionId, subQuestionId, optionId, creatorId, evauluation) {
+  var processType = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : _evaluationTypes.SUGGESTIONS;
 
   try {
     if (groupId === undefined || questionId === undefined || subQuestionId === undefined || optionId === undefined || creatorId === undefined) throw new Error("One of the Ids groupId, questionId, subQuestionId, optionId, creatorId is missing", groupId, questionId, subQuestionId, optionId, creatorId);
 
-    _config.DB.collection('groups').doc(groupId).collection('questions').doc(questionId).collection('subQuestions').doc(subQuestionId).collection('options').doc(optionId).collection('likes').doc(creatorId).set({
-      like: like
-    })["catch"](function (error) {
-      console.error('Error adding document: ', error);
-      sendError(e);
-    });
+    var evaluateRef = _config.DB.collection('groups').doc(groupId).collection('questions').doc(questionId).collection('subQuestions').doc(subQuestionId).collection('options').doc(optionId);
+
+    if (processType === _evaluationTypes.SUGGESTIONS) {
+      evaluateRef.collection('likes').doc(creatorId).set({
+        like: evauluation
+      })["catch"](function (error) {
+        console.error('Error adding document: ', error);
+      });
+    } else if (processType === _evaluationTypes.PARALLEL_OPTIONS) {
+      evaluateRef.collection('confirms').doc(creatorId).set({
+        confirm: evauluation
+      })["catch"](function (error) {
+        console.error('Error adding document: ', error);
+      });
+    }
   } catch (e) {
     console.error(e);
     sendError(e);

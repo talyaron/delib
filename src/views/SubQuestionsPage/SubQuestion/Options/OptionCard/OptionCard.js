@@ -398,11 +398,11 @@ export function setSelection(evaluate, vnode) {
     } else if (evaluate === "confirm") {
         vnode.state.confirm = !vnode.state.confirm;
       
-        // if (vnode.state.confirm) {
-        //     setLike(groupId, questionId, subQuestionId, optionId, store.user.uid, -1, processType);
-        // } else {
-        //     setLike(groupId, questionId, subQuestionId, optionId, store.user.uid, 0, processType);
-        // }
+        if (vnode.state.confirm) {
+            setLike(groupId, questionId, subQuestionId, optionId, store.user.uid, true, processType);
+        } else {
+            setLike(groupId, questionId, subQuestionId, optionId, store.user.uid, false, processType);
+        }
     }
 }
 
