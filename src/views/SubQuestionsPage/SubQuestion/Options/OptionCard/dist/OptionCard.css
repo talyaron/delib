@@ -14,6 +14,10 @@
   border: 1px solid #0000000d;
   width: 100%;
 }
+.optionCard--parallel {
+  border-radius: 2px;
+  box-shadow: 3px 3px 9px rgba(0, 0, 0, 0.555);
+}
 .optionCard__main {
   display: grid;
   grid-template-columns: 60px auto 60px;

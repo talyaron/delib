@@ -555,7 +555,7 @@ function updateOptionDescription(ids, description) {
     }
 }
 
-function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like) {
+function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like, processType = '') {
 
 
     try {

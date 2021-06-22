@@ -123,7 +123,6 @@ function switchProcess(type, vnode) {
 
 	const { processType, groupId, questionId, subQuestionId, isAlone, questionObj } = vnode.attrs;
 
-
 	switch (processType) {
 		case 'suggestions':
 			return (
@@ -133,19 +132,11 @@ function switchProcess(type, vnode) {
 					subQuestionId={subQuestionId}
 					options={options}
 					isAlone={isAlone}
+					processType={processType}
 				/>
 			);
 		case 'votes':
 			return <Votes ids={{ groupId, questionId, subQuestionId }} options={options} question={questionObj} />;
-		case PARALLEL_OPTIONS:
-			return <Options
-				groupId={groupId}
-				questionId={questionId}
-				subQuestionId={subQuestionId}
-				options={options}
-				isAlone={isAlone}
-				type={processType}
-			/>
 		default:
 			return (
 				<Options
@@ -154,6 +145,7 @@ function switchProcess(type, vnode) {
 					subQuestionId={vnode.attrs.subQuestionId}
 					options={options}
 					isAlone={vnode.attrs.isAlone}
+					processType={processType}
 				/>
 			);
 	}

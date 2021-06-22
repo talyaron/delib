@@ -196,15 +196,15 @@ function updateSubQuestionOrderBy(groupId, questionId, subQuestionId, orderBy) {
 function setSubQuestion(ids, settings) {
   return new Promise(function (resolve, reject) {
     try {
-      console.log('saving........');
       var title = settings.title,
           processType = settings.processType,
           orderBy = settings.orderBy,
           userHaveNavigation = settings.userHaveNavigation,
           showSubQuestion = settings.showSubQuestion,
           numberOfSubquestions = settings.numberOfSubquestions,
-          proAgainstType = settings.proAgainstType,
-          cutoff = settings.cutoff;
+          proAgainstType = settings.proAgainstType;
+      var cutoff = settings.cutoff;
+      if (!cutoff) cutoff = false;
       var groupId = ids.groupId,
           questionId = ids.questionId,
           subQuestionId = ids.subQuestionId;
@@ -364,7 +364,6 @@ function voteOption(ids, settings) {
         questionId = ids.questionId,
         subQuestionId = ids.subQuestionId,
         optionId = ids.optionId;
-    console.log(groupId, questionId, subQuestionId, optionId);
     var addVote = settings.addVote;
 
     var optionRef = _config.DB.collection('groups').doc(groupId).collection('questions').doc(questionId).collection('subQuestions').doc(subQuestionId).collection('votes').doc(_store["default"].user.uid);
@@ -377,10 +376,11 @@ function voteOption(ids, settings) {
         photoURL: _store["default"].user.photoURL || ""
       }
     };
-    console.log(updateObj);
 
     if (addVote) {
-      optionRef.update(updateObj).then(function () {
+      optionRef.set(updateObj, {
+        margin: true
+      }).then(function () {
         console.info("Option ".concat(optionId, " was voted for"));
       })["catch"](function (e) {
         // console.error(e); sendError(e)
@@ -514,6 +514,8 @@ function updateOptionDescription(ids, description) {
 }
 
 function setLike(groupId, questionId, subQuestionId, optionId, creatorId, like) {
+  var processType = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : '';
+
   try {
     if (groupId === undefined || questionId === undefined || subQuestionId === undefined || optionId === undefined || creatorId === undefined) throw new Error("One of the Ids groupId, questionId, subQuestionId, optionId, creatorId is missing", groupId, questionId, subQuestionId, optionId, creatorId);
 
