@@ -1407,4 +1407,45 @@ exports.calcValidateEval = functions.firestore
     });
   });
 
+  exports.confirms = functions.firestore
+  .document(
+    "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}/confirms/{userId}"
+  )
+  .onWrite((change, context) => {
+    const { confirm } = change.after.data();
+    const { groupId, questionId, subQuestionId, optionId, userId } = context.params;
+
+    const subQuestionRef = db
+    .collection("groups")
+    .doc(groupId)
+    .collection("questions")
+    .doc(questionId)
+    .collection("subQuestions")
+    .doc(subQuestionId)
+
+    const optionRef = subQuestionRef
+    .collection("options")
+    .doc(optionId)
+    
+
+    // transaction to option numberOfConfirmations
+    return db.runTransaction(transaction => {
+      return transaction.get(optionRef).then(optionDB => {
+        let numberOfConfirms = optionDB.data().numberOfConfirms;
+        if (!numberOfConfirms){
+          numberOfConfirms = 0;
+        }
+
+        if(confirm) numberOfConfirms++;
+        else numberOfConfirms--;
+        if(numberOfConfirms<0) numberOfConfirms = 0;
+
+        return transaction.update(optionRef, {numberOfConfirms});
+      })
+    })
+
+
+    //check in subQuestion if bigger then maxConfirmations
+  })
+
 

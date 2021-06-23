@@ -8,6 +8,8 @@ var _config = require("../config");
 
 var _store = _interopRequireWildcard(require("../../../data/store"));
 
+var _evaluationTypes = require("../../../data/evaluationTypes");
+
 var _lodash = require("lodash");
 
 var _general = require("../../general");
@@ -20,6 +22,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
+//model
 //functions
 var unsubscribe = {};
 
@@ -339,8 +342,6 @@ function listenToOptions(groupId, questionId, subQuestionId) {
   var isSingle = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
 
   try {
-    console.log(groupId, questionId, subQuestionId, order, isSingle);
-
     if (!{}.hasOwnProperty.call(_store["default"].optionsListen, subQuestionId)) {
       //signal that this questionId options are listend to
       _store["default"].optionsListen[subQuestionId] = true;
@@ -367,7 +368,6 @@ function listenToOptions(groupId, questionId, subQuestionId) {
       // }
 
       return optionsRef.orderBy(_orderBy, "desc").limit(limit).onSnapshot(function (optionsDB) {
-        console.log('listenToOptions');
         var optionsArray = [];
         optionsDB.forEach(function (optionDB) {
           //see how many message the user read (from total mesaages of option). use this to calculate hoem namy messages the user didn't read.
@@ -421,8 +421,6 @@ function listenToUserLastReadOfOptionChat(optionId) {
   try {
     if (!{}.hasOwnProperty.call(_store["default"].optionNumberOfMessagesRead, optionId)) {
       _config.DB.collection('users').doc(_store["default"].user.uid).collection('optionsRead').doc(optionId).onSnapshot(function (optionListenDB) {
-        console.log('listenToUserLastReadOfOptionChat');
-
         if (optionListenDB.exists) {
           var numberOfMessages = optionListenDB.data().numberOfMessages || 0;
           _store["default"].optionNumberOfMessagesRead[optionId] = numberOfMessages;
@@ -451,7 +449,6 @@ function listenToOption(ids) {
     if (subQuestionId === undefined) throw new Error('missing subQuestionId');
     if (optionId === undefined) throw new Error('missing optionId');
     return _config.DB.collection("groups").doc(groupId).collection("questions").doc(questionId).collection("subQuestions").doc(subQuestionId).collection("options").doc(optionId).onSnapshot(function (optionDB) {
-      console.log('listen ot option');
       var optionObj = optionDB.data();
       optionObj.optionId = optionDB.data().optionId;
       (0, _lodash.set)(_store["default"], "option[".concat(optionId, "]"), optionObj);
@@ -481,17 +478,38 @@ function getOptionDetails(groupId, questionId, subQuestionId, optionId, vnode) {
 }
 
 function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId) {
+  var processType = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : _evaluationTypes.SUGGESTIONS;
+
   try {
     if (groupId === undefined || questionId === undefined || subQuestionId === undefined || optionId === undefined || creatorId === undefined) throw new Error("One of the Ids groupId, questionId, subQuestionId, optionId, creatorId is missing", groupId, questionId, subQuestionId, optionId, creatorId);
 
-    var voteRef = _config.DB.collection("groups").doc(groupId).collection("questions").doc(questionId).collection("subQuestions").doc(subQuestionId).collection("options").doc(optionId).collection("likes").doc(creatorId);
+    var evaluationRef = _config.DB.collection("groups").doc(groupId).collection("questions").doc(questionId).collection("subQuestions").doc(subQuestionId).collection("options").doc(optionId);
 
-    var _unsubscribe = voteRef.onSnapshot(function (voteDB) {
+    var evaluationTypeRef;
+
+    if (processType === _evaluationTypes.SUGGESTIONS) {
+      evaluationTypeRef = evaluationRef.collection("likes").doc(creatorId);
+    } else if (processType === _evaluationTypes.PARALLEL_OPTIONS) {
+      evaluationTypeRef = evaluationRef.collection("confirms").doc(creatorId);
+    } else {
+      throw new Error("couldnt detect the process type (".concat(processType, ")"));
+    }
+
+    var _unsubscribe = evaluationTypeRef.onSnapshot(function (voteDB) {
       if (voteDB.exists) {
-        _store["default"].optionsVotes[optionId] = voteDB.data().like;
+        if (processType === _evaluationTypes.SUGGESTIONS) {
+          _store["default"].optionsVotes[optionId] = voteDB.data().like;
+        } else if (processType === _evaluationTypes.PARALLEL_OPTIONS) {
+          console.log('process type', _evaluationTypes.PARALLEL_OPTIONS);
+          console.log(voteDB.data());
+          _store["default"].optionsConfirm[optionId] = voteDB.data().confirm;
+        }
       } else {
         _store["default"].optionsVotes[optionId] = 0;
+        console.error('voteDB do not exists.....');
       }
+
+      console.log(_store["default"].optionsConfirm);
 
       _mithril["default"].redraw();
     });
@@ -499,7 +517,6 @@ function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId) 
     return _unsubscribe;
   } catch (e) {
     console.error(e);
-    (0, _set.sendError)(e);
   }
 }
 

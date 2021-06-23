@@ -10,7 +10,7 @@ module.exports = {
 
     view: vnode => {
         const { vp, evaluationType, processType } = vnode.attrs;
-        console.log('...........', processType)
+       
         const evaluation = evaluate(evaluationType);
 
         if (!(evaluationType === DISLIKE && processType === PARALLEL_OPTIONS)) {

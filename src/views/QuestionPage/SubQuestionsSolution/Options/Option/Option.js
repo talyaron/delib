@@ -5,7 +5,7 @@ import "./Option.css";
 import store from "../../../../../data/store";
 
 import {
-  setLike,
+  setEvaluation,
   updateOption,
   setOptionActive
 } from "../../../../../functions/firebase/set/set";
@@ -14,8 +14,6 @@ import { getOptionVote } from "../../../../../functions/firebase/get/get";
 module.exports = {
   oninit: (vnode) => {
 
-
-    console.log('option')
 
     vnode.state = {
       creatorName: vnode.attrs.creatorName || "אנונימי",
@@ -37,13 +35,13 @@ module.exports = {
       more: vnode.attrs.more || { text: "", URL: "" },
     };
 
-    vnode.state.likeUnsubscribe = getOptionVote(
-      vnode.attrs.groupId,
-      vnode.attrs.questionId,
-      vnode.attrs.subQuestionId,
-      vnode.attrs.optionId,
-      store.user.uid
-    );
+    // vnode.state.likeUnsubscribe = getOptionVote(
+    //   vnode.attrs.groupId,
+    //   vnode.attrs.questionId,
+    //   vnode.attrs.subQuestionId,
+    //   vnode.attrs.optionId,
+    //   store.user.uid
+    // );
 
     store.optionsDetails[vnode.attrs.optionId] = {
       title: vnode.attrs.title,
@@ -130,10 +128,10 @@ module.exports = {
     }
   },
   onremove: (vnode) => {
-    vnode.state.likeUnsubscribe();
+    // vnode.state.likeUnsubscribe();
   },
   view: (vnode) => {
-    console.log(vnode)
+ 
     return (
       <div
         class="card optionCard"
@@ -340,7 +338,7 @@ function setSelection(upDown, vnode) {
     vnode.state.down = false;
 
     if (vnode.state.up) {
-      setLike(
+      setEvaluation(
         vnode.attrs.groupId,
         vnode.attrs.questionId,
         vnode.attrs.subQuestionId,
@@ -349,7 +347,7 @@ function setSelection(upDown, vnode) {
         1
       );
     } else {
-      setLike(
+      setEvaluation(
         vnode.attrs.groupId,
         vnode.attrs.questionId,
         vnode.attrs.subQuestionId,
@@ -362,7 +360,7 @@ function setSelection(upDown, vnode) {
     vnode.state.down = !vnode.state.down;
     vnode.state.up = false;
     if (vnode.state.down) {
-      setLike(
+      setEvaluation(
         vnode.attrs.groupId,
         vnode.attrs.questionId,
         vnode.attrs.subQuestionId,
@@ -371,7 +369,7 @@ function setSelection(upDown, vnode) {
         -1
       );
     } else {
-      setLike(
+      setEvaluation(
         vnode.attrs.groupId,
         vnode.attrs.questionId,
         vnode.attrs.subQuestionId,

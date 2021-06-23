@@ -5,17 +5,19 @@ import "./dist/OptionCard.css";
 
 //data
 import store, {consequencesTop} from "../../../../../data/store";
-import {CONFIRM, LIKE, DISLIKE, PARALLEL_OPTIONS} from '../../../../../data/evaluationTypes';
+import {CONFIRM, LIKE, DISLIKE, PARALLEL_OPTIONS, SUGGESTIONS} from '../../../../../data/evaluationTypes';
 
 //functions
 import {changeTextToArray, convertParagraphsToVisual} from '../../../../../functions/general';
 import {enterIn} from '../../../../../functions/animations';
-import {setLike, updateOption, setOptionActive} from "../../../../../functions/firebase/set/set";
+import {setEvaluation, updateOption, setOptionActive} from "../../../../../functions/firebase/set/set";
 import {getOptionVote, listenToTopConsequences} from "../../../../../functions/firebase/get/get";
 
 //components
 import ConsequenceTop from './ConsequenceTop/ConsequenceTop';
 import Evaluate from './Evaluate';
+
+let likeUnsubscribe = ()=>{}, confirmUnsubscribe =()=>{}
 
 module.exports = {
     oninit: (vnode) => {
@@ -48,9 +50,11 @@ module.exports = {
                 URL: ""
             },
             messagesRead: 0
+            
         };
 
-        vnode.state.likeUnsubscribe = getOptionVote(groupId, questionId, subQuestionId, optionId, store.user.uid);
+        likeUnsubscribe = getOptionVote(groupId, questionId, subQuestionId, optionId, store.user.uid, SUGGESTIONS);
+        confirmUnsubscribe = getOptionVote(groupId, questionId, subQuestionId, optionId, store.user.uid, PARALLEL_OPTIONS);
 
         store.optionsDetails[vnode.attrs.optionId] = {
             title: vnode.attrs.title,
@@ -67,6 +71,9 @@ module.exports = {
         vnode.state.admin = get(store.groups, `[${groupId}].creatorId`, '')
 
         let optionVote = store.optionsVotes[optionId];
+        if(optionId in store.optionsConfirm){
+          vnode.state.confirm = store.optionsConfirm[optionId]
+        }
 
         //set conesnsus level to string
         if (vnode.attrs.consensusPrecentage !== undefined) {
@@ -144,9 +151,8 @@ module.exports = {
         }
     },
     onremove: (vnode) => {
-        vnode
-            .state
-            .likeUnsubscribe();
+        likeUnsubscribe();
+        confirmUnsubscribe();
     },
     view: (vnode) => {
         try {
@@ -383,25 +389,25 @@ export function setSelection(evaluate, vnode) {
         vnode.state.down = false;
 
         if (vnode.state.up) {
-            setLike(groupId, questionId, subQuestionId, optionId, store.user.uid, 1);
+            setEvaluation(groupId, questionId, subQuestionId, optionId, store.user.uid, 1);
         } else {
-            setLike(groupId, questionId, subQuestionId, optionId, store.user.uid, 0);
+            setEvaluation(groupId, questionId, subQuestionId, optionId, store.user.uid, 0);
         }
     } else if (evaluate === "down") {
         vnode.state.down = !vnode.state.down;
         vnode.state.up = false;
         if (vnode.state.down) {
-            setLike(groupId, questionId, subQuestionId, optionId, store.user.uid, -1);
+            setEvaluation(groupId, questionId, subQuestionId, optionId, store.user.uid, -1);
         } else {
-            setLike(groupId, questionId, subQuestionId, optionId, store.user.uid, 0);
+            setEvaluation(groupId, questionId, subQuestionId, optionId, store.user.uid, 0);
         }
     } else if (evaluate === "confirm") {
         vnode.state.confirm = !vnode.state.confirm;
       
         if (vnode.state.confirm) {
-            setLike(groupId, questionId, subQuestionId, optionId, store.user.uid, true, processType);
+            setEvaluation(groupId, questionId, subQuestionId, optionId, store.user.uid, true, processType);
         } else {
-            setLike(groupId, questionId, subQuestionId, optionId, store.user.uid, false, processType);
+            setEvaluation(groupId, questionId, subQuestionId, optionId, store.user.uid, false, processType);
         }
     }
 }

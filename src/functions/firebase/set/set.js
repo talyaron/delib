@@ -556,7 +556,7 @@ function updateOptionDescription(ids, description) {
     }
 }
 
-function setLike(groupId, questionId, subQuestionId, optionId, creatorId, evauluation, processType = SUGGESTIONS) {
+function setEvaluation(groupId, questionId, subQuestionId, optionId, creatorId, evauluation, processType = SUGGESTIONS) {
 
 
     try {
@@ -970,7 +970,7 @@ module.exports = {
     createSubItem,
     updateSubItem,
     setLikeToSubItem,
-    setLike,
+    setEvaluation,
     setMessage,
     setSubAnswer,
     updateSubQuestionProcess,

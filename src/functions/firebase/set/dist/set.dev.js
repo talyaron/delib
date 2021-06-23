@@ -515,7 +515,7 @@ function updateOptionDescription(ids, description) {
   }
 }
 
-function setLike(groupId, questionId, subQuestionId, optionId, creatorId, evauluation) {
+function setEvaluation(groupId, questionId, subQuestionId, optionId, creatorId, evauluation) {
   var processType = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : _evaluationTypes.SUGGESTIONS;
 
   try {
@@ -836,7 +836,7 @@ module.exports = {
   createSubItem: createSubItem,
   updateSubItem: updateSubItem,
   setLikeToSubItem: setLikeToSubItem,
-  setLike: setLike,
+  setEvaluation: setEvaluation,
   setMessage: setMessage,
   setSubAnswer: setSubAnswer,
   updateSubQuestionProcess: updateSubQuestionProcess,

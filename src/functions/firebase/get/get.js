@@ -1,6 +1,8 @@
 import m from "mithril";
 import { DB } from "../config";
+//model
 import store, { consequencesTop } from "../../../data/store";
+import { SUGGESTIONS, PARALLEL_OPTIONS } from '../../../data/evaluationTypes';
 
 //functions
 import { cond, constant, orderBy, set } from 'lodash';
@@ -383,7 +385,7 @@ function getSubQuestion(groupId, questionId, subQuestionId, isSingle) {
 
 function listenToOptions(groupId, questionId, subQuestionId, order = 'top', isSingle = false) {
     try {
-console.log(groupId, questionId, subQuestionId, order, isSingle)
+       
         if (!{}.hasOwnProperty.call(store.optionsListen, subQuestionId)) {
             //signal that this questionId options are listend to
             store.optionsListen[subQuestionId] = true;
@@ -418,7 +420,7 @@ console.log(groupId, questionId, subQuestionId, order, isSingle)
                 .orderBy(orderBy, "desc")
                 .limit(limit)
                 .onSnapshot(optionsDB => {
-                    console.log('listenToOptions')
+           
                     let optionsArray = [];
                     optionsDB.forEach(optionDB => {
 
@@ -486,7 +488,7 @@ function listenToUserLastReadOfOptionChat(optionId) {
                 .collection('optionsRead')
                 .doc(optionId)
                 .onSnapshot(optionListenDB => {
-                    console.log('listenToUserLastReadOfOptionChat')
+                    
                     if (optionListenDB.exists) {
                         const numberOfMessages = optionListenDB.data().numberOfMessages || 0;
                         store.optionNumberOfMessagesRead[optionId] = numberOfMessages;
@@ -524,7 +526,7 @@ function listenToOption(ids) {
             .collection("options")
             .doc(optionId)
             .onSnapshot(optionDB => {
-                console.log('listen ot option')
+                
                 let optionObj = optionDB.data();
 
                 optionObj.optionId = optionDB.data().optionId;
@@ -562,13 +564,13 @@ function getOptionDetails(groupId, questionId, subQuestionId, optionId, vnode) {
     });
 }
 
-function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId) {
+function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId, processType = SUGGESTIONS) {
     try {
 
 
 
         if (groupId === undefined || questionId === undefined || subQuestionId === undefined || optionId === undefined || creatorId === undefined) throw new Error("One of the Ids groupId, questionId, subQuestionId, optionId, creatorId is missing", groupId, questionId, subQuestionId, optionId, creatorId)
-        let voteRef = DB
+        let evaluationRef = DB
             .collection("groups")
             .doc(groupId)
             .collection("questions")
@@ -576,23 +578,41 @@ function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId) 
             .collection("subQuestions")
             .doc(subQuestionId)
             .collection("options")
-            .doc(optionId)
-            .collection("likes")
-            .doc(creatorId);
+            .doc(optionId);
 
-        let unsubscribe = voteRef.onSnapshot(voteDB => {
+        let evaluationTypeRef;
+        if (processType === SUGGESTIONS) {
+            evaluationTypeRef = evaluationRef.collection("likes").doc(creatorId);
+        } else if (processType === PARALLEL_OPTIONS) {
+            evaluationTypeRef = evaluationRef.collection("confirms").doc(creatorId);
+        } else {
+            throw new Error(`couldnt detect the process type (${processType})`)
+        }
+
+        let unsubscribe = evaluationTypeRef.onSnapshot(voteDB => {
 
 
             if (voteDB.exists) {
-                store.optionsVotes[optionId] = voteDB.data().like;
+               
+                if (processType === SUGGESTIONS) {
+                    store.optionsVotes[optionId] = voteDB.data().like;
+                } else if(processType === PARALLEL_OPTIONS){
+                    console.log('process type',PARALLEL_OPTIONS)
+                    console.log(voteDB.data())
+                    store.optionsConfirm[optionId] = voteDB.data().confirm;
+                }
             } else {
                 store.optionsVotes[optionId] = 0;
+                console.error('voteDB do not exists.....')
             }
+
+            console.log(store.optionsConfirm)
+
             m.redraw();
         });
         return unsubscribe;
     } catch (e) {
-        console.error(e); sendError(e);
+        console.error(e); 
     }
 }
 
@@ -674,8 +694,8 @@ function listenToTopConsequences(ids) {
         if (!{}.hasOwnProperty.call(store.consequencesTopListen, optionId)) {
             store.consequencesTopListen[optionId] = true;
             store.consequencesTop[optionId] = [];
-            
-            
+
+
             DB
                 .collection('groups')
                 .doc(groupId)
@@ -1054,9 +1074,9 @@ function listenToChat(ids) {
                         store.chatMessegesNotRead[path]++;
 
 
-                    } else if(change.type === 'removed'){
-                        console.log('removed',change.doc.id )
-                        store.chat[path] = store.chat[path].filter(msg=>msg.messageId !== change.doc.id);
+                    } else if (change.type === 'removed') {
+                        console.log('removed', change.doc.id)
+                        store.chat[path] = store.chat[path].filter(msg => msg.messageId !== change.doc.id);
                     }
 
                 })

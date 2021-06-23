@@ -37,6 +37,7 @@ var store = {
     options: [],//options in a given question. stored as {subQuestionID:[options]} 
     optionsListen: {}, //used to store if there is a listner in subQuestion of option {subQuestionId:true}
     optionsVotes: {}, //store how the user voted on each option. stored as {optionId: -1 to 1}
+    optionsConfirm:{}, //store the confirms of options. stored as {optionId:true/false}
     optionsLoc: {}, //options location. used for animations
     optionsDetails: {}, //vote on options by user
     optionNumberOfMessagesRead: {}, //store how many messages in option chat, the user has read.

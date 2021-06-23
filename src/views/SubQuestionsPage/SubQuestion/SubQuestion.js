@@ -28,7 +28,8 @@ let unsubscribeOptions = () => { };
 module.exports = {
 	oninit: (vnode) => {
 
-		const { groupId, questionId, subQuestionId, title, orderBy } = vnode.attrs;
+		const { groupId, questionId, subQuestionId, title, orderBy, processType } = vnode.attrs;
+	
 
 		listenToGroupDetails(groupId)
 
