@@ -333,7 +333,7 @@ module.exports = {
                         {processType === PARALLEL_OPTIONS ?
                             <div
                                 class="optionCard__infoItem">
-                                <img src="img/iconmonstr-checkbox-check.svg" /> {confirms}
+                                <img src="img/check_blue.svg" /> {confirms}
                             </div>
                             :
                             <div
