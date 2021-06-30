@@ -83,8 +83,8 @@ exports.totalVotes = functions.firestore
           let totalVoters = optionDoc.data().totalVoters;
 
           // old method consensusPrecentage = totalVotes / totalVoters; 
-          
-          
+
+
           //consensus with respect to group size
           consensusPrecentage =
             (totalVotes / totalVoters) * (Math.log(totalVoters) / Math.log(10));
@@ -571,7 +571,7 @@ exports.sendPushForNewOptions = functions.firestore
     const { groupId, questionId, subQuestionId, optionId } = context.params;
     const DATA = snap.data();
 
-    
+
     // send notification
 
     const pathForAction = concatenateURL({ groupId, questionId, subQuestionId, optionId }, 'option');
@@ -582,7 +582,7 @@ exports.sendPushForNewOptions = functions.firestore
 
     const payload = {
       notification: {
-        title: `${DATA.title}` ,
+        title: `${DATA.title}`,
         body: `הצעה חדשה ב-${DATA.subQuestionTitle}`,
         icon: "https://delib.tech/img/logo-72px.png",
         click_action: `https://delib.tech/?/${pathForAction}`
@@ -727,16 +727,16 @@ exports.groupChatNotifications = functions.firestore
 
   });
 
-  // new options notification
+// new options notification
 
-  exports.newOptionsNotifications = functions.firestore
+exports.newOptionsNotifications = functions.firestore
   .document(
     "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}"
 
   )
   .onCreate((snap, context) => {
 
-    const { groupId, questionId, subQuestionId} = context.params;
+    const { groupId, questionId, subQuestionId } = context.params;
     const option = snap.data();
 
 
@@ -1022,12 +1022,12 @@ exports.listenToGroupChats = functions.firestore
               msgDifference: FieldValue.increment(1),
               msg: newMsg.data(),
               date: new Date()
-            }).then(()=>{
-              return db.collection('users').doc(subscriberDB.id).collection('messagesCounter').doc('counter').set({messages:FieldValue.increment(1)}, {merge:true})
+            }).then(() => {
+              return db.collection('users').doc(subscriberDB.id).collection('messagesCounter').doc('counter').set({ messages: FieldValue.increment(1) }, { merge: true })
             })
-            .catch(e=>console.error(e))
+              .catch(e => console.error(e))
 
-            
+
           })
 
         })
@@ -1047,7 +1047,7 @@ exports.listenToQuestionChats = functions.firestore
         .collection(`/groups/${groupId}/questions/${questionId}/subscribers`)
         .get()
         .then(subscribersDB => {
-          return subscribersDB.forEach( subscriberDB => {
+          return subscribersDB.forEach(subscriberDB => {
             console.log('update user ', subscriberDB.id)
 
             const userChatRef = db.collection('users').doc(subscriberDB.id).collection('messages').doc(`${generateChatEntitiyId({ groupId, questionId })}`);
@@ -1089,8 +1089,8 @@ exports.listenToSubQuestionChats = functions.firestore
               msgDifference: FieldValue.increment(1),
               msg: newMsg.data(),
               date: new Date()
-            }).then(()=>{
-              return db.collection('users').doc(subscriberDB.id).collection('messagesCounter').doc('counter').set({messages:FieldValue.increment(1)}, {merge:true})
+            }).then(() => {
+              return db.collection('users').doc(subscriberDB.id).collection('messagesCounter').doc('counter').set({ messages: FieldValue.increment(1) }, { merge: true })
             })
           })
 
@@ -1121,8 +1121,8 @@ exports.listenToOptionChats = functions.firestore
               msgDifference: FieldValue.increment(1),
               msg: newMsg.data(),
               date: new Date()
-            }).then(()=>{
-              return db.collection('users').doc(subscriberDB.id).collection('messagesCounter').doc('counter').set({messages:FieldValue.increment(1)}, {merge:true})
+            }).then(() => {
+              return db.collection('users').doc(subscriberDB.id).collection('messagesCounter').doc('counter').set({ messages: FieldValue.increment(1) }, { merge: true })
             })
           })
 
@@ -1180,7 +1180,7 @@ function notifiyUsers(payload, ids, pathDB) {
     // go over all token given by users and see which user set a token for this
     // entity
     const path2 = generateCollectionPath({ groupId, questionId, subQuestionId, optionId })
-    
+
 
     return db
       .collection(pathDB)
@@ -1195,7 +1195,7 @@ function notifiyUsers(payload, ids, pathDB) {
 
             let token = userTokensObj[i].token
             if (userTokensObj[i].token) {
-             
+
               admin.messaging().sendToDevice(token, payload);
             }
           }
@@ -1277,7 +1277,7 @@ function concatenateURL(ids, level) {
         console.log(`entity ${level} was not found in switch`)
 
     }
-console.log('subscriptionPath',subscriptionPath)
+    console.log('subscriptionPath', subscriptionPath)
     return subscriptionPath
 
 
@@ -1407,45 +1407,70 @@ exports.calcValidateEval = functions.firestore
     });
   });
 
-  exports.confirms = functions.firestore
+exports.confirms = functions.firestore
   .document(
     "groups/{groupId}/questions/{questionId}/subQuestions/{subQuestionId}/options/{optionId}/confirms/{userId}"
   )
-  .onWrite((change, context) => {
+  .onWrite(async (change, context) => {
+
+    //set confirm of option and then, set total number of confirms
+
     const { confirm } = change.after.data();
     const { groupId, questionId, subQuestionId, optionId, userId } = context.params;
 
     const subQuestionRef = db
-    .collection("groups")
-    .doc(groupId)
-    .collection("questions")
-    .doc(questionId)
-    .collection("subQuestions")
-    .doc(subQuestionId)
+      .collection("groups")
+      .doc(groupId)
+      .collection("questions")
+      .doc(questionId)
+      .collection("subQuestions")
+      .doc(subQuestionId)
 
     const optionRef = subQuestionRef
-    .collection("options")
-    .doc(optionId)
-    
+      .collection("options")
+      .doc(optionId)
 
-    // transaction to option numberOfConfirmations
-    return db.runTransaction(transaction => {
-      return transaction.get(optionRef).then(optionDB => {
-        let numberOfConfirms = optionDB.data().numberOfConfirms;
-        if (!numberOfConfirms){
+
+    // transaction to option new number of confirms
+    return db.runTransaction(async transaction => {
+      const optionDB = await transaction.get(optionRef);
+      let numberOfConfirms = optionDB.data().numberOfConfirms;
+      
+      numberOfConfirms =setNewNumberOfConfirms(numberOfConfirms);
+
+
+      const transaction2 = await db.runTransaction;
+      const subQuestionDB = await transaction2.get(subQuestionRef)
+      let maxConfirms = subQuestionDB.data().maxConfirms;
+      if (!maxConfirms)
+        maxConfirms = 0;
+      if (numberOfConfirms > maxConfirms) {
+        return transaction2.update(subQuestionRef, { maxConfirms });
+      } else {
+        return null;
+      }
+
+
+      return transaction.update(optionRef, { numberOfConfirms });
+
+      function setNewNumberOfConfirms(numberOfConfirms) {
+        if (!numberOfConfirms) {
           numberOfConfirms = 0;
         }
+        if (confirm)
+          numberOfConfirms++;
 
-        if(confirm) numberOfConfirms++;
-        else numberOfConfirms--;
-        if(numberOfConfirms<0) numberOfConfirms = 0;
+        else
+          numberOfConfirms--;
+        if (numberOfConfirms < 0)
+          numberOfConfirms = 0;
 
-        return transaction.update(optionRef, {numberOfConfirms});
-      })
+          return numberOfConfirms;
+      }
     })
 
 
-    //check in subQuestion if bigger then maxConfirmations
+    //check in subQuestion if bigger than maxConfirmations
   })
 
 

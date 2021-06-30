@@ -143,7 +143,7 @@ function createSubQuestion(groupId, questionId, title, order) {
                 .doc(questionId)
                 .collection('subQuestions')
                 .doc(subQuestionId)
-                .set({ title, order, creator: store.user.uid, orderBy: 'top', subQuestionId, id: subQuestionId })
+                .set({ title, order, creator: store.user.uid, orderBy: 'top', subQuestionId, id: subQuestionId,maxConfirms:0 })
                 .then(() => { resolve(subQuestionId) })
                 .catch(function (error) {
                     console.error('Error adding document: ', error); sendError(e)
