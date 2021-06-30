@@ -1431,27 +1431,31 @@ exports.confirms = functions.firestore
       .doc(optionId)
 
 
-    // transaction to option new number of confirms
+    // transaction to option numberOfConfirmations
     return db.runTransaction(async transaction => {
       const optionDB = await transaction.get(optionRef);
       let numberOfConfirms = optionDB.data().numberOfConfirms;
-      
-      numberOfConfirms =setNewNumberOfConfirms(numberOfConfirms);
 
+      numberOfConfirms = setNewNumberOfConfirms(numberOfConfirms);
 
-      const transaction2 = await db.runTransaction;
-      const subQuestionDB = await transaction2.get(subQuestionRef)
-      let maxConfirms = subQuestionDB.data().maxConfirms;
-      if (!maxConfirms)
-        maxConfirms = 0;
-      if (numberOfConfirms > maxConfirms) {
-        return transaction2.update(subQuestionRef, { maxConfirms });
-      } else {
-        return null;
-      }
+      await transaction.update(optionRef, { numberOfConfirms });
 
+      //set maximum confirms
 
-      return transaction.update(optionRef, { numberOfConfirms });
+      return db.runTransaction(async transaction2 => {
+        const subQuestionDB = await transaction2.get(subQuestionRef);
+
+        let maxConfirms = subQuestionDB.data().maxConfirms;
+
+        if (typeof maxConfirms !== 'number')
+          maxConfirms = 0;
+
+        if (numberOfConfirms > maxConfirms)
+          return transaction2.update(subQuestionRef, { maxConfirms: numberOfConfirms });
+        else
+          return null;
+
+      })
 
       function setNewNumberOfConfirms(numberOfConfirms) {
         if (!numberOfConfirms) {
@@ -1465,8 +1469,9 @@ exports.confirms = functions.firestore
         if (numberOfConfirms < 0)
           numberOfConfirms = 0;
 
-          return numberOfConfirms;
+        return numberOfConfirms;
       }
+
     })
 
 

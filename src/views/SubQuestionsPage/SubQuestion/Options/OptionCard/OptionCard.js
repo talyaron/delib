@@ -1,28 +1,29 @@
 import m from "mithril";
-import {get} from 'lodash';
+import { get } from 'lodash';
 
 import "./dist/OptionCard.css";
 
 //data
-import store, {consequencesTop} from "../../../../../data/store";
-import {CONFIRM, LIKE, DISLIKE, PARALLEL_OPTIONS, SUGGESTIONS} from '../../../../../data/evaluationTypes';
+import store, { consequencesTop } from "../../../../../data/store";
+import { CONFIRM, LIKE, DISLIKE, PARALLEL_OPTIONS, SUGGESTIONS } from '../../../../../data/evaluationTypes';
 
 //functions
-import {changeTextToArray, convertParagraphsToVisual} from '../../../../../functions/general';
-import {enterIn} from '../../../../../functions/animations';
-import {setEvaluation, updateOption, setOptionActive} from "../../../../../functions/firebase/set/set";
-import {getOptionVote, listenToTopConsequences} from "../../../../../functions/firebase/get/get";
+import { changeTextToArray, convertParagraphsToVisual } from '../../../../../functions/general';
+import { enterIn } from '../../../../../functions/animations';
+import { setEvaluation, updateOption, setOptionActive } from "../../../../../functions/firebase/set/set";
+import { getOptionVote, listenToTopConsequences } from "../../../../../functions/firebase/get/get";
 
 //components
 import ConsequenceTop from './ConsequenceTop/ConsequenceTop';
 import Evaluate from './Evaluate';
 
-let likeUnsubscribe = ()=>{}, confirmUnsubscribe =()=>{}
+let likeUnsubscribe = () => { }, confirmUnsubscribe = () => { }
 
 module.exports = {
     oninit: (vnode) => {
+        console.log(vnode)
 
-        const {groupId, questionId, subQuestionId, optionId} = vnode.attrs.ids;
+        const { groupId, questionId, subQuestionId, optionId } = vnode.attrs.ids;
 
         vnode.state = {
             creatorName: vnode.attrs.creatorName || "אנונימי",
@@ -49,8 +50,9 @@ module.exports = {
                 text: "",
                 URL: ""
             },
-            messagesRead: 0
-            
+            messagesRead: 0,
+            confirmed: false
+
         };
 
         likeUnsubscribe = getOptionVote(groupId, questionId, subQuestionId, optionId, store.user.uid, SUGGESTIONS);
@@ -61,18 +63,18 @@ module.exports = {
             description: vnode.attrs.description
         };
 
-        listenToTopConsequences({groupId, questionId, subQuestionId, optionId})
+        listenToTopConsequences({ groupId, questionId, subQuestionId, optionId })
     },
     onbeforeupdate: (vnode) => {
 
-        const {groupId, optionId} = vnode.attrs.ids;
+        const { groupId, optionId } = vnode.attrs.ids;
 
         //get admin
         vnode.state.admin = get(store.groups, `[${groupId}].creatorId`, '')
 
         let optionVote = store.optionsVotes[optionId];
-        if(optionId in store.optionsConfirm){
-          vnode.state.confirm = store.optionsConfirm[optionId]
+        if (optionId in store.optionsConfirm) {
+            vnode.state.confirm = store.optionsConfirm[optionId]
         }
 
         //set conesnsus level to string
@@ -105,7 +107,7 @@ module.exports = {
     },
     onupdate: (vnode) => {
 
-        const {optionId} = vnode.attrs.ids;
+        const { optionId } = vnode.attrs.ids;
 
         //animation
         let element = vnode.dom;
@@ -140,13 +142,13 @@ module.exports = {
                 left: -1 * leftMove + "px"
             }, {
                 duration: 0,
-                begin: (elms) => {}
+                begin: (elms) => { }
             }).velocity({
                 top: "0px",
                 left: "0px"
             }, {
                 duration: 750,
-                complete: (elms) => {}
+                complete: (elms) => { }
             }, "easeInOutCubic");
         }
     },
@@ -156,8 +158,12 @@ module.exports = {
     },
     view: (vnode) => {
         try {
-            const {description, processType} = vnode.attrs;
-            const {groupId, questionId, subQuestionId, optionId} = vnode.attrs.ids;
+            const { description, processType, confirms, title } = vnode.attrs;
+            const { groupId, questionId, subQuestionId, optionId } = vnode.attrs.ids;
+            const { cutoff, maxConfirms } = get(store, `subQuestions[${subQuestionId}]`, { cutoff: 0, maxConfirms: 0 });
+
+            vnode.state.confirmed = isConfirmed();
+
 
             let consequencesTop = get(store.consequencesTop, `[${optionId}]`, []);
 
@@ -168,24 +174,24 @@ module.exports = {
             return (
                 <div
                     class={processType === PARALLEL_OPTIONS
-                    ? "optionCard optionCard--parallel"
-                    : "optionCard"}
+                        ? vnode.state.confirmed ? "optionCard optionCard--parallel confirm" : "optionCard optionCard--parallel"
+                        : "optionCard"}
                     id={optionId}
                     key={vnode.attrs.key}>
                     <div class="optionCard__main">
-                        <Evaluate vp={vnode} evaluationType={LIKE} processType={processType}/>
+                        <Evaluate vp={vnode} evaluationType={LIKE} processType={processType} />
                         <div class="optionContent">
                             <div class="cardTitle">
                                 {!vnode.state.isEdit
                                     ? (
-                                        <span>{vnode.attrs.title}</span>
+                                        <span>{title}</span>
                                     )
                                     : (<input
                                         type="text"
-                                        defaultValue={vnode.state.title}
+                                        defaultValue={title}
                                         onkeyup={(e) => {
-                                        vnode.state.title = e.target.value;
-                                    }}/>)}
+                                            vnode.state.title = e.target.value;
+                                        }} />)}
                             </div>
                             {!vnode.state.isEdit
                                 ? (
@@ -199,28 +205,28 @@ module.exports = {
                                             type="checkbox"
                                             defaultChecked={vnode.state.isNamed}
                                             onchange={(e) => {
-                                            isAnonymous(e, vnode);
-                                        }}/> {vnode.state.isNamed
-                                            ? (
-                                                <span>{vnode.state.creatorName}</span>
-                                            )
-                                            : (
-                                                <span>אנונימי/ת</span>
-                                            )}
+                                                isAnonymous(e, vnode);
+                                            }} /> {vnode.state.isNamed
+                                                ? (
+                                                    <span>{vnode.state.creatorName}</span>
+                                                )
+                                                : (
+                                                    <span>אנונימי/ת</span>
+                                                )}
                                     </div>
                                 )}
 
                             <div
                                 class={isImgRegExp.test(description)
-                                ? "optionCard__description--image"
-                                : "optionCard__description"}
+                                    ? "optionCard__description--image"
+                                    : "optionCard__description"}
                                 onclick={() => {
-                                if (!vnode.state.isEdit) {
-                                    m
-                                        .route
-                                        .set(`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`)
-                                }
-                            }}>
+                                    if (!vnode.state.isEdit) {
+                                        m
+                                            .route
+                                            .set(`/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`)
+                                    }
+                                }}>
                                 {!vnode.state.isEdit
                                     ? (descriptionParagraphs.map((paragraph, index) => {
                                         return (convertParagraphsToVisual(paragraph, index))
@@ -228,8 +234,8 @@ module.exports = {
                                     : (<textarea
                                         defaultValue={vnode.state.description}
                                         onkeyup={(e) => {
-                                        vnode.state.description = e.target.value;
-                                    }}/>)}
+                                            vnode.state.description = e.target.value;
+                                        }} />)}
                             </div>
                             {/* {vnode.state.more.text.length > 0 ? (
                 <div>
@@ -289,100 +295,128 @@ module.exports = {
                   </div>
                 )} */}
                         </div>
-                        <Evaluate vp={vnode} evaluationType={DISLIKE} processType={processType}/>
+                        <Evaluate vp={vnode} evaluationType={DISLIKE} processType={processType} />
                     </div>
                     {/* options information panel */}
                     <hr></hr>
                     {consequencesTop.length > 0
                         ? <div
-                                onclick={() => {
+                            onclick={() => {
                                 enterIn(document.getElementById('page'), `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`)
                             }}>
-                                {consequencesTop.map(consequence => {
+                            {consequencesTop.map(consequence => {
 
-                                    return (<ConsequenceTop
-                                        consequence={consequence}
-                                        ids={{
+                                return (<ConsequenceTop
+                                    consequence={consequence}
+                                    ids={{
                                         groupId,
                                         questionId,
                                         subQuestionId,
                                         optionId
                                     }}
-                                        key={consequence.consequenceId}/>)
+                                    key={consequence.consequenceId} />)
 
-                                })
-}
-                            </div>
+                            })
+                            }
+                        </div>
                         : <div
                             class='consequences__tip'
                             onclick={() => {
-                            enterIn(document.getElementById('page'), `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`)
-                        }}>יש לכם טענות בעד ונגד ההצעה?</div>
-}
+                                enterIn(document.getElementById('page'), `/option/${groupId}/${questionId}/${subQuestionId}/${optionId}`)
+                            }}>יש לכם טענות בעד ונגד ההצעה?</div>
+                    }
                     <hr></hr>
                     <div class="optionCard__info">
                         <div class="optionCard__infoItem">
-                            <img src="img/group2.svg"/> {vnode.attrs.totalVoters}
+                            <img src="img/group2.svg" /> {vnode.attrs.totalVoters}
                         </div>
-                        <div
-                            class={vnode.state.isConNegative
-                            ? "optionCard__infoItem negative"
-                            : "optionCard__infoItem"}>
-                            <img src="img/voteUpDown.svg"/> {vnode.state.consensusPrecentage}
-                        </div>
+                        {processType === PARALLEL_OPTIONS ?
+                            <div
+                                class="optionCard__infoItem">
+                                <img src="img/iconmonstr-checkbox-check.svg" /> {confirms}
+                            </div>
+                            :
+                            <div
+                                class={vnode.state.isConNegative
+                                    ? "optionCard__infoItem negative"
+                                    : "optionCard__infoItem"}>
+                                <img src="img/voteUpDown.svg" /> {vnode.state.consensusPrecentage}
+                            </div>
+                        }
                         <div
                             class="optionCard__infoItem"
                             onclick={() => {
-                            m
-                                .route
-                                .set(`/option-chat/${groupId}/${questionId}/${subQuestionId}/${optionId}`)
-                        }}>
-                            <img src="img/chat.svg"/> {!isNaN(vnode.attrs.messagesCounter)
+                                m
+                                    .route
+                                    .set(`/option-chat/${groupId}/${questionId}/${subQuestionId}/${optionId}`)
+                            }}>
+                            <img src="img/chat.svg" /> {!isNaN(vnode.attrs.messagesCounter)
                                 ? vnode.attrs.messagesCounter - vnode.state.messagesRead
                                 : 0}
                         </div>
                         <div
                             class="optionCard__infoItem"
                             onclick={() => {
-                            vnode.state.isEdit = !vnode.state.isEdit;
-                        }}>
+                                vnode.state.isEdit = !vnode.state.isEdit;
+                            }}>
                             {vnode.attrs.creatorId == store.user.uid
                                 ? (
                                     <div>
                                         {!vnode.state.isEdit
-                                            ? (<img src="img/edit.svg"/>)
+                                            ? (<img src="img/edit.svg" />)
                                             : (
                                                 <div
                                                     class="buttons editOptionBtn"
                                                     onclick={() => {
-                                                    updateOption(vnode);
-                                                }}>
+                                                        updateOption(vnode);
+                                                    }}>
                                                     אישור
                                                 </div>
                                             )}
                                     </div>
                                 )
-                                : (<div/>)}
+                                : (<div />)}
                         </div>
                         {vnode.attrs.creatorId == store.user.uid || vnode.state.admin == store.user.uid
                             ? <div class="optionCard__infoItem" onclick={() => handleHide(vnode)}>
-                                    <img src="img/visibility_off-24px.svg"/>
-                                </div>
+                                <img src="img/visibility_off-24px.svg" />
+                            </div>
                             : null
-}
+                        }
                     </div>
                 </div>
             );
         } catch (e) {
             console.error(e)
         }
+
+        function isConfirmed() {
+            try {
+                const { confirms } = vnode.attrs;
+                const { subQuestionId } = vnode.attrs.ids;
+                const { cutoff, maxConfirms } = get(store, `subQuestions[${subQuestionId}]`, { cutoff: 0, maxConfirms: 0 });
+                console.log(cutoff, maxConfirms, confirms)
+                if (cutoff === undefined || maxConfirms === undefined || confirms === undefined) return false
+
+                if (typeof cutoff !== 'number' || typeof maxConfirms !== 'number' || typeof confirms !== 'number') throw new Error(`cutoff, maxConfirms or confirms are not a number, ${cutoff}, ${maxConfirms}, ${confirms}`)
+
+                if (confirms) {
+                    return confirms >= (maxConfirms * cutoff)
+                }
+
+                return false;
+            } catch (e) {
+                console.error(e);
+                return false
+            }
+        }
     }
 };
 
 export function setSelection(evaluate, vnode) {
 
-    const {groupId, questionId, subQuestionId, optionId} = vnode.attrs.ids;
-    const { processType} = vnode.attrs;
+    const { groupId, questionId, subQuestionId, optionId } = vnode.attrs.ids;
+    const { processType } = vnode.attrs;
 
     if (evaluate === "up") {
         vnode.state.up = !vnode.state.up;
@@ -403,7 +437,7 @@ export function setSelection(evaluate, vnode) {
         }
     } else if (evaluate === "confirm") {
         vnode.state.confirm = !vnode.state.confirm;
-      
+
         if (vnode.state.confirm) {
             setEvaluation(groupId, questionId, subQuestionId, optionId, store.user.uid, true, processType);
         } else {
@@ -419,7 +453,7 @@ function isAnonymous(e, vnode) {
 function handleHide(vnode) {
     try {
 
-        const {groupId, questionId, subQuestionId, optionId} = vnode.attrs.ids;
+        const { groupId, questionId, subQuestionId, optionId } = vnode.attrs.ids;
 
         let isDeactivate = confirm("האם אתם בטוחים שיש להחביא אופציה זאת?");
 

@@ -21,7 +21,7 @@ module.exports = {
         </div>);
 
         function handleCutoffChange(ev) {
-            vnode.state.cutoff = ev.target.value;
+            vnode.state.cutoff = ev.target.valueAsNumber/100;
         }
     }
 }

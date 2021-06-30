@@ -319,7 +319,7 @@ body {
 }
 
 .confirm {
-    background: #51d051;
+    background: #51d051 !important;
 }
 
 .cancel {

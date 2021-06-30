@@ -33,6 +33,7 @@ module.exports = {
                             messagesCounter={option.numberOfMessages}
                             more={option.more}
                             key={option.id}
+                            confirms={option.numberOfConfirms}
                             processType={processType}
                         />
                     })

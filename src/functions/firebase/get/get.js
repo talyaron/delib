@@ -432,6 +432,7 @@ function listenToOptions(groupId, questionId, subQuestionId, order = 'top', isSi
                         if (optionDB.data().isActive == null || optionDB.data().isActive == true) {
 
                             let optionObj = optionDB.data();
+                        
                             optionObj.id = optionObj.optionId = optionDB.id; //the preferd syntax is 'optionId' and not id, but we left the old 'id' for backward compatability purpose (Tal Yaron)
                             optionObj.subQuestionId = subQuestionId;
 
