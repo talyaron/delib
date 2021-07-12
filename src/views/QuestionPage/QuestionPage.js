@@ -259,6 +259,8 @@ module.exports = {
                                             return (<SubQuestionSolution
                                                 key={subQuestion.id}
                                                 creator={subQuestion.creator}
+                                                cutoff={subQuestion.cutoff}
+                                                maxConfirms={subQuestion.maxConfirms}
                                                 groupId={vnode.attrs.groupId}
                                                 questionId={vnode.attrs.questionId}
                                                 subQuestionId={subQuestion.id}

@@ -338,7 +338,6 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
                         let subQuestionObj = subQuestionDB.data();
                         subQuestionObj.subQuestionId = subQuestionObj.id = subQuestionDB.id;
 
-
                         subQuestionsArray.push(subQuestionObj);
                         subQuestionsObj[subQuestionObj.id] = {};
                     });
@@ -369,7 +368,8 @@ function getSubQuestion(groupId, questionId, subQuestionId, isSingle) {
 
         return optionRef.onSnapshot(subQuestionDB => {
             if (subQuestionDB.exists) {
-                set(store, `subQuestions[${subQuestionId}]`, subQuestionDB.data())
+                set(store, `subQuestions[${subQuestionId}]`, subQuestionDB.data());
+               
 
                 m.redraw();
             } else {

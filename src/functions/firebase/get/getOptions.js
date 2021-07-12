@@ -36,3 +36,43 @@ export const listenToTopOption = (ids, type = 'consensusPrecentage') => {
         console.error(e);
     }
 }
+
+export const listenToOptionsConfirmed = (ids,minmumConfirms)=>{
+    try {
+        const { groupId, questionId, subQuestionId } = ids;
+        if (!{}.hasOwnProperty.call(store.subQuestionOptionsConfirmedListen, subQuestionId)) {
+            store.subQuestionOptionsConfirmedListen[subQuestionId] = true
+
+            DB
+            .collection("groups")
+            .doc(groupId)
+            .collection("questions")
+            .doc(questionId)
+            .collection("subQuestions")
+            .doc(subQuestionId)
+            .collection("options")
+            .where('numberOfConfirms','>=',minmumConfirms)
+            .orderBy('numberOfConfirms', 'desc')
+            .onSnapshot(optionsDB => {
+                const confirmedOptions = [];
+                optionsDB.forEach(optionDB => {
+                    if (optionDB.exists) {
+                        const optionObj = optionDB.data();
+                        optionObj.optionId = optionDB.id;
+
+                        confirmedOptions.push(optionObj);
+                        
+                        
+                    }
+                })
+                store.subQuestionOptionsConfirmed[subQuestionId] = confirmedOptions;
+                console.log(store.subQuestionOptionsConfirmed[subQuestionId])
+                m.redraw();
+            }, e=>console.error(e))
+
+        }
+
+    } catch (error) {
+        
+    }
+}

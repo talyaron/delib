@@ -11,10 +11,10 @@ import Modal from '../../Commons/Modal/Modal';
 import settings from '../../../data/settings';
 import store from '../../../data/store';
 import { EntityModel } from '../../../data/dataTypes';
-import{PARALLEL_OPTIONS} from '../../../data/evaluationTypes';
+import { PARALLEL_OPTIONS, SUGGESTIONS, VOTES } from '../../../data/evaluationTypes';
 
 //functions
-import { listenToTopOption } from '../../../functions/firebase/get/getOptions';
+import { listenToTopOption, listenToOptionsConfirmed } from '../../../functions/firebase/get/getOptions';
 
 import { concatenateURL } from '../../../functions/general';
 import { get } from 'lodash';
@@ -24,14 +24,9 @@ let unsubscribeOptions = () => { };
 let subQuestionObj;
 
 module.exports = {
-	oninit: (vnode) => {
-
-		const { groupId, questionId, subQuestionId } = vnode.attrs;
-
-		listenToTopOption({ groupId, questionId, subQuestionId });
-	},
-	onremove: (vnode) => {
-
+	oninit: vnode => {
+		console.log(vnode.attrs);
+		listenToTopOptions(vnode);
 	},
 	view: vnode => {
 
@@ -69,7 +64,7 @@ module.exports = {
 						</div>
 						<div>
 							<img src='img/consensus.svg' alt='counsesnsus' />
-							<div>{isNaN(option.consensusPrecentage)? <div> -- </div> : <div>{Math.floor(option.consensusPrecentage * 100)}%</div>}</div>
+							<div>{isNaN(option.consensusPrecentage) ? <div> -- </div> : <div>{Math.floor(option.consensusPrecentage * 100)}%</div>}</div>
 						</div>
 
 					</div>
@@ -91,6 +86,8 @@ module.exports = {
 				}
 			</div>)
 		}
+
+
 	}
 };
 
@@ -185,9 +182,9 @@ function iconType(vnode) {
 	const { processType } = vnode.attrs;
 
 	switch (processType) {
-		case 'votes':
+		case VOTES:
 			return (<img class='subQuestionSolution__icon' src='img/votesDarkGray.svg' alt='votes' />);
-		case 'suggestions':
+		case SUGGESTIONS:
 			return (<img class='subQuestionSolution__icon' src='img/suggestionsDarkGray.svg' alt='suggestions' />);
 		case PARALLEL_OPTIONS:
 			return (<img class='subQuestionSolution__icon' src='img/lines.svg' alt='votes' />);
@@ -202,4 +199,37 @@ function handleSetId(e, id) {
 
 	e.dataTransfer.setData("text", id);
 	e.dataTransfer.effectAllowed = "move"
+}
+
+function listenToTopOptions(vnode) {
+
+	const { groupId, questionId, subQuestionId, processType } = vnode.attrs;
+	switch (processType) {
+		case VOTES:
+			listenToTopOption({ groupId, questionId, subQuestionId });
+			break;
+		case SUGGESTIONS:
+
+			listenToTopOption({ groupId, questionId, subQuestionId });
+
+			break;
+		case PARALLEL_OPTIONS:
+			console.log(PARALLEL_OPTIONS)
+			let { maxConfirms, cutoff } = vnode.attrs;
+
+			if (cutoff !== undefined && maxConfirms !== undefined) {
+
+				cutoff = parseInt(cutoff);
+				maxConfirms = parseInt(maxConfirms);
+
+				const minmumConfirms = maxConfirms * (cutoff / 100);
+				console.log('minmumConfirms = ',minmumConfirms)
+				listenToOptionsConfirmed({ groupId, questionId, subQuestionId },minmumConfirms)
+			}
+			break;
+
+		default:
+			listenToTopOption({ groupId, questionId, subQuestionId });
+			break;
+	}
 }
