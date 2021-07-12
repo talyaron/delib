@@ -196,6 +196,8 @@ function setSubQuestion(ids, settings) {
 
             const { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions, proAgainstType } = settings;
             let { cutoff } = settings;
+            cutoff = parseInt(cutoff);
+            
             if (!cutoff) cutoff = false;
             const { groupId, questionId, subQuestionId } = ids;
 

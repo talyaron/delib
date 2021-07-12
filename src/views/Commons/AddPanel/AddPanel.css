@@ -62,8 +62,8 @@
 .addPanel--open{
     animation: openAddPanel 300ms;
     animation-fill-mode: forwards;
-    /* display: none;  */
-    bottom:-300px;
+    transform: translate(-50%, -45px);
+
 }
 
 @keyframes openAddPanel{

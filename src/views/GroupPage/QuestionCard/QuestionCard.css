@@ -7,5 +7,5 @@
 
 
 .questionOwned{
-    border-left: 9px solid var(--gray2);
+   background-color: aliceblue;
 }

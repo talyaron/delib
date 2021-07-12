@@ -394,14 +394,18 @@ module.exports = {
             try {
                 const { confirms } = vnode.attrs;
                 const { subQuestionId } = vnode.attrs.ids;
-                const { cutoff, maxConfirms } = get(store, `subQuestions[${subQuestionId}]`, { cutoff: 0, maxConfirms: 0 });
-                console.log(cutoff, maxConfirms, confirms)
+                let { cutoff, maxConfirms } = get(store, `subQuestions[${subQuestionId}]`, { cutoff: 0, maxConfirms: 0 });
+                cutoff = parseInt(cutoff);
+                maxConfirms = parseInt(maxConfirms);
+
+               console.log(cutoff, maxConfirms, confirms)
                 if (cutoff === undefined || maxConfirms === undefined || confirms === undefined) return false
 
                 if (typeof cutoff !== 'number' || typeof maxConfirms !== 'number' || typeof confirms !== 'number') throw new Error(`cutoff, maxConfirms or confirms are not a number, ${cutoff}, ${maxConfirms}, ${confirms}`)
 
                 if (confirms) {
-                    return confirms >= (maxConfirms * cutoff)
+                    console.log('it was confirmed', confirms,maxConfirms * (cutoff/100) )
+                    return confirms >= (maxConfirms * (cutoff/100))
                 }
 
                 return false;

@@ -235,7 +235,7 @@ module.exports = {
                         />
                     }
                     <div class='page__footer'>
-                        {vnode.state.subPage == 'main' ?
+                        {vnode.state.subPage == 'main' && !vnode.state.openAddPanel ?
                             <div class='fav' onclick={() => { vnode.state.openAddPanel = true }} >
                                 <div>+</div>
                             </div>
