@@ -4,19 +4,26 @@ import './DocumentCard.css';
 
 //data
 import store from '../../../../data/store';
+import { PARALLEL_OPTIONS } from '../../../../data/evaluationTypes'
 
 //functions
-import { listenToTopOption } from '../../../../functions/firebase/get/getOptions';
-import { concatenateURL,changeTextToArray,convertParagraphsToVisual } from '../../../../functions/general';
+import { listenToTopOptions} from '../../../../functions/firebase/get/getOptions';
+import { concatenateURL, changeTextToArray, convertParagraphsToVisual } from '../../../../functions/general';
+
+//components
+import Solutions from '../../../QuestionPage/Solutions/Solutions';
 
 module.exports = {
     oninit: vnode => {
-        const { groupId, questionId, subQuestionId } = vnode.attrs;
-        listenToTopOption({ groupId, questionId, subQuestionId })
+        const { groupId, questionId, subQuestionId, subQuestion } = vnode.attrs;
+        const {processType} = subQuestion;
+        listenToTopOptions( groupId, questionId, subQuestionId, processType,subQuestion)
+       
     },
 
     view: vnode => {
-        const {groupId, questionId, subQuestionId, subQuestion } = vnode.attrs;
+        const { groupId, questionId, subQuestionId, subQuestion } = vnode.attrs;
+        const { processType } = subQuestion;
 
         const option = get(store.selectedOption, `[${subQuestion.subQuestionId}]`, { title: 'אין עדיין תשובה' })
         const descriptionParagraphs = changeTextToArray(option.description);
@@ -24,20 +31,28 @@ module.exports = {
         return (
             <div class='documentCard' id={subQuestionId} ondragstart={e => handleSetId(e, subQuestionId)} data-id={subQuestionId} data-type='subQuestion' onclick={() => { m.route.set(concatenateURL(groupId, questionId, subQuestionId)) }} draggable={true}>
                 <div class='documentCard__handle'>
-                    <img src='img/sortHandle.svg' alt='sort sub question'/>
+                    <img src='img/sortHandle.svg' alt='sort sub question' />
                 </div>
                 <div class='documentCard__main'>
-                <h1>{subQuestion.title}</h1>
-                <p>{option.title}</p>
-                <div class='description__text'  >
-                        {
-                            descriptionParagraphs.map((paragaph, index) => {
+                    {processType === PARALLEL_OPTIONS ?
+                        <Solutions processType={processType} title={subQuestion.title} subQuestionId={subQuestionId} />
+                        :
+                        <div>
+                            <h1>{subQuestion.title}</h1>
+                            <p>{option.title}</p>
 
-                                return (convertParagraphsToVisual(paragaph, index))
-                            })
-                        }
 
-                    </div>
+                            <div class='description__text'  >
+                                {
+                                    descriptionParagraphs.map((paragaph, index) => {
+
+                                        return (convertParagraphsToVisual(paragaph, index))
+                                    })
+                                }
+
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         )
@@ -47,8 +62,8 @@ module.exports = {
 
 function handleSetId(e, id) {
 
-	e.dataTransfer.setData("text", id);
-	e.dataTransfer.effectAllowed = "move"
+    e.dataTransfer.setData("text", id);
+    e.dataTransfer.effectAllowed = "move"
 }
 
 

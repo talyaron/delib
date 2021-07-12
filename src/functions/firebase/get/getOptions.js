@@ -1,6 +1,7 @@
 import m from "mithril";
 import { DB } from "../config";
 import store, { consequencesTop } from "../../../data/store";
+import {VOTES, SUGGESTIONS, PARALLEL_OPTIONS} from '../../../data/evaluationTypes'
 
 export const listenToTopOption = (ids, type = 'consensusPrecentage') => {
  
@@ -75,4 +76,37 @@ export const listenToOptionsConfirmed = (ids,minmumConfirms)=>{
     } catch (error) {
         
     }
+}
+
+export const listenToTopOptions = ( groupId, questionId, subQuestionId, processType, subQuestion)=> {
+
+	
+	switch (processType) {
+		case VOTES:
+			listenToTopOption({ groupId, questionId, subQuestionId });
+			break;
+		case SUGGESTIONS:
+
+			listenToTopOption({ groupId, questionId, subQuestionId });
+
+			break;
+		case PARALLEL_OPTIONS:
+		
+			let { maxConfirms, cutoff } = subQuestion;
+
+			if (cutoff !== undefined && maxConfirms !== undefined) {
+
+				cutoff = parseInt(cutoff);
+				maxConfirms = parseInt(maxConfirms);
+
+				const minmumConfirms = maxConfirms * (cutoff / 100);
+		
+				listenToOptionsConfirmed({ groupId, questionId, subQuestionId }, minmumConfirms)
+			}
+			break;
+
+		default:
+			listenToTopOption({ groupId, questionId, subQuestionId });
+			break;
+	}
 }
