@@ -7,7 +7,7 @@
     grid-template-columns: 30px auto;
     grid-gap: 10px;
 }
-.documentCard h1{
+.documentCard h1, .subQuestionSolution__text h1{
     color: var(--white);
     font-size: var(--size15);
     background: var(--halfPrimary);
@@ -15,7 +15,7 @@
     padding: 5px 10px;
 }
 
-.documentCard p{
+.documentCard p, .subQuestionSolution__text p{
     color: var(--gray0);
     font-size: var(--size15);
 }

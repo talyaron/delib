@@ -35,9 +35,9 @@ module.exports = {
                     <div class='subQuestionSolution__text'>
                         <h1>{title}</h1>
                         {options.map(option => {
-                            return (<div class='subQuestionSolution__confirmedOptions'>
-                                {option.title}
-                            </div>)
+                            return (<p>
+                               <img src='img/check_gray.svg'/> {option.title}
+                            </p>)
                         })}
                     </div>
                 );
