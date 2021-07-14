@@ -62,7 +62,7 @@
 .addPanel--open{
     animation: openAddPanel 300ms;
     animation-fill-mode: forwards;
-    transform: translate(-50%, -45px);
+    transform: translate(-50%,0px);
 
 }
 
