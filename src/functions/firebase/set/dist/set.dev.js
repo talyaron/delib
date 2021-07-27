@@ -24,8 +24,8 @@ function createGroup(settings) {
         title = settings.title,
         description = settings.description,
         callForAction = settings.callForAction,
-        language = settings.language;
-    var groupId = (0, _general.uniqueId)();
+        language = settings.language,
+        groupId = settings.groupId; // const groupId = uniqueId()
 
     _config.DB.collection('groups').doc(groupId).set({
       title: title,
@@ -36,7 +36,10 @@ function createGroup(settings) {
       id: groupId,
       groupColor: (0, _general.getRandomColor)(),
       callForAction: callForAction,
-      language: language
+      language: language,
+      active: true
+    }, {
+      merge: true
     }).then(function () {
       _config.DB.collection("users").doc(_store["default"].user.uid).collection("groupsOwned").doc(groupId).set({
         id: groupId,
@@ -161,7 +164,8 @@ function createSubQuestion(groupId, questionId, title, order) {
         creator: _store["default"].user.uid,
         orderBy: 'top',
         subQuestionId: subQuestionId,
-        id: subQuestionId
+        id: subQuestionId,
+        maxConfirms: 0
       }).then(function () {
         resolve(subQuestionId);
       })["catch"](function (error) {
@@ -206,6 +210,7 @@ function setSubQuestion(ids, settings) {
           numberOfSubquestions = settings.numberOfSubquestions,
           proAgainstType = settings.proAgainstType;
       var cutoff = settings.cutoff;
+      cutoff = parseInt(cutoff);
       if (!cutoff) cutoff = false;
       var groupId = ids.groupId,
           questionId = ids.questionId,

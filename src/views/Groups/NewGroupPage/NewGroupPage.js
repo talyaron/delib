@@ -12,7 +12,7 @@ const optionsArray = getLangOptions(lang);
 
 //functions
 import { createGroup } from "../../../functions/firebase/set/set";
-import {setWrapperHeight} from '../../../functions/general';
+import {setWrapperHeight, uniqueId} from '../../../functions/general';
 
 module.exports = {
   oninit: vnode => {
@@ -24,7 +24,8 @@ module.exports = {
       logo: false,
       language: 'he',
       wrapperHight:window.innerHeight,
-      headerHeight:0
+      headerHeight:0,
+      groupId:uniqueId()
     };
   },
   oncreate: vnode => {
@@ -73,7 +74,7 @@ module.exports = {
               placeholder="קריאה לפעולה - תופיעה בדף הכניסה לאפליקציה"
               onkeyup={e => (vnode.state.callForAction = e.target.value)}
             />
-            <Picture logo={vnode.state.logo} id={vnode.attrs.id} />
+            <Picture logo={vnode.state.logo} id={vnode.state.groupId} />
             <input
               type="button"
               class="buttons"
@@ -82,7 +83,7 @@ module.exports = {
                 if (vnode.state.title != false && vnode.state.title.length > 2) {
 
                   const { uid, title, description, callForAction, language } = vnode.state;
-                  createGroup({ creatorId: store.user.uid, title, description, callForAction, language });
+                  createGroup({ creatorId: store.user.uid, title, description, callForAction, language, groupId:vnode.state.groupId});
                 }
               }}
             ></input>

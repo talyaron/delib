@@ -7,7 +7,8 @@ import { constant } from 'lodash';
 
 module.exports = {
   oninit: vnode => {
-    vnode.state = { filePercent: false }
+    vnode.state = { filePercent: false, logo:vnode.attrs.logo }
+    console.log('vnode.attrs.id',vnode.attrs.groupId)
   },
   view: vnode => {
 
@@ -28,8 +29,8 @@ module.exports = {
           </div>
           :
 
-          vnode.attrs.logo ? (
-            <img src={vnode.attrs.logo} class="imgOption" />
+          vnode.state.logo ? (
+            <img src={vnode.state.logo} class="imgOption" />
           ) : (
 
 
@@ -77,8 +78,9 @@ function getImage(event, vnode) {
       uploadImg.snapshot.ref.getDownloadURL().then(function (downloadURL) {
 
         vnode.state.logo = downloadURL;
+        m.redraw();
 
-        DB.collection('groups').doc(vnode.attrs.id).update({ logo: downloadURL })
+        DB.collection('groups').doc(vnode.attrs.id).set({ logo: downloadURL }, {merge:true})
           .then(() => {
             vnode.state.logo = downloadURL;
             vnode.state.filePercent = false

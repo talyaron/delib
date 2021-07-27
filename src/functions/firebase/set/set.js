@@ -1,5 +1,5 @@
 import m from 'mithril';
-import { set, get } from 'lodash';
+import { set, get, merge } from 'lodash';
 import { DB } from '../config';
 import store from '../../../data/store';
 import { concatenateDBPath, uniqueId, getRandomColor } from '../../general';
@@ -9,9 +9,9 @@ import { SUGGESTIONS, PARALLEL_OPTIONS } from '../../../data/evaluationTypes'
 
 function createGroup(settings) {
     try {
-        const { creatorId, title, description, callForAction, language } = settings;
+        const { creatorId, title, description, callForAction, language,groupId } = settings;
 
-        const groupId = uniqueId()
+        // const groupId = uniqueId()
 
         DB
             .collection('groups')
@@ -25,8 +25,9 @@ function createGroup(settings) {
                 id: groupId,
                 groupColor: getRandomColor(),
                 callForAction,
-                language
-            })
+                language,
+                active:true
+            }, {merge:true})
             .then(() => {
 
                 DB
