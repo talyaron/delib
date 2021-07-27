@@ -1,4 +1,5 @@
 import m from 'mithril';
+import {get} from 'lodash';
 
 
 import './Groups.css';
@@ -22,7 +23,7 @@ module.exports = {
         sessionStorage.setItem('lastPage', store.lastPage);
     },
     view: () => {
-     
+
         return (
             <div class='page page__grid'>
                 <Header name='דליב - קבוצות' topic='דליב' upLevelUrl={false} notifications={false} />
@@ -34,7 +35,7 @@ module.exports = {
 
                         store.userGroups.length > 0 ?
                             store.userGroups.map((group, key) => {
-                            
+
 
                                 return <Group
                                     route='/group/'
@@ -47,17 +48,33 @@ module.exports = {
                                 />
                             })
                             :
-                            <CreateNewEntity entity='קבוצות' func={() => { m.route.set('/newgroup') }    } />
+                            isShowNewGroup()?<CreateNewEntity entity='קבוצות' func={() => { m.route.set('/newgroup') }} />:null
 
                     }
                 </div>
                 <NavBottom />
-                <div class='fav' onclick={() => { m.route.set('/newgroup') }} >
-                    <div>+</div>
-                </div>
+                {isShowNewGroup() ?
+                    <div class='fav' onclick={() => { m.route.set('/newgroup') }} >
+                        <div>+</div>
+                    </div>
+                    : null
+                }
                 <Feed />
             </div >
         )
+
+        function isShowNewGroup() {
+            try{
+            const {isAnonymous} = store.user;
+            if(isAnonymous === undefined) return false;
+            if(isAnonymous === true) return false;
+            return true;
+           
+            }catch(e){
+                console.error(e);
+                return false;
+            }
+        }
     }
 }
 

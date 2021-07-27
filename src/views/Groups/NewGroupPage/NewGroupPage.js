@@ -1,5 +1,5 @@
 import m from "mithril";
-import "./NewGroupPage.css";
+import "./dist/NewGroupPage.min.css";
 
 //model
 import store from "../../../data/store";
@@ -12,68 +12,89 @@ const optionsArray = getLangOptions(lang);
 
 //functions
 import { createGroup } from "../../../functions/firebase/set/set";
+import {setWrapperHeight} from '../../../functions/general';
 
 module.exports = {
   oninit: vnode => {
-    
+
     vnode.state = {
       title: false,
       description: "",
       callForAction: '',
       logo: false,
-      language:'he'
+      language: 'he',
+      wrapperHight:window.innerHeight,
+      headerHeight:0
     };
+  },
+  oncreate: vnode => {
+    setTimeout(()=>{
+      vnode.state.wrapperHight = setWrapperHeight('pageEdit__header','wrapper_newGroup');
+    
+      vnode.state.headerHeight = document.getElementById('pageEdit__header').offsetHeight;
+     
+      m.redraw();
+    },1000)
+   
+    window.addEventListener('resize',()=>{
+      vnode.state.headerHeight = document.getElementById('pageEdit__header').offsetHeight;
+      vnode.state.wrapperHight = setWrapperHeight('pageEdit__header','wrapper_newGroup');
+    })
   },
   view: vnode => {
     return (
-      <div>
-        <Header topic="קבוצות" title="יצירת קבוצה חדשה" upLevelUrl="/groups" />
-        <div class="wrapper wrapper_newGroup inputs">
-          <select class="inputGeneral" onchange={(e)=>handleLanguageChange(e, vnode)}>
-            {
-            optionsArray.map(lng => {
-              return (<option value={lng.key}>{lng.name}</option>)
-            })
+      <div class='pageEdit'>
+        <div class='pageEdit__header' id='pageEdit__header'>
+          <Header topic="קבוצות" title="יצירת קבוצה חדשה" upLevelUrl="/groups" />
+        </div>
+        <div class="wrapper wrapper_newGroup" id='wrapper_newGroup' style={`height:${vnode.state.wrapperHight}px ; margin-top:${vnode.state.headerHeight}px`}>
+          <div class='inputs'>
+            <select class="inputGeneral" onchange={(e) => handleLanguageChange(e, vnode)}>
+              {
+                optionsArray.map(lng => {
+                  return (<option value={lng.key}>{lng.name}</option>)
+                })
 
-            }
-          </select>
-          <input
-            class="inputGeneral"
-            type="text"
-            placeholder="שם הקבוצה"
-            onkeyup={e => (vnode.state.title = e.target.value)}
-          />
-          <textarea
-            class="inputGeneral"
-            placeholder="תאור הקבוצה"
-            onkeyup={e => (vnode.state.description = e.target.value)}
-          />
-          <textarea
-            class="inputGeneral"
-            placeholder="קריאה לפעולה - תופיעה בדף הכניסה לאפליקציה"
-            onkeyup={e => (vnode.state.callForAction = e.target.value)}
-          />
-          <Picture logo={vnode.state.logo} id={vnode.attrs.id} />
-          <input
-            type="button"
-            class="buttons"
-            value="יצירת קבוצה חדשה"
-            onclick={() => {
-              if (vnode.state.title != false && vnode.state.title.length > 2) {
-
-                const {uid, title, description, callForAction, language} = vnode.state;
-                createGroup({creatorId:store.user.uid,title,description,callForAction,language} );
               }
-            }}
-          ></input>
+            </select>
+            <input
+              class="inputGeneral"
+              type="text"
+              placeholder="שם הקבוצה"
+              onkeyup={e => (vnode.state.title = e.target.value)}
+            />
+            <textarea
+              class="inputGeneral"
+              placeholder="תאור הקבוצה"
+              onkeyup={e => (vnode.state.description = e.target.value)}
+            />
+            <textarea
+              class="inputGeneral"
+              placeholder="קריאה לפעולה - תופיעה בדף הכניסה לאפליקציה"
+              onkeyup={e => (vnode.state.callForAction = e.target.value)}
+            />
+            <Picture logo={vnode.state.logo} id={vnode.attrs.id} />
+            <input
+              type="button"
+              class="buttons"
+              value="יצירת קבוצה חדשה"
+              onclick={() => {
+                if (vnode.state.title != false && vnode.state.title.length > 2) {
+
+                  const { uid, title, description, callForAction, language } = vnode.state;
+                  createGroup({ creatorId: store.user.uid, title, description, callForAction, language });
+                }
+              }}
+            ></input>
+          </div>
         </div>
       </div>
     );
   }
 };
 
-function handleLanguageChange(e, vnode){
-  
+function handleLanguageChange(e, vnode) {
+
   vnode.state.language = e.target.value
 }
 

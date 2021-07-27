@@ -34,6 +34,7 @@ function getLastEntityId(ids){
 }
 
 function setWrapperHeight(headerId, wrapperId) {
+    let windowHight = window.innerHeight;
     let header = document.getElementById(headerId);
     if (header != null) {
         let headerHeight = header.clientHeight;
@@ -43,8 +44,11 @@ function setWrapperHeight(headerId, wrapperId) {
             .style
             .top = headerHeight + 'px';
 
+            return windowHight-headerHeight;
+
     } else {
-        console.error('No such header exists')
+        console.error(`No such header exists: ${headerId}`);
+        return windowHight
     }
 }
 

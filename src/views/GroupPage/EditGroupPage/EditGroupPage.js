@@ -1,6 +1,7 @@
 import m from "mithril";
-import "../../Groups/NewGroupPage/NewGroupPage.css";
+import "../../Groups/NewGroupPage/dist/NewGroupPage.min.css";
 import { get } from "lodash";
+import './dist/EditGroupPage.min.css';
 
 
 //model
@@ -33,8 +34,10 @@ module.exports = {
   view: vnode => {
 
     return (
-      <div>
-        <Header topic="קבוצה" title="עדכון קבוצה" upLevelUrl="/groups" />
+      <div class='pageEdit'>
+        <div class='pageEdit__header'>
+          <Header topic="קבוצה" title="עדכון קבוצה" upLevelUrl="/groups" />
+        </div>
         <div class="wrapper wrapper_newGroup inputs">
           <input
             class="inputGeneral"

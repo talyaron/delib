@@ -235,7 +235,7 @@ module.exports = {
                         />
                     }
                     <div class='page__footer'>
-                        {vnode.state.subPage == 'main' && !vnode.state.openAddPanel ?
+                        {isShowFav() ?
                             <div class='fav' onclick={() => { vnode.state.openAddPanel = true }} >
                                 <div>+</div>
                             </div>
@@ -277,6 +277,11 @@ module.exports = {
             </div>
 
         )
+
+        function isShowFav(){
+            console.log(store.user)
+            return vnode.state.subPage == 'main' && !vnode.state.openAddPanel
+        }
     }
 }
 

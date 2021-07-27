@@ -1,5 +1,16 @@
-.wrapper_newGroup{
-    margin-top:80px;
+.pageEdit {
+    &__header {
+        position: fixed;
+        width: 100%;
+        top: 0px;
+        z-index: 2;
+    }
+}
+
+
+.wrapper_newGroup {
+    margin-top: 80px;
+    overflow-y: auto;
 }
 
 .addPicturesPanel {
@@ -12,6 +23,7 @@
     user-select: none;
     cursor: pointer;
 }
+
 
 .addPicturesPanel>span {
     position: relative;
