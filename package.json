@@ -36,7 +36,7 @@
     "path-dirname": "^1.0.2",
     "regenerator-runtime": "^0.13.7",
     "serialize-javascript": ">=3.1.0",
-    "set-value": ">=2.0.1",
+    "set-value": ">=4.0.1",
     "sortablejs": "^1.13.0"
   }
 }
