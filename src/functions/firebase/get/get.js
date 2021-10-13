@@ -1,5 +1,7 @@
 import m from "mithril";
 import { DB } from "../config";
+import { doc, getDoc } from "firebase/firestore";
+
 //model
 import store, { consequencesTop } from "../../../data/store";
 import { SUGGESTIONS, PARALLEL_OPTIONS } from '../../../data/evaluationTypes';
@@ -11,24 +13,27 @@ import { sendError } from '../set/set';
 
 var unsubscribe = {};
 
-function getUser(uid) {
+async function getUser(uid) {
     try {
 
-        DB.collection('users').doc(uid)
-            .get()
-            .then(userDB => {
-                if (userDB.exists) {
-                    let { stopRegistrationMessages, firstTimeOnSuggestions } = userDB.data()
-                    if (stopRegistrationMessages === undefined) stopRegistrationMessages = false;
+        const userRef = doc(DB, 'users', uid);
+        const userSnap = await getDoc(userRef);
 
-                    store.user.stopRegistrationMessages = stopRegistrationMessages;
+        if (userSnap.exists()) {
+            console.log(userSnap.data());
+            let { stopRegistrationMessages, firstTimeOnSuggestions } = userSnap.data()
+            if (stopRegistrationMessages === undefined) stopRegistrationMessages = false;
 
-                    //check if user is first time on suggestions
-                    if (firstTimeOnSuggestions === undefined) store.user.firstTimeOnSuggestions = true;
+            store.user.stopRegistrationMessages = stopRegistrationMessages;
 
-                }
-            })
-            .catch(e => { console.error(e); sendError(e); })
+            //check if user is first time on suggestions
+            if (firstTimeOnSuggestions === undefined) store.user.firstTimeOnSuggestions = true;
+
+        } else {
+            throw new Error(`No user with id ${uid}`)
+        }
+
+
     } catch (e) {
         console.error(e); sendError(e);
     }
@@ -369,7 +374,7 @@ function getSubQuestion(groupId, questionId, subQuestionId, isSingle) {
         return optionRef.onSnapshot(subQuestionDB => {
             if (subQuestionDB.exists) {
                 set(store, `subQuestions[${subQuestionId}]`, subQuestionDB.data());
-               
+
 
                 m.redraw();
             } else {
@@ -385,7 +390,7 @@ function getSubQuestion(groupId, questionId, subQuestionId, isSingle) {
 
 function listenToOptions(groupId, questionId, subQuestionId, order = 'top', isSingle = false) {
     try {
-       
+
         if (!{}.hasOwnProperty.call(store.optionsListen, subQuestionId)) {
             //signal that this questionId options are listend to
             store.optionsListen[subQuestionId] = true;
@@ -420,7 +425,7 @@ function listenToOptions(groupId, questionId, subQuestionId, order = 'top', isSi
                 .orderBy(orderBy, "desc")
                 .limit(limit)
                 .onSnapshot(optionsDB => {
-           
+
                     let optionsArray = [];
                     optionsDB.forEach(optionDB => {
 
@@ -432,7 +437,7 @@ function listenToOptions(groupId, questionId, subQuestionId, order = 'top', isSi
                         if (optionDB.data().isActive == null || optionDB.data().isActive == true) {
 
                             let optionObj = optionDB.data();
-                        
+
                             optionObj.id = optionObj.optionId = optionDB.id; //the preferd syntax is 'optionId' and not id, but we left the old 'id' for backward compatability purpose (Tal Yaron)
                             optionObj.subQuestionId = subQuestionId;
 
@@ -489,7 +494,7 @@ function listenToUserLastReadOfOptionChat(optionId) {
                 .collection('optionsRead')
                 .doc(optionId)
                 .onSnapshot(optionListenDB => {
-                    
+
                     if (optionListenDB.exists) {
                         const numberOfMessages = optionListenDB.data().numberOfMessages || 0;
                         store.optionNumberOfMessagesRead[optionId] = numberOfMessages;
@@ -527,7 +532,7 @@ function listenToOption(ids) {
             .collection("options")
             .doc(optionId)
             .onSnapshot(optionDB => {
-                
+
                 let optionObj = optionDB.data();
 
                 optionObj.optionId = optionDB.data().optionId;
@@ -594,11 +599,11 @@ function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId, 
 
 
             if (voteDB.exists) {
-               
+
                 if (processType === SUGGESTIONS) {
                     store.optionsVotes[optionId] = voteDB.data().like;
-                } else if(processType === PARALLEL_OPTIONS){
-                    console.log('process type',PARALLEL_OPTIONS)
+                } else if (processType === PARALLEL_OPTIONS) {
+                    console.log('process type', PARALLEL_OPTIONS)
                     console.log(voteDB.data())
                     store.optionsConfirm[optionId] = voteDB.data().confirm;
                 }
@@ -613,7 +618,7 @@ function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId, 
         });
         return unsubscribe;
     } catch (e) {
-        console.error(e); 
+        console.error(e);
     }
 }
 
