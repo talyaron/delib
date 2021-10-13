@@ -4,6 +4,9 @@ import {
 	DB
 } from '../firebase/config';
 
+import { getAuth, createUserWithEmailAndPassword,onAuthStateChanged } from "firebase/auth";
+
+
 //functions
 import {
 	getUser,
@@ -11,7 +14,7 @@ import {
 	listenToFeedLastEntrance,
 	listenToUserGroups, listenToRegisterdGroups
 } from '../firebase/get/get';
-import {listenToChatFeed,listenToBageMessages} from '../firebase/get/getChats';
+import { listenToChatFeed, listenToBageMessages } from '../firebase/get/getChats';
 import {
 	getRandomColorDark
 } from '../general';
@@ -22,8 +25,12 @@ import {
 	constant, merge
 } from 'lodash';
 
+const auth = getAuth();
+
 function AnonymousLogin() {
-	firebase.auth().signInAnonymously().catch(function (error) {
+	signInAnonymously(auth)
+	.then(()=>{ console.log('Anonymous login')})
+	.catch(error => {
 		// Handle Errors here.
 		var errorCode = error.code;
 		var errorMessage = error.message;
@@ -32,7 +39,7 @@ function AnonymousLogin() {
 }
 
 function onAuth() {
-	firebase.auth().onAuthStateChanged( user => {
+	onAuthStateChanged(auth,user => {
 		try {
 			store.user = user;
 
@@ -61,15 +68,15 @@ function onAuth() {
 					listenToRegisterdGroups();
 
 					listenToBageMessages()
-				
-					
 
-					DB.collection('users').doc(user.uid).set(userSimpleObj, {merge:true})
-					.then(function () { }).catch(function (error) {
-						console.error('On login, set user to DB;', error.name, error.message)
-						// if(error.message == 'Missing or insufficient permissions.'){alert('Insufficient permisions')}
-						// console.error('Error writing User 22: ', error);
-					});
+
+
+					DB.collection('users').doc(user.uid).set(userSimpleObj, { merge: true })
+						.then(function () { }).catch(function (error) {
+							console.error('On login, set user to DB;', error.name, error.message)
+							// if(error.message == 'Missing or insufficient permissions.'){alert('Insufficient permisions')}
+							// console.error('Error writing User 22: ', error);
+						});
 
 					let lastPage = sessionStorage.getItem('lastPage') || '/groups';
 					m.route.set(lastPage);
@@ -78,7 +85,7 @@ function onAuth() {
 
 					console.info('user is anonymous');
 					getUser(store.user.uid);
-					
+
 					listenToUserGroups();
 					listenToRegisterdGroups();
 

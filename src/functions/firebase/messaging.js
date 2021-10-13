@@ -1,4 +1,7 @@
 import m from 'mithril';
+import { getMessaging, getToken } from "firebase/messaging";
+
+const messaging = getMessaging();
 
 
 
@@ -15,37 +18,35 @@ import {
 import { concatenateDBPath, setBrowserUniqueId } from '../general';
 import { usePublicVapidKey } from '../firebase/configKey'
 
-let MESSAGING;
 
-(() => {
-    try {
-       
-       
 
-        if ('Notification' in window) {
 
-            // Retrieve Firebase Messaging object.
-            MESSAGING = firebase.messaging();
-           
-            // Add the public key generated from the console here.
-            MESSAGING.usePublicVapidKey(
-                usePublicVapidKey
-            );
 
-            // Callback fired if Instance ID token is updated.
-            MESSAGING.onTokenRefresh(function () {
-                handleTokenRefresh();
-            });
 
-            MESSAGING.onMessage(function (payload) {
+if ('Notification' in window) {
 
-            });
-        }
-    } catch (e) {
-        console.error(e.message)
-       
-    }
-})()
+    // Retrieve Firebase Messaging object.
+
+
+    // Add the public key generated from the console here.
+    getToken(messaging, { vapidKey: 'BOXKnicJW5Cu3xwRG7buXf-JU8tS-AErJX_Ax7CsUwqZQvBvo2E-ECnE-uGvUKcgeL-1nT-cJw8qGo4dH-zrfGA' })
+        .then(currentToken => {
+            console.log(currentToken)
+        });
+
+    // Callback fired if Instance ID token is updated.
+
+    // MESSAGING.onTokenRefresh(function () {
+    //     handleTokenRefresh();
+    // });
+
+    // MESSAGING.onMessage(function (payload) {
+
+    // });
+
+
+}
+
 
 // update which enteties are subscribed
 function getSubscriptions() {
