@@ -1,6 +1,6 @@
 import m from "mithril";
 import { DB } from "../config";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, query, where, getDocs, onSnapshot } from "firebase/firestore";
 
 //model
 import store, { consequencesTop } from "../../../data/store";
@@ -49,26 +49,22 @@ function listenToUserGroups() {
 
         if (store.userGroupsListen === false) {
             store.userGroupsListen = true;
+            const q = query(collection(DB, 'users', store.user.uid, 'groupsOwned'))
 
 
+            const unsub = onSnapshot(q, groupsOwnedDB => {
 
-            DB
-                .collection("users")
-                .doc(store.user.uid)
-                .collection("groupsOwned")
-                .onSnapshot(groupsOwnedDB => {
+//finished here
+                setTimeout(() => {
+                    if (store.userGroups[0] === false) store.userGroups.splice(0, 1);
+                    m.redraw()
+                }, 500)
 
-
-                    setTimeout(() => {
-                        if (store.userGroups[0] === false) store.userGroups.splice(0, 1);
-                        m.redraw()
-                    }, 500)
-
-                    listenToGroups(groupsOwnedDB);
-                    m.redraw();
-                }, err => {
-                    console.error('On getUserGroups:', err.name, err.message); sendError(err)
-                });
+                listenToGroups(groupsOwnedDB);
+                m.redraw();
+            }, err => {
+                console.error('On getUserGroups:', err.name, err.message); sendError(err)
+            });
         }
     } catch (err) {
         console.error(err)

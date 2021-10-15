@@ -84,8 +84,9 @@ function listenToUserGroups() {
 
     if (_store["default"].userGroupsListen === false) {
       _store["default"].userGroupsListen = true;
-
-      _config.DB.collection("users").doc(_store["default"].user.uid).collection("groupsOwned").onSnapshot(function (groupsOwnedDB) {
+      var q = (0, _firestore.query)((0, _firestore.collection)(_config.DB, 'users', _store["default"].user.uid, 'groupsOwned'));
+      var unsub = (0, _firestore.onSnapshot)(q, function (groupsOwnedDB) {
+        //finished here
         setTimeout(function () {
           if (_store["default"].userGroups[0] === false) _store["default"].userGroups.splice(0, 1);
 

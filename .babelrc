@@ -8,6 +8,12 @@
             {
                 "pragma": "m"
             }
+        ],
+        [
+            "transform-runtime",
+            {
+                "regenerator": true
+            }
         ]
     ]
 }
