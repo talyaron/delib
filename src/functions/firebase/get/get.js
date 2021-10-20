@@ -8,7 +8,7 @@ import { SUGGESTIONS, PARALLEL_OPTIONS } from '../../../data/evaluationTypes';
 
 //functions
 import { set } from 'lodash';
-import { concatenateDBPath, setBrowserUniqueId, getEntityId } from '../../general'
+import { concatentPath, concatenateDBPath, setBrowserUniqueId, getEntityId } from '../../general'
 import { sendError } from '../set/set';
 
 var unsubscribe = {};
@@ -73,14 +73,14 @@ function listenToUserGroups() {
 
 function listenToRegisterdGroups() {
 
- 
+
     try {
 
         if ({}.hasOwnProperty.call(store.user, 'uid') && store.registerGroupsListen === false) {
             store.registerGroupsListen = true;
 
-            const registerdGroupsRef = collection(DB, 'users',store.user.uid,'registerGroups' );
-            const unsub = onSnapshot(registerdGroupsRef, groupsDB=>{
+            const registerdGroupsRef = collection(DB, 'users', store.user.uid, 'registerGroups');
+            const unsub = onSnapshot(registerdGroupsRef, groupsDB => {
 
                 listenToGroups(groupsDB);
             }, err => {
@@ -142,8 +142,8 @@ function listenToGroup(groupId) {
 
             store.userGroupListen[groupId] = true
 
-
-            return DB.collection('groups').doc(groupId).onSnapshot(groupDB => {
+            const groupRef = doc(DB, 'groups', groupId)
+            return onSnapshot(groupRef, groupDB => {
 
                 if (groupDB.exists) {
                     let groupIndex = store.userGroups.findIndex(group => group.id === groupId);
@@ -211,18 +211,17 @@ function listenToGroupMembers(groupId) {
 
 function getQuestions(onOff, groupId, vnode) {
     if (onOff === "on") {
-        vnode.state.unsubscribe = DB
-            .collection("groups")
-            .doc(groupId)
-            .collection("questions")
-            .orderBy("time", "desc")
-            .onSnapshot(questionsDb => {
-                questionsDb.forEach(questionDB => {
-                    if (questionDB.data().id) { setStore(store.questions, groupId, questionDB.data().id, questionDB.data()); }
-                });
 
-                m.redraw();
+        const questionsRef = collection(DB, 'groups', groupId, 'questions');
+        const q = query(questionsRef, orderBy("time", "desc"));
+
+        vnode.state.unsubscribe = onSnapshot(q, questionsDb => {
+            questionsDb.forEach(questionDB => {
+                if (questionDB.data().id) { setStore(store.questions, groupId, questionDB.data().id, questionDB.data()); }
             });
+
+            m.redraw();
+        });
     } else {
         vnode
             .state
@@ -249,21 +248,18 @@ function listenToGroupDetails(groupId, vnode) {
 
         if (!{}.hasOwnProperty.call(store.groupListen, groupId)) {
             store.groupListen[groupId] = true;
+            const groupRef = doc(DB, 'groups', groupId);
+            onSnapshot(groupRef, groupDB => {
+                store.groups[groupId] = groupDB.data();
 
-            DB
-                .collection("groups")
-                .doc(groupId)
-                .onSnapshot(groupDB => {
-                    store.groups[groupId] = groupDB.data();
+                m.redraw();
+            }, err => {
+                console.error(`At listenToGroupDetails: ${err.name}, ${err.message}`);
+                if (err.message === 'Missing or insufficient permissions.') {
+                    m.route.set('/unauthorized');
+                }
 
-                    m.redraw();
-                }, err => {
-                    console.error(`At listenToGroupDetails: ${err.name}, ${err.message}`);
-                    if (err.message === 'Missing or insufficient permissions.') {
-                        m.route.set('/unauthorized');
-                    }
-
-                });
+            });
         }
     } catch (err) {
         console.error(err)
@@ -913,25 +909,25 @@ function listenToSubscription(path) {
 
 
         if ({}.hasOwnProperty.call(store.subscribe, path) === false) {
+console.log(`${path}/subscribers/${store.user.uid}`)
+            const subscriptionRef = doc(DB, `${path}/subscribers/${store.user.uid}`)
 
-            DB
-                .doc(`${path}/subscribers/${store.user.uid}`)
-                .onSnapshot(subscriberDB => {
+            onSnapshot(subscriptionRef, subscriberDB => {
 
-                    set(store.subscribe, `[${path}]`, subscriberDB.exists);
+                set(store.subscribe, `[${path}]`, subscriberDB.exists);
 
-                    m.redraw();
+                m.redraw();
 
-                    if (subscriberDB.exists)
-                        console.info('user is subscribed')
-                    else {
-                        console.info('user is not subscribed')
-                    }
-                    resolve();
-                }, err => {
-                    console.error(err)
-                    reject(err)
-                })
+                if (subscriberDB.exists)
+                    console.info('user is subscribed')
+                else {
+                    console.info('user is not subscribed')
+                }
+                resolve();
+            }, err => {
+                console.error(err)
+                reject(err)
+            })
         }
     })
 }
@@ -1039,9 +1035,10 @@ function listenToChat(ids) {
         const { groupId, questionId, subQuestionId, optionId } = ids;
 
         if (groupId === undefined) throw new Error('No group id in the ids')
-        let path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
-
-        const chatPath = path + '/messages';
+        let collectionRef = concatentPath(DB, groupId, questionId, subQuestionId, optionId);
+        const path = concatentPath(groupId, questionId, subQuestionId, optionId)
+        console.log('collectionRef', collectionRef)
+        const chatRef = collection(DB, `${collectionRef}/messages`);
         let lastRead = new Date('2020-01-01');
 
         if (!(path in store.chatLastRead)) {
@@ -1056,49 +1053,44 @@ function listenToChat(ids) {
             store.chatMessegesNotRead[path] = 0;
         }
 
-
-
-        return DB.collection(chatPath)
-            .where('createdTime', '>', lastRead)
-            .orderBy('createdTime', 'desc')
-            .limit(100)
-            .onSnapshot(messagesDB => {
-                messagesDB.docChanges().forEach(function (change) {
-                    if (change.type === "added") {
+        const q = query(chatRef, where('createdTime', '>', lastRead), orderBy('createdTime', 'desc'), limit(100))
+        return onSnapshot(q, messagesDB => {
+            messagesDB.docChanges().forEach(function (change) {
+                if (change.type === "added") {
 
 
 
-                        if (!(path in store.chat)) { store.chat[path] = [] }
-                        const messageObj = change.doc.data();
-                        messageObj.messageId = change.doc.id;
-                        store.chat[path].push(messageObj);
-                        store.chatLastRead = change.doc.data().createdTime;
-                        store.chatMessegesNotRead[path]++;
+                    if (!(path in store.chat)) { store.chat[path] = [] }
+                    const messageObj = change.doc.data();
+                    messageObj.messageId = change.doc.id;
+                    store.chat[path].push(messageObj);
+                    store.chatLastRead = change.doc.data().createdTime;
+                    store.chatMessegesNotRead[path]++;
 
 
-                    } else if (change.type === 'removed') {
-                        console.log('removed', change.doc.id)
-                        store.chat[path] = store.chat[path].filter(msg => msg.messageId !== change.doc.id);
-                    }
+                } else if (change.type === 'removed') {
+                    console.log('removed', change.doc.id)
+                    store.chat[path] = store.chat[path].filter(msg => msg.messageId !== change.doc.id);
+                }
 
-                })
-
-                store.chat[path] = store.chat[path].sort((a, b) => a.createdTime.seconds - b.createdTime.seconds);
-                let userUID = ''
-                store.chat[path].map((message, index) => {
-                    if (message.uid === userUID) {
-                        store.chat[path][index].isSameUser = true;
-                    } else {
-                        store.chat[path][index].isSameUser = false;
-                        userUID = message.uid;
-                    }
-                })
-                m.redraw();
-
-
-            }, e => {
-                console.error(e); sendError(e);
             })
+
+            store.chat[path] = store.chat[path].sort((a, b) => a.createdTime.seconds - b.createdTime.seconds);
+            let userUID = ''
+            store.chat[path].map((message, index) => {
+                if (message.uid === userUID) {
+                    store.chat[path][index].isSameUser = true;
+                } else {
+                    store.chat[path][index].isSameUser = false;
+                    userUID = message.uid;
+                }
+            })
+            m.redraw();
+
+
+        }, e => {
+            console.error(e); sendError(e);
+        })
     } catch (e) {
         console.error(e); sendError(e);
     }
@@ -1150,14 +1142,18 @@ function getLastTimeEntered(ids, vnode) {
         const { groupId, questionId, subQuestionId, optionId, consequenceId } = ids;
 
 
-        let path = concatenateDBPath(groupId, questionId, subQuestionId, optionId, consequenceId);
+        let path = concatentPath(groupId, questionId, subQuestionId, optionId, consequenceId);
+        console.log('path', path)
         const regex = new RegExp('/', 'gi')
         path = path.replace(regex, '-')
+        console.log(groupId, questionId, subQuestionId, optionId, consequenceId)
 
 
-        if (path !== '-groups') {
-            DB.collection(`users`).doc(store.user.uid).collection('chatLastEnterence').doc(path)
-                .get()
+        if (path.length > 10) {
+            console.log('users', store.user.uid, 'chatLastEnterence', path)
+            const docRef = doc(DB, 'users', store.user.uid, 'chatLastEnterence', path)
+
+            getDoc(docRef)
                 .then(time => {
                     if (time.data() !== undefined) {
                         vnode.state.lastTimeEntered = time.data().lastTime.seconds;
@@ -1172,10 +1168,7 @@ function getLastTimeEntered(ids, vnode) {
             vnode.state.unreadMessages = 0;
             throw new Error('couldnt find path to spesific chat (groupId, questionId, subQuestionId, optionId, consequenceId)', groupId, questionId, subQuestionId, optionId, consequenceId);
         }
-    }
-
-
-    catch (e) {
+    } catch (e) {
         console.error(e); sendError(e);
     }
 }

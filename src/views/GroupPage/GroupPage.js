@@ -21,11 +21,11 @@ import GroupSection from './GroupSection/GroupSection';
 
 
 //functions
-import {registerGroup } from '../../functions/firebase/set/set';
+import { registerGroup } from '../../functions/firebase/set/set';
 import { createQuestion } from '../../functions/firebase/set/setQuestion';
 import { getQuestions, listenToGroupDetails, listenToChat, getLastTimeEntered } from '../../functions/firebase/get/get';
 import { listenToGroupSections } from '../../functions/firebase/get/getGroup';
-import { setLastPage, getIsChat, concatenateDBPath } from '../../functions/general';
+import { setLastPage, getIsChat, concatentPath } from '../../functions/general';
 
 
 
@@ -55,8 +55,8 @@ module.exports = {
                 title: '',
                 description: ''
             },
-            title:'',
-            description:'',
+            title: '',
+            description: '',
             subPage: getIsChat() ? 'chat' : 'main',
             isAdmin: false,
             edit: true,
@@ -77,6 +77,7 @@ module.exports = {
         listenToGroupDetails(vnode.attrs.id, vnode);
         if (afterLogin) {
             unsubscruibeTitles = listenToGroupSections(groupId);
+            getLastTimeEntered({ groupId }, vnode);
         }
 
         vnode.state.unsubscribe.chat = listenToChat({ groupId: vnode.attrs.id });
@@ -87,7 +88,9 @@ module.exports = {
     oncreate: vnode => {
         const { id } = vnode.attrs;
         let groupId = id;
-        getLastTimeEntered({ groupId }, vnode);
+
+        
+
 
 
 
@@ -120,7 +123,7 @@ module.exports = {
         }
 
 
-        const path = concatenateDBPath(groupId);
+        const path = concatentPath(groupId);
         vnode.state.unreadMessages = store.chat[path].filter(m => {
 
             return m.createdTime.seconds > vnode.state.lastTimeEntered
@@ -176,7 +179,7 @@ module.exports = {
                                         title: 'כותרות',
                                         alt: 'add sections',
                                         class: 'addPanel__headers addPanel__images',
-                                        onClickfn: () => { vsp.openAddPanel = false; vsp.openHeadersPanel = true}
+                                        onClickfn: () => { vsp.openAddPanel = false; vsp.openHeadersPanel = true }
                                     }
                                 ]
                             }} />
@@ -207,7 +210,7 @@ module.exports = {
                     {vnode.state.subPage == 'main' ?
 
                         <div class='questionsWrapper' id='groupWrapper' style={`direction:${lang[language].dir}`}>
-                            <Explanation description={vnode.state.description} type='group' ids={{groupId}} />
+                            <Explanation description={vnode.state.description} type='group' ids={{ groupId }} />
                             {vnode.state.openHeadersPanel ? <Headers groupId={vnode.attrs.id} vsp={vsp} /> : null}
                             <h1>{lang[language].groupTopics}</h1>
                             {vnode.state.questions[0] === false ?
@@ -278,7 +281,7 @@ module.exports = {
 
         )
 
-        function isShowFav(){
+        function isShowFav() {
             console.log(store.user)
             return vnode.state.subPage == 'main' && !vnode.state.openAddPanel
         }

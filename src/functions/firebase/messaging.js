@@ -53,17 +53,17 @@ if ('Notification' in window) {
 function getSubscriptions() {
     if ('Notification' in window) {
         try {
-            const qunsub = onSnapshot(doc(DB, 'tokens', store.user.uid), userTokenDB => {
+            const qunsub = onSnapshot(doc(DB, 'tokens', store.user.uid), userTokenDB=>{
 
+           
+                    if (userTokenDB.exists && userTokenDB.data().pushEntities) {
+                        store.push = userTokenDB.data().pushEntities;
 
-                if (userTokenDB.exists && userTokenDB.data().pushEntities) {
-                    store.push = userTokenDB.data().pushEntities;
-
-                    m.redraw();
-                }
-            }, err => {
-                console.error('On getSubscriptions:', err.name, err.message)
-            })
+                        m.redraw();
+                    }
+                }, err => {
+                    console.error('On getSubscriptions:', err.name, err.message)
+                })
         } catch (err) {
             if (err.message === 'Missing or insufficient permissions.') {
                 console.error('Cant get subscriptions because of insufficient perpmissions')

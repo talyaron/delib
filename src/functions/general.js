@@ -1,5 +1,7 @@
 import m from 'mithril';
 import store from '../data/store';
+import { collection, doc} from 'firebase/firestore';
+import { DB } from '../functions/firebase/config'
 
 function deep_value(obj, path, alternativeValue) {
     try {
@@ -21,16 +23,16 @@ function deep_value(obj, path, alternativeValue) {
     }
 };
 
-function getLastEntityId(ids){
-    const {groupId, questionId, subQuestionId, optionId, consequenceId} = ids;
+function getLastEntityId(ids) {
+    const { groupId, questionId, subQuestionId, optionId, consequenceId } = ids;
 
-    if(consequenceId !== undefined) return consequenceId;
-    if(optionId !== undefined) return optionId;
-    if(subQuestionId !== undefined) return subQuestionId;
-    if(questionId !== undefined) return questionId;
-    if(groupId !== undefined) return groupId;
+    if (consequenceId !== undefined) return consequenceId;
+    if (optionId !== undefined) return optionId;
+    if (subQuestionId !== undefined) return subQuestionId;
+    if (questionId !== undefined) return questionId;
+    if (groupId !== undefined) return groupId;
     return false;
-    
+
 }
 
 function setWrapperHeight(headerId, wrapperId) {
@@ -44,7 +46,7 @@ function setWrapperHeight(headerId, wrapperId) {
             .style
             .top = headerHeight + 'px';
 
-            return windowHight-headerHeight;
+        return windowHight - headerHeight;
 
     } else {
         console.error(`No such header exists: ${headerId}`);
@@ -398,6 +400,33 @@ function setLastPage() {
 
 function concatenateDBPath(groupId, questionId, subQuestionId, optionId, consequenceId) {
     try {
+
+        if (consequenceId) {
+            return doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options', optionId, 'consequences', consequenceId);
+        } else if (optionId) {
+            return doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options', optionId);
+        } else if (subQuestionId) {
+            return doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId);
+        } else if (questionId) {
+            return doc(DB, 'groups', groupId, 'questions', questionId);
+        } else if (groupId) {
+            return doc(DB, 'groups', groupId);
+        } else {
+            return collection(DB, 'groups')
+        }
+
+
+
+
+    } catch (err) {
+        console.error(err);
+        return undefined;
+    }
+}
+
+function concatentPath(groupId, questionId, subQuestionId, optionId, consequenceId) {
+    
+    try {
         let subscriptionPath = 'groups/'
         if (groupId !== undefined) {
             subscriptionPath += `${groupId}`;
@@ -418,11 +447,8 @@ function concatenateDBPath(groupId, questionId, subQuestionId, optionId, consequ
             return '/groups'
 
         }
-
-
-    } catch (err) {
-        console.error(err);
-        return undefined;
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -501,7 +527,7 @@ function timeParse(time) {
         if (Object.prototype.toString.call(time) !== '[object Date]') throw new Error('Expected a Date object but got somthing else', time)
 
         return (
-            time.toDateString() + ' '+
+            time.toDateString() + ' ' +
             ("0" + time.getHours()).slice(-2) + ":" +
             ("0" + time.getMinutes()).slice(-2)
         )
@@ -701,11 +727,11 @@ function getUser() {
     })
 }
 
-function getLanguage(groupId){
-    const group = store.userGroups.find(group=>group.id === groupId);
-    if(group && {}.hasOwnProperty.call(group, 'language')){
+function getLanguage(groupId) {
+    const group = store.userGroups.find(group => group.id === groupId);
+    if (group && {}.hasOwnProperty.call(group, 'language')) {
         return group.language;
-       
+
     }
     return 'he';
 
@@ -724,6 +750,7 @@ module.exports = {
     loginIfNotRegisterd,
     setLastPage,
     concatenateDBPath,
+    concatentPath,
     concatenateURL,
     uniqueId,
     getRandomColor,

@@ -156,7 +156,8 @@ function listenToGroup(groupId) {
   try {
     if (!{}.hasOwnProperty.call(_store["default"].userGroupsListners, groupId)) {
       _store["default"].userGroupListen[groupId] = true;
-      return _config.DB.collection('groups').doc(groupId).onSnapshot(function (groupDB) {
+      var groupRef = (0, _firestore.doc)(_config.DB, 'groups', groupId);
+      return (0, _firestore.onSnapshot)(groupRef, function (groupDB) {
         if (groupDB.exists) {
           var groupIndex = _store["default"].userGroups.findIndex(function (group) {
             return group.id === groupId;
@@ -228,7 +229,9 @@ function listenToGroupMembers(groupId) {
 
 function getQuestions(onOff, groupId, vnode) {
   if (onOff === "on") {
-    vnode.state.unsubscribe = _config.DB.collection("groups").doc(groupId).collection("questions").orderBy("time", "desc").onSnapshot(function (questionsDb) {
+    var questionsRef = (0, _firestore.collection)(_config.DB, 'groups', groupId, 'questions');
+    var q = (0, _firestore.query)(questionsRef, (0, _firestore.orderBy)("time", "desc"));
+    vnode.state.unsubscribe = (0, _firestore.onSnapshot)(q, function (questionsDb) {
       questionsDb.forEach(function (questionDB) {
         if (questionDB.data().id) {
           setStore(_store["default"].questions, groupId, questionDB.data().id, questionDB.data());
@@ -260,8 +263,8 @@ function listenToGroupDetails(groupId, vnode) {
 
     if (!{}.hasOwnProperty.call(_store["default"].groupListen, groupId)) {
       _store["default"].groupListen[groupId] = true;
-
-      _config.DB.collection("groups").doc(groupId).onSnapshot(function (groupDB) {
+      var groupRef = (0, _firestore.doc)(_config.DB, 'groups', groupId);
+      (0, _firestore.onSnapshot)(groupRef, function (groupDB) {
         _store["default"].groups[groupId] = groupDB.data();
 
         _mithril["default"].redraw();
@@ -741,7 +744,9 @@ function getSubItemUserLike(subItemsType, groupId, questionId, subQuestionId, cr
 function listenToSubscription(path) {
   return new Promise(function (resolve, reject) {
     if ({}.hasOwnProperty.call(_store["default"].subscribe, path) === false) {
-      _config.DB.doc("".concat(path, "/subscribers/").concat(_store["default"].user.uid)).onSnapshot(function (subscriberDB) {
+      console.log("".concat(path, "/subscribers/").concat(_store["default"].user.uid));
+      var subscriptionRef = (0, _firestore.doc)(_config.DB, "".concat(path, "/subscribers/").concat(_store["default"].user.uid));
+      (0, _firestore.onSnapshot)(subscriptionRef, function (subscriberDB) {
         (0, _lodash.set)(_store["default"].subscribe, "[".concat(path, "]"), subscriberDB.exists);
 
         _mithril["default"].redraw();
@@ -847,8 +852,10 @@ function listenToChat(ids) {
         subQuestionId = ids.subQuestionId,
         optionId = ids.optionId;
     if (groupId === undefined) throw new Error('No group id in the ids');
-    var path = (0, _general.concatenateDBPath)(groupId, questionId, subQuestionId, optionId);
-    var chatPath = path + '/messages';
+    var collectionRef = (0, _general.concatentPath)(_config.DB, groupId, questionId, subQuestionId, optionId);
+    var path = (0, _general.concatentPath)(groupId, questionId, subQuestionId, optionId);
+    console.log('collectionRef', collectionRef);
+    var chatRef = (0, _firestore.collection)(_config.DB, "".concat(collectionRef, "/messages"));
     var lastRead = new Date('2020-01-01');
 
     if (!(path in _store["default"].chatLastRead)) {
@@ -862,7 +869,8 @@ function listenToChat(ids) {
       _store["default"].chatMessegesNotRead[path] = 0;
     }
 
-    return _config.DB.collection(chatPath).where('createdTime', '>', lastRead).orderBy('createdTime', 'desc').limit(100).onSnapshot(function (messagesDB) {
+    var q = (0, _firestore.query)(chatRef, (0, _firestore.where)('createdTime', '>', lastRead), (0, _firestore.orderBy)('createdTime', 'desc'), (0, _firestore.limit)(100));
+    return (0, _firestore.onSnapshot)(q, function (messagesDB) {
       messagesDB.docChanges().forEach(function (change) {
         if (change.type === "added") {
           if (!(path in _store["default"].chat)) {
@@ -950,12 +958,16 @@ function getLastTimeEntered(ids, vnode) {
         subQuestionId = ids.subQuestionId,
         optionId = ids.optionId,
         consequenceId = ids.consequenceId;
-    var path = (0, _general.concatenateDBPath)(groupId, questionId, subQuestionId, optionId, consequenceId);
+    var path = (0, _general.concatentPath)(groupId, questionId, subQuestionId, optionId, consequenceId);
+    console.log('path', path);
     var regex = new RegExp('/', 'gi');
     path = path.replace(regex, '-');
+    console.log(groupId, questionId, subQuestionId, optionId, consequenceId);
 
-    if (path !== '-groups') {
-      _config.DB.collection("users").doc(_store["default"].user.uid).collection('chatLastEnterence').doc(path).get().then(function (time) {
+    if (path.length > 10) {
+      console.log('users', _store["default"].user.uid, 'chatLastEnterence', path);
+      var docRef = (0, _firestore.doc)(_config.DB, 'users', _store["default"].user.uid, 'chatLastEnterence', path);
+      (0, _firestore.getDoc)(docRef).then(function (time) {
         if (time.data() !== undefined) {
           vnode.state.lastTimeEntered = time.data().lastTime.seconds;
 

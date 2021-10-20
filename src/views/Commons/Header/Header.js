@@ -15,7 +15,7 @@ import { subscribeToNotification } from '../../../functions/firebase/messaging';
 import { exitOut } from '../../../functions/animations';
 
 import store from '../../../data/store';
-import { Reference, concatenateDBPath, getEntityId, getUser } from '../../../functions/general';
+import { Reference, concatentPath, getEntityId, getUser } from '../../../functions/general';
 
 //components
 import Aside from '../Aside/Aside';
@@ -48,7 +48,7 @@ module.exports = {
             isMenuOpen: false,
             subscribed: false,
             notifications: get(store.listenToMessages, `[${entityId}]`, false),
-            path: concatenateDBPath(groupId, questionId, subQuestionId, optionId),
+            path: concatentPath(groupId, questionId, subQuestionId, optionId),
             language: 'he'
         }
         //set refernce string

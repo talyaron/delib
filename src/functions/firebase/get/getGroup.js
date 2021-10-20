@@ -1,11 +1,10 @@
 import m from "mithril";
 import { DB } from "../config";
 import store, { consequencesTop } from "../../../data/store";
+import { collection, onSnapshot } from "firebase/firestore";
 
 //functions
-import { cond, constant, orderBy, set } from 'lodash';
-import { concatenateDBPath, setBrowserUniqueId, getEntityId } from '../../general'
-import { sendError } from '../set/set';
+
 
 export const listenToGroupSections = groupId => {
 
@@ -20,22 +19,21 @@ export const listenToGroupSections = groupId => {
                 store.groupSections[groupId] = []
             }
 
-            return DB
-                .collection('groups').doc(groupId)
-                .collection('sections')
-                .onSnapshot(sectionsDB => {
+            const sectionsRef = collection(DB, 'groups', groupId, 'sections')
 
-                    const sections = []
-                    sectionsDB.forEach(sectionDB => {
-                        const sectionObj = sectionDB.data();
-                        sectionObj.groupTitleId = sectionDB.id
-                        sections.push(sectionObj)
-                    });
-                    store.groupSections[groupId] = [...sections];
-                   
+            onSnapshot(sectionsRef, sectionsDB => {
 
-                    m.redraw();
-                })
+                const sections = []
+                sectionsDB.forEach(sectionDB => {
+                    const sectionObj = sectionDB.data();
+                    sectionObj.groupTitleId = sectionDB.id
+                    sections.push(sectionObj)
+                });
+                store.groupSections[groupId] = [...sections];
+
+
+                m.redraw();
+            })
         } else {
 
             return () => { };
