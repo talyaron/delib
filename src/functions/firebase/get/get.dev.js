@@ -499,14 +499,17 @@ function listenToOption(ids) {
 }
 
 function getOptionDetails(groupId, questionId, subQuestionId, optionId, vnode) {
-  var optionRef = _config.DB.collection("groups").doc(groupId).collection("questions").doc(questionId).collection("subQuestions").doc(subQuestionId).collection("options").doc(optionId);
+  try {
+    var optionRef = (0, _firestore.doc)('groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options', optionId);
+    return (0, _firestore.onSnapshot)(optionRef, function (optionDB) {
+      _store["default"].optionsDetails[optionId] = optionDB.data();
+      vnode.state.option.title = optionDB.data().title;
 
-  return optionRef.onSnapshot(function (optionDB) {
-    _store["default"].optionsDetails[optionId] = optionDB.data();
-    vnode.state.option.title = optionDB.data().title;
-
-    _mithril["default"].redraw();
-  });
+      _mithril["default"].redraw();
+    });
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId) {
@@ -926,9 +929,9 @@ function listenIfGetsMessages(ids) {
 
     if (!{}.hasOwnProperty.call(_store["default"].listenToMessages, entityId)) {
       var browserUniqueId = (0, _general.setBrowserUniqueId)();
-      var dbPath = "".concat((0, _general.concatenateDBPath)(groupId, questionId, subQuestionId, optionId), "/notifications/").concat(_store["default"].user.uid);
-
-      _config.DB.doc(dbPath).onSnapshot(function (tokensDB) {
+      var dbPath = "".concat((0, _general.concatentPath)(groupId, questionId, subQuestionId, optionId), "/notifications/").concat(_store["default"].user.uid);
+      var tokensRef = (0, _firestore.doc)(_config.DB, dbPath);
+      (0, _firestore.onSnapshot)(tokensRef, function (tokensDB) {
         if (tokensDB.exists) {
           if (tokensDB.data()[browserUniqueId] === undefined) {
             _store["default"].listenToMessages[entityId] = false;

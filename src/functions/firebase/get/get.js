@@ -542,24 +542,21 @@ function listenToOption(ids) {
 }
 
 function getOptionDetails(groupId, questionId, subQuestionId, optionId, vnode) {
-    let optionRef = DB
-        .collection("groups")
-        .doc(groupId)
-        .collection("questions")
-        .doc(questionId)
-        .collection("subQuestions")
-        .doc(subQuestionId)
-        .collection("options")
-        .doc(optionId);
 
-    return optionRef.onSnapshot(optionDB => {
-        store.optionsDetails[optionId] = optionDB.data();
-        vnode.state.option.title = optionDB
-            .data()
-            .title;
+    try {
+        let optionRef = doc('groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options', optionId)
 
-        m.redraw();
-    });
+        return onSnapshot(optionRef, optionDB => {
+            store.optionsDetails[optionId] = optionDB.data();
+            vnode.state.option.title = optionDB
+                .data()
+                .title;
+
+            m.redraw();
+        });
+    } catch (err) {
+        console.error(err)
+    }
 }
 
 function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId, processType = SUGGESTIONS) {
@@ -909,7 +906,7 @@ function listenToSubscription(path) {
 
 
         if ({}.hasOwnProperty.call(store.subscribe, path) === false) {
-console.log(`${path}/subscribers/${store.user.uid}`)
+            console.log(`${path}/subscribers/${store.user.uid}`)
             const subscriptionRef = doc(DB, `${path}/subscribers/${store.user.uid}`)
 
             onSnapshot(subscriptionRef, subscriberDB => {
@@ -1108,10 +1105,10 @@ function listenIfGetsMessages(ids) {
 
             const browserUniqueId = setBrowserUniqueId()
 
-            const dbPath = `${concatenateDBPath(groupId, questionId, subQuestionId, optionId)}/notifications/${store.user.uid}`;
+            const dbPath = `${concatentPath(groupId, questionId, subQuestionId, optionId)}/notifications/${store.user.uid}`;
 
-
-            DB.doc(dbPath).onSnapshot(tokensDB => {
+            const tokensRef = doc(DB, dbPath)
+            onSnapshot(tokensRef, tokensDB => {
                 if (tokensDB.exists) {
                     if (tokensDB.data()[browserUniqueId] === undefined) {
                         store.listenToMessages[entityId] = false;

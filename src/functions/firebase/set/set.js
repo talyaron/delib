@@ -2,6 +2,7 @@ import m from 'mithril';
 import { set, get, merge } from 'lodash';
 import { DB } from '../config';
 import store from '../../../data/store';
+import { doc, setDoc, getDoc, collection, query, where, getDocs, onSnapshot, orderBy, limit, updateDoc } from "firebase/firestore";
 import { concatenateDBPath, uniqueId, getRandomColor } from '../../general';
 import { subscribeUser } from './setChats';
 import { SUGGESTIONS, PARALLEL_OPTIONS } from '../../../data/evaluationTypes'
@@ -9,7 +10,7 @@ import { SUGGESTIONS, PARALLEL_OPTIONS } from '../../../data/evaluationTypes'
 
 function createGroup(settings) {
     try {
-        const { creatorId, title, description, callForAction, language,groupId } = settings;
+        const { creatorId, title, description, callForAction, language, groupId } = settings;
 
         // const groupId = uniqueId()
 
@@ -26,8 +27,8 @@ function createGroup(settings) {
                 groupColor: getRandomColor(),
                 callForAction,
                 language,
-                active:true
-            }, {merge:true})
+                active: true
+            }, { merge: true })
             .then(() => {
 
                 DB
@@ -94,9 +95,10 @@ function registerGroup(groupId) {
 
                         store.groupsRegistered[groupId] = true;
 
-                        DB.collection('users').doc(store.user.uid)
-                            .collection('registerGroups').doc(groupId)
-                            .set({ register: true })
+                        const groupRef = doc(DB, 'users', store.user.uid, 'registerGroups', groupId);
+
+
+                        setDoc(groupRef, { register: true })
                             .then(() => { console.info('user registerd to group', groupId) })
                             .catch(e => { console.error(e); sendError(e) })
 
@@ -111,10 +113,9 @@ function registerGroup(groupId) {
                             }
                         }
 
+                        const memberRef = doc(DB, 'groups', groupId, 'members', store.user.uid)
 
-                        DB.collection('groups').doc(groupId)
-                            .collection('members').doc(store.user.uid)
-                            .set(userObj, { merge: true })
+                        setDoc(memberRef, userObj, { merge: true })
                             .then(() => { console.info('user is a member of group', groupId) })
                             .catch(e => { console.error(e); sendError(e) })
                     } else {
@@ -144,7 +145,7 @@ function createSubQuestion(groupId, questionId, title, order) {
                 .doc(questionId)
                 .collection('subQuestions')
                 .doc(subQuestionId)
-                .set({ title, order, creator: store.user.uid, orderBy: 'top', subQuestionId, id: subQuestionId,maxConfirms:0 })
+                .set({ title, order, creator: store.user.uid, orderBy: 'top', subQuestionId, id: subQuestionId, maxConfirms: 0 })
                 .then(() => { resolve(subQuestionId) })
                 .catch(function (error) {
                     console.error('Error adding document: ', error); sendError(e)
@@ -198,7 +199,7 @@ function setSubQuestion(ids, settings) {
             const { title, processType, orderBy, userHaveNavigation, showSubQuestion, numberOfSubquestions, proAgainstType } = settings;
             let { cutoff } = settings;
             cutoff = parseInt(cutoff);
-            
+
             if (!cutoff) cutoff = false;
             const { groupId, questionId, subQuestionId } = ids;
 
@@ -514,19 +515,9 @@ function voteConsequence(ids, truthiness, evaluation) {
 
 function setOptionActive(groupId, questionId, subQuestionId, optionId, isActive) {
 
-
-
     try {
-        DB
-            .collection('groups')
-            .doc(groupId)
-            .collection('questions')
-            .doc(questionId)
-            .collection('subQuestions')
-            .doc(subQuestionId)
-            .collection('options')
-            .doc(optionId)
-            .update({ isActive })
+        const optionRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options', optionId)
+        updateDoc(optionRef, { isActive })
     } catch (err) {
         console.error(err)
     }
@@ -537,16 +528,9 @@ function updateOptionDescription(ids, description) {
     try {
         const { groupId, questionId, subQuestionId, optionId } = ids;
 
-        DB
-            .collection('groups')
-            .doc(groupId)
-            .collection('questions')
-            .doc(questionId)
-            .collection('subQuestions')
-            .doc(subQuestionId)
-            .collection('options')
-            .doc(optionId)
-            .update({ description })
+        const optionRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options', optionId)
+
+        updateDoc(optionRef, { description })
             .then(() => {
                 console.info(`a description was updated on option ${optionId}`)
             })
@@ -582,17 +566,17 @@ function setEvaluation(groupId, questionId, subQuestionId, optionId, creatorId, 
         if (processType === SUGGESTIONS) {
             evaluateRef.collection('likes')
                 .doc(creatorId)
-                .set({ like:evauluation })
+                .set({ like: evauluation })
                 .catch(function (error) {
-                    console.error('Error adding document: ', error); 
+                    console.error('Error adding document: ', error);
                 });
         } else if (processType === PARALLEL_OPTIONS) {
             evaluateRef.collection('confirms')
-            .doc(creatorId)
-            .set({ confirm:evauluation })
-            .catch(function (error) {
-                console.error('Error adding document: ', error); 
-            });
+                .doc(creatorId)
+                .set({ confirm: evauluation })
+                .catch(function (error) {
+                    console.error('Error adding document: ', error);
+                });
         }
     } catch (e) {
         console.error(e); sendError(e)
