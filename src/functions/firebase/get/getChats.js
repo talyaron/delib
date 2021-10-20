@@ -41,7 +41,8 @@ export function listenToChatFeed() {
 export function listenToBageMessages() {
     if ("setAppBadge" in navigator && "clearAppBadge" in navigator) {
 
-        return DB.collection('users').doc(store.user.uid).collection('messagesCounter').doc('counter').onSnapshot(counterDB => {
+        const badgeCounterRef = doc(DB, 'users',store.user.uid, 'messagesCounter','counter' )
+        return onSnapshot(badgeCounterRef, counterDB => {
             if (counterDB.exists) {
                 let counter = counterDB.data().messages;
 

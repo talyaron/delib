@@ -8,6 +8,8 @@ var _config = require("../firebase/config");
 
 var _auth = require("firebase/auth");
 
+var _firestore = require("firebase/firestore");
+
 var _get = require("../firebase/get/get");
 
 var _getChats = require("../firebase/get/getChats");
@@ -62,14 +64,13 @@ function onAuth() {
           (0, _get.listenToUserGroups)();
           (0, _get.listenToRegisterdGroups)();
           (0, _getChats.listenToBageMessages)();
-
-          _config.DB.collection('users').doc(user.uid).set(userSimpleObj, {
+          var userRef = (0, _firestore.doc)(_config.DB, 'users', user.uid);
+          (0, _firestore.setDoc)(userRef, userSimpleObj, {
             merge: true
           }).then(function () {})["catch"](function (error) {
             console.error('On login, set user to DB;', error.name, error.message); // if(error.message == 'Missing or insufficient permissions.'){alert('Insufficient permisions')}
             // console.error('Error writing User 22: ', error);
           });
-
           var lastPage = sessionStorage.getItem('lastPage') || '/groups';
 
           _mithril["default"].route.set(lastPage);
@@ -92,7 +93,9 @@ function onAuth() {
               groupsUserTryToRegister: {}
             };
 
-            _config.DB.collection('users').doc(user.uid).set(_userSimpleObj).then(function () {})["catch"](function (error) {
+            var _userRef = (0, _firestore.doc)(_config.DB, 'users', user.uid);
+
+            (0, _firestore.setDoc)(_userRef, _userSimpleObj).then(function () {})["catch"](function (error) {
               console.error('Error writing User: ', error);
             });
           } else {

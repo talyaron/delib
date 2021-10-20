@@ -108,8 +108,8 @@ function listenToRegisterdGroups() {
   try {
     if ({}.hasOwnProperty.call(_store["default"].user, 'uid') && _store["default"].registerGroupsListen === false) {
       _store["default"].registerGroupsListen = true;
-
-      _config.DB.collection('users').doc(_store["default"].user.uid).collection('registerGroups').onSnapshot(function (groupsDB) {
+      var registerdGroupsRef = (0, _firestore.collection)(_config.DB, 'users', _store["default"].user.uid, 'registerGroups');
+      var unsub = (0, _firestore.onSnapshot)(registerdGroupsRef, function (groupsDB) {
         listenToGroups(groupsDB);
       }, function (err) {
         console.error('On listenToRegisterdGroups:', err.name, err.message);

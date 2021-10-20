@@ -79,8 +79,8 @@ function listenToRegisterdGroups() {
         if ({}.hasOwnProperty.call(store.user, 'uid') && store.registerGroupsListen === false) {
             store.registerGroupsListen = true;
 
-
-            DB.collection('users').doc(store.user.uid).collection('registerGroups').onSnapshot(groupsDB => {
+            const registerdGroupsRef = collection(DB, 'users',store.user.uid,'registerGroups' );
+            const unsub = onSnapshot(registerdGroupsRef, groupsDB=>{
 
                 listenToGroups(groupsDB);
             }, err => {

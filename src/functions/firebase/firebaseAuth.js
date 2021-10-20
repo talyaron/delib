@@ -4,7 +4,8 @@ import {
 	DB
 } from '../firebase/config';
 
-import { getAuth, createUserWithEmailAndPassword,onAuthStateChanged } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { doc, setDoc, getDoc, collection, query, where, getDocs, onSnapshot, orderBy, limit } from "firebase/firestore";
 
 
 //functions
@@ -29,17 +30,17 @@ const auth = getAuth();
 
 function AnonymousLogin() {
 	signInAnonymously(auth)
-	.then(()=>{ console.log('Anonymous login')})
-	.catch(error => {
-		// Handle Errors here.
-		var errorCode = error.code;
-		var errorMessage = error.message;
-		console.error(errorCode, errorMessage);
-	});
+		.then(() => { console.log('Anonymous login') })
+		.catch(error => {
+			// Handle Errors here.
+			var errorCode = error.code;
+			var errorMessage = error.message;
+			console.error(errorCode, errorMessage);
+		});
 }
 
 function onAuth() {
-	onAuthStateChanged(auth,user => {
+	onAuthStateChanged(auth, user => {
 		try {
 			store.user = user;
 
@@ -69,9 +70,8 @@ function onAuth() {
 
 					listenToBageMessages()
 
-
-
-					DB.collection('users').doc(user.uid).set(userSimpleObj, { merge: true })
+					const userRef = doc(DB, 'users', user.uid);
+					setDoc(userRef, userSimpleObj, { merge: true })
 						.then(function () { }).catch(function (error) {
 							console.error('On login, set user to DB;', error.name, error.message)
 							// if(error.message == 'Missing or insufficient permissions.'){alert('Insufficient permisions')}
@@ -102,7 +102,9 @@ function onAuth() {
 							signIn: true,
 							groupsUserTryToRegister: {}
 						};
-						DB.collection('users').doc(user.uid).set(userSimpleObj)
+						
+						const userRef = doc(DB, 'users', user.uid);
+						setDoc(userRef, userSimpleObj)
 							.then(function () { })
 							.catch(function (error) {
 

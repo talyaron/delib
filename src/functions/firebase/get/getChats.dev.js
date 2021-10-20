@@ -48,7 +48,8 @@ function listenToChatFeed() {
 
 function listenToBageMessages() {
   if ("setAppBadge" in navigator && "clearAppBadge" in navigator) {
-    return _config.DB.collection('users').doc(_store["default"].user.uid).collection('messagesCounter').doc('counter').onSnapshot(function (counterDB) {
+    var badgeCounterRef = (0, _firestore.doc)(_config.DB, 'users', _store["default"].user.uid, 'messagesCounter', 'counter');
+    return (0, _firestore.onSnapshot)(badgeCounterRef, function (counterDB) {
       if (counterDB.exists) {
         var counter = counterDB.data().messages;
         navigator.setAppBadge(counter)["catch"](function (e) {
