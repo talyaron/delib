@@ -208,7 +208,8 @@ function listenToGroup(groupId) {
 
 function listenToGroupMembers(groupId) {
   try {
-    return _config.DB.collection('groups').doc(groupId).collection('members').onSnapshot(function (membersDB) {
+    var membersRef = (0, _firestore.collection)(_config.DB, 'groups', groupId, 'members');
+    return (0, _firestore.onSnapshot)(membersRef, function (membersDB) {
       var members = [];
       membersDB.forEach(function (memberDB) {
         members.push(memberDB.data());
@@ -282,7 +283,8 @@ function listenToGroupDetails(groupId, vnode) {
 }
 
 function getQuestionDetails(groupId, questionId, vnode) {
-  var unsubscribe = _config.DB.collection("groups").doc(groupId).collection("questions").doc(questionId).onSnapshot(function (questionDB) {
+  var questionRef = (0, _firestore.doc)(_config.DB, 'groups', groupId, 'questions', questionId);
+  var unsubscribe = (0, _firestore.onSnapshot)(questionRef, function (questionDB) {
     // set(store.questions, `[${groupId}][${questionId}]`, questionDB.data());
     setStore(_store["default"].questions, groupId, questionId, questionDB.data());
     vnode.state.title = questionDB.data().title;
@@ -297,7 +299,6 @@ function getQuestionDetails(groupId, questionId, vnode) {
 
     _mithril["default"].redraw();
   });
-
   return unsubscribe;
 }
 
@@ -327,8 +328,8 @@ function listenSubQuestions(groupId, questionId, vnode) {
         search = 'deleted';
       }
 
-      _config.DB.collection("groups").doc(groupId).collection("questions").doc(questionId).collection("subQuestions") // .where('showSubQuestion', term, search)
-      .onSnapshot(function (subQuestionsDB) {
+      var subQuestionsRef = (0, _firestore.collection)(_config.DB, 'groups', groupId, 'questions', questionId, 'subQuestions');
+      (0, _firestore.onSnapshot)(subQuestionsRef, function (subQuestionsDB) {
         var subQuestionsArray = [];
         var subQuestionsObj = {};
         subQuestionsDB.forEach(function (subQuestionDB) {
@@ -350,9 +351,8 @@ function listenSubQuestions(groupId, questionId, vnode) {
 
 function getSubQuestion(groupId, questionId, subQuestionId, isSingle) {
   try {
-    var optionRef = _config.DB.collection("groups").doc(groupId).collection("questions").doc(questionId).collection("subQuestions").doc(subQuestionId);
-
-    return optionRef.onSnapshot(function (subQuestionDB) {
+    var subQuestionRef = (0, _firestore.doc)(Db, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId);
+    return (0, _firestore.onSnapshot)(subQuestionRef, function (subQuestionDB) {
       if (subQuestionDB.exists) {
         (0, _lodash.set)(_store["default"], "subQuestions[".concat(subQuestionId, "]"), subQuestionDB.data());
 
@@ -377,9 +377,7 @@ function listenToOptions(groupId, questionId, subQuestionId) {
     if (!{}.hasOwnProperty.call(_store["default"].optionsListen, subQuestionId)) {
       //signal that this questionId options are listend to
       _store["default"].optionsListen[subQuestionId] = true;
-
-      var optionsRef = _config.DB.collection("groups").doc(groupId).collection("questions").doc(questionId).collection("subQuestions").doc(subQuestionId).collection("options");
-
+      var optiosnRef = (0, _firestore.collection)(Db, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options');
       var _orderBy = "time";
 
       switch (order) {
@@ -395,11 +393,9 @@ function listenToOptions(groupId, questionId, subQuestionId) {
           _orderBy = "time";
       }
 
-      var _limit = 100; // if (isSingle === true) {
-      //     limit = 1
-      // }
-
-      return optionsRef.orderBy(_orderBy, "desc").limit(_limit).onSnapshot(function (optionsDB) {
+      var _limit = 100;
+      var q = (0, _firestore.query)(optiosnRef, (0, _firestore.orderBy)(_orderBy), (0, _firestore.limit)(_limit));
+      (0, _firestore.onSnapshot)(q, function (optionsDB) {
         var optionsArray = [];
         optionsDB.forEach(function (optionDB) {
           //see how many message the user read (from total mesaages of option). use this to calculate hoem namy messages the user didn't read.
@@ -452,7 +448,8 @@ function listenToOptions(groupId, questionId, subQuestionId) {
 function listenToUserLastReadOfOptionChat(optionId) {
   try {
     if (!{}.hasOwnProperty.call(_store["default"].optionNumberOfMessagesRead, optionId)) {
-      _config.DB.collection('users').doc(_store["default"].user.uid).collection('optionsRead').doc(optionId).onSnapshot(function (optionListenDB) {
+      var optionRef = (0, _firestore.doc)(_config.DB, 'users', _store["default"].user.uid, 'optionsRead', optionId);
+      (0, _firestore.onSnapshot)(optionRef, function (optionListenDB) {
         if (optionListenDB.exists) {
           var numberOfMessages = optionListenDB.data().numberOfMessages || 0;
           _store["default"].optionNumberOfMessagesRead[optionId] = numberOfMessages;
@@ -480,7 +477,8 @@ function listenToOption(ids) {
     if (questionId === undefined) throw new Error('missing questionId');
     if (subQuestionId === undefined) throw new Error('missing subQuestionId');
     if (optionId === undefined) throw new Error('missing optionId');
-    return _config.DB.collection("groups").doc(groupId).collection("questions").doc(questionId).collection("subQuestions").doc(subQuestionId).collection("options").doc(optionId).onSnapshot(function (optionDB) {
+    var optionRef = (0, _firestore.doc)(_config.DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options', optionId);
+    return (0, _firestore.onSnapshot)(optionRef, function (optionDB) {
       var optionObj = optionDB.data();
       optionObj.optionId = optionDB.data().optionId;
       (0, _lodash.set)(_store["default"], "option[".concat(optionId, "]"), optionObj);
@@ -517,20 +515,20 @@ function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId) 
 
   try {
     if (groupId === undefined || questionId === undefined || subQuestionId === undefined || optionId === undefined || creatorId === undefined) throw new Error("One of the Ids groupId, questionId, subQuestionId, optionId, creatorId is missing", groupId, questionId, subQuestionId, optionId, creatorId);
-
-    var evaluationRef = _config.DB.collection("groups").doc(groupId).collection("questions").doc(questionId).collection("subQuestions").doc(subQuestionId).collection("options").doc(optionId);
-
+    var evaluationPath = (0, _general.concatentPath)(groupId, questionId, subQuestionId, optionId);
     var evaluationTypeRef;
 
     if (processType === _evaluationTypes.SUGGESTIONS) {
-      evaluationTypeRef = evaluationRef.collection("likes").doc(creatorId);
+      evaluationTypeRef = evaluationPath + "/likes/".concat(creatorId);
     } else if (processType === _evaluationTypes.PARALLEL_OPTIONS) {
-      evaluationTypeRef = evaluationRef.collection("confirms").doc(creatorId);
+      evaluationTypeRef = evaluationPath + "/confirms/".concat(creatorId);
     } else {
       throw new Error("couldnt detect the process type (".concat(processType, ")"));
     }
 
-    var _unsubscribe = evaluationTypeRef.onSnapshot(function (voteDB) {
+    var evaluationRef = (0, _firestore.doc)(_config.DB, evaluationPath);
+
+    var _unsubscribe = (0, _firestore.onSnapshot)(evaluationRef, function (voteDB) {
       if (voteDB.exists) {
         if (processType === _evaluationTypes.SUGGESTIONS) {
           _store["default"].optionsVotes[optionId] = voteDB.data().like;
@@ -561,7 +559,8 @@ function listenToUserVote(vnode) {
         groupId = _vnode$attrs$ids.groupId,
         questionId = _vnode$attrs$ids.questionId,
         subQuestionId = _vnode$attrs$ids.subQuestionId;
-    return _config.DB.collection("groups").doc(groupId).collection("questions").doc(questionId).collection("subQuestions").doc(subQuestionId).collection('votes').doc(_store["default"].user.uid).onSnapshot(function (voteDB) {
+    var voteRef = (0, _firestore.doc)(_config.DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'votes', _store["default"].user.uid);
+    return (0, _firestore.onSnapshot)(voteRef, function (voteDB) {
       if (!voteDB.exists) {
         vnode.state.optionVoted = false;
       } else {
@@ -584,8 +583,8 @@ function listenToConsequences(groupId, questionId, subQuestionId, optionId) {
   try {
     if (!{}.hasOwnProperty.call(_store["default"].consequencesListen, optionId)) {
       _store["default"].consequencesListen[optionId] = true;
-
-      _config.DB.collection('groups').doc(groupId).collection('questions').doc(questionId).collection('subQuestions').doc(subQuestionId).collection('options').doc(optionId).collection('consequences').onSnapshot(function (consequencesDB) {
+      var consequencesRef = (0, _firestore.collection)(_config.DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options', optionId, 'consequences');
+      (0, _firestore.onSnapshot)(consequencesRef, function (consequencesDB) {
         var consequences = [];
         consequencesDB.forEach(function (consequenceDB) {
           consequences.push(consequenceDB.data());
@@ -617,8 +616,9 @@ function listenToTopConsequences(ids) {
     if (!{}.hasOwnProperty.call(_store["default"].consequencesTopListen, optionId)) {
       _store["default"].consequencesTopListen[optionId] = true;
       _store["default"].consequencesTop[optionId] = [];
-
-      _config.DB.collection('groups').doc(groupId).collection('questions').doc(questionId).collection('subQuestions').doc(subQuestionId).collection('options').doc(optionId).collection('consequences').orderBy('totalWeightAbs', 'desc').limit(1).onSnapshot(function (consequencesDB) {
+      var consequencesRef = (0, _firestore.collection)(_config.DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options', optionId, 'consequences');
+      var q = (0, _firestore.query)(consequencesRef, (0, _firestore.limit)(1), (0, _firestore.orderBy)('totalWeightAbs', 'desc'));
+      (0, _firestore.onSnapshot)(q, function (consequencesDB) {
         var consequences = [];
         consequencesDB.forEach(function (consequenceDB) {
           _store["default"].consequencesTop[optionId] = [consequenceDB.data()];
@@ -634,7 +634,8 @@ function listenToTopConsequences(ids) {
 
 function getMyVotesOnConsequence(groupId, questionId, subQuestionId, optionId, consequenceId) {
   try {
-    return _config.DB.collection('groups').doc(groupId).collection('questions').doc(questionId).collection('subQuestions').doc(subQuestionId).collection('options').doc(optionId).collection('consequences').doc(consequenceId).collection('voters').doc(_store["default"].user.uid).get().then(function (voteDB) {
+    var consequencesRef = (0, _firestore.collection)(_config.DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options', optionId, 'consequences', consequenceId, 'voters', _store["default"].user.uid);
+    return (0, _firestore.getDoc)(consequencesRef).then(function (voteDB) {
       return voteDB.data();
     })["catch"](function (e) {
       console.error(e);
@@ -647,26 +648,30 @@ function getMyVotesOnConsequence(groupId, questionId, subQuestionId, optionId, c
 }
 
 function getSubAnswers(groupId, questionId, subQuestionId, vnode) {
-  var subAnswersRef = _config.DB.collection("groups").doc(groupId).collection("questions").doc(questionId).collection("subQuestions").doc(subQuestionId).collection("subAnswers").orderBy("time", "desc").limit(100);
+  try {
+    var subAnswersRef = (0, _firestore.collection)(_config.DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'subQuestions');
+    var q = (0, _firestore.query)(subAnswersRef, (0, _firestore.orderBy)("time", "desc"), (0, _firestore.limit)(100));
+    unsubscribe = (0, _firestore.onSnapshot)(q, function (subAnswersDB) {
+      var subAnswersArr = [];
+      subAnswersDB.forEach(function (subAnswerDB) {
+        var subAnswerObj = subAnswerDB.data();
+        subAnswerObj.id = subAnswerDB.id;
+        subAnswersArr.push(subAnswerObj);
+      });
+      vnode.state.subAnswers[subQuestionId] = subAnswersArr;
 
-  unsubscribe = subAnswersRef.onSnapshot(function (subAnswersDB) {
-    var subAnswersArr = [];
-    subAnswersDB.forEach(function (subAnswerDB) {
-      var subAnswerObj = subAnswerDB.data();
-      subAnswerObj.id = subAnswerDB.id;
-      subAnswersArr.push(subAnswerObj);
+      _mithril["default"].redraw();
     });
-    vnode.state.subAnswers[subQuestionId] = subAnswersArr;
-
-    _mithril["default"].redraw();
-  });
-  return unsubscribe;
+    return unsubscribe;
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 function getMessages(groupId, questionId, subQuestionId, optionId, vnode) {
-  var messagesRef = _config.DB.collection("groups").doc(groupId).collection("questions").doc(questionId).collection("subQuestions").doc(subQuestionId).collection("options").doc(optionId).collection("messages");
-
-  return messagesRef.orderBy("time", "desc").limit(20).onSnapshot(function (messagesDB) {
+  var messagesRef = (0, _firestore.collection)(_config.DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'subQuestions', subQuestionId, 'options', optionId, 'messages');
+  var q = (0, _firestore.query)(messagesRef, (0, _firestore.orderBy)("time", "desc"), (0, _firestore.limit)(20));
+  return (0, _firestore.onSnapshot)(q, function (messagesDB) {
     var messagesArray = [];
     var numberOfMessages = messagesDB.size;
     messagesDB.forEach(function (messageDB) {

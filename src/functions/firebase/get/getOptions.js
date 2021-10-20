@@ -3,6 +3,8 @@ import { DB } from "../config";
 import store, { consequencesTop } from "../../../data/store";
 import {VOTES, SUGGESTIONS, PARALLEL_OPTIONS} from '../../../data/evaluationTypes'
 
+import { doc, getDoc, collection, query, where, getDocs, onSnapshot, orderBy, limit } from "firebase/firestore";
+
 export const listenToTopOption = (ids, type = 'consensusPrecentage') => {
  
     try {

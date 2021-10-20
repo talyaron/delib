@@ -21,7 +21,7 @@ export const listenToGroupSections = groupId => {
 
             const sectionsRef = collection(DB, 'groups', groupId, 'sections')
 
-            onSnapshot(sectionsRef, sectionsDB => {
+            return onSnapshot(sectionsRef, sectionsDB => {
 
                 const sections = []
                 sectionsDB.forEach(sectionDB => {

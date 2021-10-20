@@ -34,7 +34,7 @@ var listenToGroupSections = function listenToGroupSections(groupId) {
       }
 
       var sectionsRef = (0, _firestore.collection)(_config.DB, 'groups', groupId, 'sections');
-      (0, _firestore.onSnapshot)(sectionsRef, function (sectionsDB) {
+      return (0, _firestore.onSnapshot)(sectionsRef, function (sectionsDB) {
         var sections = [];
         sectionsDB.forEach(function (sectionDB) {
           var sectionObj = sectionDB.data();
