@@ -694,80 +694,70 @@ function getSubAnswers(groupId, questionId, subQuestionId, vnode) {
 
 function getMessages(groupId, questionId, subQuestionId, optionId, vnode) {
 
-    const messagesRef =  collection(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'subQuestions', subQuestionId,'options', optionId, 'messages');
-   const q = query(messagesRef,orderBy("time", "desc"), limit(20))
+    const messagesRef = collection(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'subQuestions', subQuestionId, 'options', optionId, 'messages');
+    const q = query(messagesRef, orderBy("time", "desc"), limit(20))
 
     return onSnapshot(q, messagesDB => {
-            let messagesArray = [];
+        let messagesArray = [];
 
-            let numberOfMessages = messagesDB.size;
-            messagesDB.forEach(messageDB => {
-                let tempMessage = messageDB.data();
+        let numberOfMessages = messagesDB.size;
+        messagesDB.forEach(messageDB => {
+            let tempMessage = messageDB.data();
 
-                //check if message is new
-                if (!vnode.state.messagesIds.hasOwnProperty(messageDB.id)) {
-                    tempMessage.isNew = true;
-                } else {
-                    tempMessage.isNew = false;
-                }
+            //check if message is new
+            if (!vnode.state.messagesIds.hasOwnProperty(messageDB.id)) {
+                tempMessage.isNew = true;
+            } else {
+                tempMessage.isNew = false;
+            }
 
-                messagesArray.unshift(tempMessage);
-                vnode.state.messagesIds[messageDB.id] = true;
-            });
-            vnode.state.messages = messagesArray;
-            // vnode.state.numberOfMessages = numberOfMessages;
-
-            m.redraw();
+            messagesArray.unshift(tempMessage);
+            vnode.state.messagesIds[messageDB.id] = true;
         });
+        vnode.state.messages = messagesArray;
+        // vnode.state.numberOfMessages = numberOfMessages;
+
+        m.redraw();
+    });
 }
 
 function getSubItems(subItemsType, groupId, questionId, vnode) {
-    let subItemsRef = DB
-        .collection("groups")
-        .doc(groupId)
-        .collection("questions")
-        .doc(questionId)
-        .collection(subItemsType);
 
-    unsubscribe = subItemsRef
-        .orderBy("totalVotes", "desc")
-        .onSnapshot(SubItemsDB => {
-            SubItemsDB
-                .docChanges()
-                .forEach(function (change) {
-                    if (change.type === "added") {
-                        vnode.state.subAnswersUnsb[change.doc.id] = getSubAnswers(groupId, questionId, change.doc.id, vnode); //listen to answers
-                    }
 
-                    if (change.type === "removed") {
-                        //unsubscribe from answers
-                    }
-                });
+    const subItemsRef = collection(DB, 'groups', groupId, 'questions', questionId, subItemsType)
 
-            let subItemArr = [];
-            SubItemsDB.forEach(SubItemDB => {
-                let subItemObj = SubItemDB.data();
+    const q = query(orderBy("totalVotes", "desc"))
+    unsubscribe = onSnapshot(q, SubItemsDB => {
+        SubItemsDB
+            .docChanges()
+            .forEach(function (change) {
+                if (change.type === "added") {
+                    vnode.state.subAnswersUnsb[change.doc.id] = getSubAnswers(groupId, questionId, change.doc.id, vnode); //listen to answers
+                }
 
-                subItemObj.id = SubItemDB.id;
-                subItemArr.push(subItemObj);
+                if (change.type === "removed") {
+                    //unsubscribe from answers
+                }
             });
 
-            vnode.state[subItemsType] = subItemArr;
-            m.redraw();
+        let subItemArr = [];
+        SubItemsDB.forEach(SubItemDB => {
+            let subItemObj = SubItemDB.data();
+
+            subItemObj.id = SubItemDB.id;
+            subItemArr.push(subItemObj);
         });
+
+        vnode.state[subItemsType] = subItemArr;
+        m.redraw();
+    });
     return unsubscribe;
 }
 
 function getSubItemLikes(subItemsType, groupId, questionId, subQuestionId, creatorId, vnode) {
-    let subQuestionRef = DB
-        .collection("groups")
-        .doc(groupId)
-        .collection("questions")
-        .doc(questionId)
-        .collection(subItemsType)
-        .doc(subQuestionId);
+    const subQuestionRef = doc(Db, 'groups', groupId, 'questions', questionId, subItemsType, subQuestionId)
 
-    return subQuestionRef.onSnapshot(likeDB => {
+    return onSnapshot(subQuestionRef, likeDB => {
         if (likeDB.data().totalVotes != undefined) {
             vnode.state.likes = likeDB
                 .data()
@@ -781,17 +771,10 @@ function getSubItemLikes(subItemsType, groupId, questionId, subQuestionId, creat
 }
 
 function getSubItemUserLike(subItemsType, groupId, questionId, subQuestionId, creatorId, vnode) {
-    let subQuestionRef = DB
-        .collection("groups")
-        .doc(groupId)
-        .collection("questions")
-        .doc(questionId)
-        .collection(subItemsType)
-        .doc(subQuestionId)
-        .collection("likes")
-        .doc(creatorId);
+    const subQuestionRef = doc(Db, 'groups', groupId, 'questions', questionId, subItemsType, subQuestionId, 'like', creatorId)
 
-    return subQuestionRef.onSnapshot(likeDB => {
+
+    return onSnapshot(subQuestionRef, likeDB => {
         if (likeDB.exists) {
             if (likeDB.data().like == 1) {
                 vnode.state.up = true;
@@ -874,60 +857,6 @@ function listenToFeedLastEntrance() {
         console.error(err)
     }
 }
-// function listenToFeed(path, onOff = "on") {
-//     let path1 = path;
-//     path = path.replace(/--/g, "/");
-
-//     if (onOff === "on") {
-//         let feedRef = DB.collection(path);
-
-//         //for how long should a message appear in the feed
-//         let dayPassed = 1;
-//         let hoursPassed = 12;
-//         let timeOfActiveMessage = (dayPassed + (hoursPassed * 1) / 24) * 24 * 3600 * 1000;
-//         let timePassed = new Date().getTime() - timeOfActiveMessage;
-
-//         store.feedsUnsubscribe[path1] = feedRef
-//             .where("timeSeconds", ">", timePassed)
-//             .orderBy("timeSeconds", "desc")
-//             .limit(1)
-//             .onSnapshot(feedsDB => {
-//                 feedsDB.forEach(feedDB => {
-//                     if (feedDB.data().time !== null) {
-//                         let newFeed = feedDB.data();
-
-//                         newFeed.path = path1;
-//                         //add feed-inputs to feed
-//                         store.feed[path] = newFeed;
-
-//                         store.numberOfNewMessages++;
-
-//                         audio.play();
-
-//                         const playPromise = audio.play()
-//                         // const playPromise = media.play();
-//                         if (playPromise !== null) {
-//                             playPromise.catch(() => {
-//                                 audio.play();
-//                             })
-//                         }
-
-//                         m.redraw();
-//                     }
-//                 });
-//             });
-//     } else {
-//         //unsubscribe
-
-//         if (store.feedsUnsubscribe.hasOwnProperty(path1)) {
-//             store.feedsUnsubscribe[path1]();
-//         }
-
-//         delete store.subscribed[path1]; //delete indciation that this feed is regigsterd
-
-//         m.redraw();
-//     }
-// }
 
 
 
