@@ -1,5 +1,6 @@
 import m from 'mithril';
 import { getMessaging, getToken } from "firebase/messaging";
+import { doc, onSnapshot } from "firebase/firestore";
 
 const messaging = getMessaging();
 
@@ -52,16 +53,17 @@ if ('Notification' in window) {
 function getSubscriptions() {
     if ('Notification' in window) {
         try {
-            DB.collection('tokens').doc(store.user.uid).onSnapshot(
-                userTokenDB => {
-                    if (userTokenDB.exists && userTokenDB.data().pushEntities) {
-                        store.push = userTokenDB.data().pushEntities;
+            const qunsub = onSnapshot(doc(DB, 'tokens', store.user.uid), userTokenDB => {
 
-                        m.redraw();
-                    }
-                }, err => {
-                    console.error('On getSubscriptions:', err.name, err.message)
-                })
+
+                if (userTokenDB.exists && userTokenDB.data().pushEntities) {
+                    store.push = userTokenDB.data().pushEntities;
+
+                    m.redraw();
+                }
+            }, err => {
+                console.error('On getSubscriptions:', err.name, err.message)
+            })
         } catch (err) {
             if (err.message === 'Missing or insufficient permissions.') {
                 console.error('Cant get subscriptions because of insufficient perpmissions')

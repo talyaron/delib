@@ -1,13 +1,13 @@
 import m from "mithril";
 import { DB } from "../config";
-import { doc, getDoc, collection, query, where, getDocs, onSnapshot } from "firebase/firestore";
+import { doc, getDoc, collection, query, where, getDocs, onSnapshot, orderBy, limit } from "firebase/firestore";
 
 //model
 import store, { consequencesTop } from "../../../data/store";
 import { SUGGESTIONS, PARALLEL_OPTIONS } from '../../../data/evaluationTypes';
 
 //functions
-import { cond, constant, orderBy, set } from 'lodash';
+import { set } from 'lodash';
 import { concatenateDBPath, setBrowserUniqueId, getEntityId } from '../../general'
 import { sendError } from '../set/set';
 
@@ -49,12 +49,12 @@ function listenToUserGroups() {
 
         if (store.userGroupsListen === false) {
             store.userGroupsListen = true;
+
             const q = query(collection(DB, 'users', store.user.uid, 'groupsOwned'))
 
 
             const unsub = onSnapshot(q, groupsOwnedDB => {
 
-//finished here
                 setTimeout(() => {
                     if (store.userGroups[0] === false) store.userGroups.splice(0, 1);
                     m.redraw()
@@ -73,7 +73,7 @@ function listenToUserGroups() {
 
 function listenToRegisterdGroups() {
 
-
+ 
     try {
 
         if ({}.hasOwnProperty.call(store.user, 'uid') && store.registerGroupsListen === false) {
@@ -938,23 +938,22 @@ function listenToSubscription(path) {
 
 function listenToFeed() {
     try {
-        DB.collection('users').doc(store.user.uid).collection('feed')
-            .limit(20)
-            .orderBy('date', 'desc')
-            .onSnapshot(feedDB => {
+        const feedRef = collection(DB, 'users', store.user.uid, 'feed');
+        const q = query(feedRef, orderBy('date', 'desc'), limit(20));
+        const usub = onSnapshot(q, feedDB => {
 
-                feedDB.docChanges().forEach(function (change) {
-                    if (change.type === "added") {
-                        const feedItem = change.doc.data();
-                        feedItem.feedItemId = change.doc.id;
-                        store.feed2.push(feedItem)
+            feedDB.docChanges().forEach(function (change) {
+                if (change.type === "added") {
+                    const feedItem = change.doc.data();
+                    feedItem.feedItemId = change.doc.id;
+                    store.feed2.push(feedItem)
 
-                    }
+                }
 
-                });
+            });
 
-                m.redraw();
-            })
+            m.redraw();
+        })
     } catch (err) {
         console.error(err)
     }
@@ -964,14 +963,15 @@ function listenToFeed() {
 
 function listenToFeedLastEntrance() {
     try {
-        DB.collection('users').doc(store.user.uid).collection('feedLastEntrence').doc('info')
-            .onSnapshot(infoDB => {
-                const { lastEntrance } = infoDB.data()
-                store.feed2Info = { lastEntrance }
+        const feedLastEntrenceRef = doc(DB, 'users', store.user.uid, 'feedLastEntrence', 'info');
+        const unsub = onSnapshot(feedLastEntrenceRef, infoDB => {
 
-            }, err => {
-                console.error(err)
-            })
+            const { lastEntrance } = infoDB.data()
+            store.feed2Info = { lastEntrance }
+
+        }, err => {
+            console.error(err)
+        })
     } catch (err) {
         console.error(err)
     }

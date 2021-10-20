@@ -1,5 +1,6 @@
 import m from "mithril";
 import { DB } from "../config";
+import { doc, getDoc, collection, query, where, getDocs, onSnapshot, orderBy, limit } from "firebase/firestore";
 import store, { consequencesTop } from "../../../data/store";
 
 export function listenToChatFeed() {
@@ -7,26 +8,27 @@ export function listenToChatFeed() {
     try {
 
         if (store.listen.chatFeed == false) {
-            DB.collection('users').doc(store.user.uid).collection('messages')
-                .orderBy("date", "asc")
-                .onSnapshot(chatDB => {
-                    let unreadMessagesCouner = 0;
-                    const messages = [];
-                    chatDB.forEach(newMessageDB => {
+
+            const chatFeedRef = collection(DB, 'users', store.user.uid, 'messages')
+            const q = query(chatFeedRef, orderBy("date", "asc"));
+            const unsub = onSnapshot(q, chatDB => {
+                let unreadMessagesCouner = 0;
+                const messages = [];
+                chatDB.forEach(newMessageDB => {
 
 
-                        messages.push(newMessageDB.data());
+                    messages.push(newMessageDB.data());
 
-                        unreadMessagesCouner += newMessageDB.data().msgDifference;
-                    })
-
-
-                    store.chatFeed = messages;
-
-                    store.chatFeedCounter = unreadMessagesCouner;
-
-                    m.redraw()
+                    unreadMessagesCouner += newMessageDB.data().msgDifference;
                 })
+
+
+                store.chatFeed = messages;
+
+                store.chatFeedCounter = unreadMessagesCouner;
+
+                m.redraw()
+            })
 
             store.listen.chatFeed = true;
         }
@@ -42,7 +44,7 @@ export function listenToBageMessages() {
         return DB.collection('users').doc(store.user.uid).collection('messagesCounter').doc('counter').onSnapshot(counterDB => {
             if (counterDB.exists) {
                 let counter = counterDB.data().messages;
-            
+
                 navigator.setAppBadge(counter).catch(e => { console.error(e) })
             }
         })

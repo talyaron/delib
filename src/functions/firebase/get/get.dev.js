@@ -86,7 +86,6 @@ function listenToUserGroups() {
       _store["default"].userGroupsListen = true;
       var q = (0, _firestore.query)((0, _firestore.collection)(_config.DB, 'users', _store["default"].user.uid, 'groupsOwned'));
       var unsub = (0, _firestore.onSnapshot)(q, function (groupsOwnedDB) {
-        //finished here
         setTimeout(function () {
           if (_store["default"].userGroups[0] === false) _store["default"].userGroups.splice(0, 1);
 
@@ -393,11 +392,11 @@ function listenToOptions(groupId, questionId, subQuestionId) {
           _orderBy = "time";
       }
 
-      var limit = 100; // if (isSingle === true) {
+      var _limit = 100; // if (isSingle === true) {
       //     limit = 1
       // }
 
-      return optionsRef.orderBy(_orderBy, "desc").limit(limit).onSnapshot(function (optionsDB) {
+      return optionsRef.orderBy(_orderBy, "desc").limit(_limit).onSnapshot(function (optionsDB) {
         var optionsArray = [];
         optionsDB.forEach(function (optionDB) {
           //see how many message the user read (from total mesaages of option). use this to calculate hoem namy messages the user didn't read.
@@ -761,7 +760,9 @@ function listenToSubscription(path) {
 
 function listenToFeed() {
   try {
-    _config.DB.collection('users').doc(_store["default"].user.uid).collection('feed').limit(20).orderBy('date', 'desc').onSnapshot(function (feedDB) {
+    var feedRef = (0, _firestore.collection)(_config.DB, 'users', _store["default"].user.uid, 'feed');
+    var q = (0, _firestore.query)(feedRef, (0, _firestore.orderBy)('date', 'desc'), (0, _firestore.limit)(20));
+    var usub = (0, _firestore.onSnapshot)(q, function (feedDB) {
       feedDB.docChanges().forEach(function (change) {
         if (change.type === "added") {
           var feedItem = change.doc.data();
@@ -780,7 +781,8 @@ function listenToFeed() {
 
 function listenToFeedLastEntrance() {
   try {
-    _config.DB.collection('users').doc(_store["default"].user.uid).collection('feedLastEntrence').doc('info').onSnapshot(function (infoDB) {
+    var feedLastEntrenceRef = (0, _firestore.doc)(_config.DB, 'users', _store["default"].user.uid, 'feedLastEntrence', 'info');
+    var unsub = (0, _firestore.onSnapshot)(feedLastEntrenceRef, function (infoDB) {
       var _infoDB$data = infoDB.data(),
           lastEntrance = _infoDB$data.lastEntrance;
 

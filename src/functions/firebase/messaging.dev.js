@@ -4,6 +4,8 @@ var _mithril = _interopRequireDefault(require("mithril"));
 
 var _messaging = require("firebase/messaging");
 
+var _firestore = require("firebase/firestore");
+
 var _config = require("./config");
 
 var _store = _interopRequireDefault(require("../../data/store"));
@@ -39,7 +41,7 @@ if ('Notification' in window) {
 function getSubscriptions() {
   if ('Notification' in window) {
     try {
-      _config.DB.collection('tokens').doc(_store["default"].user.uid).onSnapshot(function (userTokenDB) {
+      var qunsub = (0, _firestore.onSnapshot)((0, _firestore.doc)(_config.DB, 'tokens', _store["default"].user.uid), function (userTokenDB) {
         if (userTokenDB.exists && userTokenDB.data().pushEntities) {
           _store["default"].push = userTokenDB.data().pushEntities;
 
