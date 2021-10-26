@@ -128,6 +128,7 @@ export function subscribeUser(settings) {
         const { uid, displayName, email, photoURL } = store.user;
 
         const subscriberRef = doc(DB, `${subscriptionPath}/subscribers/${uid}`);
+        const chatRef = doc(DB, 'users',uid,'messages',chatEntityId);
 
         if (subscribe === false) {
             //if user is not subscribed then subscribe the user
@@ -137,8 +138,10 @@ export function subscribeUser(settings) {
             setDoc(subscriberRef, { user: { uid, displayName, email, photoURL } }) //add the user to subscribers
                 .then(() => {
                     console.info('User subscribed succsefuly to entity');
-                    DB.collection('users').doc(uid)
-                        .collection('messages').doc(chatEntityId).set({  //add initial counter
+                    
+                    
+
+                    setDoc(chatRef, {  //add initial counter
                             msgNumber: 0,
                             msgLastSeen: 0,
                             msgDifference: 0
@@ -153,8 +156,7 @@ export function subscribeUser(settings) {
 
             deleteDoc(subscriberRef)
                 .then(() => {
-                    DB.collection('users').doc(uid)
-                        .collection('messages').doc(chatEntityId).delete().then(() => {
+                    deleteDoc(chatRef).then(() => {
                             console.info('User unsubscribed succsefuly from entity')
                         })
                         .then(() => { console.log('user unsubscribed in messages') })
