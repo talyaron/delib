@@ -570,28 +570,28 @@ function setLikeToSubItem(subItemsType, groupId, questionId, subQuestionId, crea
 
 
     if (isUp) {
-       setDoc(subQuestionRef,{ like: 1 });
+        setDoc(subQuestionRef, { like: 1 });
 
     } else {
-        setDoc(subQuestionRef,{ like: 0 });
+        setDoc(subQuestionRef, { like: 0 });
 
     }
 }
 
 function setSubAnswer(groupId, questionId, subQuestionId, creatorId, creatorName, message) {
-   
-   const subAnswersRef = collection(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'subAnswers')
-    
-        addDoc(subAnswersRef,{
-            groupId,
-            questionId,
-            subQuestionId,
-            creatorId,
-            author: creatorName,
-            creatorId,
-            time: serverTimestamp(),
-            message
-        })
+
+    const subAnswersRef = collection(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'subAnswers')
+
+    addDoc(subAnswersRef, {
+        groupId,
+        questionId,
+        subQuestionId,
+        creatorId,
+        author: creatorName,
+        creatorId,
+        time: serverTimestamp(),
+        message
+    })
         .then((newLike) => { })
         .catch(function (error) {
             console.error('Error adding document: ', error); sendError(e)
@@ -600,34 +600,27 @@ function setSubAnswer(groupId, questionId, subQuestionId, creatorId, creatorName
 
 //add a path ([collection1, doc1, collection2, doc2, etc])
 function addToFeed(addRemove, pathArray, refString, collectionOrDoc) {
-    if (addRemove == 'add') {
-        DB
-            .collection('users')
-            .doc(store.user.uid)
-            .collection('feeds')
-            .doc(refString)
-            .set({
-                path: refString,
-                time: new Date().getTime(),
-                type: collectionOrDoc,
-                refString
-            })
-            .then(() => {
+    const feedRef = doc(DB, 'users', store.user.uid, 'feeds', refString);
 
-                store.subscribed[refString] = true;
-                console.dir(store.subscribed);
-            })
-            .catch((error) => {
-                console.error('Error writing document: ', error); sendError(e)
-            });
+    if (addRemove == 'add') {
+
+
+        setDoc(feedRef, {
+            path: refString,
+            time: new Date().getTime(),
+            type: collectionOrDoc,
+            refString
+        }).then(() => {
+
+            store.subscribed[refString] = true;
+            console.dir(store.subscribed);
+        }).catch((error) => {
+            console.error('Error writing document: ', error); sendError(e)
+        });
     } else {
-        DB
-            .collection('users')
-            .doc(store.user.uid)
-            .collection('feeds')
-            .doc(refString)
-            .delete()
-            .then(function () {
+
+        deleteDoc(feedRef)
+            .then(() => {
                 delete store.subscribed[refString];
             })
             .catch(function (error) {
@@ -638,8 +631,10 @@ function addToFeed(addRemove, pathArray, refString, collectionOrDoc) {
 
 function setToFeedLastEntrance() {
     try {
-        DB.collection('users').doc(store.user.uid).collection('feedLastEntrence').doc('info')
-            .set({ lastEntrance: new Date().getTime() })
+
+        const infoRef = doc(DB, 'users', store.user.uid, 'feedLastEntrence', 'info')
+
+        setDoc(infoRef, { lastEntrance: new Date().getTime() })
             .catch(err => { console.error(err) });
     } catch (err) {
         console.error(err)
@@ -653,25 +648,18 @@ function updateOption(vnode) {
         let creatorName = vnode.state.isNamed
             ? vnode.state.creatorName
             : 'אנונימי/ת'
-        DB
-            .collection('groups')
-            .doc(groupId)
-            .collection('questions')
-            .doc(questionId)
-            .collection('subQuestions')
-            .doc(subQuestionId)
-            .collection('options')
-            .doc(optionId)
-            .update({
-                creatorUid: store.user.uid,
-                creatorName,
-                title: vnode.state.title,
-                description: vnode.state.description,
 
-            })
-            .catch(e => {
-                console.error(e); sendError(e);
-            })
+        const optionRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options', optionId)
+
+        updateDoc(optionRef, {
+            creatorUid: store.user.uid,
+            creatorName,
+            title: vnode.state.title,
+            description: vnode.state.description,
+
+        }).catch(e => {
+            console.error(e); sendError(e);
+        })
     } catch (e) {
         console.error(e); sendError(e)
     }
@@ -706,13 +694,11 @@ function setNumberOfMessagesMark(ids, numberOfMessages = 0) {
 
     try {
         const { optionId } = ids;
-        if (optionId === undefined) throw new Error("option doesnt have optionId")
+        if (optionId === undefined) throw new Error("option doesnt have optionId");
 
-        DB.collection('users')
-            .doc(store.user.uid)
-            .collection('optionsRead')
-            .doc(optionId)
-            .set({ numberOfMessages })
+        const optionRef = doc(DB, 'users', store.user.uid, 'optionsRead', optionId)
+
+        setDoc(optionRef, { numberOfMessages })
             .catch(e => { console.error(e); sendError(e) })
 
     } catch (e) {
@@ -724,7 +710,9 @@ function setNumberOfMessagesMark(ids, numberOfMessages = 0) {
 
 function dontShowPopAgain() {
     try {
-        DB.collection('users').doc(store.user.uid).update({ stopRegistrationMessages: true })
+        const userRef = doc(DB, 'users', store.user.uid)
+
+        updateDoc(userRef, { stopRegistrationMessages: true })
             .then(() => console.info('user will not recive pop messages again'))
             .catch(e => { console.error(e); sendError(e); })
     } catch (e) {
@@ -734,8 +722,8 @@ function dontShowPopAgain() {
 
 function markUserSeenSuggestionsWizard() {
     try {
-        DB.collection('users').doc(store.user.uid)
-            .update({ firstTimeOnSuggestions: false })
+        const userRef = doc(DB, 'users', store.user.uid)
+        updateDoc(userRef, { firstTimeOnSuggestions: false })
             .then(() => { console.info('user seen wizared') })
             .catch(e => { console.error(e); sendError(e) })
     } catch (e) {
