@@ -1,4 +1,5 @@
 import m from "mithril";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { DB } from "../config";
 import store from "../../../data/store";
 import { uniqueId } from '../../general';
@@ -7,12 +8,10 @@ export const createQuestion = (groupId, creatorId, title, description) => {
  
     try {
         const questionId = uniqueId();
-        DB
-            .collection('groups')
-            .doc(groupId)
-            .collection('questions')
-            .doc(questionId)
-            .set({
+const questionRef = doc(DB, 'groups', groupId, 'questions', questionId);
+
+
+            setDoc({questionRef, 
                 title,
                 description,
                 time: new Date().getTime(),
@@ -31,12 +30,10 @@ export const createQuestion = (groupId, creatorId, title, description) => {
 export const updateQuestion = (groupId, questionId, title, description)=> {
 
     try {
-        DB
-            .collection('groups')
-            .doc(groupId)
-            .collection('questions')
-            .doc(questionId)
-            .update({ title, description })
+        const questionRef = doc(DB, 'groups', groupId, 'questions', questionId);
+
+        
+            updateDoc(questionRef,{ title, description })
             .then(() => {
                 console.info('writen succesufuly');
             })

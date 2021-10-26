@@ -1,7 +1,7 @@
 import m from 'mithril';
 import { doc, addDoc, getDocs, deleteDoc, collection, updateDoc, deleteField, query, where } from "firebase/firestore";
 import { DB } from '../config';
-import store from '../../../data/store';
+
 
 export const addGroupSection = (ids, title) => {
     try {
