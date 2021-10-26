@@ -3,7 +3,7 @@ import { doc, addDoc, setDoc, deleteDoc, collection,  serverTimestamp } from "fi
 import { DB } from "../config";
 import store from "../../../data/store";
 
-import { createIds, concatenateDBPath, generateChatEntitiyId } from '../../general'
+import { createIds, concatenateDBPath,concatentPath, generateChatEntitiyId } from '../../general'
 
 export function sendMessage({ groupId, questionId, subQuestionId, optionId, message, title, entity, topic, url, vnode, group, toDelete, messageId }) {
     try {
@@ -121,7 +121,7 @@ export function subscribeUser(settings) {
         console.log(settings)
 
         //build path for the enenties subscription collection
-        const subscriptionPath = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
+        const subscriptionPath = concatentPath(groupId, questionId, subQuestionId, optionId);
         let chatEntityId = generateChatEntitiyId({ groupId, questionId, subQuestionId, optionId });
 
 
