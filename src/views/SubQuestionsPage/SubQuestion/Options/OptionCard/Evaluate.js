@@ -12,6 +12,7 @@ module.exports = {
         const { vp, evaluationType, processType } = vnode.attrs;
        
         const evaluation = evaluate(evaluationType);
+        
 
         if (!(evaluationType === DISLIKE && processType === PARALLEL_OPTIONS)) {
             return (
@@ -30,6 +31,7 @@ module.exports = {
         }
 
         function evaluate(type) {
+
 
             try {
                 if (processType === PARALLEL_OPTIONS) {

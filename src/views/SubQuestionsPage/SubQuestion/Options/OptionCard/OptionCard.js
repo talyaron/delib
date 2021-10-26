@@ -419,6 +419,8 @@ module.exports = {
 
 export function setSelection(evaluate, vnode) {
 
+    console.log('setSelection',evaluate)
+
     const { groupId, questionId, subQuestionId, optionId } = vnode.attrs.ids;
     const { processType } = vnode.attrs;
 

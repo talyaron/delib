@@ -537,7 +537,7 @@ function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId, 
         } else {
             throw new Error(`couldnt detect the process type (${processType})`)
         }
-        const evaluationRef = doc(DB, evaluationPath);
+        const evaluationRef = doc(DB, evaluationTypeRef);
         let unsubscribe = onSnapshot(evaluationRef, voteDB => {
 
 

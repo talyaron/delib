@@ -373,7 +373,7 @@ function createConsequence(groupId, questionId, subQuestionId, optionId, creator
             title,
             description,
             creatorName,
-            time:serverTimestamp(),
+            time: serverTimestamp(),
             consensusPrecentage: 0,
             isActive: true
         })
@@ -453,30 +453,32 @@ function updateOptionDescription(ids, description) {
 
 function setEvaluation(groupId, questionId, subQuestionId, optionId, creatorId, evauluation, processType = SUGGESTIONS) {
 
-
     try {
 
 
         if (groupId === undefined || questionId === undefined || subQuestionId === undefined || optionId === undefined || creatorId === undefined) throw new Error("One of the Ids groupId, questionId, subQuestionId, optionId, creatorId is missing", groupId, questionId, subQuestionId, optionId, creatorId)
 
-        const evaluateRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options', optionId)
+
 
 
         if (processType === SUGGESTIONS) {
-            const userLikeRef = doc(evaluateRef, doc('likes', creatorId));
+            const userLikeRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options', optionId, 'likes', creatorId);
+
             setDoc(userLikeRef, { like: evauluation })
+                .then(() => { console.log(`like: ${evauluation}`) })
                 .catch(function (error) {
                     console.error('Error adding document: ', error);
                 });
         } else if (processType === PARALLEL_OPTIONS) {
-            const userLikeRef = doc(evaluateRef, doc('confirms', creatorId));
+            const userLikeRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options', optionId, 'confirms', creatorId);
+
             setDoc(userLikeRef, { confirm: evauluation })
                 .catch(function (error) {
                     console.error('Error adding document: ', error);
                 });
         }
     } catch (e) {
-        console.error(e); sendError(e)
+        console.error(e);
     }
 }
 
