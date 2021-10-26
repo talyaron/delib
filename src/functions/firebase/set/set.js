@@ -373,10 +373,7 @@ function createConsequence(groupId, questionId, subQuestionId, optionId, creator
             title,
             description,
             creatorName,
-            time: firebase
-                .firestore
-                .FieldValue
-                .serverTimestamp(),
+            time:serverTimestamp(),
             consensusPrecentage: 0,
             isActive: true
         })

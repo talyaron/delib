@@ -6,11 +6,13 @@ import { voteConsequence } from '../../../functions/firebase/set/set';
 import { getMyVotesOnConsequence } from '../../../functions/firebase/get/get';
 import { getColorForPercentage, calcOpacity } from '../../../functions/general'
 
+let firstRun = true;
+
 module.exports = {
     oninit: async vnode => {
         try {
 
-            const { groupId, questionId, subQuestionId, optionId, consequenceId, evaluationAvg, truthinessAvg } = vnode.attrs.consequence;
+            const {evaluationAvg, truthinessAvg } = vnode.attrs.consequence;
 
             vnode.state = {
                 color: getColorForPercentage((evaluationAvg + 1) * 0.5 || 0),
@@ -22,39 +24,26 @@ module.exports = {
 
             }
 
-            //get truthness and evaluation from voter preivous votes
+           
 
-            let { truthiness, evaluation } = await getMyVotesOnConsequence(groupId, questionId, subQuestionId, optionId, consequenceId);
-            
-
-            if(evaluation>0){
-                vnode.state.isPro = true;
-            } else if(evaluation<0){
-                vnode.state.isAgainst = true
-            }
-    
-
-
-            if (typeof truthiness === 'number' && !isNaN(truthiness)) { vnode.state.truthiness = truthiness } else { vnode.state.truthiness = 1 };
-            if (typeof evaluation === 'number' && !isNaN(evaluation)) { vnode.state.evaluation = evaluation } else { vnode.state.evaluation = 0 };
-
-
-            m.redraw();
+          
         } catch (e) {
             console.error(e)
         }
     },
-    onbeforeupdate: vnode => {
-        const { truthinessAvg, evaluationAvg } = vnode.attrs.consequence;
-        vnode.state.color = getColorForPercentage((evaluationAvg + 1) / 2);
-        vnode.state.opacity = calcOpacity(truthinessAvg * 100);
-
-     
-
-    },
+   
     view: vnode => {
 
+
+
         try {
+
+        //    TODO: get truthiness
+            if(firstRun){
+                getTruthness(vnode)
+            }
+            firstRun = false;
+
             const { title, description, consequenceId } = vnode.attrs.consequence;
 
             const { showColor, proAgainstType } = vnode.attrs;
@@ -106,7 +95,35 @@ module.exports = {
             console.error(e)
         }
     }
+
 }
+
+
+async function getTruthness(vnode){
+    //get truthness and evaluation from voter preivous votes
+    // const { groupId, questionId, subQuestionId, optionId, consequenceId, evaluationAvg, truthinessAvg } = vnode.attrs.consequence;
+    // let { truthiness, evaluation } = await getMyVotesOnConsequence(groupId, questionId, subQuestionId, optionId, consequenceId);
+     
+    // console.log(truthiness, evaluation);
+
+    // if(evaluation>0){
+    //     vnode.state.isPro = true;
+    // } else if(evaluation<0){
+    //     vnode.state.isAgainst = true
+    // }
+
+
+
+    // if (typeof truthiness === 'number' && !isNaN(truthiness)) { vnode.state.truthiness = truthiness } else { vnode.state.truthiness = 1 };
+    // if (typeof evaluation === 'number' && !isNaN(evaluation)) { vnode.state.evaluation = evaluation } else { vnode.state.evaluation = 0 };
+    
+    
+    // vnode.state.color = getColorForPercentage((evaluationAvg + 1) / 2);
+    // vnode.state.opacity = calcOpacity(truthinessAvg * 100);
+
+    // m.redraw();
+} 
+
 function handleEval(e, vnode) {
     try {
         const value = e.target.valueAsNumber;

@@ -20,7 +20,7 @@ async function getUser(uid) {
         const userSnap = await getDoc(userRef);
 
         if (userSnap.exists()) {
-            console.log(userSnap.data());
+
             let { stopRegistrationMessages, firstTimeOnSuggestions } = userSnap.data()
             if (stopRegistrationMessages === undefined) stopRegistrationMessages = false;
 
@@ -546,16 +546,13 @@ function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId, 
                 if (processType === SUGGESTIONS) {
                     store.optionsVotes[optionId] = voteDB.data().like;
                 } else if (processType === PARALLEL_OPTIONS) {
-                    console.log('process type', PARALLEL_OPTIONS)
-                    console.log(voteDB.data())
+
                     store.optionsConfirm[optionId] = voteDB.data().confirm;
                 }
             } else {
                 store.optionsVotes[optionId] = 0;
                 console.error('voteDB do not exists.....')
             }
-
-            console.log(store.optionsConfirm)
 
             m.redraw();
         });
@@ -649,15 +646,15 @@ function listenToTopConsequences(ids) {
     }
 }
 
-function getMyVotesOnConsequence(groupId, questionId, subQuestionId, optionId, consequenceId) {
+async function getMyVotesOnConsequence(groupId, questionId, subQuestionId, optionId, consequenceId) {
     try {
-        const consequencesRef = collection(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options', optionId, 'consequences', consequenceId, 'voters', store.user.uid);
+        const consequencesRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options', optionId, 'consequences', consequenceId, 'voters', store.user.uid);
 
-        return getDoc(consequencesRef).then(voteDB => {
-            return voteDB.data();
-        }).catch(e => {
-            console.error(e); sendError(e);
-        })
+        const voteDB = await getDoc(consequencesRef);
+        console.log(voteDB)
+        console.log(voteDB.data())
+        return voteDB.data();
+
 
     } catch (e) {
         console.error(e); sendError(e);
@@ -791,7 +788,7 @@ function listenToSubscription(path) {
 
 
         if ({}.hasOwnProperty.call(store.subscribe, path) === false) {
-            console.log(`${path}/subscribers/${store.user.uid}`)
+
             const subscriptionRef = doc(DB, `${path}/subscribers/${store.user.uid}`)
 
             onSnapshot(subscriptionRef, subscriberDB => {
@@ -865,7 +862,7 @@ function listenToChat(ids) {
         if (groupId === undefined) throw new Error('No group id in the ids')
         let collectionRef = concatentPath(DB, groupId, questionId, subQuestionId, optionId);
         const path = concatentPath(groupId, questionId, subQuestionId, optionId)
-        console.log('collectionRef', collectionRef)
+
         const chatRef = collection(DB, `${collectionRef}/messages`);
         let lastRead = new Date('2020-01-01');
 
@@ -897,7 +894,7 @@ function listenToChat(ids) {
 
 
                 } else if (change.type === 'removed') {
-                    console.log('removed', change.doc.id)
+
                     store.chat[path] = store.chat[path].filter(msg => msg.messageId !== change.doc.id);
                 }
 
@@ -940,7 +937,9 @@ function listenIfGetsMessages(ids) {
 
             const tokensRef = doc(DB, dbPath)
             onSnapshot(tokensRef, tokensDB => {
-                if (tokensDB.exists) {
+          
+                if (tokensDB.exists()) {
+                  
                     if (tokensDB.data()[browserUniqueId] === undefined) {
                         store.listenToMessages[entityId] = false;
 
@@ -958,7 +957,7 @@ function listenIfGetsMessages(ids) {
 
         }
     } catch (e) {
-        console.error(e); sendError(e);
+        console.error(e.message);
     }
 
 }
@@ -971,13 +970,13 @@ function getLastTimeEntered(ids, vnode) {
 
 
         let path = concatentPath(groupId, questionId, subQuestionId, optionId, consequenceId);
-        console.log('path', path)
+
         const regex = new RegExp('/', 'gi')
         path = path.replace(regex, '-')
-       
+
 
         if (path.length > 10) {
-            console.log('users', store.user.uid, 'chatLastEnterence', path)
+
             const docRef = doc(DB, 'users', store.user.uid, 'chatLastEnterence', path)
 
             getDoc(docRef)
