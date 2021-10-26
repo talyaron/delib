@@ -1,6 +1,6 @@
 import { DB } from '../config';
 import store from '../../../data/store';
-import { doc, addDoc, setDoc, getDoc, collection, query, where, getDocs, onSnapshot, orderBy, limit, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 
 export const updateSubQuestionToDoc = (ids, inDoc = true) => {
     try {
@@ -52,8 +52,6 @@ export const reorderSubQuestionsInDocument = (ids, newOrder) => {
 
                 });
         }
-
-
 
     } catch (e) {
         console.error(e)
