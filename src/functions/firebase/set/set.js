@@ -29,8 +29,8 @@ function createGroup(settings) {
         }, { merge: true })
             .then(() => {
 
-                const userSubscribeRef = doc(DB, 'users', store.user.uid,'groupsOwned',groupId)
-               
+                const userSubscribeRef = doc(DB, 'users', store.user.uid, 'groupsOwned', groupId)
+
                 setDoc(userSubscribeRef, { id: groupId, date: new Date().getTime() })
                     .then(() => { console.info(`added the group to the groups the user owns`) })
                     .catch(e => { console.error(e); sendError(e) });
@@ -50,11 +50,8 @@ function createGroup(settings) {
 function updateGroup(vnode) {
     try {
 
-
-        DB
-            .collection('groups')
-            .doc(vnode.attrs.id)
-            .update({ title: vnode.state.title, description: vnode.state.description, callForAction: vnode.state.callForAction || '' })
+        const groupRef = doc(DB, 'groups', vnode.attrs.id);
+        updateDoc(groupRef, { title: vnode.state.title, description: vnode.state.description, callForAction: vnode.state.callForAction || '' })
             .then(() => { m.route.set(`/group/${vnode.attrs.id}`) })
             .catch(err => { throw err })
     } catch (e) {
@@ -132,16 +129,10 @@ function registerGroup(groupId) {
 function createSubQuestion(groupId, questionId, title, order) {
     try {
         return new Promise((resolve, reject) => {
-            const subQuestionId = uniqueId()
+            const subQuestionId = uniqueId();
+            const subQuestionRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId);
 
-            DB
-                .collection('groups')
-                .doc(groupId)
-                .collection('questions')
-                .doc(questionId)
-                .collection('subQuestions')
-                .doc(subQuestionId)
-                .set({ title, order, creator: store.user.uid, orderBy: 'top', subQuestionId, id: subQuestionId, maxConfirms: 0 })
+            setDoc(subQuestionRef, { title, order, creator: store.user.uid, orderBy: 'top', subQuestionId, id: subQuestionId, maxConfirms: 0 })
                 .then(() => { resolve(subQuestionId) })
                 .catch(function (error) {
                     console.error('Error adding document: ', error); sendError(e)
@@ -155,36 +146,20 @@ function createSubQuestion(groupId, questionId, title, order) {
 }
 
 function updateSubQuestion(groupId, questionId, subQuestionId, title) {
-    DB
-        .collection('groups')
-        .doc(groupId)
-        .collection('questions')
-        .doc(questionId)
-        .collection('subQuestions')
-        .doc(subQuestionId)
-        .update({ title });
+    const subQuestionRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId);
+    updateDoc(subQuestionRef, { title });
 }
 
 function updateSubQuestionProcess(groupId, questionId, subQuestionId, processType) {
-    DB
-        .collection('groups')
-        .doc(groupId)
-        .collection('questions')
-        .doc(questionId)
-        .collection('subQuestions')
-        .doc(subQuestionId)
-        .update({ processType });
-}
 
+    const subQuestionRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId);
+    updateDoc(subQuestionRef, { processType });
+
+}
 function updateSubQuestionOrderBy(groupId, questionId, subQuestionId, orderBy) {
-    DB
-        .collection('groups')
-        .doc(groupId)
-        .collection('questions')
-        .doc(questionId)
-        .collection('subQuestions')
-        .doc(subQuestionId)
-        .update({ orderBy });
+
+    const subQuestionRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId);
+    updateDoc(subQuestionRef, { orderBy });
 }
 
 function setSubQuestion(ids, settings) {
@@ -198,29 +173,22 @@ function setSubQuestion(ids, settings) {
 
             if (!cutoff) cutoff = false;
             const { groupId, questionId, subQuestionId } = ids;
-
-
-            const subQuestionRef = DB
-                .collection('groups')
-                .doc(groupId)
-                .collection('questions')
-                .doc(questionId)
-                .collection('subQuestions')
-
+            const subQuestionRefString = `/groups/${groupId}/questions/${questionId}/subQuestions`;
 
 
             if (subQuestionId === undefined) {
                 //new subQuestion
                 const uid = uniqueId()
-
-                subQuestionRef.doc(uid).set({ title, processType, orderBy, groupId, questionId, subQuestionId: uid, userHaveNavigation, showSubQuestion, order: numberOfSubquestions, proAgainstType, creator: store.user.uid, cutoff })
+                const subQuestionRef = doc(DB, `${subQuestionRefString}/${uid}`);
+                setDoc(subQuestionRef, { title, processType, orderBy, groupId, questionId, subQuestionId: uid, userHaveNavigation, showSubQuestion, order: numberOfSubquestions, proAgainstType, creator: store.user.uid, cutoff })
                     .then(() => { console.info(`saved subQuestion ${uid} to DB`); resolve(uid) })
                     .catch(e => {
                         console.error(e); sendError(e)
                         reject(undefined)
                     })
             } else {
-                subQuestionRef.doc(subQuestionId).update({ title, processType, orderBy, groupId, questionId, subQuestionId, userHaveNavigation, showSubQuestion, proAgainstType, cutoff })
+                const subQuestionRef = doc(DB, `${subQuestionRefString}/${subQuestionId}`);
+                updateDoc(subQuestionRef, { title, processType, orderBy, groupId, questionId, subQuestionId, userHaveNavigation, showSubQuestion, proAgainstType, cutoff })
                     .then(() => { console.info(`updated subQuestion ${subQuestionId} to DB`); resolve(subQuestionId) })
                     .catch(e => {
                         console.error(e); sendError(e);
@@ -240,13 +208,10 @@ function setSubQuestion(ids, settings) {
 
 function deleteSubQuestion(groupId, questionId, subQuestionId) {
     try {
-        DB.collection('groups')
-            .doc(groupId)
-            .collection('questions')
-            .doc(questionId)
-            .collection('subQuestions')
-            .doc(subQuestionId)
-            .update({ showSubQuestion: 'deleted' })
+
+        const subQuestionRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId);
+
+        updateDoc(subQuestionRef, { showSubQuestion: 'deleted' })
             .then(() => { console.info('SubQuestion was deleted (and styed in db as subQuestion', subQuestionId, ')') })
             .catch(e => { console.error(e); sendError(e) })
     } catch (e) {
@@ -257,14 +222,9 @@ function deleteSubQuestion(groupId, questionId, subQuestionId) {
 
 function updateDoesUserHaveNavigation(groupId, questionId, subQuestionId, userHaveNavigation) {
     try {
-        DB
-            .collection('groups')
-            .doc(groupId)
-            .collection('questions')
-            .doc(questionId)
-            .collection('subQuestions')
-            .doc(subQuestionId)
-            .update({ userHaveNavigation })
+        const subQuestionRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId);
+
+        updateDoc(subQuestionRef, { userHaveNavigation })
             .catch(e => {
                 console.error(e); sendError(e)
             });
