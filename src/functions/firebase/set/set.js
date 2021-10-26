@@ -173,13 +173,13 @@ function setSubQuestion(ids, settings) {
 
             if (!cutoff) cutoff = false;
             const { groupId, questionId, subQuestionId } = ids;
-            const subQuestionRefString = `/groups/${groupId}/questions/${questionId}/subQuestions`;
+            const subQuestionsRef = collection(DB, 'groups', groupId,'questions', questionId, 'subQuestions');
 
 
             if (subQuestionId === undefined) {
                 //new subQuestion
                 const uid = uniqueId()
-                const subQuestionRef = doc(DB, `${subQuestionRefString}/${uid}`);
+                const subQuestionRef = doc(subQuestionsRef, uid);
                 setDoc(subQuestionRef, { title, processType, orderBy, groupId, questionId, subQuestionId: uid, userHaveNavigation, showSubQuestion, order: numberOfSubquestions, proAgainstType, creator: store.user.uid, cutoff })
                     .then(() => { console.info(`saved subQuestion ${uid} to DB`); resolve(uid) })
                     .catch(e => {
@@ -187,7 +187,7 @@ function setSubQuestion(ids, settings) {
                         reject(undefined)
                     })
             } else {
-                const subQuestionRef = doc(DB, `${subQuestionRefString}/${subQuestionId}`);
+                const subQuestionRef = doc(subQuestionsRef, subQuestionId);
                 updateDoc(subQuestionRef, { title, processType, orderBy, groupId, questionId, subQuestionId, userHaveNavigation, showSubQuestion, proAgainstType, cutoff })
                     .then(() => { console.info(`updated subQuestion ${subQuestionId} to DB`); resolve(subQuestionId) })
                     .catch(e => {
@@ -255,15 +255,11 @@ function updateSubQuestionsOrder(groupId, questionId, newOrderArray) {
 
 function setSubQuestionsOrder(groupId, questionId, subQuestionId, order) {
     try {
-        DB
-            .collection('groups')
-            .doc(groupId)
-            .collection('questions')
-            .doc(questionId)
-            .collection('subQuestions')
-            .doc(subQuestionId)
-            .update({ order })
-            .then((something) => {
+        
+        const subQuestionRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId);
+        
+        updateDoc(subQuestionRef, { order })
+            .then(() => {
                 console.info(`writen to ${subQuestionId} succesufuly`);
             })
             .catch(function (error) {
@@ -279,17 +275,10 @@ function createOption(groupId, questionId, subQuestionId, type, creatorId, title
     const optionId = uniqueId();
     try {
 
+        const optionRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId,'options', optionId);
+        
 
-        let optionRef = DB
-            .collection('groups')
-            .doc(groupId)
-            .collection('questions')
-            .doc(questionId)
-            .collection('subQuestions')
-            .doc(subQuestionId)
-            .collection('options');
-
-        optionRef.doc(optionId).set({
+        setDoc(optionRef, {
             groupId,
             questionId,
             subQuestionId,
@@ -301,10 +290,7 @@ function createOption(groupId, questionId, subQuestionId, type, creatorId, title
             description,
             creatorName,
             subQuestionTitle,
-            time: firebase
-                .firestore
-                .FieldValue
-                .serverTimestamp(),
+            time: serverTimestamp(),
             consensusPrecentage: 0,
             isActive: true,
             isVote
@@ -326,15 +312,8 @@ function voteOption(ids, settings) {
         const { addVote } = settings;
 
 
-        const optionRef = DB
-            .collection('groups')
-            .doc(groupId)
-            .collection('questions')
-            .doc(questionId)
-            .collection('subQuestions')
-            .doc(subQuestionId)
-            .collection('votes')
-            .doc(store.user.uid);
+        const optionRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'votes', store.user.uid)
+
 
         const updateObj = {
             optionVoted: optionId,
@@ -347,7 +326,7 @@ function voteOption(ids, settings) {
 
 
         if (addVote) {
-            optionRef.set(updateObj, { margin: true })
+            setDoc(optionRef, updateObj, { margin: true })
                 .then(() => { console.info(`Option ${optionId} was voted for`) })
                 .catch(e => {
                     // console.error(e); sendError(e)
@@ -363,7 +342,7 @@ function voteOption(ids, settings) {
                     }
                 })
         } else {
-            optionRef.delete()
+            deleteDoc(optionRef)
                 .then(() => { console.info(`Option ${optionId} was deleted`) })
                 .catch(e => { console.error(e); sendError(e) })
         }
@@ -379,20 +358,12 @@ function createConsequence(groupId, questionId, subQuestionId, optionId, creator
 
         const consequenceId = uniqueId();
 
-        const consequenceRef = DB
-            .collection('groups')
-            .doc(groupId)
-            .collection('questions')
-            .doc(questionId)
-            .collection('subQuestions')
-            .doc(subQuestionId)
-            .collection('options')
-            .doc(optionId)
-            .collection('consequences')
-            .doc(consequenceId);
+        const consequenceRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options', optionId, 'consequences', consequenceId);
+        
+        
 
         consequenceRef
-            .set({
+        setDoc(consequenceRef, {
                 groupId,
                 questionId,
                 subQuestionId,
