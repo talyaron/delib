@@ -1,5 +1,5 @@
 import { DB } from '../config';
-import { doc, addDoc, setDoc } from "firebase/firestore";
+import { doc, addDoc, setDoc, collection } from "firebase/firestore";
 import store from '../../../data/store';
 
 export function createReactions({ groupId, questionId, title }) {
@@ -25,7 +25,7 @@ export function setNewReaction({ groupId, questionId, subQuestionId, type }) {
         if (!questionId) throw new Error('no questionId was given')
         if (!type) throw new Error('no type was given')
 
-        const reactionsRef = doc(DB, 'reactions', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'reactions')
+        const reactionsRef = collection(DB, 'reactions', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'reactions')
 
 
         addDoc(reactionsRef, { userId: store.user.uid, reactionType: type, dateSeconds: (new Date().getTime() / 1000) })
