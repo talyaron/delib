@@ -11,10 +11,9 @@ export const createSentence = (ids, text, type, order = 1000) => {
 
         const userObj = JSON.parse(JSON.stringify(store.user));
 
-        DB
-            .collection('groups').doc(groupId)
-            .collection('questions').doc(questionId)
-            .collection('document').add({ text, type, order, creator: userObj })
+        const docmentRef = collection(DB, 'groups', groupId, 'questions', questionId, 'document');
+
+        addDoc(docmentRef, { text, type, order, creator: userObj })
             .catch(e => console.error(e))
 
 
@@ -38,11 +37,9 @@ export const updateSentence = ({ groupId, questionId, sentenceId, text, type, or
         if (sentenceId === false) {
             createSentence({ groupId, questionId }, text, type, order);
         } else {
-            DB
-                .collection('groups').doc(groupId)
-                .collection('questions').doc(questionId)
-                .collection('document').doc(sentenceId)
-                .update({ text, type, order })
+            const sentenceRef = doc(DB, 'groups', groupId, 'questions', questionId, 'document', sentenceId);
+
+            updateDoc(sentenceRef, { text, type, order })
                 .catch(e => console.error(e))
         }
 
@@ -55,16 +52,14 @@ export const updateSentence = ({ groupId, questionId, sentenceId, text, type, or
 }
 
 export const deleteSentence = ids => {
-    const {groupId, questionId, sentenceId} = ids;
+    const { groupId, questionId, sentenceId } = ids;
 
-    try{
-        DB
-        .collection('groups').doc(groupId)
-        .collection('questions').doc(questionId)
-        .collection('document').doc(sentenceId)
-        .delete()
-        .catch(e=>console.error(e))
-    } catch(e){
+    try {
+        const sentenceRef = doc(DB, 'groups', groupId, 'questions', questionId, 'document', sentenceId);
+
+        deleteDoc(sentenceRef)
+            .catch(e => console.error(e))
+    } catch (e) {
         console.error(e)
     }
 }
