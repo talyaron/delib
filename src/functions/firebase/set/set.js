@@ -173,7 +173,7 @@ function setSubQuestion(ids, settings) {
 
             if (!cutoff) cutoff = false;
             const { groupId, questionId, subQuestionId } = ids;
-            const subQuestionsRef = collection(DB, 'groups', groupId,'questions', questionId, 'subQuestions');
+            const subQuestionsRef = collection(DB, 'groups', groupId, 'questions', questionId, 'subQuestions');
 
 
             if (subQuestionId === undefined) {
@@ -255,9 +255,9 @@ function updateSubQuestionsOrder(groupId, questionId, newOrderArray) {
 
 function setSubQuestionsOrder(groupId, questionId, subQuestionId, order) {
     try {
-        
+
         const subQuestionRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId);
-        
+
         updateDoc(subQuestionRef, { order })
             .then(() => {
                 console.info(`writen to ${subQuestionId} succesufuly`);
@@ -275,8 +275,8 @@ function createOption(groupId, questionId, subQuestionId, type, creatorId, title
     const optionId = uniqueId();
     try {
 
-        const optionRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId,'options', optionId);
-        
+        const optionRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options', optionId);
+
 
         setDoc(optionRef, {
             groupId,
@@ -359,27 +359,27 @@ function createConsequence(groupId, questionId, subQuestionId, optionId, creator
         const consequenceId = uniqueId();
 
         const consequenceRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options', optionId, 'consequences', consequenceId);
-        
-        
+
+
 
         consequenceRef
         setDoc(consequenceRef, {
-                groupId,
-                questionId,
-                subQuestionId,
-                optionId,
-                consequenceId,
-                creatorId,
-                title,
-                description,
-                creatorName,
-                time: firebase
-                    .firestore
-                    .FieldValue
-                    .serverTimestamp(),
-                consensusPrecentage: 0,
-                isActive: true
-            })
+            groupId,
+            questionId,
+            subQuestionId,
+            optionId,
+            consequenceId,
+            creatorId,
+            title,
+            description,
+            creatorName,
+            time: firebase
+                .firestore
+                .FieldValue
+                .serverTimestamp(),
+            consensusPrecentage: 0,
+            isActive: true
+        })
             .then(() => {
 
                 voteConsequence({ groupId, questionId, subQuestionId, optionId, consequenceId }, 1, goodBad)
@@ -409,30 +409,14 @@ function voteConsequence(ids, truthiness, evaluation) {
 
 
         const userId = store.user.uid
+        const userRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', questionId, 'options', optionId, 'consequences', consequenceId, 'voters', userId)
 
-
-        DB
-            .collection('groups')
-            .doc(groupId)
-            .collection('questions')
-            .doc(questionId)
-            .collection('subQuestions')
-            .doc(subQuestionId)
-            .collection('options')
-            .doc(optionId)
-            .collection('consequences')
-            .doc(consequenceId)
-            .collection('voters')
-            .doc(userId)
-            .set({
-                truthiness,
-                evaluation,
-                userId,
-                time: firebase
-                    .firestore
-                    .FieldValue
-                    .serverTimestamp()
-            }, { merge: true })
+        setDoc(userRef, {
+            truthiness,
+            evaluation,
+            userId,
+            time: serverTimestamp()
+        }, { merge: true })
             .then(() => { console.info('consequence', consequenceId, 'was voted') })
             .catch(e => { console.error(e); sendError(e) })
     } catch (e) {
@@ -478,29 +462,18 @@ function setEvaluation(groupId, questionId, subQuestionId, optionId, creatorId, 
 
         if (groupId === undefined || questionId === undefined || subQuestionId === undefined || optionId === undefined || creatorId === undefined) throw new Error("One of the Ids groupId, questionId, subQuestionId, optionId, creatorId is missing", groupId, questionId, subQuestionId, optionId, creatorId)
 
+        const evaluateRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options', optionId)
 
-
-        const evaluateRef = DB
-            .collection('groups')
-            .doc(groupId)
-            .collection('questions')
-            .doc(questionId)
-            .collection('subQuestions')
-            .doc(subQuestionId)
-            .collection('options')
-            .doc(optionId)
 
         if (processType === SUGGESTIONS) {
-            evaluateRef.collection('likes')
-                .doc(creatorId)
-                .set({ like: evauluation })
+            const userLikeRef = doc(evaluateRef, doc('likes', creatorId));
+            setDoc(userLikeRef, { like: evauluation })
                 .catch(function (error) {
                     console.error('Error adding document: ', error);
                 });
         } else if (processType === PARALLEL_OPTIONS) {
-            evaluateRef.collection('confirms')
-                .doc(creatorId)
-                .set({ confirm: evauluation })
+            const userLikeRef = doc(evaluateRef, doc('confirms', creatorId));
+            setDoc(userLikeRef, { confirm: evauluation })
                 .catch(function (error) {
                     console.error('Error adding document: ', error);
                 });
@@ -514,46 +487,24 @@ function setEvaluation(groupId, questionId, subQuestionId, optionId, creatorId, 
 
 
 function setMessage(groupId, questionId, subQuestionId, optionId, creatorId, creatorName, message, groupName, questionName, optionName) {
-    DB
-        .collection('groups')
-        .doc(groupId)
-        .collection('questions')
-        .doc(questionId)
-        .collection('subQuestions')
-        .doc(subQuestionId)
-        .collection('options')
-        .doc(optionId)
-        .collection('messages')
-        .add({
-            creatorId,
-            creatorName,
-            time: firebase
-                .firestore
-                .FieldValue
-                .serverTimestamp(),
-            timeSeconds: new Date().getTime(),
-            message,
-            type: 'messages',
-            groupName,
-            questionName,
-            optionName
-        })
-        .then((messageDB) => {
-            DB
-                .collection('groups')
-                .doc(groupId)
-                .collection('questions')
-                .doc(questionId)
-                .collection('subQuestions')
-                .doc(subQuestionId)
-                .collection('options')
-                .doc(optionId)
-                .update({
-                    lastMessage: firebase
-                        .firestore
-                        .FieldValue
-                        .serverTimestamp()
-                })
+
+    const messagesRef = collection(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options', optionId, 'messages')
+
+    addDoc(messagesRef, {
+        creatorId,
+        creatorName,
+        time: serverTimestamp(),
+        timeSeconds: new Date().getTime(),
+        message,
+        type: 'messages',
+        groupName,
+        questionName,
+        optionName
+    })
+        .then(() => {
+            const optionRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options', optionId)
+
+            updateDoc(optionRef, { lastMessage: serverTimestamp() })
                 .catch(e => {
                     console.error(e); sendError(e)
                 })
@@ -564,12 +515,8 @@ function setMessage(groupId, questionId, subQuestionId, optionId, creatorId, cre
 }
 
 function createSubItem(subItemsType, groupId, questionId, creatorId, creatorName, title, description) {
-    let subQuestionRef = DB
-        .collection('groups')
-        .doc(groupId)
-        .collection('questions')
-        .doc(questionId)
-        .collection(subItemsType);
+    let subQuestionsRef = collection(DB, 'groups', groupId, 'questions', questionId);
+    
 
     let addObj = {
         groupId,
@@ -588,8 +535,8 @@ function createSubItem(subItemsType, groupId, questionId, creatorId, creatorName
     };
     addObj.roles[creatorId] = 'owner';
 
-    subQuestionRef
-        .add(addObj)
+    
+        addDoc(subQuestionsRef, addObj)
         .then((newItem) => { })
         .catch(function (error) {
             console.error('Error adding document: ', error); sendError(e)
