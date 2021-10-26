@@ -13,29 +13,25 @@ function createGroup(settings) {
         const { creatorId, title, description, callForAction, language, groupId } = settings;
 
         // const groupId = uniqueId()
+        const groupRef = doc(DB, 'groups', groupId);
 
-        DB
-            .collection('groups')
-            .doc(groupId)
-            .set({
-                title,
-                description,
-                creatorId,
-                time: new Date().getTime(),
-                groupId,
-                id: groupId,
-                groupColor: getRandomColor(),
-                callForAction,
-                language,
-                active: true
-            }, { merge: true })
+        setDoc(groupRef, {
+            title,
+            description,
+            creatorId,
+            time: new Date().getTime(),
+            groupId,
+            id: groupId,
+            groupColor: getRandomColor(),
+            callForAction,
+            language,
+            active: true
+        }, { merge: true })
             .then(() => {
 
-                DB
-                    .collection("users")
-                    .doc(store.user.uid)
-                    .collection("groupsOwned")
-                    .doc(groupId).set({ id: groupId, date: new Date().getTime() })
+                const userSubscribeRef = doc(DB, 'users', store.user.uid,'groupsOwned',groupId)
+               
+                setDoc(userSubscribeRef, { id: groupId, date: new Date().getTime() })
                     .then(() => { console.info(`added the group to the groups the user owns`) })
                     .catch(e => { console.error(e); sendError(e) });
 
