@@ -1,4 +1,5 @@
 import m from "mithril";
+import { doc, addDoc, setDoc, deleteDoc, getDoc, collection, query, where, getDocs, onSnapshot, orderBy, limit, updateDoc, serverTimestamp } from "firebase/firestore";
 import { DB } from "../config";
 import store from "../../../data/store";
 
@@ -10,9 +11,9 @@ export function sendMessage({ groupId, questionId, subQuestionId, optionId, mess
             if (vnode.attrs.title === undefined) throw new Error(`No title of entity in vnode`);
         }
 
-       
 
-      
+
+
 
         let ref = 'groups', location = {}
         if (groupId != undefined) {
@@ -44,8 +45,10 @@ export function sendMessage({ groupId, questionId, subQuestionId, optionId, mess
 
             let { displayName, photoURL, name, uid, userColor } = store.user;
             if (!userColor) { userColor = 'teal' }
+           
+            const messagesRef = collection(DB, ref + '/messages');
 
-            DB.doc(ref).collection('messages').add({
+            addDoc(messagesRef, {
                 entityTitle: vnode.attrs.title,
                 location,
                 displayName,
@@ -60,18 +63,15 @@ export function sendMessage({ groupId, questionId, subQuestionId, optionId, mess
                 ids,
                 userColor,
                 group,
-                createdTime: firebase
-                    .firestore
-                    .FieldValue
-                    .serverTimestamp()
+                createdTime:serverTimestamp()
             })
 
         }
-
+        
         if (toDelete && messageId) {
-            DB.doc(ref).collection('messages')
-                .doc(messageId)
-                .delete()
+            const messageRef = doc(DB, ref + '/messages/' + messageId);
+
+            deleteDoc(messageRef)
                 .then(() => { console.info('message deleted') })
                 .catch(err => {
                     console.error(err)
@@ -86,10 +86,9 @@ export function sendMessage({ groupId, questionId, subQuestionId, optionId, mess
 
 export function setZeroChatCounter() {
     try {
-        DB
-            .collection('users').doc(store.user.uid)
-            .collection('messagesCounter').doc('counter')
-            .set({ messages: 0 })
+        const messageRef = doc(DB, 'users', store.user.uid, 'messagesCounter', 'counter')
+
+        setDoc(messageRef, { messages: 0 })
             .catch(e => {
                 console.error(e)
             })
@@ -104,8 +103,9 @@ export function zeroChatFeedMessages(ids, isSubscribed = true) {
             if (ids === undefined) throw new Error('No ids were in the message')
 
             const path = generateChatEntitiyId(ids)
+            const chatFeedMessagesRef = doc('users', store.user.uid, 'messages', path);
 
-            DB.collection('users').doc(store.user.uid).collection('messages').doc(path).set({ msgDifference: 0 }, { merge: true }).catch(e => console.error(e))
+            setDoc(chatFeedMessagesRef, { msgDifference: 0 }, { merge: true }).catch(e => console.error(e))
         }
     } catch (e) {
         console.error(e)
@@ -127,14 +127,14 @@ export function subscribeUser(settings) {
 
         const { uid, displayName, email, photoURL } = store.user;
 
+        const subscriberRef = doc(DB, `${subscriptionPath}/subscribers/${uid}`);
+
         if (subscribe === false) {
             //if user is not subscribed then subscribe the user
 
-            DB
-                .doc(subscriptionPath)
-                .collection('subscribers')
-                .doc(uid)
-                .set({ user: { uid, displayName, email, photoURL } }) //add the user to subscribers
+
+
+            setDoc(subscriberRef, { user: { uid, displayName, email, photoURL } }) //add the user to subscribers
                 .then(() => {
                     console.info('User subscribed succsefuly to entity');
                     DB.collection('users').doc(uid)
@@ -150,11 +150,8 @@ export function subscribeUser(settings) {
                 })
                 .catch(err => console.error(err))
         } else {
-            DB
-                .doc(subscriptionPath)
-                .collection('subscribers')
-                .doc(uid)
-                .delete()
+
+            deleteDoc(subscriberRef)
                 .then(() => {
                     DB.collection('users').doc(uid)
                         .collection('messages').doc(chatEntityId).delete().then(() => {
@@ -185,8 +182,9 @@ export function setChatLastEntrance(ids) {
         path = path.replace(regex, '-')
 
         if (path !== '-groups') {
-            DB.collection(`users`).doc(store.user.uid).collection('chatLastEnterence').doc(path)
-                .set({ lastTime: firebase.firestore.FieldValue.serverTimestamp() })
+            const lastEntrenceRef = doc(DB, 'users', store.user.uid, 'chatLastEnterence', path)
+
+            setDoc(lastEntrenceRef, { lastTime: firebase.firestore.FieldValue.serverTimestamp() })
                 .catch(e => { console.error(e) })
         } else {
             throw new Error('couldnt find path to spesific chat (groupId, questionId, subQuestionId, optionId, consequenceId)', groupId, questionId, subQuestionId, optionId, consequenceId)

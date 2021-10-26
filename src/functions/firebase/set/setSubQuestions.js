@@ -1,18 +1,15 @@
 import { DB } from '../config';
 import store from '../../../data/store';
+import { doc, addDoc, setDoc, getDoc, collection, query, where, getDocs, onSnapshot, orderBy, limit, updateDoc } from "firebase/firestore";
 
-export const updateSubQuestionToDoc = (ids, inDoc=true) => {
+export const updateSubQuestionToDoc = (ids, inDoc = true) => {
     try {
         const { groupId, questionId, subQuestionId } = ids;
 
-        DB
-            .collection('groups')
-            .doc(groupId)
-            .collection('questions')
-            .doc(questionId)
-            .collection('subQuestions')
-            .doc(subQuestionId)
-            .update({ inDoc })
+        const subQuestionRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId)
+
+
+        updateDoc(subQuestionRef, { inDoc })
             // .then(() => console.info('subquestion', subQuestionId, 'was updated'))
             .catch(function (error) {
                 console.error('Error updating subquestion', subQuestionId, error)
@@ -28,29 +25,27 @@ export const updateSubQuestionToDoc = (ids, inDoc=true) => {
 export const reorderSubQuestionsInDocument = (ids, newOrder) => {
     const { groupId, questionId, elmId, type } = ids;
 
-  
+
 
     try {
 
-        const questionRef = DB
-            .collection('groups')
-            .doc(groupId)
-            .collection('questions')
-            .doc(questionId)
+        const questionPath = `groups/${groupId}/questions/${questionId}`;
 
         if (type === 'subQuestion') {
-            questionRef.collection('subQuestions')
-                .doc(elmId)
-                .update({ order: newOrder, inDoc: true })
+
+            const questionRef = doc(DB, questionPath + `/subQuestions/${elmId}`)
+
+            updateDoc(questionRef, { order: newOrder, inDoc: true })
                 .then(() => console.info('subquestion', elmId, ' order was updated to', newOrder))
                 .catch(function (error) {
                     console.error('Error updating subquestion', subQuestionId, error)
 
                 });
         } else if (type === 'sentence') {
-            questionRef.collection('document')
-                .doc(elmId)
-                .update({ order: newOrder, inDoc: true })
+            const questionRef = doc(DB, questionPath + `/document/${elmId}`)
+
+
+            updateDoc(questionRef, { order: newOrder, inDoc: true })
                 .then(() => console.info('sentence', elmId, ' order was updated to', newOrder))
                 .catch(function (error) {
                     console.error('Error updating subquestion', subQuestionId, error)

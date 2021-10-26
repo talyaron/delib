@@ -1,6 +1,7 @@
 import m from "mithril";
 import { DB } from "../config";
 import store from "../../../data/store";
+import {  collection,  onSnapshot } from "firebase/firestore";
 
 export const listenToSentences = (ids) => {
     try {
@@ -11,23 +12,21 @@ export const listenToSentences = (ids) => {
         if (!(questionId in store.documentListen)) {
             store.documentListen[questionId] = true;
 
-            DB
-                .collection('groups').doc(groupId)
-                .collection('questions').doc(questionId)
-                .collection('document')
-                .onSnapshot(sentencesDB => {
-                    const tmpSentences = []
-                    sentencesDB.forEach(sentenceDB => {
-                        const sentenceObj = sentenceDB.data();
-                        sentenceObj.sentenceId = sentenceDB.id;
+            const sentencesRef = collection(DB, 'groups', groupId, 'questions', questionId, 'document')
 
-                        tmpSentences.push(sentenceObj)
-                    })
+            onSnapshot(sentencesRef, sentencesDB => {
+                const tmpSentences = []
+                sentencesDB.forEach(sentenceDB => {
+                    const sentenceObj = sentenceDB.data();
+                    sentenceObj.sentenceId = sentenceDB.id;
 
-                  
-                    store.documents[questionId] = tmpSentences;
-                    m.redraw();
+                    tmpSentences.push(sentenceObj)
                 })
+
+
+                store.documents[questionId] = tmpSentences;
+                m.redraw();
+            })
 
         }
 

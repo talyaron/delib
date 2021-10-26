@@ -2,7 +2,7 @@ import m from 'mithril';
 import { set, get, merge } from 'lodash';
 import { DB } from '../config';
 import store from '../../../data/store';
-import { doc, setDoc, getDoc, collection, query, where, getDocs, onSnapshot, orderBy, limit, updateDoc } from "firebase/firestore";
+import { doc, addDoc, setDoc, collection, updateDoc, serverTimestamp } from "firebase/firestore";
 import { concatenateDBPath, uniqueId, getRandomColor } from '../../general';
 import { subscribeUser } from './setChats';
 import { SUGGESTIONS, PARALLEL_OPTIONS } from '../../../data/evaluationTypes'
@@ -921,16 +921,18 @@ function handleSubscription(vnode) {
 
 function sendError(e) {
     try {
-        DB.collection('errors').add({
-            message: e.message,
-            user: store.user, date: firebase
-                .firestore
-                .FieldValue
-                .serverTimestamp()
-        })
-            .catch(e => {
-                console.error(e);
+
+        const errorsRef = collection(DB, 'errors');
+        if ('uid' in store.user) {
+            addDoc(errorsRef, {
+                message: e.message,
+                user: store.user,
+                date: serverTimestamp()
             })
+                .catch(e => {
+                    console.error(e);
+                })
+        }
     } catch (e) {
         console.error(e);
     }

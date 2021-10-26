@@ -37,11 +37,11 @@ if ('Notification' in window) {
 
     // Callback fired if Instance ID token is updated.
 
-    // MESSAGING.onTokenRefresh(function () {
+    // messaging.onTokenRefresh(function () {
     //     handleTokenRefresh();
     // });
 
-    // MESSAGING.onMessage(function (payload) {
+    // messaging.onMessage(function (payload) {
 
     // });
 
@@ -79,14 +79,14 @@ function subscribeToNotification(ids, subscribe = true) {
         if ('Notification' in window) {
 
 
-            MESSAGING.requestPermission()
-                .then(() => {
-                    console.info('Notification permission granted.');
-                    handleTokenRefresh(ids, subscribe);
-                })
-                .catch(function (err) {
-                    console.info('Unable to get permission to notify.', err);
-                });
+            // messaging.requestPermission()
+            //     .then(() => {
+            //         console.info('Notification permission granted.');
+            //         handleTokenRefresh(ids, subscribe);
+            //     })
+            //     .catch(function (err) {
+            //         console.info('Unable to get permission to notify.', err);
+            //     });
 
         }
     } catch (e) {
@@ -99,9 +99,9 @@ function unsubscribeFromNotification(ids) {
 
         // delete store.push[entity][entityId]
 
-        // MESSAGING.getToken()
+        // messaging.getToken()
         //     .then((token) => {
-        //         MESSAGING.deleteToken(token);
+        //         messaging.deleteToken(token);
         //     })
         //     .then(() => {
         //         DB.collection('tokens').doc(store.user.uid).get().then((userTokenDB) => {
@@ -123,7 +123,7 @@ function unsubscribeFromNotification(ids) {
 function handleTokenRefresh(ids, subscribe) {
     try {
         if ('Notification' in window) {
-            return MESSAGING.getToken().then((token) => {
+            return messaging.getToken().then((token) => {
                 const { groupId, questionId, subQuestionId, optionId } = ids;
                 console.log('handleTokenRefresh', groupId, questionId, subQuestionId, optionId)
 

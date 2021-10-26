@@ -1,62 +1,45 @@
 import m from "mithril";
 import { DB } from "../config";
 import store, { consequencesTop } from "../../../data/store";
-import {VOTES, SUGGESTIONS, PARALLEL_OPTIONS} from '../../../data/evaluationTypes'
+import { VOTES, SUGGESTIONS, PARALLEL_OPTIONS } from '../../../data/evaluationTypes'
 
 import { doc, getDoc, collection, query, where, getDocs, onSnapshot, orderBy, limit } from "firebase/firestore";
 
 export const listenToTopOption = (ids, type = 'consensusPrecentage') => {
- 
+
     try {
         const { groupId, questionId, subQuestionId } = ids;
 
         if (!{}.hasOwnProperty.call(store.selectedOptionListen, subQuestionId)) {
             store.selectedOptionListen[subQuestionId] = true
 
-      
+            const optionsRef = collection(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options')
+            const q = query(optionsRef, orderBy(type, 'desc'), limit(1))
+            onSnapshot(q, optionsDB => {
+                optionsDB.forEach(optionDB => {
+                    if (optionDB.exists) {
 
-            DB
-                .collection("groups")
-                .doc(groupId)
-                .collection("questions")
-                .doc(questionId)
-                .collection("subQuestions")
-                .doc(subQuestionId)
-                .collection("options")
-                .orderBy(type, 'desc')
-                .limit(1)
-                .onSnapshot(optionsDB => {
-                    optionsDB.forEach(optionDB => {
-                        if (optionDB.exists) {
-                       
-                            store.selectedOption[subQuestionId] = optionDB.data();
-                            m.redraw();
-                        }
-                    })
-                }, e=>console.error(e))
+                        store.selectedOption[subQuestionId] = optionDB.data();
+                        m.redraw();
+                    }
+                })
+            }, e => console.error(e))
         }
     } catch (e) {
         console.error(e);
     }
 }
 
-export const listenToOptionsConfirmed = (ids,minmumConfirms)=>{
+export const listenToOptionsConfirmed = (ids, minmumConfirms) => {
     try {
         const { groupId, questionId, subQuestionId } = ids;
         if (!{}.hasOwnProperty.call(store.subQuestionOptionsConfirmedListen, subQuestionId)) {
             store.subQuestionOptionsConfirmedListen[subQuestionId] = true
 
-            DB
-            .collection("groups")
-            .doc(groupId)
-            .collection("questions")
-            .doc(questionId)
-            .collection("subQuestions")
-            .doc(subQuestionId)
-            .collection("options")
-            .where('numberOfConfirms','>=',minmumConfirms)
-            .orderBy('numberOfConfirms', 'desc')
-            .onSnapshot(optionsDB => {
+            const optionsRef = collection(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options');
+            const q = query(optionsRef, where('numberOfConfirms', '>=', minmumConfirms), orderBy('numberOfConfirms', 'desc'))
+
+            onSnapshot(q, optionsDB => {
                 const confirmedOptions = [];
                 optionsDB.forEach(optionDB => {
                     if (optionDB.exists) {
@@ -64,51 +47,51 @@ export const listenToOptionsConfirmed = (ids,minmumConfirms)=>{
                         optionObj.optionId = optionDB.id;
 
                         confirmedOptions.push(optionObj);
-                        
-                        
+
+
                     }
                 })
                 store.subQuestionOptionsConfirmed[subQuestionId] = confirmedOptions;
                 console.log(store.subQuestionOptionsConfirmed[subQuestionId])
                 m.redraw();
-            }, e=>console.error(e))
+            }, e => console.error(e))
 
         }
 
     } catch (error) {
-        
+
     }
 }
 
-export const listenToTopOptions = ( groupId, questionId, subQuestionId, processType, subQuestion)=> {
+export const listenToTopOptions = (groupId, questionId, subQuestionId, processType, subQuestion) => {
 
-	
-	switch (processType) {
-		case VOTES:
-			listenToTopOption({ groupId, questionId, subQuestionId });
-			break;
-		case SUGGESTIONS:
 
-			listenToTopOption({ groupId, questionId, subQuestionId });
+    switch (processType) {
+        case VOTES:
+            listenToTopOption({ groupId, questionId, subQuestionId });
+            break;
+        case SUGGESTIONS:
 
-			break;
-		case PARALLEL_OPTIONS:
-		
-			let { maxConfirms, cutoff } = subQuestion;
+            listenToTopOption({ groupId, questionId, subQuestionId });
 
-			if (cutoff !== undefined && maxConfirms !== undefined) {
+            break;
+        case PARALLEL_OPTIONS:
 
-				cutoff = parseInt(cutoff);
-				maxConfirms = parseInt(maxConfirms);
+            let { maxConfirms, cutoff } = subQuestion;
 
-				const minmumConfirms = maxConfirms * (cutoff / 100);
-		
-				listenToOptionsConfirmed({ groupId, questionId, subQuestionId }, minmumConfirms)
-			}
-			break;
+            if (cutoff !== undefined && maxConfirms !== undefined) {
 
-		default:
-			listenToTopOption({ groupId, questionId, subQuestionId });
-			break;
-	}
+                cutoff = parseInt(cutoff);
+                maxConfirms = parseInt(maxConfirms);
+
+                const minmumConfirms = maxConfirms * (cutoff / 100);
+
+                listenToOptionsConfirmed({ groupId, questionId, subQuestionId }, minmumConfirms)
+            }
+            break;
+
+        default:
+            listenToTopOption({ groupId, questionId, subQuestionId });
+            break;
+    }
 }

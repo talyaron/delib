@@ -52,7 +52,6 @@ function listenToUserGroups() {
 
             const q = query(collection(DB, 'users', store.user.uid, 'groupsOwned'))
 
-
             const unsub = onSnapshot(q, groupsOwnedDB => {
 
                 setTimeout(() => {
@@ -125,9 +124,7 @@ function listenToGroups(groupsDB) {
 
             }
 
-
             m.redraw()
-
 
         });
     } catch (e) {
@@ -348,7 +345,7 @@ function listenSubQuestions(groupId, questionId, vnode, getSubOptions = false) {
 function getSubQuestion(groupId, questionId, subQuestionId, isSingle) {
 
     try {
-        const subQuestionRef = doc(Db, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId)
+        const subQuestionRef = doc(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId)
 
 
         return onSnapshot(subQuestionRef, subQuestionDB => {
@@ -375,7 +372,7 @@ function listenToOptions(groupId, questionId, subQuestionId, order = 'top', isSi
             //signal that this questionId options are listend to
             store.optionsListen[subQuestionId] = true;
 
-            const optiosnRef = collection(Db, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options')
+            const optiosnRef = collection(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'options')
 
 
             let _orderBy = "time";
@@ -461,7 +458,7 @@ function listenToUserLastReadOfOptionChat(optionId) {
 
             onSnapshot(optionRef, optionListenDB => {
 
-                if (optionListenDB.exists) {
+                if (optionListenDB.exists()) {
                     const numberOfMessages = optionListenDB.data().numberOfMessages || 0;
                     store.optionNumberOfMessagesRead[optionId] = numberOfMessages;
                     m.redraw()
@@ -977,8 +974,7 @@ function getLastTimeEntered(ids, vnode) {
         console.log('path', path)
         const regex = new RegExp('/', 'gi')
         path = path.replace(regex, '-')
-        console.log(groupId, questionId, subQuestionId, optionId, consequenceId)
-
+       
 
         if (path.length > 10) {
             console.log('users', store.user.uid, 'chatLastEnterence', path)

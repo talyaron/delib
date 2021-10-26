@@ -22,12 +22,12 @@ import { get } from 'lodash';
 
 let unsubscribe = () => { };
 let unsubscribeOptions = () => { };
-let subQuestionObj;
+
 
 module.exports = {
 	oninit: vnode => {
 		const { groupId, questionId, subQuestionId, processType } = vnode.attrs;
-		console.log(vnode.attrs)
+	
 		listenToTopOptions(groupId, questionId, subQuestionId, processType,vnode.attrs);
 	},
 	view: vnode => {

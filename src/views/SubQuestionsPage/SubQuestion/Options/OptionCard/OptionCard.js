@@ -21,7 +21,7 @@ let likeUnsubscribe = () => { }, confirmUnsubscribe = () => { }
 
 module.exports = {
     oninit: (vnode) => {
-        console.log(vnode)
+       
 
         const { groupId, questionId, subQuestionId, optionId } = vnode.attrs.ids;
 
@@ -398,13 +398,13 @@ module.exports = {
                 cutoff = parseInt(cutoff);
                 maxConfirms = parseInt(maxConfirms);
 
-               console.log(cutoff, maxConfirms, confirms)
+             
                 if (cutoff === undefined || maxConfirms === undefined || confirms === undefined) return false
 
                 if (typeof cutoff !== 'number' || typeof maxConfirms !== 'number' || typeof confirms !== 'number') throw new Error(`cutoff, maxConfirms or confirms are not a number, ${cutoff}, ${maxConfirms}, ${confirms}`)
 
                 if (confirms) {
-                    console.log('it was confirmed', confirms,maxConfirms * (cutoff/100) )
+                  
                     return confirms >= (maxConfirms * (cutoff/100))
                 }
 

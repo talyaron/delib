@@ -8,7 +8,7 @@ import { VOTES, SUGGESTIONS, PARALLEL_OPTIONS } from '../../../data/evaluationTy
 module.exports = {
     view: vnode => {
         const { processType, title, subQuestionId } = vnode.attrs;
-        console.log(processType, title, subQuestionId )
+       
 
 
         switch (processType) {
@@ -29,7 +29,7 @@ module.exports = {
                 );
             case PARALLEL_OPTIONS:
                 const options = get(store.subQuestionOptionsConfirmed, `[${subQuestionId}]`, []);
-                console.log(options)
+            
 
                 return (
                     <div class='subQuestionSolution__text'>

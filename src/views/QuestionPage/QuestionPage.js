@@ -104,6 +104,8 @@ module.exports = {
             vnode.state.callDB = false;
         } else {
             vnode.state.callDB = true;
+            getLastTimeEntered({ groupId, questionId }, vnode);
+
         }
 
         //propare undubscribe function for question details to be used  onremove
@@ -121,8 +123,7 @@ module.exports = {
     oncreate: vnode => {
 
         const { groupId, questionId } = vnode.attrs;
-        getLastTimeEntered({ groupId, questionId }, vnode);
-
+       
 
         //change carousel size according to window size
         window.addEventListener('resize', () => {
