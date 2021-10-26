@@ -516,7 +516,7 @@ function setMessage(groupId, questionId, subQuestionId, optionId, creatorId, cre
 
 function createSubItem(subItemsType, groupId, questionId, creatorId, creatorName, title, description) {
     let subQuestionsRef = collection(DB, 'groups', groupId, 'questions', questionId);
-    
+
 
     let addObj = {
         groupId,
@@ -535,8 +535,8 @@ function createSubItem(subItemsType, groupId, questionId, creatorId, creatorName
     };
     addObj.roles[creatorId] = 'owner';
 
-    
-        addDoc(subQuestionsRef, addObj)
+
+    addDoc(subQuestionsRef, addObj)
         .then((newItem) => { })
         .catch(function (error) {
             console.error('Error adding document: ', error); sendError(e)
@@ -544,13 +544,7 @@ function createSubItem(subItemsType, groupId, questionId, creatorId, creatorName
 }
 
 function updateSubItem(subItemsType, groupId, questionId, subQuestionId, title, description) {
-    let subQuestionRef = DB
-        .collection('groups')
-        .doc(groupId)
-        .collection('questions')
-        .doc(questionId)
-        .collection(subItemsType)
-        .doc(subQuestionId);
+    let subQuestionRef = doc(DB, 'groups', groupId, 'questions', questionId, subItemsType, subQuestionId)
 
     let updateObj = {
         title,
@@ -561,8 +555,8 @@ function updateSubItem(subItemsType, groupId, questionId, subQuestionId, title, 
             .serverTimestamp()
     };
 
-    subQuestionRef
-        .update(updateObj)
+
+    updateDoc(subQuestionRef, updateObj)
         .then((newOption) => { })
         .catch(function (error) {
             console.error('Error updating document: ', error); sendError(e)
@@ -572,45 +566,30 @@ function updateSubItem(subItemsType, groupId, questionId, subQuestionId, title, 
 function setLikeToSubItem(subItemsType, groupId, questionId, subQuestionId, creatorId, isUp) {
 
 
-    let subQuestionRef = DB
-        .collection('groups')
-        .doc(groupId)
-        .collection('questions')
-        .doc(questionId)
-        .collection(subItemsType)
-        .doc(subQuestionId)
-        .collection('likes')
-        .doc(creatorId);
+    const subQuestionRef = doc(DB, 'groups', groupId, 'questions', questionId, subItemsType, subQuestionId, 'likes', creatorId)
+
 
     if (isUp) {
-        subQuestionRef.set({ like: 1 });
+       setDoc(subQuestionRef,{ like: 1 });
 
     } else {
-        subQuestionRef.set({ like: 0 });
+        setDoc(subQuestionRef,{ like: 0 });
 
     }
 }
 
 function setSubAnswer(groupId, questionId, subQuestionId, creatorId, creatorName, message) {
-    DB
-        .collection('groups')
-        .doc(groupId)
-        .collection('questions')
-        .doc(questionId)
-        .collection('subQuestions')
-        .doc(subQuestionId)
-        .collection('subAnswers')
-        .add({
+   
+   const subAnswersRef = collection(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'subAnswers')
+    
+        addDoc(subAnswersRef,{
             groupId,
             questionId,
             subQuestionId,
             creatorId,
             author: creatorName,
             creatorId,
-            time: firebase
-                .firestore
-                .FieldValue
-                .serverTimestamp(),
+            time: serverTimestamp(),
             message
         })
         .then((newLike) => { })
