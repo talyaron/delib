@@ -1,6 +1,7 @@
 import m from "mithril";
 import { DB } from "../config";
 import store from "../../../data/store";
+import { doc, addDoc, deleteDoc,  collection, updateDoc} from "firebase/firestore";
 
 export const createSentence = (ids, text, type, order = 1000) => {
     try {

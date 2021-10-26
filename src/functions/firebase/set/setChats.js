@@ -1,5 +1,5 @@
 import m from "mithril";
-import { doc, addDoc, setDoc, deleteDoc, getDoc, collection, query, where, getDocs, onSnapshot, orderBy, limit, updateDoc, serverTimestamp } from "firebase/firestore";
+import { doc, addDoc, setDoc, deleteDoc, collection,  serverTimestamp } from "firebase/firestore";
 import { DB } from "../config";
 import store from "../../../data/store";
 

@@ -1,5 +1,5 @@
 import m from 'mithril';
-import { set, get } from 'lodash';
+import { doc, addDoc, getDocs, deleteDoc, collection, updateDoc, deleteField, query, where } from "firebase/firestore";
 import { DB } from '../config';
 import store from '../../../data/store';
 
@@ -9,9 +9,9 @@ export const addGroupSection = (ids, title) => {
         if (groupId === undefined) throw new Error('groupId is not defined');
         if (title === undefined) throw new Error('title is not defined');
 
-        DB
-            .collection('groups').doc(groupId)
-            .collection('sections').add({ title, order: 100000 })
+        const sectionsRef = doc(DB, 'groups', groupId, 'sections')
+
+        addDoc(sectionsRef, { title, order: 100000 })
             .then(() => console.info('title', title, 'was saved to DB'))
             .catch(e => console.error(e))
     } catch (e) {
@@ -31,10 +31,9 @@ export const reorderGroupTitle = (groupId, groupTitleId, order) => {
 
         if (typeof order !== 'number') throw new Error('order is not a number at ', groupTitleId);
 
-        DB
-            .collection('groups').doc(groupId)
-            .collection('sections').doc(groupTitleId)
-            .update({ order })
+        const groupTitleRef = doc(DB, 'groups', groupId, 'sections', groupTitleId)
+
+        updateDoc(groupTitleRef, { order })
             .then(() => console.log(`title ${groupTitleId} was updated in group ${groupId} to ${order}`))
             .catch(e => console.error(e))
 
@@ -48,24 +47,23 @@ export const deleteGroupTitle = (groupId, groupTitleId) => {
         if (groupId === undefined) throw new Error`no group groupTitleId`;
         if (groupTitleId === undefined) throw new Error`No groupTitleId at ${groupId}`;
 
-        DB
-            .collection('groups').doc(groupId)
-            .collection('sections').doc(groupTitleId)
-            .delete()
+        const groupTitleRef = doc(DB, 'groups', groupId, 'sections', groupTitleId);
+
+        deleteDoc(groupTitleRef)
             .then(() => console.log(`title ${groupTitleId} was deleted in group ${groupId} `))
             .catch(e => console.error(e))
 
-        DB
-            .collection('groups').doc(groupId)
-            .collection('questions')
-            .where('section', '==', groupTitleId)
-            .get()
+        const questionsRef = collection(DB, 'groups', groupId, 'questions');
+        const q = query(questionsRef, where('section', '==', groupTitleId));
+
+
+        getDocs(q)
             .then(questionsDB => {
                 questionsDB.forEach(questionDB => {
-                    DB.collection('groups').doc(groupId)
-                        .collection('questions').doc(questionDB.id)
-                        .update({section: firebase.firestore.FieldValue.delete()})
-                        .catch(e=>console.error(e))
+
+                    const questionRef = doc(DB, 'groups', groupId, 'questions', questionDB.id)
+                    updateDoc(questionRef, { section: deleteField() })
+                        .catch(e => console.error(e))
                 })
             })
 
@@ -81,10 +79,9 @@ export const editGroupTitle = (title, groupId, groupTitleId) => {
         if (title === undefined) throw new Error`no title in ${groupId}, ${groupTitleId}`;
         if (groupTitleId === undefined) throw new Error`No groupTitleId at ${groupId}`;
 
-        DB
-            .collection('groups').doc(groupId)
-            .collection('sections').doc(groupTitleId)
-            .update({ title })
+        const groupTitleRef = doc(DB, 'groups', groupId, 'sections', groupTitleId);
+
+        updateDoc(groupTitleRef, { title })
             .then(() => console.log(`title ${groupTitleId} was updated in group ${groupId} `))
             .catch(e => console.error(e))
 
@@ -96,10 +93,10 @@ export const editGroupTitle = (title, groupId, groupTitleId) => {
 
 export const updateGroupSection = (groupId, questionId, sectionId) => {
     try {
-        DB
-            .collection('groups').doc(groupId)
-            .collection('questions').doc(questionId)
-            .update({ section: sectionId })
+
+        const questionRef = doc(DB, 'groups', groupId,'questions', questionId)
+       
+            updateDoc(questionRef,{ section: sectionId })
             .catch(e => console.error(e))
     } catch (e) {
         console.error(e);
