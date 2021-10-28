@@ -173,7 +173,7 @@ module.exports = {
         const { language, pages } = vnode.state;
 
         return (
-            <div class='page' id='page subQuestionPage'>
+            <div class='page' id='page'>
 
                 <div class='page__grid'>
                     <div class="page__header">
