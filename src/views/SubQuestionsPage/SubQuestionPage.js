@@ -63,7 +63,7 @@ module.exports = {
 
             //should we show wiz for first new comers?
             waitToCheckIfUserSeenSuggestionsWizard(vnode);
-
+            getLastTimeEntered({ groupId, questionId, subQuestionId }, vnode);
         }
 
 
@@ -114,7 +114,7 @@ module.exports = {
 
         listenToGroupDetails(groupId);
 
-        getLastTimeEntered({ groupId, questionId, subQuestionId }, vnode);
+
 
         //change carousel size according to window size
         window.addEventListener('resize', () => {

@@ -530,6 +530,7 @@ function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId, 
         if (groupId === undefined || questionId === undefined || subQuestionId === undefined || optionId === undefined || creatorId === undefined) throw new Error("One of the Ids groupId, questionId, subQuestionId, optionId, creatorId is missing", groupId, questionId, subQuestionId, optionId, creatorId)
         const evaluationPath = concatentPath(groupId, questionId, subQuestionId, optionId)
         let evaluationTypeRef;
+
         if (processType === SUGGESTIONS) {
             evaluationTypeRef = evaluationPath + `/likes/${creatorId}`;
         } else if (processType === PARALLEL_OPTIONS) {
@@ -541,7 +542,7 @@ function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId, 
         let unsubscribe = onSnapshot(evaluationRef, voteDB => {
 
 
-            if (voteDB.exists) {
+            if (voteDB.exists()) {
 
                 if (processType === SUGGESTIONS) {
                     store.optionsVotes[optionId] = voteDB.data().like;
@@ -551,7 +552,7 @@ function getOptionVote(groupId, questionId, subQuestionId, optionId, creatorId, 
                 }
             } else {
                 store.optionsVotes[optionId] = 0;
-                console.error('voteDB do not exists.....')
+
             }
 
             m.redraw();
@@ -888,7 +889,7 @@ function listenToChat(ids) {
                 if (change.type === "added") {
 
 
-                
+
                     if (!(path in store.chat)) { store.chat[path] = [] }
                     const messageObj = change.doc.data();
                     messageObj.messageId = change.doc.id;

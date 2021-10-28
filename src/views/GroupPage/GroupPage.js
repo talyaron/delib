@@ -77,6 +77,7 @@ module.exports = {
         listenToGroupDetails(vnode.attrs.id, vnode);
         if (afterLogin) {
             unsubscruibeTitles = listenToGroupSections(groupId);
+            console.log(store.user.uid)
             getLastTimeEntered({ groupId }, vnode);
         }
 

@@ -8,7 +8,7 @@ import store from '../../../../data/store';
 
 //functions
 import { sendMessage } from '../../../../functions/firebase/set/setChats';
-import {getLastEntityId,concatenateDBPath} from '../../../../functions/general';
+import {getLastEntityId,concatentPath} from '../../../../functions/general';
 import {get} from 'lodash';
 
 
@@ -56,7 +56,7 @@ function handleSend(options) {
    if(group){
        options.group = group;
    }
-    debugger;
+    
     sendMessage(options)
     vnode.state.message = '';
 }
@@ -68,13 +68,14 @@ async function showRequestToRegister(ids, pv) {
         console.log(pv)
 
         const entityId = getLastEntityId(ids);
-        const path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
+        const path = concatentPath(groupId, questionId, subQuestionId, optionId);
 
         if (entityId === false) throw new Error('couldnt find last entity id');
 
         const isRegisterd = get(store.listenToMessages, `[${entityId}]`, false);
 
         //search first in the array of messages, if not, search in the database.
+        console.log(path)
         let isUserInMessages = store.chat[path].find(msg => msg.uid === store.user.uid)
 
         if (!isRegisterd) {
