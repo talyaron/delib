@@ -3,7 +3,7 @@ import { doc, addDoc, setDoc, deleteDoc, collection,  serverTimestamp } from "fi
 import { DB } from "../config";
 import store from "../../../data/store";
 
-import { createIds, concatenateDBPath,concatentPath, generateChatEntitiyId } from '../../general'
+import { createIds, concatentPath, generateChatEntitiyId } from '../../general'
 
 export function sendMessage({ groupId, questionId, subQuestionId, optionId, message, title, entity, topic, url, vnode, group, toDelete, messageId }) {
     try {
@@ -179,7 +179,7 @@ export function setChatLastEntrance(ids) {
         const { groupId, questionId, subQuestionId, optionId, consequenceId } = ids;
 
 
-        let path = concatenateDBPath(groupId, questionId, subQuestionId, optionId, consequenceId);
+        let path = concatentPath(groupId, questionId, subQuestionId, optionId, consequenceId);
         const regex = new RegExp('/', 'gi')
         path = path.replace(regex, '-')
 

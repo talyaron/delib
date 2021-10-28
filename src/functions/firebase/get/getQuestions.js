@@ -34,10 +34,10 @@ export function listenToReactions({ groupId, questionId, subQuestionId }) {
         if (!{}.hasOwnProperty.call(store.reactions, subQuestionId)) store.reactions[subQuestionId] = [];
 
         const currentDate = (new Date().getTime() / 1000) - 60;
-         
-        
-            const reactionsRef = collection(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', questionId, 'reactions')
-        
+
+
+        const reactionsRef = collection(DB, 'groups', groupId, 'questions', questionId, 'subQuestions', subQuestionId, 'reactions')
+
         const q = query(reactionsRef, where('dateSeconds', '>', currentDate))
         return onSnapshot(q, reactionsDB => {
 

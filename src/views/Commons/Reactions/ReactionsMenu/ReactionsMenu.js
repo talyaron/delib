@@ -53,7 +53,7 @@ function handleReaction({ type, vnode, index }) {
         vnode.attrs.reactions[index].pressedTime = (new Date().getTime()/1000)
         m.redraw()
 
-
+console.log(type)
         setNewReaction({ groupId, questionId,subQuestionId, type })
     }
 }
