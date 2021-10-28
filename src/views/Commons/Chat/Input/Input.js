@@ -56,7 +56,7 @@ function handleSend(options) {
    if(group){
        options.group = group;
    }
-    
+    debugger;
     sendMessage(options)
     vnode.state.message = '';
 }

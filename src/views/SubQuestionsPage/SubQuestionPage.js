@@ -23,7 +23,7 @@ import Reactions from '../Commons/Reactions/Reactions';
 //functions
 import { getSubQuestion, listenToGroupDetails, listenToChat, listenToOptions, getLastTimeEntered } from "../../functions/firebase/get/get";
 import { registerGroup } from '../../functions/firebase/set/set';
-import { getIsChat, concatenateDBPath, getFirstUrl } from '../../functions/general';
+import { getIsChat, getFirstUrl,concatentPath} from '../../functions/general';
 import { listenToReactions } from '../../functions/firebase/get/getQuestions';
 import { cssForCarousel } from '../../functions/carousel';
 
@@ -85,7 +85,7 @@ module.exports = {
                 title: ""
             },
             subscribed: false,
-            path: concatenateDBPath(groupId, questionId, subQuestionId),
+            path: concatentPath(groupId, questionId, subQuestionId),
             unreadMessages: 0,
             lastTimeEntered: 0,
             language: 'he',
@@ -146,7 +146,7 @@ module.exports = {
         if (vnode.state.subPage === 'chat') {
             vnode.state.lastTimeEntered = new Date().getTime() / 1000
         }
-        const path = concatenateDBPath(groupId, questionId, subQuestionId);
+        const path = concatentPath(groupId, questionId, subQuestionId);
         vnode.state.unreadMessages = store.chat[path].filter(m => m.createdTime.seconds > vnode.state.lastTimeEntered).length;
 
         vnode.state.language = get(store.groups, `[${groupId}].language`, 'he')
@@ -173,7 +173,7 @@ module.exports = {
         const { language, pages } = vnode.state;
 
         return (
-            <div class='page' id='page'>
+            <div class='page' id='page subQuestionPage'>
 
                 <div class='page__grid'>
                     <div class="page__header">

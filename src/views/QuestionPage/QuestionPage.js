@@ -28,7 +28,7 @@ import Document from './Document/Document';
 import { getQuestionDetails, getSubQuestion, getLastTimeEntered, listenToChat, listenToGroup } from '../../functions/firebase/get/get';
 import { registerGroup } from '../../functions/firebase/set/set';
 import { updateSubQuestionToDoc } from '../../functions/firebase/set/setSubQuestions';
-import { deep_value, getIsChat, concatenateDBPath, getLanguage } from '../../functions/general';
+import { deep_value, getIsChat, concatentPath, getLanguage } from '../../functions/general';
 import { cssForCarousel } from '../../functions/carousel';
 
 
@@ -159,7 +159,7 @@ module.exports = {
         if (vnode.state.subPage === 'chat') {
             vnode.state.lastTimeEntered = new Date().getTime() / 1000
         }
-        const path = concatenateDBPath(groupId, questionId);
+        const path = concatentPath(groupId, questionId);
         vnode.state.unreadMessages = store.chat[path].filter(m => m.createdTime.seconds > vnode.state.lastTimeEntered).length;
 
         //get language

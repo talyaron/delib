@@ -860,9 +860,10 @@ function listenToChat(ids) {
         const { groupId, questionId, subQuestionId, optionId } = ids;
 
         if (groupId === undefined) throw new Error('No group id in the ids')
-        let collectionRef = concatentPath(DB, groupId, questionId, subQuestionId, optionId);
+        let collectionRef = concatentPath(groupId, questionId, subQuestionId, optionId);
         const path = concatentPath(groupId, questionId, subQuestionId, optionId)
 
+        // const chatRef = collection(DB, 'groups', groupId, 'questions', questionId, 'subQuestions',)
         const chatRef = collection(DB, `${collectionRef}/messages`);
         let lastRead = new Date('2020-01-01');
 
@@ -878,13 +879,16 @@ function listenToChat(ids) {
             store.chatMessegesNotRead[path] = 0;
         }
 
-        const q = query(chatRef, where('createdTime', '>', lastRead), orderBy('createdTime', 'desc'), limit(100))
-        return onSnapshot(q, messagesDB => {
+        // debugger;
+        // const q = query(chatRef, where('createdTime', '>', lastRead), orderBy('createdTime', 'desc'), limit(100))
+        return onSnapshot(chatRef, messagesDB => {
             messagesDB.docChanges().forEach(function (change) {
+                console.log(change.doc.data())
+                console.log(change.type)
                 if (change.type === "added") {
 
 
-
+                
                     if (!(path in store.chat)) { store.chat[path] = [] }
                     const messageObj = change.doc.data();
                     messageObj.messageId = change.doc.id;
@@ -910,6 +914,7 @@ function listenToChat(ids) {
                     userUID = message.uid;
                 }
             })
+            console.log(store.chat)
             m.redraw();
 
 
@@ -937,9 +942,9 @@ function listenIfGetsMessages(ids) {
 
             const tokensRef = doc(DB, dbPath)
             onSnapshot(tokensRef, tokensDB => {
-          
+
                 if (tokensDB.exists()) {
-                  
+
                     if (tokensDB.data()[browserUniqueId] === undefined) {
                         store.listenToMessages[entityId] = false;
 

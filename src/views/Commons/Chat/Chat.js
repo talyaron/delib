@@ -8,7 +8,7 @@ import Explanation from '../../Commons/Explanation/Explanation';
 import PopRegistration from '../../Commons/PopRegistration/PopRegistration';
 
 //functions
-import { concatenateDBPath } from '../../../functions/general'
+import { concatentPath } from '../../../functions/general'
 
 
 //data
@@ -42,12 +42,12 @@ module.exports = {
         const { groupId, questionId, subQuestionId, optionId } = ids;
 
 
-        const path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
+        const path = concatentPath(groupId, questionId, subQuestionId, optionId);
 
         if (!(path in store.chat)) { store.chat[path] = [] }
 
        
-
+console.log(path)
         return (
             <div class={carouselColumn?'carousel__col chat':'chat'}>
                
