@@ -1,6 +1,6 @@
 import m from "mithril";
 import { DB } from "../config";
-import { doc, getDoc, collection, query, where, getDocs, onSnapshot, orderBy, limit } from "firebase/firestore";
+import { doc, getDoc, collection, query, onSnapshot, orderBy } from "firebase/firestore";
 import store, { consequencesTop } from "../../../data/store";
 
 export function listenToChatFeed() {

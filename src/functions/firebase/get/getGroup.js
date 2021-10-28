@@ -1,6 +1,6 @@
 import m from "mithril";
 import { DB } from "../config";
-import store, { consequencesTop } from "../../../data/store";
+import store from "../../../data/store";
 import { collection, onSnapshot } from "firebase/firestore";
 
 //functions

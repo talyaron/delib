@@ -1,6 +1,6 @@
 import m from "mithril";
 import { DB } from "../config";
-import { doc, getDoc, collection, query, where, getDocs, onSnapshot, orderBy, limit } from "firebase/firestore";
+import { doc, getDoc, collection, query, onSnapshot, orderBy, limit } from "firebase/firestore";
 
 //model
 import store, { consequencesTop } from "../../../data/store";

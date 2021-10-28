@@ -1,5 +1,5 @@
 import { DB } from '../config';
-import store from '../../../data/store';
+
 import { doc, updateDoc } from "firebase/firestore";
 
 export const updateSubQuestionToDoc = (ids, inDoc = true) => {
