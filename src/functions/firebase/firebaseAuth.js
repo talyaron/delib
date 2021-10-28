@@ -4,8 +4,8 @@ import {
 	DB
 } from '../firebase/config';
 
-import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-import { doc, setDoc, getDoc, collection, query, where, getDocs, onSnapshot, orderBy, limit } from "firebase/firestore";
+import { getAuth,  onAuthStateChanged } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 
 
 //functions
@@ -45,7 +45,7 @@ function onAuth() {
 			store.user = user;
 
 			if (user) {
-				getSubscriptions();
+				// getSubscriptions();
 
 				console.info('User', store.user.uid, 'is signed in.');
 				if (!user.isAnonymous) {

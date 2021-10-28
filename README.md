@@ -19,7 +19,7 @@ In the terminal write
 
 Create a project at fireabse: https://console.firebase.google.com/
 
-in the source directory of delib add a file "configKey.js"
+in the source directory of delib add a file "configKey.js" (under `src/functions/firebase/configKey`)
 
 To get your project's setting, go to the project settings->general, go to the section called 'Your apps' -> 'Firebase SDK snippet', and change to 'CDN'. there you can see 'firebaseConfig' add it the the file configKey.js file
 
@@ -30,6 +30,13 @@ To get your project's setting, go to the project settings->general, go to the se
 
   module.exports = configKey;
   ```
+
+Add your vapidKey.js in `src/functions/firebase/vapidKey`
+```
+const vapidKey=  '<Your vapidKey>';
+
+module.exports = vapidKey;
+```
 
 ## installing depndancins 
 At the root directory run `npm i`.

@@ -1,6 +1,7 @@
 node_modules/
 *.bundle*.js
 configKey.js
+vapidKey.js
 firebase-debug.log
 \.firebase/hosting\.cHVibGlj\.cache
 .DS_Store

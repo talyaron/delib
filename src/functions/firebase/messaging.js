@@ -1,8 +1,9 @@
 import m from 'mithril';
+
 import { getMessaging, getToken } from "firebase/messaging";
 import { doc, onSnapshot } from "firebase/firestore";
 
-const messaging = getMessaging();
+import vapidKey from './vapidKey';
 
 
 
@@ -21,18 +22,29 @@ import { usePublicVapidKey } from '../firebase/configKey'
 
 
 
-
-
+console.log(vapidKey)
+const messaging = getMessaging();
 
 if ('Notification' in window) {
 
     // Retrieve Firebase Messaging object.
 
-
+    console.log('we have notification in brwoeser')
     // Add the public key generated from the console here.
-    getToken(messaging, { vapidKey: 'BOXKnicJW5Cu3xwRG7buXf-JU8tS-AErJX_Ax7CsUwqZQvBvo2E-ECnE-uGvUKcgeL-1nT-cJw8qGo4dH-zrfGA' })
+    getToken(messaging, { vapidKey })
         .then(currentToken => {
-            console.log(currentToken)
+            if (currentToken) {
+                console.log(currentToken)
+                console.log('Send the token to your server and update the UI if necessary')
+                // Send the token to your server and update the UI if necessary
+                // ...
+              } else {
+                // Show permission request UI
+                console.log('No registration token available. Request permission to generate one.');
+                // ...
+              }
+        }).catch(err=>{
+            console.error(err)
         });
 
     // Callback fired if Instance ID token is updated.
@@ -50,52 +62,52 @@ if ('Notification' in window) {
 
 
 // update which enteties are subscribed
-function getSubscriptions() {
-    if ('Notification' in window) {
-        try {
-            const qunsub = onSnapshot(doc(DB, 'tokens', store.user.uid), userTokenDB=>{
+// function getSubscriptions() {
+//     if ('Notification' in window) {
+//         try {
+//             const qunsub = onSnapshot(doc(DB, 'tokens', store.user.uid), userTokenDB=>{
 
            
-                    if (userTokenDB.exists && userTokenDB.data().pushEntities) {
-                        store.push = userTokenDB.data().pushEntities;
+//                     if (userTokenDB.exists && userTokenDB.data().pushEntities) {
+//                         store.push = userTokenDB.data().pushEntities;
 
-                        m.redraw();
-                    }
-                }, err => {
-                    console.error('On getSubscriptions:', err.name, err.message)
-                })
-        } catch (err) {
-            if (err.message === 'Missing or insufficient permissions.') {
-                console.error('Cant get subscriptions because of insufficient perpmissions')
-            } else {
-                console.error(err)
-            }
-        }
-    }
-}
+//                         m.redraw();
+//                     }
+//                 }, err => {
+//                     console.error('On getSubscriptions:', err.name, err.message)
+//                 })
+//         } catch (err) {
+//             if (err.message === 'Missing or insufficient permissions.') {
+//                 console.error('Cant get subscriptions because of insufficient perpmissions')
+//             } else {
+//                 console.error(err)
+//             }
+//         }
+//     }
+// }
 
-function subscribeToNotification(ids, subscribe = true) {
-    try {
-        if ('Notification' in window) {
+// function subscribeToNotification(ids, subscribe = true) {
+//     try {
+//         if ('Notification' in window) {
 
 
-            // messaging.requestPermission()
-            //     .then(() => {
-            //         console.info('Notification permission granted.');
-            //         handleTokenRefresh(ids, subscribe);
-            //     })
-            //     .catch(function (err) {
-            //         console.info('Unable to get permission to notify.', err);
-            //     });
+//             // messaging.requestPermission()
+//             //     .then(() => {
+//             //         console.info('Notification permission granted.');
+//             //         handleTokenRefresh(ids, subscribe);
+//             //     })
+//             //     .catch(function (err) {
+//             //         console.info('Unable to get permission to notify.', err);
+//             //     });
 
-        }
-    } catch (e) {
-        console.error(e)
-    }
-}
+//         }
+//     } catch (e) {
+//         console.error(e)
+//     }
+// }
 
-function unsubscribeFromNotification(ids) {
-    if ('Notification' in window) {
+// function unsubscribeFromNotification(ids) {
+//     if ('Notification' in window) {
 
         // delete store.push[entity][entityId]
 
@@ -116,48 +128,48 @@ function unsubscribeFromNotification(ids) {
         //                 });
         //             }
         //         });
-        //     });
-    }
-}
+//         //     });
+//     }
+// }
 
-function handleTokenRefresh(ids, subscribe) {
-    try {
-        if ('Notification' in window) {
-            return messaging.getToken().then((token) => {
-                const { groupId, questionId, subQuestionId, optionId } = ids;
-                console.log('handleTokenRefresh', groupId, questionId, subQuestionId, optionId)
+// function handleTokenRefresh(ids, subscribe) {
+//     try {
+//         if ('Notification' in window) {
+//             return messaging.getToken().then((token) => {
+//                 const { groupId, questionId, subQuestionId, optionId } = ids;
+//                 console.log('handleTokenRefresh', groupId, questionId, subQuestionId, optionId)
 
-                //get device unique id
-                let deviceUniqueId = localStorage.getItem('deviceUniqueId');
-                if (deviceUniqueId === null) {
-                    deviceUniqueId = setBrowserUniqueId();
-                }
+//                 //get device unique id
+//                 let deviceUniqueId = localStorage.getItem('deviceUniqueId');
+//                 if (deviceUniqueId === null) {
+//                     deviceUniqueId = setBrowserUniqueId();
+//                 }
 
-                const dbPath = `${concatenateDBPath(groupId, questionId, subQuestionId, optionId)}/notifications/${store.user.uid}`;
-                console.log(dbPath)
-                const tokenRef = DB.doc(dbPath);
+//                 const dbPath = `${concatenateDBPath(groupId, questionId, subQuestionId, optionId)}/notifications/${store.user.uid}`;
+//                 console.log(dbPath)
+//                 const tokenRef = DB.doc(dbPath);
 
-                if (subscribe === true) {
-                    let tokenObj = {}
-                    tokenObj[deviceUniqueId] = {
-                        token,
-                        uid: store.user.uid
-                    }
-                    tokenRef.set(tokenObj, { merge: true })
-                } else {
-                    tokenRef.update({ [deviceUniqueId]: firebase.firestore.FieldValue.delete() })
-                }
+//                 if (subscribe === true) {
+//                     let tokenObj = {}
+//                     tokenObj[deviceUniqueId] = {
+//                         token,
+//                         uid: store.user.uid
+//                     }
+//                     tokenRef.set(tokenObj, { merge: true })
+//                 } else {
+//                     tokenRef.update({ [deviceUniqueId]: firebase.firestore.FieldValue.delete() })
+//                 }
 
 
-            });
-        }
-    } catch (e) {
-        console.error(e)
-    }
-}
+//             });
+//         }
+//     } catch (e) {
+//         console.error(e)
+//     }
+// }
 
 module.exports = {
-    getSubscriptions,
-    subscribeToNotification,
-    unsubscribeFromNotification
+    // getSubscriptions,
+    // subscribeToNotification,
+    // unsubscribeFromNotification
 }
