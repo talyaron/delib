@@ -10,7 +10,7 @@ import {OPTION} from '../../data/EntityTypes';
 import { get } from 'lodash';
 import { setNumberOfMessagesMark, registerGroup } from '../../functions/firebase/set/set';
 import { listenToOption, listenToChat, listenToConsequences, getLastTimeEntered, getSubQuestion, listenToGroup } from '../../functions/firebase/get/get';
-import { randomizeArray, getFirstUrl, concatenateDBPath,getLanguage } from '../../functions/general';
+import { randomizeArray, getFirstUrl, concatentPath,getLanguage } from '../../functions/general';
 import { enterIn2ndPage } from '../../functions/animations'
 
 
@@ -111,7 +111,7 @@ module.exports = {
         if (vnode.state.subPage === 'chat') {
             vnode.state.lastTimeEntered = new Date().getTime() / 1000
         }
-        const path = concatenateDBPath(groupId, questionId, subQuestionId, optionId);
+        const path = concatentPath(groupId, questionId, subQuestionId, optionId);
         vnode.state.unreadMessages = store.chat[path].filter(m => m.createdTime.seconds > vnode.state.lastTimeEntered).length;
 
         if ({}.hasOwnProperty.call(store.subQuestions, subQuestionId)) {
