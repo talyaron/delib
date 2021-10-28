@@ -92,7 +92,6 @@ function registerGroup(groupId) {
 
 
                         setDoc(groupRef, { register: true })
-                            .then(() => { console.info('user registerd to group', groupId) })
                             .catch(e => { console.error(e); sendError(e) })
 
                         //store data from use as member in the group
@@ -109,7 +108,6 @@ function registerGroup(groupId) {
                         const memberRef = doc(DB, 'groups', groupId, 'members', store.user.uid)
 
                         setDoc(memberRef, userObj, { merge: true })
-                            .then(() => { console.info('user is a member of group', groupId) })
                             .catch(e => { console.error(e); sendError(e) })
                     } else {
                         console.info('user is already registered to', groupId)

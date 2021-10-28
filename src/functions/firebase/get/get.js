@@ -798,11 +798,11 @@ function listenToSubscription(path) {
 
                 m.redraw();
 
-                if (subscriberDB.exists)
-                    console.info('user is subscribed')
-                else {
-                    console.info('user is not subscribed')
-                }
+                // if (subscriberDB.exists)
+                    // console.info('user is subscribed')
+                // else {
+                    // console.info('user is not subscribed')
+                // }
                 resolve();
             }, err => {
                 console.error(err)
@@ -884,18 +884,18 @@ function listenToChat(ids) {
         // const q = query(chatRef, where('createdTime', '>', lastRead), orderBy('createdTime', 'desc'), limit(100))
         return onSnapshot(chatRef, messagesDB => {
             messagesDB.docChanges().forEach(function (change) {
-                console.log(change.doc.data())
-                console.log(change.type)
-                if (change.type === "added") {
+              
+                if (change.type === "added" || change.type === 'modified') {
 
-
-
-                    if (!(path in store.chat)) { store.chat[path] = [] }
-                    const messageObj = change.doc.data();
-                    messageObj.messageId = change.doc.id;
-                    store.chat[path].push(messageObj);
-                    store.chatLastRead = change.doc.data().createdTime;
-                    store.chatMessegesNotRead[path]++;
+                  
+                    if (change.doc.data().createdTime) {
+                        if (!(path in store.chat)) { store.chat[path] = [] }
+                        const messageObj = change.doc.data();
+                        messageObj.messageId = change.doc.id;
+                        store.chat[path].push(messageObj);
+                        store.chatLastRead = change.doc.data().createdTime;
+                        store.chatMessegesNotRead[path]++;
+                    }
 
 
                 } else if (change.type === 'removed') {
@@ -904,7 +904,11 @@ function listenToChat(ids) {
                 }
 
             })
-
+           
+            store.chat[path].forEach(msg => {
+             
+                if (!msg.createdTime) console.log(msg)
+            })
             store.chat[path] = store.chat[path].sort((a, b) => a.createdTime.seconds - b.createdTime.seconds);
             let userUID = ''
             store.chat[path].map((message, index) => {
@@ -915,7 +919,7 @@ function listenToChat(ids) {
                     userUID = message.uid;
                 }
             })
-            console.log(store.chat)
+         
             m.redraw();
 
 

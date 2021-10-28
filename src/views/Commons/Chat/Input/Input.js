@@ -8,8 +8,8 @@ import store from '../../../../data/store';
 
 //functions
 import { sendMessage } from '../../../../functions/firebase/set/setChats';
-import {getLastEntityId,concatentPath} from '../../../../functions/general';
-import {get} from 'lodash';
+import { getLastEntityId, concatentPath } from '../../../../functions/general';
+import { get } from 'lodash';
 
 
 module.exports = {
@@ -29,12 +29,12 @@ module.exports = {
                     onkeyup={e => {
 
                         vnode.state.message = e.target.value
-                     
+
                         //submit on enter without shift
-                        if (e.key === 'Enter' && e.shiftKey === false && e.target.value.replace(/\s/g, '').length>0) {
+                        if (e.key === 'Enter' && e.shiftKey === false && e.target.value.replace(/\s/g, '').length > 0) {
 
                             handleSend({ title, entity, topic, url, groupId, questionId, subQuestionId, optionId, user: store.user, message: vnode.state.message, vnode })
-                            e.target.value='';
+                            e.target.value = '';
                         }
                     }}>
 
@@ -47,16 +47,16 @@ module.exports = {
 
 function handleSend(options) {
 
-    const { vnode,groupId, questionId, subQuestionId, optionId } = options;
-    const {pv} = vnode.attrs;
+    const { vnode, groupId, questionId, subQuestionId, optionId } = options;
+    const { pv } = vnode.attrs;
 
-    showRequestToRegister({groupId, questionId, subQuestionId, optionId},pv )
+    showRequestToRegister({ groupId, questionId, subQuestionId, optionId }, pv)
 
-   const group = store.groups[groupId];
-   if(group){
-       options.group = group;
-   }
-    
+    const group = store.groups[groupId];
+    if (group) {
+        options.group = group;
+    }
+
     sendMessage(options)
     vnode.state.message = '';
 }
@@ -64,8 +64,6 @@ function handleSend(options) {
 async function showRequestToRegister(ids, pv) {
     try {
         const { groupId, questionId, subQuestionId, optionId } = ids;
-     
-        console.log(pv)
 
         const entityId = getLastEntityId(ids);
         const path = concatentPath(groupId, questionId, subQuestionId, optionId);
@@ -75,7 +73,6 @@ async function showRequestToRegister(ids, pv) {
         const isRegisterd = get(store.listenToMessages, `[${entityId}]`, false);
 
         //search first in the array of messages, if not, search in the database.
-        console.log(path)
         let isUserInMessages = store.chat[path].find(msg => msg.uid === store.user.uid)
 
         if (!isRegisterd) {
@@ -83,9 +80,9 @@ async function showRequestToRegister(ids, pv) {
             //check if the user is allready in messages. if he is not, then show the alert
 
             if (isUserInMessages === undefined) {
-               pv.state.showRegistration = true; 
+                pv.state.showRegistration = true;
                 return false
-               
+
             } else {
 
                 //dont show

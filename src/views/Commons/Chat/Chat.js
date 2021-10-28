@@ -46,8 +46,6 @@ module.exports = {
 
         if (!(path in store.chat)) { store.chat[path] = [] }
 
-       
-console.log(path)
         return (
             <div class={carouselColumn?'carousel__col chat':'chat'}>
                
