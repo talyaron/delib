@@ -283,7 +283,7 @@ module.exports = {
         )
 
         function isShowFav() {
-            console.log(store.user)
+           
             return vnode.state.subPage == 'main' && !vnode.state.openAddPanel
         }
     }

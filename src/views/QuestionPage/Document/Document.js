@@ -37,8 +37,7 @@ module.exports = {
                 const elements = [...evt.target.children];
 
                 elements.map((elm, i) => {
-                    console.dir(elm.dataset.id)
-
+                  
                     reorderSubQuestionsInDocument({ groupId, questionId, elmId: elm.dataset.id, type: elm.dataset.type }, i)
                 });
                 vnode.state.sortable = false

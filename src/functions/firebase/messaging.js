@@ -24,6 +24,8 @@ import { usePublicVapidKey } from '../firebase/configKey'
 
 console.log(vapidKey)
 const messaging = getMessaging();
+console.log(messaging)
+getToken({vapidKey:vapidKey})
 
 if ('Notification' in window) {
 

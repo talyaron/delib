@@ -60,6 +60,26 @@ if ('serviceWorker' in navigator) {
         .catch(error => {
             console.error('Service worker registration failed:', error);
         });
+
+    navigator.serviceWorker.register('./firebase-messaging-sw.js')
+        .then(registration => {
+            console.info('firebase-messaging-sw.js was registerd');
+
+            registration.addEventListener('updatefound', () => {
+                // If updatefound is fired, it means that there's
+                // a new service worker being installed.
+                console.info('new firebase-messaging-sw.js being installed')
+                const installingWorker = registration.installing;
+                console.info('A new firebase-messaging-sw.js is being installed:',
+                    installingWorker);
+
+                // You can listen for changes to the installing service worker's
+                // state via installingWorker.onstatechange
+            });
+        })
+        .catch(error => {
+            console.error('firebase-messaging-sw.js registration failed:', error);
+        });
 } else {
     console.error('Service workers are not supported.');
 }
@@ -68,7 +88,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
     // Prevent Chrome 67 and earlier from automatically showing the prompt
     e.preventDefault();
     console.log('can install as an app')
-   
+
     // Stash the event so it can be triggered later.
     store.deferredPrompt = e;
     m.redraw();

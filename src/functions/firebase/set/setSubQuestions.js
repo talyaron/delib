@@ -36,7 +36,6 @@ export const reorderSubQuestionsInDocument = (ids, newOrder) => {
             const questionRef = doc(DB, questionPath + `/subQuestions/${elmId}`)
 
             updateDoc(questionRef, { order: newOrder, inDoc: true })
-                .then(() => console.info('subquestion', elmId, ' order was updated to', newOrder))
                 .catch(function (error) {
                     console.error('Error updating subquestion', subQuestionId, error)
 
